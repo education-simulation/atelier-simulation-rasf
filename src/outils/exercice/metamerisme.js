@@ -141,12 +141,17 @@ function verifierModele(m) {
     const sommets = S.map((v, i) => (v > 0.3 * mx && v >= (S[i - 1] ?? 0) && v >= (S[i + 1] ?? 0) ? L[i] : null)).filter((x) => x !== null);
     return [435, 545, 610].every((c) => sommets.some((l) => Math.abs(l - c) <= 10));
   });
-  const paire = fn(m.paireMetamere) && illum && essai(() => {
-    const R1 = m.LONGUEURS.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
+  // La paire est testée sur plusieurs couleurs (vert, bleu, rouge, ocre, gris) : toutes doivent respecter les règles.
+  const g = (l, c, w) => Math.exp(-(((l - c) / w) ** 2));
+  const COULEURS_TEST = [(l) => 0.30 + 0.15 * g(l, 530, 70), (l) => 0.20 + 0.22 * g(l, 475, 55), (l) => 0.15 + 0.35 / (1 + Math.exp(-(l - 600) / 25)),
+    (l) => 0.25 + 0.30 / (1 + Math.exp(-(l - 560) / 30)), () => 0.4];
+  const paire = fn(m.paireMetamere) && illum && essai(() => COULEURS_TEST.every((f) => {
+    const R1 = m.LONGUEURS.map(f);
     const R2 = m.paireMetamere(R1);
+    if (!Array.isArray(R2) || R2.length !== n) return false;
     const dE = (S) => { const w = m.blanc(S); return m.deltaE(m.lab(m.xyz(R1, S), w), m.lab(m.xyz(R2, S), w)); };
     return dE(m.ILLUMINANTS.D65.spectre) < 0.5 && dE(m.ILLUMINANTS.A.spectre) > 1 && controlePaire(R1, R2, m.LONGUEURS).ok;
-  });
+  }));
   return [
     ["📏 les longueurs d'onde (380 à 780 nm)", n > 0 && m.LONGUEURS[0] === 380 && m.LONGUEURS[n - 1] === 780],
     ["📈 les distributions spectrales de A, D65 et F11", illum],
@@ -155,7 +160,7 @@ function verifierModele(m) {
     ["🖥 la couleur à l'écran", fn(m.versEcran)],
     ["🎨 la fabrication d'une paire métamère", fn(m.paireMetamere)],
     ["🔎 contrôle : F11 a trois pics vers 435, 545 et 610 nm", pics],
-    ["🔎 contrôle : la paire est identique sous D65, différente sous A, se croise au moins 3 fois et s'écarte dans le rouge", paire],
+    ["🔎 contrôle (5 couleurs testées) : chaque paire est identique sous D65, différente sous A, se croise au moins 3 fois et s'écarte dans le rouge", paire],
   ].map(([texte, ok]) => ({ texte, ok: Boolean(ok) }));
 }
 
@@ -190,14 +195,16 @@ export const FICHIER_PERSO = "maColorimetrie.js";
 // Étape 0, seulement sans la boîte à outils fournie : la construire.
 export const ETAPE_OUTILS = {
   titre: "Construire ton modèle couleur",
-  motsCles: ["crée un fichier", "mon modèle couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "observateur CIE 1931", "illuminant A", "illuminant D65", "illuminant F11", "écart ΔE*ab", "paire métamère", "calculé, pas choisi à la main", "n'utilise pas le modèle fourni"], // surlignés quand l'étape est ouverte
-  consigne: "Tu construis toi-même le modèle couleur. Rédige un prompt pour que l'IA crée les données spectrales et les calculs dont la simulation aura besoin.",
+  motsCles: ["crée un fichier", "mon modèle couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "observateur CIE 1931", "illuminant A", "illuminant D65", "illuminant F11", "écart ΔE*ab", "paire métamère", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "calculé, pas choisi à la main", "n'utilise pas le modèle fourni"], // surlignés quand l'étape est ouverte
+  consigne: "Tu construis toi-même le modèle couleur. Rédige un prompt pour que l'IA crée les données spectrales et les calculs dont la simulation aura besoin, y compris la fabrication d'une paire métamère VÉRIFIÉE.",
   indices: [
-    "Quelles données ? Les distributions spectrales des illuminants A, D65 et F11, et l'observateur CIE 1931, de 380 à 780 nm.",
-    "D'où viennent-elles ? Exige les tables officielles de la CIE, pas des valeurs de mémoire : sinon l'IA peut en inventer une partie.",
-    "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab, la couleur à l'écran, et une paire métamère calculée : même couleur sous D65, au moins 3 croisements, et les courbes qui s'écartent dans le rouge.",
+    "Quelles données ? Les distributions spectrales des illuminants A, D65 et F11, et l'observateur CIE 1931, de 380 à 780 nm, tirées des tables officielles de la CIE (pas de mémoire : sinon l'IA peut en inventer une partie).",
+    "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab et la couleur à l'écran.",
+    "Le cœur du métamérisme : la carte 2 doit avoir EXACTEMENT la même couleur que la carte 1 sous D65, ses courbes doivent croiser celles de la carte 1 au moins 3 fois et s'en écarter dans le rouge. Exige que chaque paire soit vérifiée, et refusée puis refaite si une règle n'est pas respectée.",
   ],
-  proposition: "Crée mon modèle couleur avec les tables officielles de la CIE (pas de mémoire) : illuminants A, D65, F11 et observateur CIE 1931, de 380 à 780 nm. Ajoute XYZ, L*a*b*, ΔE*ab, la couleur à l'écran et une paire métamère calculée. N'utilise pas le modèle fourni.",
+  proposition: "Crée mon modèle couleur avec les tables officielles de la CIE (pas de mémoire) : illuminants A, D65, F11 et observateur CIE 1931, de 380 à 780 nm. Ajoute XYZ, L*a*b*, ΔE*ab, la couleur à l'écran, et une paire métamère : même couleur sous D65, au moins 3 croisements, écart dans le rouge ; vérifie chaque paire et refais le tirage si une règle n'est pas respectée. N'utilise pas le modèle fourni.",
+  // L'étape ne peut être terminée que si le contrôle automatique du modèle est entièrement ✅.
+  exigeModeleValide: true,
 };
 
 export const OUTILS_SANS = [
@@ -246,5 +253,5 @@ export const MOTS_CLES = [
   { titre: "🛠 Les actions", mots: ["crée un fichier", "ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
   { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "encadré « À retenir »", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
-  { titre: "✅ Les exigences", mots: ["pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas le modèle fourni", "calculé, pas choisi à la main", "avec le modèle couleur", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
+  { titre: "✅ Les exigences", mots: ["pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "n'utilise pas le modèle fourni", "calculé, pas choisi à la main", "avec le modèle couleur", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
 ];

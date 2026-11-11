@@ -284,7 +284,7 @@ function AideOutil({ outil, fermer }) {
 }
 
 // --- Une étape du parcours guidé : section repliable ---
-function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher, precedente, outil }) {
+function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher, precedente, outil, controle, bloquee }) {
   const [voirCourbes, setVoirCourbes] = useState(false);
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
   const [voirProposition, setVoirProposition] = useState(false);
@@ -303,6 +303,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
         {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>{parIA ? "✅ validée par l'IA" : "✅ terminée"}</span>}
+        {bloquee && <span style={{ fontSize: 12.5, color: "#b91c1c", background: "#fee2e2", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>❌ modèle à corriger</span>}
         {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {precedente}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
@@ -325,9 +326,22 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
           </div>
         )}
         {voirCourbes && <FenetreGraphiques outil={outil} ids={etape.graphiques} fermer={() => setVoirCourbes(false)} />}
+        {controle && (
+          <div style={{ marginTop: 12, padding: "8px 12px", borderRadius: 10, fontSize: 14, background: bloquee ? "#fef2f2" : "#f0fdf4", border: `1px solid ${bloquee ? "#fecaca" : "#bbf7d0"}` }}>
+            <strong>🔎 Contrôle automatique de ton modèle</strong>
+            {controle === "absent" && <div>📭 Le modèle n'existe pas encore.</div>}
+            {controle === "erreur" && <div>⚠️ Le modèle contient une erreur et ne peut pas être lu.</div>}
+            {Array.isArray(controle) && (
+              <ul style={{ margin: "4px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 2 }}>
+                {controle.map((v) => <li key={v.texte}>{v.ok ? "✅" : "❌"} {v.texte}</li>)}
+              </ul>
+            )}
+            {bloquee && <div style={{ marginTop: 4, fontWeight: 700 }}>Tant qu'une ligne est ❌, l'étape n'est pas terminée : demande à l'IA de corriger son modèle.</div>}
+          </div>
+        )}
         <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12, padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontSize: 14.5, fontWeight: 700,
           background: faite ? "#dcfce7" : "#f8fafc", border: `2px ${faite ? "solid #22c55e" : "dashed #94a3b8"}` }}>
-          <input type="checkbox" checked={faite} disabled={parIA} onChange={cocher} style={{ width: 18, height: 18, accentColor: "#16a34a", cursor: parIA ? "default" : "pointer" }} />
+          <input type="checkbox" checked={faite} disabled={parIA || bloquee} onChange={cocher} style={{ width: 18, height: 18, accentColor: "#16a34a", cursor: parIA ? "default" : "pointer" }} />
           {parIA ? "✅ Étape validée par l'IA : le résultat marche dans la simulation" : <>✅ Étape terminée : le résultat marche dans la simulation{faite ? "" : " (ouvre l'étape suivante)"}</>}
         </label>
       </div>
@@ -461,8 +475,16 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   const suivante = (n) => nums[nums.indexOf(n) + 1];
   // Étapes terminées : cochées ici, ou validées par l'IA dans la page (ETAPES_VALIDEES).
   const [cochees, setCochees] = useState(() => lire(`${page}.faitesN`, []));
-  const parIA = validees;
-  const faites = [...new Set([...cochees, ...parIA])];
+  // Modèle construit : on le contrôle ici. L'étape 0 n'est terminée que si TOUT est ✅ (même si elle a été cochée ou validée).
+  const [controle, setControle] = useState(null); // null | "absent" | "erreur" | [{ texte, ok }]
+  useEffect(() => {
+    if (!sans || !outils[0]?.charger) { setControle(null); return; }
+    outils[0].charger().then((m) => setControle(m ? outils[0].verifier(m) : "absent")).catch(() => setControle("erreur"));
+  }, [Boolean(sans)]); // eslint-disable-line react-hooks/exhaustive-deps
+  const modeleValide = Array.isArray(controle) && controle.every((v) => v.ok);
+  const bloqueeParControle = (n) => n === 0 && sans && etapes.etapeOutils?.exigeModeleValide && !modeleValide;
+  const parIA = validees.filter((n) => !bloqueeParControle(n));
+  const faites = [...new Set([...cochees, ...parIA])].filter((n) => !bloqueeParControle(n));
   // Une étape que l'IA vient de valider : on la replie et on ouvre la suivante (une seule fois).
   const cleVues = validees.join(",");
   useEffect(() => {
@@ -481,7 +503,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
     if (sans && !faites.includes(0)) setOuvertes((o) => { if (o.includes(0)) return o; const m = [0, ...o.filter((x) => x !== 1)]; ecrire(`${page}.ouvertesN`, m); return m; });
   }, [Boolean(sans)]); // eslint-disable-line react-hooks/exhaustive-deps
   const cocher = (n) => {
-    if (parIA.includes(n)) return;
+    if (parIA.includes(n) || bloqueeParControle(n)) return;
     const m = cochees.includes(n) ? cochees.filter((x) => x !== n) : [...cochees, n];
     setCochees(m); ecrire(`${page}.faitesN`, m);
     if (!cochees.includes(n)) { // cochée : on replie celle-ci et on ouvre la suivante
@@ -489,7 +511,9 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
       setOuvertes((o) => { const k = [...o.filter((x) => x !== n), ...(s2 !== undefined && !o.includes(s2) ? [s2] : [])]; ecrire(`${page}.ouvertesN`, k); return k; });
     }
   };
-  const verrouillee = (n) => { const k = nums.indexOf(n); return k > 0 && !faites.includes(nums[k - 1]); };
+  // Une étape est verrouillée tant qu'UNE des étapes précédentes n'est pas terminée (en cascade).
+  const verrouillee = (n) => nums.slice(0, nums.indexOf(n)).some((x) => !faites.includes(x));
+  const premiereNonFaite = (n) => nums.slice(0, nums.indexOf(n)).find((x) => !faites.includes(x));
   // Étapes dont on surligne les mots clés : celles qui sont ouvertes (et déverrouillées), sinon l'étape en cours.
   const ouvertesLibres = nums.filter((n) => ouvertes.includes(n) && !verrouillee(n));
   const enCours = nums.find((n) => !faites.includes(n));
@@ -542,7 +566,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             ? liste.map(({ num, etape }) => (
               <Etape key={num} page={page} numero={num} etape={etape} ouverte={ouvertes.includes(num)} basculer={() => basculer(num)}
                 faite={faites.includes(num)} parIA={parIA.includes(num)} verrouillee={verrouillee(num)} cocher={() => cocher(num)}
-                precedente={nums[nums.indexOf(num) - 1]} outil={outils[0]} />
+                precedente={premiereNonFaite(num) ?? nums[nums.indexOf(num) - 1]} outil={outils[0]} controle={num === 0 && sans ? controle : null} bloquee={bloqueeParControle(num)} />
             ))
             : <ExplorationLibre idees={idees} />}
         </section>
