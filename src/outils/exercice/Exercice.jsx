@@ -186,7 +186,7 @@ function AideOutil({ outil, fermer }) {
       <div ref={boite} role="dialog" aria-label={outil.titre || outil.nom}
         style={{ background: "#fff", borderRadius: 18, width: outil.donnees || outil.charger ? "min(760px, 100%)" : "min(520px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <strong style={{ fontSize: 18, flex: 1 }}>🧰 {outil.titre || outil.nom}</strong>
+          <strong style={{ fontSize: 18, flex: 1 }}>🧰 {(verifs && outil.titreComplet && verifs.every((v) => v.ok) ? outil.titreComplet : outil.titre) || outil.nom}</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>

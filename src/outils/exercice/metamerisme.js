@@ -193,7 +193,8 @@ export const ETAPE_OUTILS = {
 
 export const OUTILS_SANS = [
   {
-    titre: "Ton modèle couleur",
+    titre: "Modèle en cours de construction",
+    titreComplet: "Ton modèle couleur, complet", // quand tous les éléments sont ✅
     nom: "maColorimetrie.js",
     chemin: "src/outils/maColorimetrie.js",
     resume: "Ton propre modèle couleur, construit par l'IA à l'étape 0, à la place du modèle fourni. Il doit contenir :",
