@@ -131,7 +131,7 @@ button { font-family: inherit; }
 .bl-page { font-size: 13.5px; }
 .bl-icone { width: 20px; text-align: center; flex-shrink: 0; }
 .bl-vide { padding: 6px 10px; font-size: 13px; color: #94a3b8; }
-.racine-lateral .zone-sim, .racine-lateral .barre-titre, .racine-lateral .fil-ariane { max-width: 1000px; }
+.racine-lateral .zone-sim, .racine-lateral .barre-titre, .racine-lateral .fil-ariane { max-width: 1400px; } /* chaque page garde sa propre largeur ; l'exercice a besoin de place pour sa colonne de journal */
 .racine-lateral .barre-titre h1 { font-weight: 700; }
 @media (min-width: 760px) { .racine-lateral header.entete { display: none; } }
 @media (max-width: 759px) { .barre-laterale { display: none; } }

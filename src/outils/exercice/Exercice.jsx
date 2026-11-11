@@ -238,15 +238,21 @@ export function CadreExercice({ page, sujet, etapes, idees, children }) {
   const dernierPour = (num) => [...entrees].reverse().find((e) => e.etape === num);
 
   return (
+    <div className="ex-conteneur">
     <div className={`ex-cadre${estApercu ? " avec-journal" : ""}`}>
       <style>{`
-        .ex-cadre { max-width: 1320px; margin: 0 auto; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
+        .ex-conteneur { container-type: inline-size; }
+        .ex-cadre { max-width: 1360px; margin: 0 auto; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
         .ex-principal { display: grid; gap: 14px; min-width: 0; }
         .ex-journal { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 14px; padding: 12px 12px; }
-        @media (min-width: 1080px) {
-          .ex-cadre.avec-journal { grid-template-columns: minmax(0, 1fr) 330px; align-items: start; }
+        /* Le journal ne passe à droite que s'il RESTE assez de place pour la simulation (quel que soit le style du site) */
+        @container (min-width: 1020px) {
+          .ex-cadre.avec-journal { grid-template-columns: minmax(0, 1fr) 310px; align-items: start; }
           .ex-cadre.avec-journal .ex-journal { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow-y: auto; }
         }
+        .ex-bascule { display: inline-flex; background: #e2e8f0; border-radius: 999px; padding: 3px; gap: 2px; }
+        .ex-bascule button { border: none; background: transparent; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 13.5px; font-weight: 800; color: #475569; cursor: pointer; white-space: nowrap; }
+        .ex-bascule button[aria-selected="true"] { background: #fff; color: var(--accent); box-shadow: 0 1px 3px rgba(15,23,42,.18); }
       `}</style>
       <div className="ex-principal">
         <div style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
@@ -259,10 +265,9 @@ export function CadreExercice({ page, sujet, etapes, idees, children }) {
         <section aria-label="Construis cette simulation avec l'IA" style={{ background: "#f8fafc", border: "2px solid var(--accent)", borderRadius: 18, padding: "14px 16px", display: "grid", gap: 10 }}>
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <strong style={{ fontSize: 17, flex: "1 1 auto" }}>🤖 Construis cette simulation avec l'IA</strong>
-            <div role="tablist" style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+            <div role="tablist" aria-label="Mode" className="ex-bascule">
               {[["guide", "🧭 Parcours guidé"], ["libre", "🧪 Exploration libre"]].map(([id, nom]) => (
-                <button key={id} type="button" role="tab" aria-selected={mode === id} onClick={() => choisirMode(id)}
-                  style={{ ...bouton(mode === id ? "principal" : "normal") }}>{nom}</button>
+                <button key={id} type="button" role="tab" aria-selected={mode === id} onClick={() => choisirMode(id)}>{nom}</button>
               ))}
             </div>
           </div>
@@ -277,6 +282,7 @@ export function CadreExercice({ page, sujet, etapes, idees, children }) {
       </div>
       {estApercu && <Journal entrees={entrees} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} />}
+    </div>
     </div>
   );
 }
