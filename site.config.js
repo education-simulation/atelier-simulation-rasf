@@ -16,7 +16,7 @@ export default {
   accroche: "Essayer, observer, [comprendre.]",
 
   // Petit texte de présentation, sous la grande phrase.
-  presentation: "Des simulations : on change les réglages, on observe, on comprend.",
+  presentation: "Des simulations, support de mes cours : on change les réglages, on observe, on comprend.",
 
   // Ton nom ou ton pseudo, et ton établissement (laisse "" pour ne rien afficher).
   auteur: "Prénom Nom",
