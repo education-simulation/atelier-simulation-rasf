@@ -13,12 +13,12 @@ export const ETAPES = [
   {
     titre: "Faire fonctionner les boutons des illuminants",
     graphiques: ["illuminants"], // bouton « 📈 Voir … » dans l'étape : courbes du modèle couleur choisi
-    motsCles: ["sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    motsCles: ["sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre", "sur le fond de la cabine", "distribution spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [
       "Les trois boutons et les trois illuminants existent déjà (sur la cabine et dans le modèle couleur) : inutile de les décrire, dis juste quoi en faire.",
       "Un verbe d'action et la cible suffisent : « active… », « fais fonctionner… ».",
-      "Pour aller plus loin (facultatif) : un voyant sur le bouton actif, ou le choix retenu au rechargement.",
+      "Pour aller plus loin (facultatif) : tracer la distribution spectrale de l'illuminant choisi sur le fond de la cabine, un voyant sur le bouton actif, ou le choix retenu au rechargement.",
     ],
     proposition: "Active les 3 boutons d'illuminants.",
   },
@@ -234,7 +234,7 @@ export const IDEES = [
 
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
-  { titre: "📍 Où ?", mots: ["sur le bord de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
+  { titre: "📍 Où ?", mots: ["sur le bord de la cabine", "sur le fond de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
   { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "une palette de couleurs", "le modèle couleur", "mon modèle couleur", "tables officielles de la CIE", "distribution spectrale", "réflectance spectrale", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
   { titre: "🛠 Les actions", mots: ["crée un fichier", "ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
