@@ -656,7 +656,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
               ))}
             </div>
           </div>
-          <EtatActuel etat={etat} ligneModele={etapes.etapeOutils ? (etapes.ligneModele ? etapes.ligneModele(Boolean(sans)) : sans
+          <EtatActuel etat={etat} ligneModele={estApercu && etapes.etapeOutils ? (etapes.ligneModele ? etapes.ligneModele(Boolean(sans)) : sans
             ? "🧰 Tu construis tes propres modèles couleur (étape 0). Tu peux revenir aux modèles par défaut avec « Modèles couleur » ci-dessous."
             : "🧰 Les modèles couleur par défaut sont prêts. Tu peux aussi construire les tiens : « Modèles couleur » → « À construire ».") : null} />
           {outils[0]?.controleDirect ? <ControleDirect outil={outils[0]} /> : <ControleJour outil={outils[0]} />}
