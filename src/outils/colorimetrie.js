@@ -55,8 +55,9 @@ export const deltaE = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]
 
 // Couleur d'écran : adaptation de Bradford du blanc de l'illuminant vers D65 (l'œil s'habitue à la lumière),
 // avec un degré d'adaptation (1 = complète : un blanc paraît blanc ; < 1 : on voit encore la teinte de la lampe).
-// Par défaut 0,7 : dans la cabine, on voit à la fois la teinte de la lampe ET l'écart entre deux cartes métamères.
-export const ADAPTATION = 0.7;
+// Par défaut 0,4 (choix pédagogique, volontairement marqué) : dans la cabine, la teinte de la lampe saute aux yeux,
+// et l'écart entre deux cartes métamères aussi.
+export const ADAPTATION = 0.4;
 const BRAD = [[0.8951, 0.2664, -0.1614], [-0.7502, 1.7135, 0.0367], [0.0389, -0.0685, 1.0296]];
 const BRAD_INV = [[0.9869929, -0.1470543, 0.1599627], [0.4323053, 0.5183603, 0.0492912], [-0.0085287, 0.0400428, 0.9684867]];
 const mul = (M, v) => M.map((l) => l[0] * v[0] + l[1] * v[1] + l[2] * v[2]);
@@ -111,7 +112,7 @@ export function verifierPaire(R1, R2, minCroisements = 3) {
 
 // Fabrique la carte 2 à partir de la carte 1. Chaque essai est vérifié (verifierPaire) : un essai qui ne
 // respecte pas les règles est REFUSÉ et on recommence avec une autre perturbation.
-export function paireMetamere(R1, perturbation, cibleDeltaEsousA = 7) {
+export function paireMetamere(R1, perturbation, cibleDeltaEsousA = 12) {
   const essais = [...(perturbation ? [perturbation] : []), ...BOSSES_ROUGES];
   let meilleur = null;
   for (const p of essais) {
