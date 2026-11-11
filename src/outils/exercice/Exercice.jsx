@@ -278,6 +278,19 @@ function AideOutil({ outil, fermer }) {
             {donnees.map((g) => <Graphique key={g.id} g={g} />)}
           </>
         )}
+        {outil.telecharger && (outil.donnees || modele) && (
+          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
+            <button type="button" style={bouton()} onClick={async () => {
+              const texte = await outil.telecharger.lire();
+              if (!texte) return;
+              const a = document.createElement("a");
+              a.href = URL.createObjectURL(new Blob([texte], { type: "text/javascript;charset=utf-8" }));
+              a.download = outil.telecharger.nom; a.click();
+              setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+            }}>{outil.telecharger.libelle}</button>
+            <span style={{ fontSize: 12.5, color: "#64748b" }}>Pour t'en inspirer, ou le redonner à l'agent dans Antigravity.</span>
+          </div>
+        )}
         <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : les modèles sont dans le fichier <code>{outil.chemin}</code>.</p>
       </div>
     </div>,

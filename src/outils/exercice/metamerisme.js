@@ -8,6 +8,9 @@
 import * as MODELE_FOURNI from "../colorimetrie.js";
 // Le modèle couleur construit par la personne (étape 0), s'il existe déjà : chargé à la demande.
 const MODELE_PERSO = import.meta.glob("../maColorimetrie.js");
+// Le texte des fichiers de modèles, pour les télécharger depuis la fenêtre « Voir les modèles ».
+const SOURCES = import.meta.glob(["../colorimetrie.js", "../maColorimetrie.js"], { query: "?raw", import: "default" });
+const source = (chemin) => async () => { const f = SOURCES[chemin]; return f ? f() : null; };
 
 export const ETAPES = [
   {
@@ -113,6 +116,7 @@ export const OUTILS = [
     equations: EQUATIONS, // montrées dans la fenêtre, section « 🧮 Le modèle mathématique »
     controlePaire,
     ecartJour,
+    telecharger: { lire: source("../colorimetrie.js"), nom: "modeles-couleur-par-defaut.js", libelle: "⬇️ Télécharger les modèles par défaut" },
     donnees: () => donneesColorimetrie(), // courbes montrées (et téléchargeables) dans la fenêtre « À quoi sert … ? »
   },
 ];
@@ -247,6 +251,7 @@ export const OUTILS_SANS = [
     // Le fichier construit : chargé s'il existe, puis montré (courbes) et vérifié automatiquement.
     controlePaire,
     ecartJour,
+    telecharger: { lire: source("../maColorimetrie.js"), nom: "mes-modeles-couleur.js", libelle: "⬇️ Télécharger tes modèles" },
     charger: async () => { const f = MODELE_PERSO["../maColorimetrie.js"]; return f ? f() : null; },
     donneesDe: (m) => { try { return donneesColorimetrie(m); } catch { return null; } },
     verifier: verifierModele,
