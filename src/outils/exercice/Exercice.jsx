@@ -388,19 +388,19 @@ function ExplorationLibre({ idees }) {
 }
 
 // --- Sauvegardes (sauver / reprendre) ---
-function Sauvegardes({ page }) {
+function Sauvegardes({ page, modele }) {
   const [nom, setNom] = useState("");
   const [liste, setListe] = useState(null);
   const [confirmer, setConfirmer] = useState(null);
   const [message, setMessage] = useState("");
   const charger = async () => { const j = await fetch(`__atelier/versions?page=${page}`).then((r) => r.json()); setListe(j.fichiers || []); };
   const sauver = async () => {
-    try { const j = await appel("sauver", { page, nom }); setMessage(`✅ Sauvegardé : versions/${page}/${j.fichier}`); setNom(""); if (liste) charger(); }
+    try { const j = await appel("sauver", { page, nom, modele }); setMessage(`✅ Sauvegardé : versions/${page}/${j.fichier}`); setNom(""); if (liste) charger(); }
     catch (e) { setMessage(`⚠️ ${e.message}`); }
   };
   const reprendre = async (fichier) => {
     if (confirmer !== fichier) return setConfirmer(fichier);
-    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier }); setMessage("✅ Version reprise : la page se recharge. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : l'agent repartira de cette version.");  setTimeout(() => window.location.reload(), 1800);}
+    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier, modele }); setMessage("✅ Version reprise : la page se recharge. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : l'agent repartira de cette version.");  setTimeout(() => window.location.reload(), 1800);}
     catch (e) { setMessage(`⚠️ ${e.message}`); }
   };
   const lisible = (f) => f.replace(/\.jsx$/, "").replace(/^(\d{4})-(\d\d)-(\d\d)_(\d\d)h(\d\d)-\d\d-?/, "$3/$2/$1 à $4h$5 · ").replace(/-/g, " ");
@@ -431,7 +431,7 @@ function Sauvegardes({ page }) {
 }
 
 // --- « Tout recommencer » : fenêtre de confirmation ---
-function ToutRecommencer({ page, fermer, remiseAZero }) {
+function ToutRecommencer({ page, fermer, remiseAZero, modele }) {
   const [etat, setEtat] = useState("");
   const boite = useRef(null);
   useEffect(() => {
@@ -443,7 +443,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
     try {
       setEtat("⏳ Retour au départ…");
       remiseAZero();
-      await appel("zero", { page });
+      await appel("zero", { page, modele });
       setEtat("✅ C'est reparti du début. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : sinon l'agent croit que tout est encore fait.");
       setTimeout(() => window.location.reload(), 1800); // recharge complète : rien ne reste de l'ancienne version
     } catch (e) { setEtat(`⚠️ ${e.message}`); }
@@ -456,6 +456,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
         <strong style={{ fontSize: 18 }}>↺ Tout recommencer ?</strong>
         <ul style={{ margin: "10px 0", paddingLeft: 20, lineHeight: 1.6, fontSize: 14.5 }}>
           <li>La page revient au <strong>point de départ</strong> : la cabine éteinte et les deux cartes vierges.</li>
+          {modele && <li>Les modèles que tu as construits sont <strong>mis de côté</strong> : en « À construire », tu repars de modèles <strong>vierges</strong>.</li>}
           <li>Les étapes se replient, les indices se cachent, et « État actuel » revient au départ.</li>
           <li>Ta version actuelle est <strong>sauvegardée automatiquement</strong> avant : tu pourras la reprendre.</li>
           <li>💬 Ensuite, dans Antigravity, <strong>ouvre une nouvelle conversation</strong> (bouton <strong>+</strong>) : sinon l'agent peut croire que tout est encore fait.</li>
@@ -599,10 +600,10 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             : <ExplorationLibre idees={idees} />}
         </section>}
 
-        {estApercu && !guideMasque && <Sauvegardes page={page} />}
+        {estApercu && !guideMasque && <Sauvegardes page={page} modele={etapes.outilsSans?.[0]?.chemin} />}
       </div>
       {!guideMasque && groupesMots.length > 0 && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
-      {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} />}
+      {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} modele={etapes.outilsSans?.[0]?.chemin} />}
     </div>
     </div>
   );

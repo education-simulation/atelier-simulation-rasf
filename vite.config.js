@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite' // seulement pour les outils de src/outils/reula/
 import { basename, dirname, join } from 'node:path'
-import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, copyFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, copyFileSync, unlinkSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 // Le dossier du site = celui qui contient ce fichier.
@@ -78,13 +78,20 @@ function versionsDesPages() {
             return repondre(res, 200, { dossier: `versions/${page}`, fichiers })
           }
           if (req.method !== 'POST') return repondre(res, 405, {})
-          const { page, nom, fichier, effacerJournal, avec } = await lireCorps(req)
+          const { page, nom, fichier, effacerJournal, avec, modele } = await lireCorps(req)
           req.effacerJournal = effacerJournal === true
           if (!pageOk(page)) return repondre(res, 400, { erreur: 'page inconnue' })
           const actuel = join(dossier, 'simulations', `${page}.jsx`), d = join(dossier, 'versions', page)
           if (!existsSync(actuel)) return repondre(res, 404, { erreur: 'page introuvable' })
           mkdirSync(d, { recursive: true })
-          const sauver = (etiquette) => { const f = `${horodatage()}-${etiquette}.jsx`; copyFileSync(actuel, join(d, f)); return f }
+          // Le modèle CONSTRUIT par la personne (ex. src/outils/maColorimetrie.js) suit la page : sauvegardé avec elle,
+          // repris avec elle, et mis de côté par « Tout recommencer » (on repart d'un modèle vierge). Seuls les fichiers ma*.js.
+          const fichierModele = typeof modele === 'string' && /^src\/outils\/ma[A-Za-z0-9_-]*\.js$/.test(modele) ? join(dossier, modele) : null
+          const sauver = (etiquette) => {
+            const f = `${horodatage()}-${etiquette}.jsx`; copyFileSync(actuel, join(d, f))
+            if (fichierModele && existsSync(fichierModele)) copyFileSync(fichierModele, join(d, `${f}.modele.js`))
+            return f
+          }
           if (action === 'sauver') {
             const etiquette = String(nom || 'version').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'version'
             return repondre(res, 200, { fichier: sauver(etiquette) })
@@ -100,6 +107,8 @@ function versionsDesPages() {
             if (typeof fichier !== 'string' || !/^[A-Za-z0-9_.-]+\.jsx$/.test(fichier) || !existsSync(join(d, fichier))) return repondre(res, 400, { erreur: 'sauvegarde introuvable' })
             const avant = sauver('avant-reprise')
             copyFileSync(join(d, fichier), actuel)
+            const modeleSauve = join(d, `${fichier}.modele.js`)
+            if (fichierModele && existsSync(modeleSauve)) copyFileSync(modeleSauve, fichierModele)
             return repondre(res, 200, { ok: true, avant })
           }
           if (action === 'zero') {
@@ -107,6 +116,7 @@ function versionsDesPages() {
             if (!existsSync(depart)) return repondre(res, 404, { erreur: 'pas de version de départ pour cette page' })
             const avant = sauver('avant-zero')
             copyFileSync(depart, actuel)
+            if (fichierModele && existsSync(fichierModele)) unlinkSync(fichierModele) // déjà sauvegardé avec « avant-zero »
             // Option : effacer aussi le journal des prompts (journal/<Page>.json), après l'avoir sauvegardé.
             const journal = join(dossier, 'journal', `${page}.json`)
             if (req.effacerJournal && existsSync(journal)) {
