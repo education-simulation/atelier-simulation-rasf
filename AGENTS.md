@@ -219,7 +219,7 @@ Propose, une par une : remplir une autre page, changer la grande phrase de l'acc
 ### Construire le prompt ensemble (avant d'écrire une nouvelle simulation)
 Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation à partir d'une idée floue** : aide d'abord la personne à préciser sa demande, puis montre-lui le prompt complet **avant** de coder. Elle peut le modifier.
 
-**Le modèle à montrer** : l'exemple **Métamérisme** (menu Exemples) est un exercice guidé. Il part d'une scène fixe et donne, une étape à la fois, un objectif : la personne écrit elle-même son prompt, tu le vérifies avant de l'exécuter. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
+**Le modèle à montrer** : l'exemple **Métamérisme** (menu Exemples) est un exercice guidé. Il part d'une scène fixe : la personne écrit elle-même ses prompts (parcours guidé en 6 étapes, ou exploration libre), tu les vérifies avant de les exécuter, et tu notes tes conseils dans son journal. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
 
 **Deux façons de faire, à proposer en une question à choix** : « Comment veux-tu décrire ta simulation ? » → **Étape par étape, je te guide** · **Je te donne mon idée en vrac, propose-moi un prompt**.
 
@@ -236,27 +236,22 @@ Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation 
 
 Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui affiche ce prompt : la personne pourra le reprendre plus tard pour une autre simulation.
 
-**L'exercice Métamérisme** : la page apprend à écrire un prompt. À chaque étape, la personne écrit son prompt **dans cette conversation**, en commençant par **« Exercice Métamérisme, étape N — analyse d'abord mon prompt… : »** (ou simplement « Exercice Métamérisme, étape N : »). Quand un message commence ainsi, **même si tu as déjà commencé la conversation avant**, applique ces règles :
-1. **Ne code pas tout de suite. Vérifie d'abord le prompt** avec les critères de l'étape N : ce sont les `indices` de l'étape N dans `simulations/Metamerisme.jsx` (lis ce fichier), et son `objectif` (`consigne`). Réponds en quelques lignes :
-   - ✅ **Ce qui est réussi** (les critères présents dans le prompt) ;
-   - ⚠️ **Ce qui manque ou reste ambigu** (les critères absents), formulé comme une question, **sans donner la réponse** et sans recopier la `proposition` ;
-   - une appréciation en une ligne : « prompt complet », « presque complet » ou « à compléter ».
-2. Puis pose la question à choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e**. (Si le prompt est complet, mets « Exécute-le » en premier.)
-3. Si elle corrige, elle renvoie un nouveau message « Exercice Métamérisme, étape N : … » : recommence la vérification.
-   (Pour la question de l'étape 2, utilise exactement ces choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e**.)
-4. Si elle choisit « Exécute-le tel quel », fais **exactement ce que dit son prompt**, rien de plus (ne prends pas d'avance sur les étapes suivantes, ne complète pas en douce ce qui manquait).
-5. **Puis commente le résultat** (3 à 5 lignes, sans donner la réponse) :
-   - 👀 **Ce que ton prompt a produit** : ce qui a changé dans la page, en une ou deux phrases (le lien de l'aperçu, puis Cmd + R / Ctrl + R) ;
-   - ✅ **Ce qui correspond à l'objectif** de l'étape, en citant les mots du prompt qui l'ont permis ;
-   - ⚠️ **Ce qui manque encore** par rapport aux critères de l'étape, et **pourquoi** : relie-le à ce que le prompt ne disait pas (« ton prompt ne précisait pas … , donc je ne l'ai pas fait ») ;
-   - 💡 une astuce d'écriture de prompt en une ligne (être précis sur l'endroit, le comportement, ce qui doit être retenu…).
-6. Termine par la question à choix, **avec exactement ces choix, dans cet ordre** : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. **Ne propose pas de mettre en ligne pendant l'exercice** : seulement après l'étape 6 (ou si la personne le demande).
-   - « Je continue » : dis-lui de cliquer « Suivant » dans le guide de la page, puis d'écrire son prompt de l'étape suivante en commençant par « Exercice Métamérisme, étape N+1 : ».
-   - « Je veux ajuster » : elle écrit ce qu'elle veut changer (c'est aussi un prompt : vérifie-le de la même façon s'il commence par « Exercice Métamérisme »).
-**Journal (à tenir à CHAQUE prompt de l'exercice, guidé ou libre)** : la page affiche, sous le guide, « 📜 Mes prompts et les conseils de l'IA », lu dans le fichier **`journal/Metamerisme.json`** (un tableau JSON ; crée le dossier et le fichier s'ils n'existent pas, avec `[]`). À chaque message « Exercice Métamérisme… », **ajoute une entrée à la fin du tableau** (ne modifie pas les anciennes, sauf pour passer `execute` à `true` quand tu exécutes ensuite le même prompt) :
+**L'exercice Métamérisme** : la page apprend à écrire un prompt. Elle ne contient que la simulation (`simulations/Metamerisme.jsx`), posée dans un cadre d'exercice qu'il ne faut **jamais modifier** (`src/outils/exercice/`). Le cadre a deux modes, choisis par la personne dans la page : **🧭 Parcours guidé** (6 étapes repliables) et **🧪 Exploration libre**. Les étapes, leurs objectifs (`consigne`) et leurs **critères** (`indices`) sont dans `src/outils/exercice/metamerisme.js`.
+
+**Tout message qui demande de changer la page Métamérisme fait partie de l'exercice**, même sans formule particulière, et même si la conversation a commencé avant. Pour chacun :
+1. **Repère l'étape** : compare la demande aux `consigne` des 6 étapes.
+   - **Elle correspond à une étape (parcours guidé)** : **ne code pas tout de suite. Analyse d'abord le prompt** avec les `indices` de cette étape, en quelques lignes :
+     - ✅ **Ce qui est réussi** (les critères présents) ;
+     - ⚠️ **Ce qui manque ou reste ambigu**, formulé comme une question, **sans donner la réponse** et **sans jamais recopier ni utiliser la `proposition`** ;
+     - une appréciation : « complet », « presque complet » ou « à compléter ».
+     Puis la question à choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e** (« Exécute-le » en premier si le prompt est complet).
+     Si elle choisit « Exécute-le tel quel » : fais **exactement ce que dit son prompt**, rien de plus (pas d'avance sur les étapes suivantes, pas de complément en douce), puis commente : 👀 ce qui a changé (lien de l'aperçu, Cmd + R / Ctrl + R), ✅ ce qui correspond à l'objectif, ⚠️ ce qui manque encore **et pourquoi** (« ton prompt ne précisait pas … »), 💡 une astuce d'écriture. Termine par : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**.
+   - **C'est une autre idée (exploration libre)** : fais-la directement (et seulement ça), puis réponds en deux lignes : 👀 ce qui a changé, 💡 une astuce pour rendre la prochaine demande plus précise. Termine par : **J'ai une autre idée** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. Si la demande est trop floue pour être faite, pose **une** question à choix pour la préciser, sans coder.
+   - **Tu hésites** entre les deux : pose la question à choix « Je vérifie d'abord ton prompt (parcours guidé) » · « Je le fais directement (exploration libre) ».
+2. **Note-le dans le journal** (à chaque message, guidé ou libre) : la page affiche, dans la marge de droite, « 📜 Mes prompts et les conseils de l'IA », lu dans **`journal/Metamerisme.json`** (un tableau JSON ; crée le dossier et le fichier s'ils n'existent pas, avec `[]`). Ajoute une entrée à la fin (ne modifie pas les anciennes, sauf pour passer `execute` à `true` et ajouter `resultat` quand tu exécutes ensuite le même prompt) :
 ```json
-{ "date": "11/11/2026 19:40", "mode": "guide", "etape": 3,
-  "prompt": "le texte exact du prompt, sans le début « Exercice Métamérisme… : »",
+{ "date": "11/11/2026 19:40", "etape": 3,
+  "prompt": "le texte exact du prompt de la personne",
   "appreciation": "complet | presque complet | à compléter",
   "reussi": ["ce qui est réussi, une phrase par point"],
   "a_ameliorer": ["ce qui manque, sous forme de question, sans donner la réponse"],
@@ -264,11 +259,9 @@ Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui af
   "execute": false,
   "resultat": "après exécution : ce qui a changé, en une phrase" }
 ```
-En exploration libre : `"mode": "libre"`, pas de champ `etape` ni `appreciation`, et `execute: true` avec le `resultat`. Garde le JSON valide (vérifie-le). Rien de personnel dans ce fichier. **C'est la seule écriture autorisée en dehors de `simulations/Metamerisme.jsx` pendant l'exercice.**
+   En exploration libre : pas de champ `etape` ni `appreciation`, `execute: true` et `resultat`. Garde le JSON valide. Rien de personnel dans ce fichier.
+3. **Ce que tu peux écrire pendant l'exercice** : `simulations/Metamerisme.jsx` et `journal/Metamerisme.json`, **rien d'autre**. Ne touche jamais à `site.config.js` (la page y est déjà), à `src/outils/exercice/`, ni au dossier `versions/` (sauvegardes et page de départ, gérées par les boutons « 💾 Sauvegardes » et « ↺ Tout recommencer » de la page). Si la personne demande de sauvegarder, reprendre ou recommencer, dis-lui d'utiliser ces boutons.
 
-**Exploration libre** : le guide a aussi un mode « 🧪 Exploration libre », sans étapes. Les messages commencent alors par **« Exercice Métamérisme, exploration libre : »**. Pour ceux-là, **pas de vérification préalable** : fais directement ce qui est demandé (et seulement ça), puis réponds en deux lignes : 👀 ce qui a changé (avec le lien de l'aperçu et Cmd + R / Ctrl + R) et 💡 une astuce pour rendre la prochaine demande plus précise. Termine par la question à choix : **J'ai une autre idée** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. Si la demande est trop floue pour être faite, pose **une** question à choix pour la préciser, sans coder.
-**Sauvegardes** : sous le guide, des boutons « 💾 Sauvegarder cette version », « 📂 Reprendre une version » et « ↺ Recommencer à zéro » copient la page dans `versions/Metamerisme/` (sur l'ordinateur, jamais en ligne). Si la personne te demande de sauvegarder, reprendre ou recommencer, dis-lui d'utiliser ces boutons. **Ne modifie et ne supprime jamais** le dossier `versions/` (surtout `versions/depart/`, la page de départ). Le journal `journal/Metamerisme.json` reste quand on recommence à zéro : c'est l'historique de la personne.
-**Pendant l'exercice, ne touche jamais à `site.config.js`** : la page Métamérisme y est déjà inscrite (ne l'ajoute pas une deuxième fois). Ne lis pas la `proposition` pour compléter : elle sert seulement à la personne.
 Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
 
 ## 5. Dépannage

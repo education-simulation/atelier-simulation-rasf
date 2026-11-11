@@ -49,7 +49,8 @@ function enregistrerStyle() {
 //   GET  /__atelier/versions?page=P      → liste des sauvegardes
 //   POST /__atelier/versions/sauver      { page, nom }      → copie la page actuelle
 //   POST /__atelier/versions/restaurer   { page, fichier }  → remet une sauvegarde (après avoir sauvé l'état actuel)
-//   POST /__atelier/versions/zero        { page }           → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel)
+//   POST /__atelier/versions/zero        { page, effacerJournal? } → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel)
+//                                         et, si demandé, vide journal/<Page>.json (après l'avoir sauvé)
 // Comme pour le style : seulement pendant l'aperçu ; le site en ligne n'écrit rien.
 function versionsDesPages() {
   const pageOk = (s) => typeof s === 'string' && /^[A-Za-z0-9_-]{1,60}$/.test(s)
@@ -76,7 +77,8 @@ function versionsDesPages() {
             return repondre(res, 200, { dossier: `versions/${page}`, fichiers })
           }
           if (req.method !== 'POST') return repondre(res, 405, {})
-          const { page, nom, fichier } = await lireCorps(req)
+          const { page, nom, fichier, effacerJournal } = await lireCorps(req)
+          req.effacerJournal = effacerJournal === true
           if (!pageOk(page)) return repondre(res, 400, { erreur: 'page inconnue' })
           const actuel = join(dossier, 'simulations', `${page}.jsx`), d = join(dossier, 'versions', page)
           if (!existsSync(actuel)) return repondre(res, 404, { erreur: 'page introuvable' })
@@ -97,6 +99,12 @@ function versionsDesPages() {
             if (!existsSync(depart)) return repondre(res, 404, { erreur: 'pas de version de départ pour cette page' })
             const avant = sauver('avant-zero')
             copyFileSync(depart, actuel)
+            // Option : effacer aussi le journal des prompts (journal/<Page>.json), après l'avoir sauvegardé.
+            const journal = join(dossier, 'journal', `${page}.json`)
+            if (req.effacerJournal && existsSync(journal)) {
+              copyFileSync(journal, join(d, `${horodatage()}-journal-avant-zero.json`))
+              writeFileSync(journal, '[]\n')
+            }
             return repondre(res, 200, { ok: true, avant })
           }
           return repondre(res, 404, {})
