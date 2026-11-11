@@ -118,6 +118,18 @@ button { font-family: inherit; }
 .racine-lateral { --fond: #ffffff; background: #ffffff; }
 .barre-laterale { width: 250px; flex-shrink: 0; position: sticky; top: 0; height: 100vh; overflow-y: auto; background: #1e2230; color: #e2e8f0;
   padding: 14px 10px; display: flex; flex-direction: column; gap: 6px; }
+/* Barre réduite : une colonne d'icônes (bouton « / ») */
+.bl-haut { display: flex; align-items: center; gap: 4px; }
+.bl-haut .bl-titre { flex: 1; min-width: 0; }
+.bl-reduire { flex-shrink: 0; width: 28px; height: 28px; border: 1px solid rgba(255,255,255,.18); border-radius: 8px; background: transparent; color: #cbd5e1;
+  font: 800 15px/1 'Nunito', sans-serif; cursor: pointer; }
+.bl-reduire:hover { background: rgba(255,255,255,.1); color: #fff; }
+.barre-laterale.replie { width: 64px; padding: 14px 8px; transition: width .15s; }
+.barre-laterale.replie .bl-haut { flex-direction: column; gap: 8px; }
+.barre-laterale.replie .bl-titre { padding: 4px 0 6px; justify-content: center; }
+.barre-laterale.replie .bl-texte, .barre-laterale.replie .bl-menu, .barre-laterale.replie .bl-vide, .barre-laterale.replie .bouton-calc-texte { display: none; }
+.barre-laterale.replie .bl-lien { justify-content: center; padding: 7px 0; }
+.barre-laterale.replie .bl-pages { padding-left: 0; border-top: 1px solid rgba(255,255,255,.08); padding-top: 4px; margin-top: 4px; }
 .bl-titre { display: flex; align-items: center; gap: 9px; padding: 4px 8px 12px; text-decoration: none; color: #fff; font: 700 15.5px/1.2 'Nunito', sans-serif; }
 .bl-nav { display: flex; flex-direction: column; gap: 2px; }
 .bl-lien { display: flex; align-items: center; gap: 9px; width: 100%; text-align: left; padding: 7px 10px; border: none; border-radius: 8px; background: transparent;
