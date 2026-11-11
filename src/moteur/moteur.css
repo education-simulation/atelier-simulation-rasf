@@ -87,6 +87,13 @@ button { font-family: inherit; }
 .et-lien[aria-current="page"] { background: var(--accent-clair); font-weight: 800; }
 .et-icone { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
 .et-vide { padding: 6px 8px; font-size: 13px; color: var(--texte2); }
+.bouton-calc { flex-shrink: 0; display: inline-flex; align-items: center; gap: 6px; padding: 5px 11px; border-radius: 999px; border: 1.5px solid var(--bord);
+  background: #fff; cursor: pointer; font-size: 14px; font-weight: 700; color: var(--texte); white-space: nowrap; margin-right: 6px; }
+.bouton-calc:hover { border-color: var(--accent); }
+.bouton-calc.actif { background: var(--accent); border-color: var(--accent); color: #fff; }
+@media (max-width: 480px) { .bouton-calc .bouton-calc-texte { display: none; } }
+.bl-calc { margin-bottom: 6px; border: 1px solid rgba(255,255,255,.15) !important; }
+.bl-calc.actif { background: var(--accent); color: #fff; }
 .et-mobile { flex-shrink: 0; white-space: nowrap; padding: 5px 10px; border-radius: 9px; border: 1.5px solid var(--bord); background: #fff; cursor: pointer; font-size: 14px; font-weight: 700; color: var(--texte); }
 .et-panneau-mobile { position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--bord); padding: 6px 12px 10px;
   max-height: calc(100vh - 52px); overflow-y: auto; }

@@ -215,13 +215,13 @@ export default function ExtraitSec() {
               <span style={{ fontSize: 12, fontWeight: 800, color: "#b45309", textTransform: "uppercase", letterSpacing: 0.5 }}>
                 📊 Mesures & données acquises :
               </span>
-              <label style={{ fontSize: 14, fontWeight: 800, color: "#7c2d12", display: "flex", alignItems: "center", gap: 8,
-                background: "#fff7ed", border: "2px solid #f59e0b", borderRadius: 12, padding: "6px 10px" }}>
-                🧪 Produit étudié :
+              <label style={{ fontSize: 14, fontWeight: 800, color: "#7c2d12", display: "flex", flexWrap: "wrap", alignItems: "center", gap: 8,
+                background: "#fff7ed", border: "2px solid #f59e0b", borderRadius: 12, padding: "6px 10px", maxWidth: "100%", boxSizing: "border-box" }}>
+                <span style={{ whiteSpace: "nowrap" }}>🧪 Produit étudié :</span>
                 <select
                   value={echantillon.typeKey}
                   onChange={(ev) => resetGuide(ev.target.value)}
-                  style={{ fontSize: 14.5, fontWeight: 700, padding: "6px 10px", borderRadius: 8, border: "1.5px solid #b45309", background: "#fff", color: "#7c2d12", cursor: "pointer" }}
+                  style={{ fontSize: 14.5, fontWeight: 700, padding: "6px 10px", borderRadius: 8, border: "1.5px solid #b45309", background: "#fff", color: "#7c2d12", cursor: "pointer", flex: "1 1 180px", minWidth: 0, maxWidth: "100%" }}
                 >
                   {Object.entries(PRODUITS).map(([k, p]) => <option key={k} value={k}>{p.nom}</option>)}
                 </select>

@@ -5,8 +5,20 @@
 //  Sur écran étroit, les menus se regroupent derrière un bouton « Menu ».
 // ============================================================
 import { useState, useEffect, useRef } from "react";
+import { basculerCalculatrice, useCalculatriceOuverte } from "../outils/calculatriceFlottante.js";
 
 export const HAUTEUR_ENTETE = 52;
+
+// Bouton 🧮 : ouvre ou ferme la calculatrice flottante, depuis n'importe quelle page.
+export function BoutonCalculatrice({ className = "bouton-calc" }) {
+  const ouverte = useCalculatriceOuverte();
+  return (
+    <button type="button" className={`${className}${ouverte ? " actif" : ""}`} onClick={basculerCalculatrice} aria-pressed={ouverte}
+      title={ouverte ? "Fermer la calculatrice" : "Ouvrir la calculatrice"} aria-label={ouverte ? "Fermer la calculatrice" : "Ouvrir la calculatrice"}>
+      <span aria-hidden="true">🧮</span><span className="bouton-calc-texte">Calculatrice</span>
+    </button>
+  );
+}
 
 // Le petit logo (une fiole) aux couleurs du site.
 export function Logo({ taille = 28 }) {
@@ -82,6 +94,7 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
           </nav>
         )}
         {!large && <span style={{ flex: 1 }} />}
+        <BoutonCalculatrice />
         {!large && (
           <button onClick={() => setOuvert((o) => (o === "mobile" ? null : "mobile"))} aria-expanded={ouvert === "mobile"} className="et-mobile">
             <span aria-hidden="true">☰</span> Menu

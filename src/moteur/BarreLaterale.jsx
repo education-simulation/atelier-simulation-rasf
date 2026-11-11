@@ -5,7 +5,7 @@
 //  Les menus dépliés sont retenus au rechargement.
 // ============================================================
 import { useState } from "react";
-import { Logo } from "./EnTete";
+import { Logo, BoutonCalculatrice } from "./EnTete";
 
 const CLE = "atelier.barreLaterale.ouverts";
 
@@ -27,6 +27,7 @@ export function BarreLaterale({ titre, menus, activeId, menuActif, naviguer }) {
       <a href="?" className="bl-titre" onClick={(e) => { e.preventDefault(); naviguer(null); }} title="Retour à l'accueil">
         <Logo taille={26} /><span>{titre}</span>
       </a>
+      <BoutonCalculatrice className="bl-lien bl-calc" />
       <nav className="bl-nav">
         <button className="bl-lien" aria-current={!activeId ? "page" : undefined} onClick={() => naviguer(null)}>
           <span aria-hidden="true" className="bl-icone">🏠</span>Accueil
