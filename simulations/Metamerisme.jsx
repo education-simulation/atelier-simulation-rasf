@@ -13,10 +13,9 @@ import { ETAPES, IDEES, MOTS_CLES } from "../src/outils/exercice/metamerisme.js"
 
 // Ce que fait la simulation EN CE MOMENT (affiché dans le guide). À mettre à jour après chaque changement.
 const ETAT_ACTUEL = [
-  "🃏 Les deux cartes sont vierges : des cartes de contraste, moitié blanches, moitié noires, sans aucune couleur dessus.",
-  "💡 La cabine de lumière (en 3D) a trois boutons A, D65 et F11 sur son bord, mais ils ne fonctionnent pas encore : la lumière ne change pas.",
-  "🖐 Les cartes restent sur la table : on ne peut pas encore les déplacer.",
-  "📈 Aucun calcul de couleur ni aucun spectre pour l'instant.",
+  "🃏 Les deux cartes de contraste sont vierges et ne peuvent pas être déplacées.",
+  "💡 Les trois boutons de la cabine de lumière ne fonctionnent pas.",
+  "📈 Aucune distribution spectrale des illuminants, aucune courbe de réflectance spectrale.",
 ];
 
 // --- Survol : chaque objet s'entoure et affiche son nom (les mêmes mots que dans les mots clés) ---
