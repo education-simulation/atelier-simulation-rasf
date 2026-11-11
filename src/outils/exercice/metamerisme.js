@@ -242,7 +242,6 @@ export const OUTILS_SANS = [
       "🖥 la couleur à afficher à l'écran ;",
       "🎨 la fabrication d'une paire métamère calculée.",
     ],
-    conseil: "Vérifie-la : F11 doit avoir trois pics étroits (vers 435, 545 et 610 nm), et les deux cartes doivent être identiques sous D65.",
     // Le fichier construit : chargé s'il existe, puis montré (courbes) et vérifié automatiquement.
     equations: EQUATIONS,
     controlePaire,

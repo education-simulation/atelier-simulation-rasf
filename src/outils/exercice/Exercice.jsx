@@ -247,7 +247,7 @@ function AideOutil({ outil, fermer }) {
         {perso === "absent" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#f1f5f9", borderRadius: 10 }}>📭 <strong>Tes modèles n'existent pas encore.</strong> Fais l'étape 0 : ses éléments apparaîtront ici, vérifiés un par un, avec leurs courbes.</p>}
         {perso === "erreur" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10 }}>⚠️ <strong>Tes modèles contiennent une erreur</strong> et ne peuvent pas être lus. Demande à l'agent de la corriger.</p>}
         {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites des modèles :</strong> {outil.limites}</p>}
-        <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
+        {outil.conseil && <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>}
         {outil.equations && (
           <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
