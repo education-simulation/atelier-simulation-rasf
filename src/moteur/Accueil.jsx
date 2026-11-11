@@ -25,7 +25,7 @@ export function Accueil({ site, menus, naviguer }) {
         {menus.map((m, i) => {
           const large = (i % 4 === 0 || i % 4 === 3) ? 7 : 5;    // blocs alternés, comme une mosaïque
           return (
-            <section key={m.id} className="ab-niv" aria-label={m.label}
+            <section key={m.id} id={`menu-${m.id}`} className="ab-niv" aria-label={m.label}
               style={{ "--ab-fond": m.fond || "#2563eb", "--ab-ink": m.texte || "#ffffff", gridColumn: `span ${menus.length === 1 ? 12 : large}` }}>
               <span className="ab-abbr" aria-hidden="true">{m.id}</span>
               <h3>{m.label}</h3>

@@ -86,3 +86,12 @@ button { font-family: inherit; }
 .et-panneau-mobile { position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--bord); padding: 6px 12px 10px;
   max-height: calc(100vh - 52px); overflow-y: auto; }
 .et-titre-accordeon { font-weight: 800; font-size: 14.5px; padding: 9px 8px; }
+
+/* Fil d'Ariane, au-dessus du titre de chaque page : Accueil › Menu › Page */
+.fil-ariane { display: flex; flex-wrap: wrap; align-items: center; gap: 6px; max-width: 1100px; width: 100%; margin: 0 auto; padding: 14px 2rem 0; font-size: 13.5px; color: var(--texte2); }
+.fil-ariane a { color: var(--accent); font-weight: 700; text-decoration: none; }
+.fil-ariane a:hover { text-decoration: underline; }
+.fil-ariane [aria-current] { color: var(--texte2); }
+.fil-ariane + .barre-titre { padding-top: 6px; }
+.ab-niv { scroll-margin-top: 70px; }
+@media (max-width: 480px) { .fil-ariane { padding-left: 1rem; padding-right: 1rem; } }

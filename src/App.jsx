@@ -55,6 +55,12 @@ export default function App() {
     window.history.pushState(null, "", u.toString());
     setActiveId(id || null);
   }
+  // Fil d'Ariane : le menu de la page ramène à l'accueil, sur le bloc de ce menu.
+  const menuDeLaPage = sim && menus.find((m) => m.id === sim.menu);
+  function allerAuMenu(id) {
+    naviguer(null);
+    setTimeout(() => document.getElementById(`menu-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+  }
   function partager() {
     navigator.clipboard?.writeText(window.location.href).then(() => { setCopie(true); setTimeout(() => setCopie(false), 2000); });
   }
@@ -72,6 +78,17 @@ export default function App() {
       {estApercu && <Apercu />}
       <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />
       <main className="principal">
+        {titre && (
+          <nav aria-label="Fil d'Ariane" className="fil-ariane">
+            <a href="?" onClick={(e) => { e.preventDefault(); naviguer(null); }}>Accueil</a>
+            {menuDeLaPage && <>
+              <span aria-hidden="true">›</span>
+              <a href="?" onClick={(e) => { e.preventDefault(); allerAuMenu(menuDeLaPage.id); }}>{menuDeLaPage.label}</a>
+            </>}
+            <span aria-hidden="true">›</span>
+            <span aria-current="page">{titre}</span>
+          </nav>
+        )}
         {titre && (
           <div className="barre-titre">
             {sim && <span className="icone-sim" aria-hidden="true">{sim.icone}</span>}
