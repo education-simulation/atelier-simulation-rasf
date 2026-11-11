@@ -65,7 +65,7 @@ function genererEchantillon(typeKey = "pc") {
 // COMPOSANT PRINCIPAL
 // ============================================================
 export default function MasseVolumiqueHubbard() {
-  const [mode, setMode] = useState(() => localStorage.getItem("hubbard_pv_mode") || "guide");
+  const mode = "guide"; // Dans le modèle, la page s'ouvre toujours en parcours guidé (le mode « défi » n'est plus proposé).
   const [avecTemperature, setAvecTemperature] = useState(() => {
     const saved = localStorage.getItem("hubbard_pv_avec_temp");
     return saved !== null ? saved === "true" : true;
@@ -232,31 +232,6 @@ export default function MasseVolumiqueHubbard() {
             </p>
           </div>
 
-          {/* BOUTONS DE MODE */}
-          <div style={{ display: "flex", gap: 6, background: "#f1f5f9", padding: 4, borderRadius: 12 }}>
-            {[
-              { id: "guide", label: "🧭 Parcours guidé" },
-              { id: "defi", label: "🎯 Défi" },
-            ].map((btn) => (
-              <button
-                key={btn.id}
-                onClick={() => setMode(btn.id)}
-                style={{
-                  padding: "8px 14px",
-                  borderRadius: 8,
-                  border: "none",
-                  fontWeight: 700,
-                  fontSize: 13,
-                  cursor: "pointer",
-                  background: mode === btn.id ? "#b45309" : "transparent",
-                  color: mode === btn.id ? "#ffffff" : "#475569",
-                  transition: "all .15s ease",
-                }}
-              >
-                {btn.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         {/* TUILES HORIZONTALES DES MESURES ACQUISES */}

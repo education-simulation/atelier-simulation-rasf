@@ -130,7 +130,7 @@ function ecrireLocal(cle, v) {
 }
 
 export default function ExtraitSec() {
-  const [mode, setMode] = useState(() => lireLocal("es_mode", "guide"));
+  const mode = "guide"; // Dans le modèle, la page s'ouvre toujours en parcours guidé (le mode « défi » n'est plus proposé).
   const [echantillon, setEchantillon] = useState(() => { const e = lireLocal("es_echantillon", null); return e && produitDe(e) ? e : genererEchantillon(TYPE_DEFAUT); });
   const [guideState, setGuideState] = useState(() => {
     const g = lireLocal("es_guide", null);
@@ -207,23 +207,6 @@ export default function ExtraitSec() {
             </p>
           </div>
 
-          <div style={{ display: "flex", gap: 6, background: "#f1f5f9", padding: 4, borderRadius: 12 }}>
-            {[
-              { id: "guide", label: "🧭 Parcours guidé" },
-              { id: "defi", label: "🎯 Défi" },
-            ].map((btn) => (
-              <button
-                key={btn.id}
-                onClick={() => setMode(btn.id)}
-                style={{
-                  padding: "8px 14px", borderRadius: 8, border: "none", fontWeight: 700, fontSize: 13, cursor: "pointer",
-                  background: mode === btn.id ? "#b45309" : "transparent", color: mode === btn.id ? "#ffffff" : "#475569",
-                }}
-              >
-                {btn.label}
-              </button>
-            ))}
-          </div>
         </div>
 
         {mode === "guide" && (

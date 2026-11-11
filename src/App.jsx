@@ -36,7 +36,6 @@ const lireId = () => new URLSearchParams(window.location.search).get("sim");
 export default function App() {
   const menus = useMemo(() => construireMenus(SITE), []);
   const [activeId, setActiveId] = useState(lireId);
-  const [copie, setCopie] = useState(false);
   const sim = (SITE.pages || []).find((s) => s.id === activeId);
 
   useEffect(() => { document.documentElement.style.setProperty("--accent", SITE.couleur || "#0b4f94"); }, []);
@@ -61,9 +60,6 @@ export default function App() {
   function allerAuMenu(id) {
     naviguer(null);
     setTimeout(() => document.getElementById(`menu-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
-  }
-  function partager() {
-    navigator.clipboard?.writeText(window.location.href).then(() => { setCopie(true); setTimeout(() => setCopie(false), 2000); });
   }
 
   const Composant = sim && composant(sim.fichier);
@@ -99,7 +95,6 @@ export default function App() {
           <div className="barre-titre">
             {sim && <span className="icone-sim" aria-hidden="true">{sim.icone}</span>}
             <h1>{titre}</h1>
-            {sim && <button className="bouton-pilule" onClick={partager} style={copie ? { background: "#2a9d8f", color: "#fff" } : null}>{copie ? "✓ Lien copié !" : "🔗 Partager"}</button>}
           </div>
         )}
         <div className="zone-sim">{contenu}</div>
