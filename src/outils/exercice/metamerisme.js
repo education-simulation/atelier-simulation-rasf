@@ -63,11 +63,11 @@ export const ETAPES = [
     motsCles: ["sous la scène", "paire métamère", "ajoute", "retire", "encadré « À retenir »", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour ajouter la conclusion de la simulation, puis terminer la page.",
     indices: [
-      "Quelle forme ? Un encadré « À retenir », bien visible en bas de la page.",
+      "Quelle forme ? Un encadré « À retenir », bien visible sous la scène.",
       "Quel contenu ? La définition du métamérisme, et une conséquence pratique : comment comparer correctement deux couleurs.",
-      "Pour finir la page : le cadre de l'exercice (guide, mots clés, sauvegardes) n'a plus lieu d'être. Demande de le retirer pour ne garder que la simulation.",
+      "Pour montrer la simulation seule (en classe), inutile de toucher au code : le bouton « 🙈 Masquer le guide » cache le guide et les mots clés.",
     ],
-    proposition: "Ajoute un encadré « À retenir » sur le métamérisme, puis retire le cadre de l'exercice (<CadreExercice>).",
+    proposition: "Ajoute sous la scène un encadré « À retenir » sur le métamérisme.",
   },
 ];
 

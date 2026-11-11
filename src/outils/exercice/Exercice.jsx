@@ -484,6 +484,9 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   const groupesMots = sans ? motsCles.map((g) => ({ ...g, mots: g.mots.map(adapter) })) : motsCles.map((g) => ({ ...g, mots: g.mots.filter((m) => !(etapes.motsSansSeulement || []).includes(m)) }));
 
   const [mode, setMode] = useState(() => (lire(`${page}.mode`, "guide") === "libre" ? "libre" : "guide"));
+  // « 🙈 Masquer le guide » : la simulation seule, sans toucher au code (retenu au rechargement).
+  const [guideMasque, setGuideMasque] = useState(() => lire(`${page}.guideMasque`, false) === true);
+  const basculerGuide = () => setGuideMasque((v) => { ecrire(`${page}.guideMasque`, !v); return !v; });
   // Tout est repéré par le NUMÉRO de l'étape (0 = boîte à outils), pour ne rien décaler quand l'étape 0 apparaît.
   const [ouvertes, setOuvertes] = useState(() => lire(`${page}.ouvertesN`, [nums[0]]));
   const [recommencer, setRecommencer] = useState(false);
@@ -542,7 +545,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   };
   return (
     <div className="ex-conteneur">
-    <div className={`ex-cadre${motsCles.length ? " avec-colonne" : ""}`}>
+    <div className={`ex-cadre${motsCles.length && !guideMasque ? " avec-colonne" : ""}`}>
       <style>{`
         .ex-conteneur { container-type: inline-size; }
         .ex-cadre { max-width: 1360px; margin: 0 auto; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
@@ -562,13 +565,16 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
       `}</style>
       <div className="ex-principal">
         <div style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
-          <p style={{ margin: 0, flex: "1 1 320px" }}>À toi de construire la simulation du <strong>{sujet}</strong> en écrivant tes demandes à l'agent, dans Antigravity. Regarde d'abord l'<strong>état actuel</strong> dans le guide, puis aide-toi des <strong>mots clés</strong>.</p>
-          {estApercu && <button type="button" style={bouton("danger")} onClick={() => setRecommencer(true)}>↺ Tout recommencer</button>}
+          {!guideMasque && <p style={{ margin: 0, flex: "1 1 320px" }}>À toi de construire la simulation du <strong>{sujet}</strong> en écrivant tes demandes à l'agent, dans Antigravity. Regarde d'abord l'<strong>état actuel</strong> dans le guide, puis aide-toi des <strong>mots clés</strong>.</p>}
+          <span style={{ display: "flex", gap: 8, marginLeft: "auto", flexWrap: "wrap" }}>
+            <button type="button" style={bouton()} onClick={basculerGuide}>{guideMasque ? "🧭 Afficher le guide" : "🙈 Masquer le guide"}</button>
+            {estApercu && !guideMasque && <button type="button" style={bouton("danger")} onClick={() => setRecommencer(true)}>↺ Tout recommencer</button>}
+          </span>
         </div>
 
         {children}
 
-        <section aria-label="Construis cette simulation avec l'IA" style={{ background: "#f8fafc", border: "2px solid var(--accent)", borderRadius: 18, padding: "14px 16px", display: "grid", gap: 10 }}>
+        {!guideMasque && <section aria-label="Construis cette simulation avec l'IA" style={{ background: "#f8fafc", border: "2px solid var(--accent)", borderRadius: 18, padding: "14px 16px", display: "grid", gap: 10 }}>
           <div style={{ display: "flex", gap: 10, alignItems: "center", flexWrap: "wrap" }}>
             <strong style={{ fontSize: 17, flex: "1 1 auto" }}>🤖 Construis cette simulation avec l'IA</strong>
             <div role="tablist" aria-label="Mode" className="ex-bascule">
@@ -587,11 +593,11 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
                 precedente={premiereNonFaite(num) ?? nums[nums.indexOf(num) - 1]} outil={outils[0]} controle={num === 0 && sans ? controle : null} bloquee={bloqueeParControle(num)} />
             ))
             : <ExplorationLibre idees={idees} />}
-        </section>
+        </section>}
 
-        {estApercu && <Sauvegardes page={page} />}
+        {estApercu && !guideMasque && <Sauvegardes page={page} />}
       </div>
-      {groupesMots.length > 0 && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
+      {!guideMasque && groupesMots.length > 0 && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} />}
     </div>
     </div>
