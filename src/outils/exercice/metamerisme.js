@@ -1,7 +1,7 @@
 // ============================================================
 //  EXERCICE MÉTAMÉRISME — les étapes du parcours guidé et les idées de l'exploration libre.
 //  Les « indices » servent aussi de CRITÈRES à l'agent pour analyser les prompts de la personne.
-//  La « proposition » est une réponse possible, montrée seulement si la personne la demande :
+//  La « proposition » est une réponse possible, la PLUS COURTE qui marche (l'IA devine le reste),, montrée seulement si la personne la demande :
 //  l'agent ne doit JAMAIS s'en servir pour compléter un prompt.
 // ============================================================
 
@@ -11,11 +11,11 @@ export const ETAPES = [
     motsCles: ["dans la page Métamérisme", "sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [
-      "Nomme précisément les illuminants et ce qu'ils représentent (A : lampe à incandescence, D65 : lumière du jour, F11 : tube fluorescent) : l'IA saura quelle teinte donner à chacun.",
-      "Dis ce qui doit changer quand on clique : la teinte de TOUT l'intérieur de la cabine (fond, murs, sol, plafond), et un voyant allumé sur le bouton choisi.",
-      "Pense au confort : le choix est retenu quand on recharge la page. Et précise bien la page et l'endroit (« Dans la page Métamérisme, les boutons sur le bord de la cabine… »).",
+      "Nomme les boutons : A, D65 et F11. L'IA sait ce que sont ces illuminants, inutile de les décrire.",
+      "Dis en quelques mots ce que fait un clic : il éclaire la cabine avec cette lumière.",
+      "Commence par l'endroit : « Dans la page Métamérisme… ». Le reste (teinte exacte, voyant), l'IA le devine.",
     ],
-    proposition: "Dans la page Métamérisme, fais fonctionner les trois boutons A (lampe à incandescence), D65 (lumière du jour) et F11 (tube fluorescent) placés sur le bord de la cabine 3D : un clic choisit la lumière de la cabine, tout l'intérieur (fond, murs, sol, plafond) prend sa teinte, et un voyant s'allume sur le bouton actif. Retiens le choix au rechargement de la page.",
+    proposition: "Dans la page Métamérisme, fais fonctionner les boutons A, D65 et F11 : un clic éclaire la cabine avec cet illuminant.",
   },
 
   {
@@ -27,7 +27,7 @@ export const ETAPES = [
       "La carte 2 n'est pas choisie : elle est calculée pour former une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Le site a déjà un outil pour ça : src/outils/colorimetrie.js (fonction paireMetamere).",
       "Les couleurs affichées doivent être calculées à partir des spectres (réflectance spectrale de l'échantillon, distribution spectrale de la lumière, observateur CIE 1931), pas choisies à la main.",
     ],
-    proposition: "Dans la page Métamérisme, peins un échantillon au centre de chaque carte de contraste. Ajoute sous la scène une palette de quelques couleurs : un clic choisit la couleur de l'échantillon de la carte 1. L'échantillon de la carte 2 est calculé avec src/outils/colorimetrie.js (paireMetamere) pour former une paire métamère : même couleur sous D65, différente sous A. Les couleurs affichées sont calculées à partir des spectres, pas choisies à la main. Retiens le choix au rechargement.",
+    proposition: "Dans la page Métamérisme, ajoute une palette pour choisir la couleur de l'échantillon de la carte 1 ; la carte 2 est sa paire métamère, calculée avec colorimetrie.js.",
   },
   {
     titre: "Construire les distributions spectrales",
@@ -38,7 +38,7 @@ export const ETAPES = [
       "Quel graphique ? Les longueurs d'onde de 380 à 780 nm, des courbes superposées pour comparer les deux échantillons, une légende, et des axes nommés.",
       "Que doit-on remarquer ? Les deux réflectances se croisent en plusieurs points (marque-les avec leur longueur d'onde), et le graphique de la lumière change quand on clique sur A, D65 ou F11. Les données sont déjà dans src/outils/colorimetrie.js.",
     ],
-    proposition: "Dans la page Métamérisme, ajoute sous la scène deux graphiques de 380 à 780 nm, avec légende et axes nommés : à gauche, la distribution spectrale de l'illuminant choisi dans la cabine (il change quand on clique sur A, D65 ou F11) ; à droite, les réflectances spectrales des deux échantillons, superposées, avec leurs points de croisement marqués et leur longueur d'onde. Utilise les données de src/outils/colorimetrie.js.",
+    proposition: "Dans la page Métamérisme, affiche sous la scène la distribution spectrale de l'illuminant choisi et les réflectances spectrales des deux échantillons, avec colorimetrie.js.",
   },
   {
     titre: "Faire glisser les cartes dans la cabine",
@@ -49,7 +49,7 @@ export const ETAPES = [
       "Sur un petit écran, glisser est difficile : demande aussi un bouton qui place les deux cartes dans la cabine.",
       "Dis ce qui change quand une carte entre dans la cabine : sa couleur est recalculée sous la lumière de la cabine ; sur la table, elle reste à la lumière du jour (D65).",
     ],
-    proposition: "Dans la page Métamérisme, rends les deux cartes déplaçables : on peut les faire glisser, à la souris ou au doigt, de la table jusque dans la cabine. Ajoute aussi un bouton « Mettre les deux cartes dans la cabine » pour le téléphone. Dans la cabine, la couleur des échantillons est recalculée sous la lumière choisie ; sur la table, elle reste celle de la lumière du jour (D65).",
+    proposition: "Dans la page Métamérisme, rends les deux cartes déplaçables dans la cabine, à la souris et au doigt.",
   },
   {
     titre: "Mesurer l'écart de couleur",
@@ -60,7 +60,7 @@ export const ETAPES = [
       "Comment le rendre lisible ? Une valeur arrondie, une couleur verte, orange ou rouge selon que la différence se voit ou non, et une phrase d'explication.",
       "Pour comprendre pourquoi : surligne sur le graphique des réflectances la zone où les deux courbes s'écartent le plus, et fais le lien avec la lumière choisie.",
     ],
-    proposition: "Dans la page Métamérisme, affiche sous la scène l'écart ΔE*ab entre les deux échantillons, calculé avec src/outils/colorimetrie.js sous la lumière où se trouvent les cartes : valeur arrondie à 0,1, en vert sous 1, orange de 1 à 3, rouge au-delà, avec une phrase qui dit si la différence se voit. Sur le graphique des réflectances, surligne la zone où les deux courbes s'écartent le plus.",
+    proposition: "Dans la page Métamérisme, affiche l'écart ΔE*ab entre les deux cartes sous la lumière où elles sont, en vert, orange ou rouge.",
   },
   {
     titre: "Le message à retenir",
@@ -71,7 +71,7 @@ export const ETAPES = [
       "Quel contenu ? La définition du métamérisme, et une conséquence pratique : comment comparer correctement deux couleurs.",
       "Pour finir la page : le cadre de l'exercice (guide, mots clés, sauvegardes) n'a plus lieu d'être. Demande de le retirer pour ne garder que la simulation.",
     ],
-    proposition: "Dans la page Métamérisme, ajoute en bas un encadré « À retenir » : deux couleurs identiques sous une lumière peuvent être différentes sous une autre ; c'est le métamérisme. Pour comparer deux couleurs, on les regarde toujours sous la même lumière, et de préférence sous plusieurs lumières (cabine de lumière). Puis retire le cadre de l'exercice (<CadreExercice>) pour ne garder que la simulation.",
+    proposition: "Dans la page Métamérisme, ajoute un encadré « À retenir » sur le métamérisme, puis retire le cadre de l'exercice (<CadreExercice>).",
   },
 ];
 
