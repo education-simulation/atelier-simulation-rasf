@@ -210,6 +210,37 @@ function FenetreGraphiques({ outil, ids, fermer }) {
   );
 }
 
+// --- « 📄 PDF » : un document lisible (modèles, équations, limites, courbes, données) à enregistrer en PDF ---
+// Ouvre une page prête à imprimer ; la fenêtre d'impression du navigateur propose « Enregistrer au format PDF ».
+function imprimerModeles(outil, equations, boite) {
+  const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+  const courbes = boite ? [...boite.querySelectorAll("figure")].map((f) => {
+    const titre = f.closest("details")?.querySelector("summary strong")?.textContent || "";
+    const svg = f.querySelector("svg")?.outerHTML || "";
+    const legende = f.querySelector("figcaption")?.innerText || "";
+    return `<section class="courbe"><h3>${esc(titre)}</h3>${svg}<p class="petit">${esc(legende)}</p></section>`;
+  }).join("") : "";
+  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(outil.titre || outil.nom)}</title>
+<style>
+  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.55;font-size:13.5px}
+  h1{font-size:22px;margin:0 0 8px} h2{font-size:17px;margin:22px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px} h3{font-size:14px;margin:12px 0 4px}
+  .formules{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:15px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;margin:4px 0}
+  .petit{font-size:12px;color:#475569} .limites{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:6px 10px}
+  .courbe{break-inside:avoid} svg{width:100%;height:auto} @page{margin:14mm}
+</style></head><body>
+<h1>🧰 ${esc(outil.titre || outil.nom)}</h1>
+<p>${esc(outil.resume)}</p>
+<ul>${(outil.contenu || []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul>
+${outil.limites ? `<p class="limites">⚠️ <strong>Les limites des modèles :</strong> ${esc(outil.limites)}</p>` : ""}
+${equations?.length ? `<h2>🧮 Les équations</h2>${equations.map((q) => `<h3>${esc(q.titre)}</h3><div class="formules">${q.formules.map((f) => `<div>${esc(f)}</div>`).join("")}</div>${q.note ? `<p class="petit">${esc(q.note)}</p>` : ""}`).join("")}` : ""}
+${courbes ? `<h2>📈 Les courbes</h2>${courbes}` : ""}
+<script>window.onload=()=>setTimeout(()=>window.print(),300)</script>
+</body></html>`;
+  const w = window.open("", "_blank");
+  if (!w) return;
+  w.document.open(); w.document.write(html); w.document.close();
+}
+
 function AideOutil({ outil, fermer }) {
   const boite = useRef(null);
   // Modèle fourni : données tout de suite. Modèle construit : on charge le fichier (s'il existe) et on le vérifie.
@@ -255,6 +286,16 @@ function AideOutil({ outil, fermer }) {
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
               <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
               <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 {outil.equations ? "Les modèles mathématiques : de la réflectance à la couleur" : "Les équations de tes modèles"}</strong>
+              <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); imprimerModeles(outil, equations, boite.current); }}>📄 PDF</button>
+              {outil.code && <button type="button" style={bouton()} title="Le code des modèles, à redonner à l'agent" onClick={async (e) => {
+                e.preventDefault(); e.stopPropagation();
+                const texte = await outil.code.lire();
+                if (!texte) return;
+                const lien = document.createElement("a");
+                lien.href = URL.createObjectURL(new Blob([texte], { type: "text/javascript;charset=utf-8" }));
+                lien.download = outil.code.nom; lien.click();
+                setTimeout(() => URL.revokeObjectURL(lien.href), 1000);
+              }}>⬇️ JS</button>}
             </summary>
             <div style={{ display: "grid", gap: 10, paddingBottom: 10 }}>
               {equations.map((q) => (
@@ -277,19 +318,6 @@ function AideOutil({ outil, fermer }) {
             </div>
             {donnees.map((g) => <Graphique key={g.id} g={g} />)}
           </>
-        )}
-        {outil.telecharger && (outil.donnees || modele) && (
-          <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", marginTop: 12 }}>
-            <button type="button" style={bouton()} onClick={async () => {
-              const texte = await outil.telecharger.lire();
-              if (!texte) return;
-              const a = document.createElement("a");
-              a.href = URL.createObjectURL(new Blob([texte], { type: "text/javascript;charset=utf-8" }));
-              a.download = outil.telecharger.nom; a.click();
-              setTimeout(() => URL.revokeObjectURL(a.href), 1000);
-            }}>{outil.telecharger.libelle}</button>
-            <span style={{ fontSize: 12.5, color: "#64748b" }}>Pour t'en inspirer, ou le redonner à l'agent dans Antigravity.</span>
-          </div>
         )}
         <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : les modèles sont dans le fichier <code>{outil.chemin}</code>.</p>
       </div>
