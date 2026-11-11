@@ -34,22 +34,31 @@ function useCopie() {
 }
 
 // --- Mots clés : le vocabulaire qui rend un prompt précis (un clic copie le mot) ---
-function MotsCles({ groupes }) {
+function MotsCles({ groupes, surlignes = new Set(), pourEtapes = [] }) {
   const [copie, copier] = useCopie();
   return (
     <aside className="ex-mots" aria-label="Mots clés pour un prompt précis">
       <strong style={{ display: "block", fontSize: 15, marginBottom: 2 }}>🔑 Mots clés pour un prompt précis</strong>
       <span style={{ display: "block", fontSize: 12.5, color: "#64748b", marginBottom: 8 }}>Utilise-les dans tes demandes à l'agent. Un clic copie le mot.</span>
+      {pourEtapes.length > 0 && (
+        <span style={{ display: "block", fontSize: 12.5, fontWeight: 800, color: "#854d0e", background: "#fef9c3", border: "1px solid #fde047", borderRadius: 8, padding: "4px 8px", marginBottom: 8 }}>
+          🟡 En jaune : les mots utiles pour l'étape {pourEtapes.join(" et ")}
+        </span>
+      )}
       <div style={{ display: "grid", gap: 10 }}>
         {groupes.map((g) => (
           <div key={g.titre}>
             <div style={{ fontWeight: 800, fontSize: 13.5, marginBottom: 4 }}>{g.titre}</div>
             <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
-              {g.mots.map((m) => (
-                <button key={m} type="button" onClick={() => copier(m, m)} title="Copier"
-                  style={{ border: "1px solid #c7d2fe", background: copie === m ? "#4f46e5" : "#fff", color: copie === m ? "#fff" : "#312e81",
-                    borderRadius: 999, padding: "3px 10px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>{copie === m ? "✓ copié" : m}</button>
-              ))}
+              {g.mots.map((m) => {
+                const s = surlignes.has(m), attenue = surlignes.size > 0 && !s;
+                return (
+                  <button key={m} type="button" onClick={() => copier(m, m)} title="Copier"
+                    style={{ border: `1px solid ${s ? "#eab308" : "#c7d2fe"}`, background: copie === m ? "#4f46e5" : s ? "#fde047" : "#fff",
+                      color: copie === m ? "#fff" : s ? "#422006" : "#312e81", opacity: attenue ? 0.55 : 1, boxShadow: s ? "0 1px 3px rgba(161,98,7,.35)" : "none",
+                      borderRadius: 999, padding: "3px 10px", fontSize: 12.5, fontWeight: s ? 800 : 700, cursor: "pointer", transition: "background .2s, opacity .2s" }}>{copie === m ? "✓ copié" : m}</button>
+                );
+              })}
             </div>
           </div>
         ))}
@@ -235,6 +244,11 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
       setOuvertes((o) => { const m = [...o.filter((x) => x !== i), ...(i + 1 < etapes.length && !o.includes(i + 1) ? [i + 1] : [])]; ecrire(`${page}.ouvertes`, m); return m; });
     }
   };
+  // Étapes dont on surligne les mots clés : celles qui sont ouvertes (et déverrouillées), sinon l'étape en cours.
+  const verrouillee = (i) => i > 0 && !faites.includes(i - 1);
+  const ouvertesLibres = ouvertes.filter((i) => i < etapes.length && !verrouillee(i)).sort((a, b) => a - b);
+  const enCours = etapes.findIndex((_, i) => !faites.includes(i));
+  const actives = mode !== "guide" ? [] : ouvertesLibres.length ? ouvertesLibres : enCours >= 0 ? [enCours] : [];
   const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); ecrire(`${page}.faites`, []); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
 
   return (
@@ -282,7 +296,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
 
         {estApercu && <Sauvegardes page={page} />}
       </div>
-      {motsCles.length > 0 && <MotsCles groupes={motsCles} />}
+      {motsCles.length > 0 && <MotsCles groupes={motsCles} surlignes={new Set(actives.flatMap((i) => etapes[i].motsCles || []))} pourEtapes={actives.map((i) => i + 1)} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} />}
     </div>
     </div>

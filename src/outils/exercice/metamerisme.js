@@ -8,6 +8,7 @@
 export const ETAPES = [
   {
     titre: "Faire fonctionner les boutons des illuminants",
+    motsCles: ["dans la page Métamérisme", "sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [
       "Nomme précisément les illuminants et ce qu'ils représentent (A : lampe à incandescence, D65 : lumière du jour, F11 : tube fluorescent) : l'IA saura quelle teinte donner à chacun.",
@@ -19,6 +20,7 @@ export const ETAPES = [
 
   {
     titre: "Faire glisser les cartes dans la cabine",
+    motsCles: ["dans la page Métamérisme", "carte de contraste", "cabine de lumière 3D", "un bouton", "rends déplaçable", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour que l'on puisse déplacer les deux cartes de la table jusque dans la cabine.",
     indices: [
       "Comment déplace-t-on les cartes ? Pense à la souris ET au doigt (tablette, téléphone).",
@@ -29,6 +31,7 @@ export const ETAPES = [
   },
   {
     titre: "Calculer les couleurs à partir des spectres",
+    motsCles: ["sur chaque carte", "sous la scène", "échantillon", "carte de contraste", "observateur CIE 1931", "illuminant A", "illuminant D65", "paire métamère", "écart ΔE*ab", "calcule à partir des spectres", "calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "valeur arrondie", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour peindre un échantillon sur chaque carte, avec des couleurs calculées (et non choisies à la main) : identiques à la lumière du jour, différentes sous l'illuminant A.",
     indices: [
       "Les cartes sont vierges (cartes de contraste noir et blanc) : demande d'y peindre un échantillon de couleur sur chacune. Et à partir de quoi calcule-t-on sa couleur ? Des spectres (de la lumière et de l'échantillon) et de l'observateur CIE 1931 : le site a déjà un outil pour ça, src/outils/colorimetrie.js.",
@@ -39,6 +42,7 @@ export const ETAPES = [
   },
   {
     titre: "Montrer les spectres des illuminants",
+    motsCles: ["dans une fenêtre (popup)", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "affiche", "graphique de 380 à 780 nm", "courbes superposées", "légende", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour afficher, dans une fenêtre, les spectres des trois illuminants.",
     indices: [
       "Où les afficher ? Par exemple un bouton qui ouvre une fenêtre (popup), pour ne pas encombrer la page.",
@@ -49,6 +53,7 @@ export const ETAPES = [
   },
   {
     titre: "Montrer les spectres des deux cartes",
+    motsCles: ["dans une fenêtre (popup)", "un bouton", "carte de contraste", "spectre de réflexion", "illuminant A", "affiche", "surligne", "graphique de 380 à 780 nm", "courbes superposées", "zone surlignée", "légende", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour afficher les spectres de réflexion des deux cartes et faire comprendre pourquoi elles paraissent différentes sous A.",
     indices: [
       "Les deux spectres doivent être superposés sur le même graphique, pour pouvoir les comparer.",
@@ -59,11 +64,12 @@ export const ETAPES = [
   },
   {
     titre: "Le message à retenir",
+    motsCles: ["sous la scène", "paire métamère", "ajoute", "retire", "encadré « À retenir »", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour ajouter la conclusion de la simulation, puis terminer la page.",
     indices: [
       "Quelle forme ? Un encadré « À retenir », bien visible en bas de la page.",
       "Quel contenu ? La définition du métamérisme, et une conséquence pratique : comment comparer correctement deux couleurs.",
-      "Pour finir la page : le cadre de l'exercice (guide, journal, sauvegardes) n'a plus lieu d'être. Demande de le retirer pour ne garder que la simulation.",
+      "Pour finir la page : le cadre de l'exercice (guide, mots clés, sauvegardes) n'a plus lieu d'être. Demande de le retirer pour ne garder que la simulation.",
     ],
     proposition: "Dans la page Métamérisme, ajoute en bas un encadré « À retenir » : deux couleurs identiques sous une lumière peuvent être différentes sous une autre ; c'est le métamérisme. Pour comparer deux couleurs, on les regarde toujours sous la même lumière, et de préférence sous plusieurs lumières (cabine de lumière). Puis retire le cadre de l'exercice (<CadreExercice>) pour ne garder que la simulation.",
   },
@@ -79,9 +85,9 @@ export const IDEES = [
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
   { titre: "📍 Où ?", mots: ["dans la page Métamérisme", "sur le bord de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
-  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "spectre de réflexion", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
+  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "spectre de réflexion", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
   { titre: "🛠 Les actions", mots: ["ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
-  { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
+  { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "encadré « À retenir »", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
   { titre: "✅ Les exigences", mots: ["calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
 ];
