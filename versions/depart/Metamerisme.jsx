@@ -85,6 +85,18 @@ function Cabine({ style }) {
   );
 }
 
+// --- Un soleil simple au-dessus des cartes : la table est à la lumière du jour (D65) ---
+function Soleil({ style }) {
+  return (
+    <svg viewBox="-50 -50 100 100" aria-hidden="true" style={{ position: "absolute", width: "clamp(44px, 8%, 70px)", ...style }}>
+      {Array.from({ length: 12 }, (_, i) => (
+        <line key={i} x1="0" y1="-30" x2="0" y2="-44" stroke="#f59e0b" strokeWidth="5" strokeLinecap="round" transform={`rotate(${i * 30})`} />
+      ))}
+      <circle r="22" fill="#fbbf24" stroke="#f59e0b" strokeWidth="3" />
+    </svg>
+  );
+}
+
 // --- La scène : la table à la lumière du jour, deux cartes vierges, la cabine ---
 function Scene() {
   return (
@@ -92,7 +104,8 @@ function Scene() {
       style={{ position: "relative", height: "clamp(260px, 40vw, 380px)", borderRadius: 18, overflow: "hidden",
         background: "linear-gradient(#eef2f7 0 70%, #d6c3a5 70% 100%)", border: "1px solid #d5dfeb" }}>
       <style>{STYLE_SURVOL}</style>
-      <span style={{ position: "absolute", left: "3%", top: "6%", fontSize: 13, fontWeight: 800, color: "#475569" }}>☀️ Table, à la lumière du jour</span>
+      <span style={{ position: "absolute", left: "3%", top: "6%", fontSize: 13, fontWeight: 800, color: "#475569" }}>Table, à la lumière du jour</span>
+      <Soleil style={{ left: "13%", top: "15%" }} />
       <CarteContraste numero={1} style={{ left: "6%", top: "40%" }} />
       <CarteContraste numero={2} style={{ left: "21%", top: "40%" }} />
       <Cabine style={{ right: "4%", top: "7%", width: "min(53%, 430px)" }} />

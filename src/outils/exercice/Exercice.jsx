@@ -92,17 +92,17 @@ function BoiteOutils({ page, avec, outils, choix }) {
   const o = outils?.[0];
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 13.5, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "6px 10px" }}>
-      <span style={{ fontWeight: 800 }}>🧰 Données de couleur</span>
+      <span style={{ fontWeight: 800 }}>🧰 Modèle couleur</span>
       {choix && (
-        <div role="tablist" aria-label="Données de couleur" className="ex-bascule ex-bascule-petite">
-          <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Fournies</button>
+        <div role="tablist" aria-label="Modèle couleur" className="ex-bascule ex-bascule-petite">
+          <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Données fournies (par défaut)</button>
           <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 Je les construis</button>
         </div>
       )}
       {message && <span>{message}</span>}
       {o && (
         <button type="button" onClick={() => setAide(o)} style={{ marginLeft: "auto", border: "none", background: "none", padding: "4px 2px", font: "inherit", fontSize: 13.5, fontWeight: 700, color: "var(--accent)", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          ❓ À quoi sert {o.nom} ?
+          ❓ Voir le modèle
         </button>
       )}
       {aide && <AideOutil outil={aide} fermer={() => setAide(null)} />}
@@ -175,10 +175,10 @@ function AideOutil({ outil, fermer }) {
   return createPortal(
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
       style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
-      <div ref={boite} role="dialog" aria-label={`À quoi sert ${outil.nom} ?`}
+      <div ref={boite} role="dialog" aria-label={outil.titre || outil.nom}
         style={{ background: "#fff", borderRadius: 18, width: outil.donnees ? "min(760px, 100%)" : "min(520px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <strong style={{ fontSize: 18, flex: 1 }}>🧰 À quoi sert <code>{outil.nom}</code> ?</strong>
+          <strong style={{ fontSize: 18, flex: 1 }}>🧰 {outil.titre || outil.nom}</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
@@ -213,7 +213,7 @@ function AideOutil({ outil, fermer }) {
             {donnees.map((g) => <Graphique key={g.id} g={g} />)}
           </>
         )}
-        <p style={{ margin: "8px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 {outil.chemin}</p>
+        <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : le modèle est dans le fichier <code>{outil.chemin}</code>.</p>
       </div>
     </div>,
     document.body,
