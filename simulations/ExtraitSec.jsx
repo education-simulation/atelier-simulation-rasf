@@ -215,12 +215,13 @@ export default function ExtraitSec() {
               <span style={{ fontSize: 12, fontWeight: 800, color: "#b45309", textTransform: "uppercase", letterSpacing: 0.5 }}>
                 📊 Mesures & données acquises :
               </span>
-              <label style={{ fontSize: 12, color: "#475569", display: "flex", alignItems: "center", gap: 6 }}>
-                Produit :
+              <label style={{ fontSize: 14, fontWeight: 800, color: "#7c2d12", display: "flex", alignItems: "center", gap: 8,
+                background: "#fff7ed", border: "2px solid #f59e0b", borderRadius: 12, padding: "6px 10px" }}>
+                🧪 Produit étudié :
                 <select
                   value={echantillon.typeKey}
                   onChange={(ev) => resetGuide(ev.target.value)}
-                  style={{ fontSize: 12, padding: "3px 6px", borderRadius: 6, border: "1px solid #cbd5e1", background: "#fff" }}
+                  style={{ fontSize: 14.5, fontWeight: 700, padding: "6px 10px", borderRadius: 8, border: "1.5px solid #b45309", background: "#fff", color: "#7c2d12", cursor: "pointer" }}
                 >
                   {Object.entries(PRODUITS).map(([k, p]) => <option key={k} value={k}>{p.nom}</option>)}
                 </select>
