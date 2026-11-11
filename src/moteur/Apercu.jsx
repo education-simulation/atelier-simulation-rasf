@@ -19,10 +19,10 @@ const ETAPES = [
 const DOSSIER = typeof __DOSSIER_DU_SITE__ !== "undefined" ? __DOSSIER_DU_SITE__ : "";
 
 // Icône « escalier » des étapes (pas d'émoji escalier : 🪜 est une échelle).
-function Escalier({ taille = 24, couleur = "#fff" }) {
+function Escalier({ taille = 32, couleur = "#fff" }) {
   return (
-    <svg width={taille} height={taille} viewBox="0 0 24 24" aria-hidden="true" style={{ display: "inline-block", verticalAlign: "-4px" }}>
-      <path d="M3 20h5v-4h4v-4h4V8h5" fill="none" stroke={couleur} strokeWidth="2.4" strokeLinejoin="round" strokeLinecap="round" />
+    <svg width={taille} height={taille} viewBox="0 0 24 24" aria-hidden="true" style={{ display: "block" }}>
+      <path d="M2.5 20.5h6.5v-7h6.5v-7h6" fill="none" stroke={couleur} strokeWidth="2.6" strokeLinejoin="round" strokeLinecap="round" />
     </svg>
   );
 }
@@ -73,7 +73,7 @@ export function Apercu() {
             <div className="volet-etapes" role="dialog" aria-label="Les étapes de ton site"
               style={{ position: "absolute", right: 66, bottom: 0, width: "min(380px, calc(100vw - 110px))", maxHeight: "70vh", overflow: "auto",
                 borderRadius: 14, border: "1px solid #cbd5e1", boxShadow: "0 10px 25px rgba(0,0,0,.2)", padding: "10px 14px" }}>
-              <strong><Escalier taille={18} couleur="#336fa3" /> Les étapes de ton site</strong>
+              <strong style={{ display: "flex", alignItems: "center", gap: 6 }}><Escalier taille={20} couleur="#336fa3" /> Les étapes de ton site</strong>
               <span style={{ display: "block", fontSize: 12, color: "#64748b", marginTop: 2 }}>🔒 Ce bouton n'est visible que sur ton ordinateur.</span>
               <ol start="0">
                 {ETAPES.map(([titre, detail], i) => (
