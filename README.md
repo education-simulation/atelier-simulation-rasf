@@ -1,6 +1,6 @@
 # Atelier simulation RASF
 
-Un site de simulations pour tes élèves, simple et gratuit, que tu construis en parlant à l'agent d'**Antigravity** (l'application gratuite de Google, avec ton compte Google d'établissement), et que **Vercel** met en ligne gratuitement.
+Un site de simulations, simple et gratuit, que tu construis en parlant à l'agent d'**Antigravity** (l'application gratuite de Google, avec ton compte Google d'établissement), et que **Vercel** met en ligne gratuitement.
 
 Ton site démarre avec :
 - un menu **Exemples**, rempli de pages toutes faites : masse volumique, extrait sec, cohésion de la matière, un jeu, et un exemple simple pour t'entraîner (instabilité des milieux dispersés) ;

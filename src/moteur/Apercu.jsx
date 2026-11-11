@@ -41,7 +41,7 @@ export function Apercu() {
     <>
       <div className="bandeau-apercu">
         <strong>👀 Aperçu de ton site, sur ton ordinateur.</strong> Cette page affiche le code rangé dans le dossier
-        {DOSSIER ? <> <code className="bandeau-dossier">{DOSSIER}</code></> : " de ton site"}. Toi seul la vois : tes élèves verront la version en ligne.
+        {DOSSIER ? <> <code className="bandeau-dossier">{DOSSIER}</code></> : " de ton site"}. Toi seul la vois : le site en ligne, lui, est visible par tous.
       </div>
       {charge && faites.size < ETAPES.length && (
         <div style={{ position: "fixed", bottom: 84, right: 20, zIndex: 9999 }}>

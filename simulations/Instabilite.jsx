@@ -3,7 +3,7 @@
 //  Exemple VOLONTAIREMENT SIMPLE de l'Atelier simulation RASF : il sert à t'entraîner.
 //  Demande par exemple à ton agent :
 //    « Dans Instabilité, ajoute la coalescence quand les gouttes se touchent. »
-//    « Ajoute une question à l'élève : que faut-il changer pour stabiliser l'émulsion ? »
+//    « Ajoute une question : que faut-il changer pour stabiliser l'émulsion ? »
 //    « Ajoute un graphique de la vitesse en fonction du rayon des gouttes. »
 //  Modèle : loi de Stokes, v = 2·r²·Δρ·g / (9·η)  (gouttes isolées, sans interactions).
 // ============================================================
@@ -71,7 +71,7 @@ export default function Instabilite() {
     <div style={{ maxWidth: 940, margin: "0 auto", display: "grid", gap: 16 }}>
       <div role="note" style={{ background: "#fff7e6", border: "2px solid #f5a31a", borderRadius: 16, padding: "12px 16px", color: "#5c3a00" }}>
         <strong>🏋️ Entraîne-toi : améliore cet exemple !</strong> Il est volontairement simple. Demande par exemple à ton agent :
-        « Dans Instabilité, ajoute la coalescence des gouttes » ou « ajoute une question pour l'élève ».
+        « Dans Instabilité, ajoute la coalescence des gouttes » ou « ajoute une question à résoudre ».
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(140px, 200px) 1fr", gap: 18, alignItems: "start" }}>

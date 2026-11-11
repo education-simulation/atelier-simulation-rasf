@@ -25,7 +25,7 @@ const SIZES = {
 //     `overscroll-contain`. Sans lui, iPadOS reprend le geste et fait rebondir
 //     la page derrière, qui n'est pourtant plus censée bouger.
 // Le pincer-pour-zoomer reste possible : on ne pose PAS `touch-action: none`,
-// parce qu'un élève doit pouvoir agrandir un INCI écrit en 11 px.
+// parce qu'on doit pouvoir agrandir un INCI écrit en 11 px.
 //
 // LA FENÊTRE DOIT TENIR ENTIÈRE DANS L'ÉCRAN (Marco, 08/09/2026). Sur un écran
 // bas — portable, tablette couchée — les 14 px d'en-tête, 20 px de corps et
@@ -40,7 +40,7 @@ const SIZES = {
 // superposer — le pavé de saisie d'une masse par-dessus une fabrication, une
 // confirmation par-dessus un formulaire. Sans cette pile, CHAQUE fenêtre
 // ouverte écoute Échap sur le document, et une seule frappe les ferme TOUTES :
-// l'élève annule une pesée et perd la fabrication avec. Seule la fenêtre du
+// on annule une pesée et perd la fabrication avec. Seule la fenêtre du
 // dessus répond donc à Échap. (Le clic sur le voile n'a jamais eu le problème :
 // chaque voile est son propre élément.)
 const pileOuverte = []

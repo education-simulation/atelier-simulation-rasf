@@ -46,12 +46,12 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 
 1. **Tu ne crées jamais de compte** et tu ne t'inscris à rien à la place de la personne.
 2. **Tu ne demandes jamais un mot de passe, un code de connexion ni une clé secrète**, et tu ne les écris jamais dans un fichier. Si la personne en colle un dans la conversation, dis-lui de le changer.
-3. **Tu remets le site en ligne à la fin de chaque étape qui le change** (commande de la section 0) : le site des élèves suit ainsi l'aperçu.
+3. **Tu remets le site en ligne à la fin de chaque étape qui le change** (commande de la section 0) : le site en ligne suit ainsi l'aperçu.
 4. Tu ne supprimes jamais un projet Vercel et tu ne touches pas aux réglages du compte Vercel.
 5. Tu ne modifies **ni** `src/`, **ni** `public/`, **ni** `index.html`, `vite.config.js`, `package.json`, sauf si la personne le demande explicitement.
 6. **Tu n'ajoutes aucune bibliothèque** (`npm install <quelque chose>`) sans l'accord de la personne : une page s'écrit avec React seul (la calculatrice et les formules de `src/outils/` sont déjà là, tu peux t'en servir).
 7. **La mention de Nils Aronssohn reste** dans le pied de page et la page « À propos » : la présentation du site vient de sa « Paillasse virtuelle », avec son autorisation.
-8. Aucune donnée personnelle d'élève (nom, note, photo) dans ce site : il est **public**. Il n'y a pas de comptes élèves.
+8. Aucune donnée personnelle (nom, note, photo) dans ce site : il est **public**. Il n'y a pas de comptes.
 
 ## 3. Comment le site est fait
 
@@ -72,7 +72,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - **Ajouter ou remplacer une page, en deux gestes :**
   1. créer (ou réécrire) `simulations/<NomEnMajuscule>.jsx` : un composant React `export default function …`, styles écrits dans le fichier (`style={{ … }}`), sans nouvelle bibliothèque. Prends modèle sur l'exemple le plus proche : `Instabilite.jsx` (curseurs + animation), `ForcesIntermoleculaires.jsx` (onglets + schémas SVG), `JeuEquations.jsx` (jeu avec score), `ExtraitSec.jsx` (parcours guidé avec calculatrice et formules) ;
   2. dans `pages` de `site.config.js` : `{ id, titre, icone, menu, fichier }` (`menu` = l'`id` d'un menu, `fichier` = le nom du fichier sans `.jsx`). Quand une page vide est remplacée, supprime son ancien fichier `PageXn.jsx` s'il n'est plus utilisé.
-- Une page pour élèves : des réglages (curseurs, boutons), un résultat qui change aussitôt (nombre, schéma, couleur), une consigne courte. Les nombres s'affichent à la française (`toLocaleString("fr-FR")`).
+- Une bonne page : des réglages (curseurs, boutons), un résultat qui change aussitôt (nombre, schéma, couleur), une consigne courte. Les nombres s'affichent à la française (`toLocaleString("fr-FR")`).
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
 - **Trois styles**, choisis par `style` dans `site.config.js` : `"blocs"` (menus en haut, accueil en blocs de couleur), `"lateral"` (barre sombre à gauche, accueil en cartes ; sur téléphone, menu en haut), `"liste"` (menus en haut, accueil en liste). Changer de style = changer ce seul mot. Les pages, les menus et le fil d'Ariane restent les mêmes. Le champ facultatif `description` d'une page s'affiche sur l'accueil des styles `lateral` et `liste` : écris-en une courte pour chaque nouvelle page.
 
@@ -102,11 +102,11 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 ### Étape 0 — Présenter, puis copier le modèle sur l'ordinateur (une seule fois)
 - **D'abord, une courte présentation** (texte seul, sans aucune action), à peu près celle-ci :
 
-  > Bonjour ! Ensemble, on va créer ton site de simulations pour tes élèves, en 15 minutes environ. Voici ce qui va se passer :
+  > Bonjour ! Ensemble, on va créer ton site de simulations, en 15 minutes environ. Voici ce qui va se passer :
   > 1. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom).
   > 2. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
   > 3. Tu vois ton site, sur ton ordinateur seulement.
-  > 4. On le met en ligne, gratuitement, à une adresse que tu donneras à tes élèves.
+  > 4. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
   > 5. Je te propose des idées pour la suite.
   >
   > Des petites fenêtres vont te demander la permission avant chacune de mes actions : je te dirai à chaque fois sur quel choix cliquer.
@@ -148,7 +148,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
 ### Étape 1 — Faire connaissance (questions à cliquer, une par une)
 Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
-1. **Le nom de ton site ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse de mes élèves », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mon atelier de simulations »), puis Autre.
+1. **Le nom de ton site ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse virtuelle », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mon atelier de simulations »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
 3. **Le style de ton site ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
 4. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement).
@@ -164,7 +164,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   >
   > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Exemples** montre ce qu'on peut faire (simulations, calculatrice, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant. Le menu **Outils** contient un diagramme ternaire, une calculatrice et un graphe vierge, prêts à servir.
   >
-  > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel, pour tes élèves.
+  > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel.
   >
   > **Les deux boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
   > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
@@ -179,19 +179,19 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   « Clique sur ce lien. Si tu n'as pas encore de compte Vercel, clique **Continue with Google** et choisis ton compte d'établissement (c'est gratuit, offre « Hobby »). Vérifie que le code affiché est le même que celui-ci, puis clique **Confirm** (ou « Allow »). Reviens ensuite ici et choisis « C'est fait ». »
   Pose la question à choix : C'est fait · Je suis bloqué·e. Tu ne crées pas le compte à sa place et tu ne demandes aucun mot de passe.
 - **Mise en ligne** : `npm run build && npx --yes vercel@latest deploy --prod --yes`
-  À la fin, Vercel affiche l'adresse du site, de la forme `https://<nom-du-dossier>.vercel.app` (ligne « Production » ou « Aliased »). Garde **cette adresse courte** : c'est celle du site pour les élèves. Ajoute-la dans `PROGRESSION.md` (« Adresse du site : … »).
+  À la fin, Vercel affiche l'adresse du site, de la forme `https://<nom-du-dossier>.vercel.app` (ligne « Production » ou « Aliased »). Garde **cette adresse courte** : c'est celle du site en ligne. Ajoute-la dans `PROGRESSION.md` (« Adresse du site : … »).
 - **Vérification :** « Ton site est en ligne : <adresse courte>. » puis question à choix : Je le vois · Je ne le vois pas.
 - Ce que tu dois cliquer maintenant : le lien de connexion, puis « Confirm ».
 
 ### Étape 4 — Ouvrir le site sur le téléphone
-- Propose de l'ouvrir aussi sur son téléphone (en tapant l'adresse courte) pour voir ce que verront les élèves. Rappelle que les boutons ronds et le bandeau bleu n'apparaissent pas en ligne.
+- Propose de l'ouvrir aussi sur son téléphone (en tapant l'adresse courte) pour voir le site comme tout le monde le verra. Rappelle que les boutons ronds et le bandeau bleu n'apparaissent pas en ligne.
 - Ce que tu dois cliquer maintenant : rien, ouvre l'adresse sur ton téléphone si tu veux.
 
 ### Étape 5 — Choisir la suite (des idées à cliquer)
-Beaucoup de profs ne savent pas par où commencer ; d'autres savent déjà. **Ne pose pas de question ouverte** (« que doivent manipuler tes élèves ? ») : propose des idées, en une question à choix :
+Beaucoup de profs ne savent pas par où commencer ; d'autres savent déjà. **Ne pose pas de question ouverte** (« que veux-tu faire manipuler ? ») : propose des idées, en une question à choix :
 « Et maintenant, que veux-tu faire ? »
 → **M'entraîner sur l'exemple Instabilité** · **Remplacer la page A1 par une simulation de mon cours** · **Renommer les menus A, B et C** · **J'ai déjà mon idée** (écris-la).
-- **M'entraîner sur l'exemple Instabilité** : propose 3 améliorations à cliquer (« ajouter la coalescence des gouttes », « ajouter une question pour l'élève », « ajouter un graphique vitesse / rayon »), fais-en une, montre-la.
+- **M'entraîner sur l'exemple Instabilité** : propose 3 améliorations à cliquer (« ajouter la coalescence des gouttes », « ajouter une question à résoudre », « ajouter un graphique vitesse / rayon »), fais-en une, montre-la.
 - **Remplacer la page A1** : demande le thème en une question à choix avec 3 idées courantes (ex. « dilution d'une solution », « dosage par étalonnage », « titrage acide-base ») et Autre ; puis demande si la personne a un document de cours à te donner (elle peut glisser un PDF ou une capture dans la conversation). Écris la page, renomme-la dans `site.config.js`.
 - **Renommer les menus** : une question par menu (3 idées + Autre + « Garder ce nom »).
 - Après chaque changement : le lien de l'aperçu, puis question à choix « Ça marche, on le met en ligne » · « Je veux le modifier ». Puis remise en ligne (commande de l'étape 3, sans la connexion), et coche l'étape 5.

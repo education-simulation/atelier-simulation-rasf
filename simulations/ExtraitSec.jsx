@@ -40,7 +40,7 @@ function genererEchantillon(typeKey = TYPE_DEFAUT) {
   if (!PRODUITS[typeKey]) typeKey = TYPE_DEFAUT;
   const p = PRODUITS[typeKey];
   // On retire jusqu'à ce que la 2e pesée diffère de plus de 1 mg et la 3e de moins de 1 mg :
-  // l'élève voit ainsi la masse « se stabiliser » à la 3e pesée.
+  // on voit ainsi la masse « se stabiliser » à la 3e pesée.
   let dernier = null;
   for (let essai = 0; essai < 1000; essai++) {
     const m0 = r4(1.8 + Math.random() * 0.6);

@@ -8,7 +8,7 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 //
 // POINTER EVENTS, JAMAIS LE DRAG HTML5 (fiche de décision 005). Le
 // glisser-déposer natif (`draggable` / `dragstart`) ne se déclenche PAS sur
-// écran tactile : il n'échoue pas bruyamment, il ne se passe rien, et l'élève
+// écran tactile : il n'échoue pas bruyamment, il ne se passe rien, et on
 // croit s'y être mal pris. Trois écrans du projet sont déjà inutilisables sur
 // tablette pour cette raison exacte. Les Pointer Events unifient souris, doigt
 // et stylet, et `setPointerCapture` garde le geste même quand le doigt sort de

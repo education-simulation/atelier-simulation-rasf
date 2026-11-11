@@ -2,7 +2,7 @@
 //  JEU : DÉFI CHRONO, ÉQUILIBRE LES ÉQUATIONS
 //  Exemple de jeu de l'Atelier simulation RASF.
 //  60 secondes pour équilibrer un maximum d'équations avec les boutons + et −.
-//  Le compteur d'atomes de chaque élément aide l'élève. Le meilleur score reste en mémoire.
+//  Le compteur d'atomes de chaque élément sert d'aide. Le meilleur score reste en mémoire.
 //  Idées à demander à ton agent : « ajoute un niveau difficile », « ajoute mes équations de TP ».
 // ============================================================
 import { useEffect, useMemo, useState } from "react";
