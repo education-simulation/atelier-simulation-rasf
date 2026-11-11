@@ -12,6 +12,7 @@ const MODELE_PERSO = import.meta.glob("../maColorimetrie.js");
 export const ETAPES = [
   {
     titre: "Faire fonctionner les boutons des illuminants",
+    graphiques: ["illuminants"], // bouton « 📈 Voir … » dans l'étape : courbes du modèle couleur choisi
     motsCles: ["sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [

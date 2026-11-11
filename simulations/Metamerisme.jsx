@@ -16,7 +16,7 @@ import { ETAPES, IDEES, MOTS_CLES } from "../src/outils/exercice/metamerisme.js"
 // Ce que fait la simulation EN CE MOMENT (affiché dans le guide). À mettre à jour après chaque changement.
 // Boîte à outils : true = on utilise colorimetrie.js (fournie) ; false = on construit la sienne à l'étape 0
 // (src/outils/maColorimetrie.js) et on n'utilise PAS colorimetrie.js. Choisi avec le bouton « 🧰 » du guide.
-const AVEC_COLORIMETRIE = true;
+const AVEC_COLORIMETRIE = false;
 
 // Étapes du parcours guidé VALIDÉES PAR L'IA (numéros 0 à 6 ; 0 = boîte à outils) : l'agent ajoute le numéro quand l'étape marche.
 const ETAPES_VALIDEES = [];

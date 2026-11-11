@@ -111,7 +111,7 @@ function BoiteOutils({ page, avec, outils, choix }) {
 }
 
 // --- Un graphique de courbes spectrales (380 à 780 nm), avec légende et téléchargement CSV ---
-function Graphique({ g }) {
+function Graphique({ g, ouvert = false }) {
   const L = 560, H = 220, mg = { g: 58, d: 10, h: 10, b: 32 };
   const max = Math.max(...g.series.flatMap((s) => s.valeurs)) * 1.05, min = Math.min(0, ...g.series.flatMap((s) => s.valeurs));
   const x = (l) => mg.g + ((l - 380) / 400) * (L - mg.g - mg.d);
@@ -119,7 +119,7 @@ function Graphique({ g }) {
   const pas = max > 20 ? 50 : max > 1.2 ? 0.5 : 0.2;
   const graduations = []; for (let v = 0; v <= max; v += pas) graduations.push(Number(v.toFixed(2)));
   return (
-    <details style={{ margin: "10px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
+    <details open={ouvert || undefined} style={{ margin: "10px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
       <summary style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
         <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
         <strong style={{ flex: 1, fontSize: 14.5 }}>{g.titre}</strong>
@@ -162,6 +162,39 @@ function telechargerCSV(nom, graphiques) {
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = `${nom}.csv`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
+// --- Fenêtre « 📈 Voir … » d'une étape : les courbes du modèle couleur choisi (par défaut ou construit) ---
+function FenetreGraphiques({ outil, ids, fermer }) {
+  const boite = useRef(null);
+  const [donnees, setDonnees] = useState(outil.donnees ? outil.donnees() : "chargement");
+  useEffect(() => {
+    const echap = (e) => { if (e.key === "Escape") fermer(); };
+    document.addEventListener("keydown", echap);
+    return () => document.removeEventListener("keydown", echap);
+  }, [fermer]);
+  useEffect(() => {
+    if (outil.donnees || !outil.charger) return;
+    outil.charger().then((m) => setDonnees(m ? outil.donneesDe(m) || "erreur" : "absent")).catch(() => setDonnees("erreur"));
+  }, [outil]);
+  const liste = Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : [];
+  return createPortal(
+    <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
+      style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
+      <div ref={boite} role="dialog" aria-label="Courbes du modèle couleur"
+        style={{ background: "#fff", borderRadius: 18, width: "min(760px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <strong style={{ fontSize: 18, flex: 1 }}>📈 {outil.donnees ? "Modèle par défaut" : "Ton modèle couleur"}</strong>
+          <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
+        </div>
+        {donnees === "chargement" && <p>⏳ Lecture de ton modèle…</p>}
+        {donnees === "absent" && <p>📭 Ton modèle n'existe pas encore : fais l'étape 0.</p>}
+        {donnees === "erreur" && <p>⚠️ Ton modèle contient une erreur : demande à l'agent de la corriger.</p>}
+        {liste.map((g) => <Graphique key={g.id} g={g} ouvert />)}
+      </div>
+    </div>,
+    document.body,
+  );
 }
 
 function AideOutil({ outil, fermer }) {
@@ -238,7 +271,8 @@ function AideOutil({ outil, fermer }) {
 }
 
 // --- Une étape du parcours guidé : section repliable ---
-function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher, precedente }) {
+function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher, precedente, outil }) {
+  const [voirCourbes, setVoirCourbes] = useState(false);
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, copier] = useCopie();
@@ -263,6 +297,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           <button type="button" style={{ ...bouton(), opacity: fini ? 0.5 : 1 }} disabled={fini} onClick={plusUn}>💡 {indices === 0 ? "Un indice" : fini ? "Plus d'indice" : "Un autre indice"}</button>
           <button type="button" style={bouton()} onClick={() => setVoirProposition((v) => !v)}>{voirProposition ? "🙈 Cacher la proposition" : "👀 Proposition de réponse"}</button>
+          {etape.graphiques && outil && <button type="button" style={bouton()} onClick={() => setVoirCourbes(true)}>📈 Voir les distributions spectrales</button>}
         </div>
         {indices > 0 && (
           <ol style={{ margin: "10px 0 0", padding: "8px 12px 8px 30px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, lineHeight: 1.55, fontSize: 14 }}>
@@ -276,6 +311,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
             <button type="button" style={bouton()} onClick={() => copier("p", etape.proposition)}>{copie === "p" ? "✓ Copié !" : "📋 Copier la proposition"}</button>
           </div>
         )}
+        {voirCourbes && <FenetreGraphiques outil={outil} ids={etape.graphiques} fermer={() => setVoirCourbes(false)} />}
         <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12, padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontSize: 14.5, fontWeight: 700,
           background: faite ? "#dcfce7" : "#f8fafc", border: `2px ${faite ? "solid #22c55e" : "dashed #94a3b8"}` }}>
           <input type="checkbox" checked={faite} disabled={parIA} onChange={cocher} style={{ width: 18, height: 18, accentColor: "#16a34a", cursor: parIA ? "default" : "pointer" }} />
@@ -493,7 +529,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             ? liste.map(({ num, etape }) => (
               <Etape key={num} page={page} numero={num} etape={etape} ouverte={ouvertes.includes(num)} basculer={() => basculer(num)}
                 faite={faites.includes(num)} parIA={parIA.includes(num)} verrouillee={verrouillee(num)} cocher={() => cocher(num)}
-                precedente={nums[nums.indexOf(num) - 1]} />
+                precedente={nums[nums.indexOf(num) - 1]} outil={outils[0]} />
             ))
             : <ExplorationLibre idees={idees} />}
         </section>
