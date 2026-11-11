@@ -49,7 +49,7 @@ function enregistrerStyle() {
 //   GET  /__atelier/versions?page=P      → liste des sauvegardes
 //   POST /__atelier/versions/sauver      { page, nom }      → copie la page actuelle
 //   POST /__atelier/versions/restaurer   { page, fichier }  → remet une sauvegarde (après avoir sauvé l'état actuel)
-//   POST /__atelier/versions/outils     { page, avec }     → écrit AVEC_COLORIMETRIE (true/false) dans la page
+//   POST /__atelier/versions/outils     { page, avec }     → écrit AVEC_COLORIMETRIE ou AVEC_MODELE (true/false) dans la page
 //   POST /__atelier/versions/zero        { page, garder?, modele? } → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel si garder)
 //                                         et, si demandé, vide journal/<Page>.json (après l'avoir sauvé)
 // Comme pour le style : seulement pendant l'aperçu ; le site en ligne n'écrit rien.
@@ -86,7 +86,7 @@ function versionsDesPages() {
           mkdirSync(d, { recursive: true })
           // Le modèle CONSTRUIT par la personne (ex. src/outils/maColorimetrie.js) suit la page : sauvegardé avec elle,
           // repris avec elle, et mis de côté par « Tout recommencer » (on repart d'un modèle vierge). Seuls les fichiers ma*.js.
-          const fichierModele = typeof modele === 'string' && /^src\/outils\/ma[A-Za-z0-9_-]*\.js$/.test(modele) ? join(dossier, modele) : null
+          const fichierModele = typeof modele === 'string' && /^src\/outils\/(ma|mon)[A-Za-z0-9_-]*\.js$/.test(modele) ? join(dossier, modele) : null
           const sauver = (etiquette) => {
             const f = `${horodatage()}-${etiquette}.jsx`; copyFileSync(actuel, join(d, f))
             if (fichierModele && existsSync(fichierModele)) copyFileSync(fichierModele, join(d, `${f}.modele.js`))
@@ -97,10 +97,11 @@ function versionsDesPages() {
             return repondre(res, 200, { fichier: sauver(etiquette) })
           }
           if (action === 'outils') {
-            // Choix de la boîte à outils, écrit dans la page : const AVEC_COLORIMETRIE = true | false;
-            const texte = readFileSync(actuel, 'utf8'), motif = /const AVEC_COLORIMETRIE = (true|false);/
-            if (!motif.test(texte)) return repondre(res, 400, { erreur: 'AVEC_COLORIMETRIE introuvable dans la page' })
-            writeFileSync(actuel, texte.replace(motif, `const AVEC_COLORIMETRIE = ${avec === false ? 'false' : 'true'};`))
+            // Choix du modèle (par défaut / à construire), écrit dans la page :
+            // const AVEC_COLORIMETRIE = true | false; (Métamérisme) ou const AVEC_MODELE = true | false; (autres exercices)
+            const texte = readFileSync(actuel, 'utf8'), motif = /const (AVEC_COLORIMETRIE|AVEC_MODELE) = (true|false);/
+            if (!motif.test(texte)) return repondre(res, 400, { erreur: 'AVEC_COLORIMETRIE ou AVEC_MODELE introuvable dans la page' })
+            writeFileSync(actuel, texte.replace(motif, (_, nom) => `const ${nom} = ${avec === false ? 'false' : 'true'};`))
             return repondre(res, 200, { ok: true })
           }
           if (action === 'restaurer') {

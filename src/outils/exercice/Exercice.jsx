@@ -93,9 +93,9 @@ function BoiteOutils({ page, avec, outils, choix }) {
   const o = outils?.[0];
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 13.5, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "6px 10px" }}>
-      <span style={{ fontWeight: 800 }}>🧰 Modèles couleur</span>
+      <span style={{ fontWeight: 800 }}>🧰 {o?.nomModele || "Modèles couleur"}</span>
       {choix && (
-        <div role="tablist" aria-label="Modèles couleur" className="ex-bascule ex-bascule-petite">
+        <div role="tablist" aria-label={o?.nomModele || "Modèles couleur"} className="ex-bascule ex-bascule-petite">
           <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Par défaut</button>
           <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 À construire</button>
         </div>
@@ -103,7 +103,7 @@ function BoiteOutils({ page, avec, outils, choix }) {
       {message && <span>{message}</span>}
       {o && (
         <button type="button" onClick={() => setAide(o)} style={{ marginLeft: "auto", border: "none", background: "none", padding: "4px 2px", font: "inherit", fontSize: 13.5, fontWeight: 700, color: "var(--accent)", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          ❓ Voir les modèles {avec ? "par défaut" : "à construire"}
+          ❓ {o?.libelleVoir || "Voir les modèles"} {avec ? "par défaut" : "à construire"}
         </button>
       )}
       {aide && <AideOutil outil={aide} fermer={() => setAide(null)} />}
@@ -112,35 +112,41 @@ function BoiteOutils({ page, avec, outils, choix }) {
 }
 
 // --- Un graphique de courbes spectrales (380 à 780 nm), avec légende et téléchargement CSV ---
-function Graphique({ g, ouvert = false }) {
+// Axe des abscisses : par défaut les longueurs d'onde (380 à 780 nm) ; un graphique peut en donner un autre (g.axeX, g.abscisses).
+const AXE_SPECTRAL = { titre: "Longueur d'onde λ (nm)", min: 380, max: 780, graduations: [400, 450, 500, 550, 600, 650, 700, 750] };
+const abscissesDe = (g) => g.abscisses || g.longueurs;
+// Pas « rond » des graduations (1, 2 ou 5 × 10ⁿ), pour les graphiques qui ont leur propre axe.
+const pasRond = (max) => { const b = 10 ** Math.floor(Math.log10(max / 4)), r = max / 4 / b; return (r >= 5 ? 5 : r >= 2 ? 2 : 1) * b; };
+function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
   const L = 560, H = 220, mg = { g: 58, d: 10, h: 10, b: 32 };
+  const ax = g.axeX || AXE_SPECTRAL, X = abscissesDe(g);
   const max = Math.max(...g.series.flatMap((s) => s.valeurs)) * 1.05, min = Math.min(0, ...g.series.flatMap((s) => s.valeurs));
-  const x = (l) => mg.g + ((l - 380) / 400) * (L - mg.g - mg.d);
+  const x = (l) => mg.g + ((l - ax.min) / (ax.max - ax.min)) * (L - mg.g - mg.d);
   const y = (v) => H - mg.b - ((v - min) / (max - min)) * (H - mg.h - mg.b);
-  const pas = max > 20 ? 50 : max > 1.2 ? 0.5 : 0.2;
-  const graduations = []; for (let v = 0; v <= max; v += pas) graduations.push(Number(v.toFixed(2)));
+  const pas = g.axeX ? pasRond(max || 1) : max > 20 ? 50 : max > 1.2 ? 0.5 : 0.2;
+  const graduations = []; for (let v = 0; v <= max; v += pas) graduations.push(Number(v.toFixed(g.axeX ? 6 : 2)));
   return (
     <details open={ouvert || undefined} style={{ margin: "10px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
       <summary style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
         <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
         <strong style={{ flex: 1, fontSize: 14.5 }}>{g.titre}</strong>
-        <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerCSV(`colorimetrie-${g.id}`, [g]); }}>⬇️ CSV</button>
+        <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerCSV(`${prefixe}-${g.id}`, [g]); }}>⬇️ CSV</button>
       </summary>
       <figure style={{ margin: 0, paddingBottom: 8 }}>
       <svg viewBox={`0 0 ${L} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label={g.titre}>
         {graduations.map((v) => (
-          <g key={v}><line x1={mg.g} x2={L - mg.d} y1={y(v)} y2={y(v)} stroke="#e2e8f0" /><text x={mg.g - 5} y={y(v) + 4} fontSize="10" textAnchor="end" fill="#64748b">{String(v).replace(".", ",")}</text></g>
+          <g key={v}><line x1={mg.g} x2={L - mg.d} y1={y(v)} y2={y(v)} stroke="#e2e8f0" /><text x={mg.g - 5} y={y(v) + 4} fontSize="10" textAnchor="end" fill="#64748b">{g.axeX ? v.toLocaleString("fr-FR") : String(v).replace(".", ",")}</text></g>
         ))}
-        {[400, 450, 500, 550, 600, 650, 700, 750].map((l) => (
+        {ax.graduations.map((l) => (
           <text key={l} x={x(l)} y={H - mg.b + 14} fontSize="10" textAnchor="middle" fill="#64748b">{l}</text>
         ))}
         <line x1={mg.g} x2={mg.g} y1={mg.h} y2={H - mg.b} stroke="#475569" />
         <line x1={mg.g} x2={L - mg.d} y1={y(0)} y2={y(0)} stroke="#475569" />
-        <text x={(mg.g + L - mg.d) / 2} y={H - 3} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">Longueur d'onde λ (nm)</text>
+        <text x={(mg.g + L - mg.d) / 2} y={H - 3} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{ax.titre}</text>
         <text transform={`translate(13 ${(mg.h + H - mg.b) / 2}) rotate(-90)`} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{g.unite.charAt(0).toUpperCase() + g.unite.slice(1)}</text>
         {g.series.map((s) => (
           <polyline key={s.nom} fill="none" stroke={s.couleur} strokeWidth="2.2" strokeDasharray={s.tirets ? "6 4" : undefined}
-            points={s.valeurs.map((v, i) => `${x(g.longueurs[i]).toFixed(1)},${y(v).toFixed(1)}`).join(" ")} />
+            points={s.valeurs.map((v, i) => `${x((s.x || X)[i]).toFixed(1)},${y(v).toFixed(1)}`).join(" ")} />
         ))}
       </svg>
       <figcaption style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.5 }}>
@@ -156,10 +162,20 @@ function Graphique({ g, ouvert = false }) {
 
 // Télécharge un ou plusieurs graphiques en CSV (séparateur « ; », virgule décimale : s'ouvre tel quel dans Excel en français).
 function telechargerCSV(nom, graphiques) {
-  const L = graphiques[0].longueurs;
-  const tete = ["longueur d'onde (nm)", ...graphiques.flatMap((g) => g.series.map((s) => `${g.id} : ${s.nom}`))];
-  const lignes = L.map((l, i) => [l, ...graphiques.flatMap((g) => g.series.map((s) => s.valeurs[i].toPrecision(6).replace(".", ",")))].join(";"));
-  const blob = new Blob(["\ufeff" + [tete.join(";"), ...lignes].join("\n")], { type: "text/csv;charset=utf-8" });
+  // Graphiques aux abscisses différentes : un bloc par graphique, séparés par une ligne vide.
+  if (graphiques.some((g) => abscissesDe(g) !== abscissesDe(graphiques[0]))) {
+    return enregistrerCSV(nom, graphiques.map((g) => csvDe([g])).join("\n\n"));
+  }
+  enregistrerCSV(nom, csvDe(graphiques));
+}
+function csvDe(graphiques) {
+  const L = abscissesDe(graphiques[0]);
+  const tete = [graphiques[0].axeX ? graphiques[0].axeX.titre : "longueur d'onde (nm)", ...graphiques.flatMap((g) => g.series.map((s) => `${g.id} : ${s.nom}`))];
+  const lignes = L.map((l, i) => [String(l).replace(".", ","), ...graphiques.flatMap((g) => g.series.map((s) => s.valeurs[i].toPrecision(6).replace(".", ",")))].join(";"));
+  return [tete.join(";"), ...lignes].join("\n");
+}
+function enregistrerCSV(nom, texte) {
+  const blob = new Blob(["\ufeff" + texte], { type: "text/csv;charset=utf-8" });
   const a = document.createElement("a");
   a.href = URL.createObjectURL(blob); a.download = `${nom}.csv`; a.click();
   setTimeout(() => URL.revokeObjectURL(a.href), 1000);
@@ -188,22 +204,22 @@ function FenetreGraphiques({ outil, ids, fermer }) {
   }, [outil]);
   // Les réflectances : celles que la simulation a publiées (ses cartes actuelles), sinon l'exemple du modèle.
   const publiees = courbesPubliees();
-  const liste = (Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : []).map((g) => (g.id === "paire-metamere" && publiees
+  const liste = (Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : []).map((g) => outil.avecPubliees ? outil.avecPubliees(g, publiees) : (g.id === "paire-metamere" && publiees && !publiees.some((s) => s.x)
     ? { ...g, titre: "🎨 Réflectances spectrales de tes deux cartes", series: publiees.map((c, i) => ({ ...c, tirets: i > 0 })), explication: explicationPaire(publiees, outil) }
     : g.id === "paire-metamere" ? { ...g, explication: `${g.explication} (Exemple tiré des modèles : ta simulation ne montre pas encore ses propres cartes ici.)` } : g));
   return createPortal(
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
       style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
-      <div ref={boite} role="dialog" aria-label="Courbes des modèles couleur"
+      <div ref={boite} role="dialog" aria-label={`Courbes : ${(outil.nomModele || "Modèles couleur").toLowerCase()}`}
         style={{ background: "#fff", borderRadius: 18, width: "min(760px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <strong style={{ fontSize: 18, flex: 1 }}>📈 {outil.donnees ? "Modèles par défaut" : "Tes modèles couleur"}</strong>
+          <strong style={{ fontSize: 18, flex: 1 }}>📈 {outil.donnees ? (outil.titreDefautCourt || "Modèles par défaut") : (outil.nomPerso || "Tes modèles couleur")}</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
         {donnees === "chargement" && <p>⏳ Lecture de tes modèles…</p>}
         {donnees === "absent" && <p>📭 Tes modèles n'existent pas encore : fais l'étape 0.</p>}
         {donnees === "erreur" && <p>⚠️ Tes modèles contiennent une erreur : demande à l'agent de la corriger.</p>}
-        {liste.map((g) => <Graphique key={g.id} g={g} ouvert />)}
+        {liste.map((g) => <Graphique key={g.id} g={g} ouvert prefixe={outil.prefixeCSV} />)}
       </div>
     </div>,
     document.body,
@@ -296,7 +312,7 @@ function AideOutil({ outil, fermer }) {
           <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
               <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
-              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 {outil.equations ? "Les modèles mathématiques : de la réflectance à la couleur" : "Les équations de tes modèles"}</strong>
+              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 {outil.equations ? (outil.titreEquations || "Les modèles mathématiques : de la réflectance à la couleur") : "Les équations de tes modèles"}</strong>
               <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerPDF(outil, equations, boite.current, setEtatPDF); }}>{etatPDF || "📄 PDF"}</button>
               {outil.code && <button type="button" style={bouton()} title="Le code des modèles, à redonner à l'agent" onClick={async (e) => {
                 e.preventDefault(); e.stopPropagation();
@@ -324,13 +340,13 @@ function AideOutil({ outil, fermer }) {
         {donnees && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "14px 0 4px" }}>
-              <strong style={{ flex: 1 }}>Les données des modèles (380 à 780 nm, pas de 5 nm)</strong>
-              <button type="button" style={bouton()} onClick={() => telechargerCSV("colorimetrie-toutes-les-donnees", donnees)}>⬇️ Tout télécharger (CSV)</button>
+              <strong style={{ flex: 1 }}>{outil.titreDonnees || "Les données des modèles (380 à 780 nm, pas de 5 nm)"}</strong>
+              <button type="button" style={bouton()} onClick={() => telechargerCSV(`${outil.prefixeCSV || "colorimetrie"}-toutes-les-donnees`, donnees)}>⬇️ Tout télécharger (CSV)</button>
             </div>
-            {donnees.map((g) => <Graphique key={g.id} g={g} />)}
+            {donnees.map((g) => <Graphique key={g.id} g={g} prefixe={outil.prefixeCSV} />)}
           </>
         )}
-        <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : les modèles sont dans le fichier <code>{outil.chemin}</code>.</p>
+        {outil.chemin && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : {outil.nomModele && !/s$/.test(outil.nomModele.split(" ")[0]) ? "le modèle est" : "les modèles sont"} dans le fichier <code>{outil.chemin}</code>.</p>}
       </div>
     </div>,
     document.body,
@@ -340,7 +356,7 @@ function AideOutil({ outil, fermer }) {
 // --- Contrôle EN DIRECT : à la lumière du jour, les deux cartes doivent avoir exactement la même couleur ---
 function ControleJour({ outil }) {
   const series = useCourbesPubliees();
-  if (!series || series.length < 2 || !outil?.ecartJour) return null;
+  if (!series || series.length < 2 || !outil?.ecartJour || series.some((s) => s.x)) return null; // pas les courbes d'un autre exercice
   const dE = outil.ecartJour(series[0].valeurs, series[1].valeurs);
   if (!Number.isFinite(dE)) return null;
   const ok = dE < 0.5;
@@ -350,6 +366,19 @@ function ControleJour({ outil }) {
       {ok
         ? <>✅ <strong>Sur la table (lumière du jour, D65), les deux cartes ont la même couleur</strong> (ΔE*ab = {dE.toFixed(1).replace(".", ",")}). C'est bien une paire métamère.</>
         : <>❌ <strong>Sur la table (lumière du jour, D65), les deux cartes n'ont PAS la même couleur</strong> (ΔE*ab = {dE.toFixed(1).replace(".", ",")}). Ce n'est pas une paire métamère : la carte 2 doit être recalculée.</>}
+    </div>
+  );
+}
+
+// --- Contrôle EN DIRECT fourni par le modèle (outil.controleDirect(courbes) → null | { ok, titre, detail }) ---
+function ControleDirect({ outil }) {
+  const series = useCourbesPubliees();
+  const c = series ? outil.controleDirect(series) : null;
+  if (!c) return null;
+  return (
+    <div role="status" style={{ padding: "8px 12px", borderRadius: 10, fontSize: 14.5, lineHeight: 1.5,
+      background: c.ok ? "#f0fdf4" : "#fef2f2", border: `2px solid ${c.ok ? "#22c55e" : "#ef4444"}` }}>
+      {c.ok ? "✅" : "❌"} <strong>{c.titre}</strong> {c.detail}
     </div>
   );
 }
@@ -627,10 +656,10 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
               ))}
             </div>
           </div>
-          <EtatActuel etat={etat} ligneModele={etapes.etapeOutils ? (sans
+          <EtatActuel etat={etat} ligneModele={etapes.etapeOutils ? (etapes.ligneModele ? etapes.ligneModele(Boolean(sans)) : sans
             ? "🧰 Tu construis tes propres modèles couleur (étape 0). Tu peux revenir aux modèles par défaut avec « Modèles couleur » ci-dessous."
             : "🧰 Les modèles couleur par défaut sont prêts. Tu peux aussi construire les tiens : « Modèles couleur » → « À construire ».") : null} />
-          <ControleJour outil={outils[0]} />
+          {outils[0]?.controleDirect ? <ControleDirect outil={outils[0]} /> : <ControleJour outil={outils[0]} />}
           <BoiteOutils page={page} avec={!sans} outils={outils} choix={estApercu && !!etapes.etapeOutils} />
           {mode === "guide"
             ? liste.map(({ num, etape }) => (
