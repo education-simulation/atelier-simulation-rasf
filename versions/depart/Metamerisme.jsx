@@ -6,7 +6,8 @@
 //  ETAT_ACTUEL décrit ce que fait la simulation en ce moment : l'agent le tient à jour à chaque changement.
 //  Le cadre de l'exercice (guide, mots clés, sauvegardes, « Tout recommencer ») est dans
 //  src/outils/exercice/ : ne pas le modifier. Les étapes et leurs critères : src/outils/exercice/metamerisme.js.
-//  Pour calculer les couleurs à partir des spectres : src/outils/colorimetrie.js.
+//  Pour calculer les couleurs : le modèle ACTIF, avec modeleCouleur(AVEC_COLORIMETRIE) (src/outils/exercice/modeleCouleur.js),
+//  jamais en important un fichier de modèle directement : basculer de modèle dans le guide recalcule alors tout.
 //  AGENT : relis AGENTS.md (section « L'exercice Métamérisme ») à CHAQUE message : les règles ont changé.
 //  Il n'y a AUCUNE formule à recopier : ne demande jamais d'écrire « Exercice Métamérisme, étape N — analyse d'abord… ».
 // ============================================================
