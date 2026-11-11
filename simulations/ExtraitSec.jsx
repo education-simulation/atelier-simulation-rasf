@@ -224,7 +224,6 @@ export default function ExtraitSec() {
                 >
                   {Object.entries(PRODUITS).map(([k, p]) => <option key={k} value={k}>{p.nom}</option>)}
                 </select>
-                <span style={{ color: "#64748b" }}>{tuiles.filter((t) => t.acquis).length} / 6 obtenues</span>
               </label>
             </div>
             <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(130px, 1fr))", gap: 10 }}>

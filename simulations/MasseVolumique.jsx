@@ -323,9 +323,6 @@ export default function MasseVolumiqueHubbard() {
                 <span style={{ fontSize: 12, fontWeight: 800, color: "#b45309", textTransform: "uppercase", letterSpacing: 0.5 }}>
                   📊 Mesures & Données acquises :
                 </span>
-                <span style={{ fontSize: 11, color: "#64748b" }}>
-                  {tuiles.filter(t => t.acquis).length} / {tuiles.length} obtenues
-                </span>
               </div>
               <div
                 style={{
