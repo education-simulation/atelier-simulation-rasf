@@ -19,14 +19,30 @@ const ETAT_ACTUEL = [
   "📈 Aucun calcul de couleur ni aucun spectre pour l'instant.",
 ];
 
+// --- Survol : chaque objet s'entoure et affiche son nom (les mêmes mots que dans les mots clés) ---
+const STYLE_SURVOL = `
+  .mm-objet { transition: transform .15s, box-shadow .15s, outline-color .15s; outline: 3px solid transparent; outline-offset: 3px; }
+  .mm-objet:hover { outline-color: #f59e0b; box-shadow: 0 0 0 7px rgba(245,158,11,.25), 0 8px 18px rgba(0,0,0,.25); z-index: 5; }
+  .mm-carte:hover { transform: translateY(-4px) scale(1.04); }
+  .mm-etiquette { position: absolute; left: 50%; transform: translateX(-50%); background: #0f172a; color: #fff; font-size: 12.5px; font-weight: 800;
+    padding: 4px 9px; border-radius: 8px; white-space: nowrap; pointer-events: none; opacity: 0; transition: opacity .15s; z-index: 10; }
+  .mm-objet:hover > .mm-etiquette { opacity: 1; }
+  .mm-cabine:has(.mm-bouton:hover) > .mm-etiquette { opacity: 0; }
+  .mm-bouton { position: relative; transition: background .15s, border-color .15s, color .15s; }
+  .mm-bouton:hover { background: #52525b !important; border-color: #f59e0b !important; color: #fff !important; }
+`;
+
 // --- Une carte de contraste vierge : moitié blanche en haut, moitié noire en bas ---
 function CarteContraste({ numero, style }) {
   return (
-    <div style={{ position: "absolute", width: "12%", aspectRatio: "3 / 4", borderRadius: 4, overflow: "hidden",
-      boxShadow: "0 4px 10px rgba(0,0,0,.25)", border: "2px solid #e5e7eb", display: "grid", gridTemplateRows: "1fr 1fr", ...style }}>
-      <div style={{ background: "#ffffff" }} />
-      <div style={{ background: "#111827", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 4 }}>
-        <span style={{ background: "rgba(255,255,255,.9)", borderRadius: 6, padding: "1px 6px", fontSize: 12, fontWeight: 800, color: "#0f172a" }}>{numero}</span>
+    <div className="mm-objet mm-carte" style={{ position: "absolute", width: "12%", aspectRatio: "3 / 4", borderRadius: 4, ...style }}>
+      <span className="mm-etiquette" style={{ bottom: "calc(100% + 8px)" }}>🃏 Carte de contraste {numero}</span>
+      <div style={{ width: "100%", height: "100%", borderRadius: 4, overflow: "hidden", boxShadow: "0 4px 10px rgba(0,0,0,.25)", border: "2px solid #e5e7eb",
+        display: "grid", gridTemplateRows: "1fr 1fr", boxSizing: "border-box" }}>
+        <div style={{ background: "#ffffff" }} />
+        <div style={{ background: "#111827", display: "flex", alignItems: "flex-end", justifyContent: "center", paddingBottom: 4 }}>
+          <span style={{ background: "rgba(255,255,255,.9)", borderRadius: 6, padding: "1px 6px", fontSize: 12, fontWeight: 800, color: "#0f172a" }}>{numero}</span>
+        </div>
       </div>
     </div>
   );
@@ -35,14 +51,16 @@ function CarteContraste({ numero, style }) {
 // --- La cabine de lumière en 3D, éteinte, avec ses trois boutons (qui ne font encore rien) ---
 function Cabine({ style }) {
   return (
-    <div style={{ position: "absolute", ...style }}>
+    <div className="mm-objet mm-cabine" style={{ position: "absolute", borderRadius: 10, ...style }}>
+      <span className="mm-etiquette" style={{ top: "55%" }}>💡 Cabine de lumière 3D</span>
       <div style={{ display: "flex", alignItems: "center", gap: 6, background: "#27272a", borderRadius: "10px 10px 0 0", padding: "6px 10px", flexWrap: "wrap" }}>
         <span style={{ color: "#e4e4e7", fontSize: 12.5, fontWeight: 800, flex: 1, whiteSpace: "nowrap" }}>💡 Cabine de lumière</span>
         {["A", "D65", "F11"].map((id) => (
-          <button key={id} type="button" title="Ce bouton ne fonctionne pas encore (étape 1)"
+          <button key={id} type="button" className="mm-bouton" title="Ce bouton ne fonctionne pas encore (étape 1)"
             style={{ border: "1px solid #52525b", background: "#3f3f46", color: "#d4d4d8", borderRadius: 8, padding: "3px 10px", fontSize: 12.5, fontWeight: 800, cursor: "not-allowed",
               display: "inline-flex", alignItems: "center", gap: 5 }}>
             <span aria-hidden="true" style={{ width: 7, height: 7, borderRadius: "50%", background: "#52525b" }} />{id}
+            <span className="mm-etiquette mm-etiquette-bouton" style={{ top: "calc(100% + 8px)" }}>🔘 Bouton illuminant {id}</span>
           </button>
         ))}
       </div>
@@ -65,6 +83,7 @@ function Scene() {
     <div role="img" aria-label="Une table avec deux cartes de contraste vierges et une cabine de lumière en 3D éteinte"
       style={{ position: "relative", height: "clamp(260px, 40vw, 380px)", borderRadius: 18, overflow: "hidden",
         background: "linear-gradient(#eef2f7 0 70%, #d6c3a5 70% 100%)", border: "1px solid #d5dfeb" }}>
+      <style>{STYLE_SURVOL}</style>
       <span style={{ position: "absolute", left: "3%", top: "6%", fontSize: 13, fontWeight: 800, color: "#475569" }}>☀️ Table, à la lumière du jour</span>
       <CarteContraste numero={1} style={{ left: "6%", top: "40%" }} />
       <CarteContraste numero={2} style={{ left: "21%", top: "40%" }} />

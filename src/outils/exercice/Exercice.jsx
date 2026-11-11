@@ -70,18 +70,22 @@ function EtatActuel({ etat }) {
 }
 
 // --- Une étape du parcours guidé : section repliable ---
-function Etape({ page, numero, etape, ouverte, basculer }) {
+function Etape({ page, numero, etape, ouverte, basculer, faite, verrouillee, cocher }) {
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, copier] = useCopie();
   const plusUn = () => { const v = Math.min(etape.indices.length, indices + 1); setIndices(v); ecrire(`${page}.indices.${numero}`, v); };
   const fini = indices >= etape.indices.length;
   return (
-    <details open={ouverte} onToggle={(e) => { if (e.currentTarget.open !== ouverte) basculer(); }}
-      style={{ background: "#fff", border: "1px solid #d5dfeb", borderRadius: 12, padding: "0 14px" }}>
-      <summary style={{ cursor: "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
-        <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{ouverte ? "▼" : "▶"}</span>
+    <details open={ouverte && !verrouillee} onToggle={(e) => { if (!verrouillee && e.currentTarget.open !== ouverte) basculer(); }}
+      style={{ background: verrouillee ? "#f1f5f9" : "#fff", border: `1px solid ${faite ? "#86efac" : "#d5dfeb"}`, borderRadius: 12, padding: "0 14px", opacity: verrouillee ? 0.65 : 1 }}>
+      <summary onClick={(e) => { if (verrouillee) e.preventDefault(); }} aria-disabled={verrouillee || undefined}
+        title={verrouillee ? `Coche d'abord « Étape terminée » à l'étape ${numero - 1}` : undefined}
+        style={{ cursor: verrouillee ? "not-allowed" : "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
+        <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
+        {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>✅ terminée</span>}
+        {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {numero - 1}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
         <p style={{ margin: "0 0 10px", fontSize: 15 }}>✍️ <strong>{etape.consigne}</strong></p>
@@ -101,6 +105,11 @@ function Etape({ page, numero, etape, ouverte, basculer }) {
             <button type="button" style={bouton()} onClick={() => copier("p", etape.proposition)}>{copie === "p" ? "✓ Copié !" : "📋 Copier la proposition"}</button>
           </div>
         )}
+        <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12, padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontSize: 14.5, fontWeight: 700,
+          background: faite ? "#dcfce7" : "#f8fafc", border: `2px ${faite ? "solid #22c55e" : "dashed #94a3b8"}` }}>
+          <input type="checkbox" checked={faite} onChange={cocher} style={{ width: 18, height: 18, accentColor: "#16a34a", cursor: "pointer" }} />
+          ✅ Étape terminée : le résultat marche dans la simulation{faite ? "" : " (ouvre l'étape suivante)"}
+        </label>
       </div>
     </details>
   );
@@ -216,7 +225,16 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   const [recommencer, setRecommencer] = useState(false);
   const choisirMode = (m) => { setMode(m); ecrire(`${page}.mode`, m); };
   const basculer = (i) => setOuvertes((o) => { const n = o.includes(i) ? o.filter((x) => x !== i) : [...o, i]; ecrire(`${page}.ouvertes`, n); return n; });
-  const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
+  // Étapes terminées (cochées) : chaque étape ne s'ouvre qu'une fois la précédente cochée.
+  const [faites, setFaites] = useState(() => lire(`${page}.faites`, []));
+  const cocher = (i) => {
+    const n = faites.includes(i) ? faites.filter((x) => x !== i) : [...faites, i];
+    setFaites(n); ecrire(`${page}.faites`, n);
+    if (!faites.includes(i)) { // cochée : on replie celle-ci et on ouvre la suivante
+      setOuvertes((o) => { const m = [...o.filter((x) => x !== i), ...(i + 1 < etapes.length && !o.includes(i + 1) ? [i + 1] : [])]; ecrire(`${page}.ouvertes`, m); return m; });
+    }
+  };
+  const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); ecrire(`${page}.faites`, []); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
 
   return (
     <div className="ex-conteneur">
@@ -255,7 +273,8 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
           <EtatActuel etat={etat} />
           {mode === "guide"
             ? etapes.map((etape, i) => (
-              <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)} />
+              <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)}
+                faite={faites.includes(i)} verrouillee={i > 0 && !faites.includes(i - 1)} cocher={() => cocher(i)} />
             ))
             : <ExplorationLibre idees={idees} />}
         </section>

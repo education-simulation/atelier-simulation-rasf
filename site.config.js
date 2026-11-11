@@ -29,7 +29,7 @@ export default {
   //   "blocs"   : menus en haut, accueil en grands blocs de couleur (d'après la Paillasse virtuelle)
   //   "lateral" : barre de menus sombre à gauche, accueil sobre en cartes
   //   "liste"   : menus en haut, accueil en simple liste, le plus rapide à lire
-  style: "blocs",
+  style: "lateral",
 
   // Les menus, dans l'ordre. Chacun a aussi sa place sur l'accueil.
   //   id    : abréviation courte (sert au rangement des pages, affichée en gros sur l'accueil)
