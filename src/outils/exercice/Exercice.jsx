@@ -11,6 +11,7 @@
 //  Les écritures sur l'ordinateur passent par le serveur d'aperçu (vite.config.js) : jamais en ligne.
 // ============================================================
 import { useEffect, useRef, useState } from "react";
+import { createPortal } from "react-dom";
 import { estApercu } from "../../moteur/Apercu";
 
 const lire = (cle, defaut) => { try { const v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); } catch { return defaut; } };
@@ -78,39 +79,60 @@ function EtatActuel({ etat }) {
   );
 }
 
-// --- Les outils déjà présents dans le site, expliqués (ex. colorimetrie.js) ---
-function Outils({ outils }) {
-  if (!outils?.length) return null;
-  return outils.map((o) => (
-    <details key={o.nom} style={{ background: "#fff", border: "1px solid #c7d2fe", borderLeft: "5px solid #6366f1", borderRadius: 10, padding: "0 12px", fontSize: 14, lineHeight: 1.55 }}>
-      <summary style={{ cursor: "pointer", padding: "8px 0", fontWeight: 800 }}>🧰 C'est quoi <code>{o.nom}</code> ?</summary>
-      <div style={{ paddingBottom: 10 }}>
-        <p style={{ margin: "0 0 4px" }}>{o.resume} <span style={{ color: "#64748b" }}>({o.chemin})</span></p>
-        <ul style={{ margin: "0 0 6px", paddingLeft: 20 }}>{o.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
-        <p style={{ margin: 0 }}>💡 <strong>{o.conseil}</strong></p>
-      </div>
-    </details>
-  ));
-}
-
-// --- Choix : boîte à outils fournie (colorimetrie.js) ou construite soi-même (étape 0) ---
+// --- Boîte à outils : une ligne compacte (choix fournie / construite) + « ❓ À quoi sert … ? » en popup ---
 // Le choix est ÉCRIT dans la page (AVEC_COLORIMETRIE) par le serveur d'aperçu : l'agent le lit.
-function ChoixOutils({ page, avec }) {
+function BoiteOutils({ page, avec, outils, choix }) {
   const [message, setMessage] = useState("");
+  const [aide, setAide] = useState(null);
   const choisir = async (v) => {
     if (v === avec) return;
-    try { setMessage("⏳ …"); await appel("outils", { page, avec: v }); setMessage(""); }
+    try { setMessage("⏳"); await appel("outils", { page, avec: v }); setMessage(""); }
     catch (e) { setMessage(`⚠️ ${e.message}`); }
   };
+  const o = outils?.[0];
   return (
-    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 14 }}>
-      <strong>🧰 Boîte à outils :</strong>
-      <div role="tablist" aria-label="Boîte à outils" className="ex-bascule">
-        <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Fournie (colorimetrie.js)</button>
-        <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 Je construis la mienne</button>
-      </div>
+    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 13.5, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "6px 10px" }}>
+      <span style={{ fontWeight: 800 }}>🧰 Données de couleur</span>
+      {choix && (
+        <div role="tablist" aria-label="Données de couleur" className="ex-bascule ex-bascule-petite">
+          <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Fournies</button>
+          <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 Je les construis</button>
+        </div>
+      )}
       {message && <span>{message}</span>}
+      {o && (
+        <button type="button" onClick={() => setAide(o)} style={{ marginLeft: "auto", border: "none", background: "none", padding: "4px 2px", font: "inherit", fontSize: 13.5, fontWeight: 700, color: "var(--accent)", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>
+          ❓ À quoi sert {o.nom} ?
+        </button>
+      )}
+      {aide && <AideOutil outil={aide} fermer={() => setAide(null)} />}
     </div>
+  );
+}
+
+function AideOutil({ outil, fermer }) {
+  const boite = useRef(null);
+  useEffect(() => {
+    const echap = (e) => { if (e.key === "Escape") fermer(); };
+    document.addEventListener("keydown", echap);
+    return () => document.removeEventListener("keydown", echap);
+  }, [fermer]);
+  return createPortal(
+    <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
+      style={{ position: "fixed", inset: 0, zIndex: 9500, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
+      <div ref={boite} role="dialog" aria-label={`À quoi sert ${outil.nom} ?`}
+        style={{ background: "#fff", borderRadius: 18, width: "min(520px, 100%)", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+          <strong style={{ fontSize: 18, flex: 1 }}>🧰 À quoi sert <code>{outil.nom}</code> ?</strong>
+          <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
+        </div>
+        <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
+        <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
+        <p style={{ margin: "8px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 {outil.chemin}</p>
+      </div>
+    </div>,
+    document.body,
   );
 }
 
@@ -343,6 +365,8 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
         .ex-bascule { display: inline-flex; background: #e2e8f0; border-radius: 999px; padding: 3px; gap: 2px; }
         .ex-bascule button { border: none; background: transparent; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 13.5px; font-weight: 800; color: #475569; cursor: pointer; white-space: nowrap; }
         .ex-bascule button[aria-selected="true"] { background: #fff; color: var(--accent); box-shadow: 0 1px 3px rgba(15,23,42,.18); }
+        .ex-bascule-petite { padding: 2px; }
+        .ex-bascule-petite button { padding: 4px 10px; font-size: 12.5px; }
       `}</style>
       <div className="ex-principal">
         <div style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
@@ -362,8 +386,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             </div>
           </div>
           <EtatActuel etat={etat} />
-          {estApercu && etapes.etapeOutils && <ChoixOutils page={page} avec={!sans} />}
-          <Outils outils={outils} />
+          <BoiteOutils page={page} avec={!sans} outils={outils} choix={estApercu && !!etapes.etapeOutils} />
           {mode === "guide"
             ? liste.map(({ num, etape }) => (
               <Etape key={num} page={page} numero={num} etape={etape} ouverte={ouvertes.includes(num)} basculer={() => basculer(num)}
