@@ -5,12 +5,12 @@ Si tu es une personne : dans Antigravity, écris à l'agent « bonjour ».
 
 ## 0. Quel que soit le premier message
 
-**AVANT TOUT : le site est-il rangé où la personne l'a choisi ?** Si la personne te demande de le copier (« Copie https://github.com/… sur mon ordinateur… »), si tu lis ce fichier sur GitHub, **ou si ce dossier se trouve dans le dossier de travail d'Antigravity** (chemin contenant `.gemini/antigravity/scratch` : Antigravity y copie les dépôts tout seul, la personne ne le retrouverait jamais), **ta toute première réponse est la courte présentation de l'étape 0, suivie de la question « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »**, puis « Quel nom donner au dossier ? ». **Aucune question de l'étape 1 avant que le site soit rangé à cet endroit.**
+**AVANT TOUT : le site est-il rangé où la personne l'a choisi ?** Si la personne te demande de le copier (« Copie https://github.com/… sur mon ordinateur… »), si tu lis ce fichier sur GitHub, **ou si ce dossier se trouve dans le dossier de travail d'Antigravity** (chemin contenant `.gemini/antigravity/scratch` : Antigravity y copie les dépôts tout seul, la personne ne le retrouverait jamais), **ta toute première réponse est la courte présentation de l'étape 0, suivie aussitôt de la vérification de Node.js**, puis seulement la question « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? », puis « Quel nom donner au dossier ? ». **Aucune question de l'étape 1 avant que le site soit rangé à cet endroit.**
 
 La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit** (« bonjour », « hello », « aide-moi », un mot au hasard), **veut dire : « Lis AGENTS.md et guide-moi. »**
 
 **Ta toute première réponse est du texte, rien d'autre.** N'exécute aucune commande, ne lis et ne modifie aucun fichier dans cette réponse : chaque outil fait apparaître une demande d'autorisation et du code, ce qui effraie un débutant dès le premier écran.
-- Seule exception : la personne t'a demandé de **copier le modèle** (« Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 : la présentation, deux questions à choix (dossier, puis nom), puis la copie, précédée du message en gras ci-dessous. Puis enchaîne sur la première question de l'étape 1.
+- Seule exception : la personne t'a demandé de **copier le modèle** (« Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 dans cet ordre : la présentation, **puis tout de suite la vérification de Node.js** (seule action avant les questions, précédée du message en gras sur la petite fenêtre), puis les deux questions à choix (dossier, puis nom), puis la copie. Puis enchaîne sur la première question de l'étape 1.
 - Si la personne revient pour continuer (« Reprends mon site qui est dans … », « on reprend »), lis `PROGRESSION.md` dans ce dossier et propose de reprendre à la première étape non cochée.
 
 **Ensuite seulement**, au début de l'étape 2 :
@@ -101,42 +101,42 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
-### Étape 0 — Présenter, puis copier le modèle sur l'ordinateur (une seule fois)
-- **D'abord, une courte présentation** (texte seul, sans aucune action), à peu près celle-ci :
+### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
+- **D'abord, une courte présentation**, à peu près celle-ci :
 
   > Bonjour ! Ensemble, on va créer ton site de simulations, en 15 minutes environ. Voici ce qui va se passer :
-  > 1. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom).
-  > 2. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
-  > 3. Tu vois ton site, sur ton ordinateur seulement.
-  > 4. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
-  > 5. Je te propose des idées pour la suite.
+  > 1. Je vérifie qu'un logiciel gratuit, Node.js, est installé sur ton ordinateur (s'il manque, je te guide pour l'installer).
+  > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom).
+  > 3. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
+  > 4. Tu vois ton site, sur ton ordinateur seulement.
+  > 5. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
+  > 6. Je te propose des idées pour la suite.
   >
   > Des petites fenêtres vont te demander la permission avant chacune de mes actions : je te dirai à chaque fois sur quel choix cliquer.
 
-  Puis, dans le même message, la première question.
-- **Les deux questions, une par message :**
-  1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → Bureau · Documents · Autre (écris le nom du dossier).
-  2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne).
-- Puis copie : `git clone --depth 1 <adresse> <dossier choisi>/<nom choisi>` — ou, si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : `mv <chemin actuel> <dossier choisi>/<nom choisi>`. Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin.
-- **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
-  - Mac : `/Users/<nom>/Desktop/mon-site`
-  - Windows : `C:\Users\<nom>\Desktop\mon-site`
-  - Linux : `/home/<nom>/Bureau/mon-site`
-- Si la copie échoue, explique pourquoi en une phrase et arrête-toi : n'invente pas d'autre solution.
-- **Juste après la copie, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v`.
-  - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe à l'étape 1.
-  - Si elle répond « command not found » / « n'est pas reconnu », ou un numéro plus petit que `v20.19` : écris d'abord `PROGRESSION.md` (voir plus bas), puis affiche **exactement** ce message, sans rien ajouter :
+- **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (précédée du message en gras sur la petite fenêtre, 2e choix).
+  - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
+  - Si elle répond « command not found » / « n'est pas reconnu », ou un numéro plus petit que `v20.19` : **arrête-toi là** (ne pose aucune question, ne copie rien) et affiche **exactement** ce message, sans rien ajouter :
 
     > Il manque un logiciel gratuit sur ton ordinateur : **Node.js**. C'est le moteur qui fait tourner l'aperçu de ton site. On l'installe une seule fois, en 5 minutes environ :
     > 1. Clique sur ce lien : https://nodejs.org/fr/download
     > 2. Clique sur le bouton de téléchargement de l'**installateur** pour ton ordinateur : « macOS Installer (.pkg) » sur Mac, « Windows Installer (.msi) » sur Windows.
     > 3. Ouvre le fichier téléchargé, puis clique sur **Continuer**, **Accepter**, **Installer**. L'ordinateur demande ton mot de passe : c'est normal.
     > 4. À la fin, **quitte complètement Antigravity** (Cmd + Q sur Mac ; sur Windows, ferme la fenêtre) et rouvre-le.
-    > 5. Écris-moi : **« Reprends mon site qui est dans <chemin complet> »**.
+    > 5. Colle à nouveau la phrase du début : **« Copie https://github.com/education-simulation/atelier-simulation-rasf sur mon ordinateur, puis lis AGENTS.md et guide-moi. »** On reprendra au même endroit.
     >
     > Ce que tu dois cliquer maintenant : le lien ci-dessus.
 
-    Puis pose la question à choix : C'est installé · Je suis bloqué·e. Quand la personne revient, relance `node -v` : si c'est bon, passe à l'étape 1 ; sinon, demande-lui une capture de l'écran où elle bloque.
+    Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe aux deux questions ; sinon, demande-lui une capture de l'écran où elle bloque.
+- **Les deux questions, une par message :**
+  1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → Bureau · Documents · Autre (écris le nom du dossier).
+  2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne). **Si ce dossier existe déjà**, dis-le et propose un autre nom : ne copie jamais par-dessus un dossier existant.
+- Puis copie : `git clone --depth 1 <adresse> <dossier choisi>/<nom choisi>` — ou, si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : `mv <chemin actuel> <dossier choisi>/<nom choisi>`. Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin.
+- **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
+  - Mac : `/Users/<nom>/Desktop/mon-site`
+  - Windows : `C:\Users\<nom>\Desktop\mon-site`
+  - Linux : `/home/<nom>/Bureau/mon-site`
+- Si la copie échoue, explique pourquoi en une phrase et arrête-toi : n'invente pas d'autre solution.
 - **`PROGRESSION.md`** (à la racine du site) commence toujours par ces lignes, avec le vrai chemin :
 
   ```
