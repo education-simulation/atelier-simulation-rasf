@@ -1,0 +1,88 @@
+/* Moteur du site (ne pas modifier) — habillage d'après la « Paillasse virtuelle » de Nils Aronssohn.
+   La couleur principale vient de site.config.js (variable --accent). */
+:root {
+  --accent: #0b4f94;
+  --accent-clair: #dce9f7;
+  --texte: #0f172a;
+  --texte2: #334155;
+  --bord: #cbd5e1;
+  --fond: #eef3f9;
+  color-scheme: light;
+  font: 17px/1.5 'Nunito', 'Segoe UI', system-ui, sans-serif;
+  color: var(--texte);
+  background: var(--fond);
+  -webkit-font-smoothing: antialiased;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+h1, h2, h3 { font-family: 'Outfit', 'Segoe UI', sans-serif; color: #0c1a2e; }
+button { font-family: inherit; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+
+.racine { display: flex; flex-direction: column; min-height: 100vh; }
+.principal { flex: 1; display: flex; flex-direction: column; min-width: 0; }
+.barre-titre { display: flex; align-items: center; gap: 1rem; padding: 1.25rem 2rem; max-width: 1100px; margin: 0 auto; width: 100%; }
+.barre-titre h1 { flex: 1; margin: 0; font-weight: 800; letter-spacing: -0.02em; font-size: clamp(24px, 3.8vw, 38px); line-height: 1.1; text-wrap: balance; }
+.icone-sim { width: 56px; height: 56px; border-radius: 18px; display: grid; place-items: center; font-size: 30px; flex-shrink: 0; background: var(--accent-clair); }
+.bouton-pilule { display: inline-flex; align-items: center; gap: 6px; padding: 8px 16px; border-radius: 999px; border: 1.5px solid #d5dfeb; background: #fff; color: var(--texte2); font-size: 14px; font-weight: 700; cursor: pointer; white-space: nowrap; }
+.zone-sim { flex: 1; padding: 1.5rem 2rem; overflow-x: clip; }
+.erreur { max-width: 700px; margin: 24px auto; padding: 20px 24px; background: #fef2f2; border: 1px solid #fecaca; border-radius: 16px; color: #7f1d1d; }
+
+/* Accueil « blocs » : grands aplats de couleur, sans dégradé ni ombre. */
+.ab { max-width: 1100px; margin: 0 auto; width: 100%; padding: 8px 0 24px; display: flex; flex-direction: column; gap: 14px; }
+.ab-hero { padding: 18px 4px 14px; }
+.ab-etiquette { display: block; font: 700 13px 'Nunito', sans-serif; letter-spacing: .09em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; }
+.ab h1 { font: 800 clamp(40px, 7.4vw, 84px)/1.12 'Outfit', sans-serif; letter-spacing: -.035em; margin: 0 0 18px; text-wrap: balance; }
+.ab h1 mark { background: #f5a31a; color: #3a2500; padding: 0 .12em; border-radius: .16em; -webkit-box-decoration-break: clone; box-decoration-break: clone; }
+.ab-lead { font-size: clamp(17px, 2vw, 20px); line-height: 1.55; color: #3d4d63; max-width: 52ch; margin: 0; }
+.ab-titre-section { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; flex-wrap: wrap; margin: 22px 4px 0; }
+.ab-titre-section h2 { font: 800 clamp(26px, 3.6vw, 36px)/1.1 'Outfit', sans-serif; letter-spacing: -.02em; margin: 0; }
+.ab-titre-section span { color: #3d4d63; font-size: 14.5px; }
+.ab-bento { display: grid; grid-template-columns: repeat(12, minmax(0, 1fr)); gap: 14px; }
+.ab-niv { border-radius: 28px; padding: 26px 26px 24px; display: flex; flex-direction: column; gap: 6px; min-width: 0; background: var(--ab-fond); color: var(--ab-ink); }
+.ab-niv .ab-abbr { font: 800 clamp(44px, 7vw, 76px)/.9 'Outfit', sans-serif; letter-spacing: -.04em; }
+.ab-niv h3 { font: 700 20px/1.2 'Outfit', sans-serif; margin: 6px 0 0; color: inherit; }
+.ab-niv .ab-nb { margin: 0 0 14px; font-size: 13.5px; font-weight: 700; opacity: .88; }
+.ab-puces { display: flex; flex-wrap: wrap; gap: 7px; margin: 0; padding: 0; list-style: none; }
+.ab-puces button { all: unset; cursor: pointer; display: block; padding: 7px 13px; border-radius: 999px; background: rgba(255,255,255,.26); color: inherit; font: 700 13.5px/1.3 'Nunito', sans-serif; }
+.ab-puce-vide { display: block; padding: 6px 12px; border-radius: 999px; border: 1.5px dashed currentColor; opacity: .75; font: 700 13px/1.3 'Nunito', sans-serif; }
+.ab-puces button:hover { background: #fff; color: #0c1a2e; }
+.ab-carte { grid-column: span 12; background: #fff; border: 1px solid #d5dfeb; border-radius: 28px; padding: 26px; }
+.ab-carte h3 { font: 800 21px 'Outfit', sans-serif; margin: 0 0 6px; }
+.ab-carte p { margin: 0; color: #3d4d63; }
+@media (max-width: 900px) { .ab-niv { grid-column: span 12 !important; } }
+@media (max-width: 480px) { .ab-niv, .ab-carte { border-radius: 22px; padding: 20px; } .barre-titre, .zone-sim { padding-left: 1rem; padding-right: 1rem; } }
+
+/* Aperçu (sur l'ordinateur, localhost) : bandeau et volet des étapes, jamais sur le site publié. */
+.bandeau-apercu { background: #336fa3; color: #fff; padding: 10px 16px; font-size: 15px; line-height: 1.45; }
+.volet-etapes { background: #fff; border-bottom: 1px solid var(--bord); padding: 6px 16px; font-size: 14px; }
+.volet-etapes summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
+.volet-etapes ol { margin: 6px 0 10px; padding-left: 22px; }
+.volet-etapes li { margin: 6px 0; }
+.volet-etapes li span { color: #475569; }
+.volet-etapes li.faite strong { color: #2e9e5b; }
+
+/* En-tête compact (d'après la Paillasse virtuelle) : titre, puis un petit menu déroulant par menu. */
+.entete { position: sticky; top: 0; z-index: 30; background: #fff; border-bottom: 1px solid var(--bord); transition: transform .25s ease; }
+.entete-ligne { display: flex; align-items: center; gap: 4px; height: 100%; padding: 0 16px; max-width: 1280px; margin: 0 auto; }
+.entete-titre { display: flex; align-items: center; gap: 8px; min-width: 0; margin-right: 12px; text-decoration: none; }
+.entete-titre span { font: 800 18px 'Outfit', sans-serif; color: var(--accent); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.entete-menus { display: flex; align-items: center; gap: 2px; flex: 1; min-width: 0; }
+.et-menu { position: relative; }
+.et-bouton { display: inline-flex; align-items: center; gap: 4px; padding: 6px 10px; border: none; border-radius: 8px; background: transparent;
+  font-size: 14.5px; font-weight: 700; color: var(--texte); cursor: pointer; white-space: nowrap; }
+.et-bouton:hover, .et-bouton.deroule { background: #f1f5f9; }
+.et-bouton.actif { color: var(--accent); box-shadow: inset 0 -3px 0 var(--accent); border-radius: 8px 8px 0 0; }
+.et-fleche { font-size: 9px; opacity: .7; }
+.et-panneau { position: absolute; left: 0; top: calc(100% + 6px); min-width: 250px; max-width: 360px; background: #fff; border: 1px solid var(--bord);
+  border-radius: 12px; box-shadow: 0 10px 24px rgba(15,23,42,.12); padding: 6px; display: flex; flex-direction: column; }
+.et-lien { display: flex; align-items: center; gap: 8px; width: 100%; text-align: left; padding: 6px 8px; border: none; border-radius: 7px; background: transparent;
+  font-size: 13.5px; font-weight: 600; color: var(--texte); cursor: pointer; line-height: 1.3; }
+.et-lien:hover { background: var(--accent-clair); }
+.et-lien[aria-current="page"] { background: var(--accent-clair); font-weight: 800; }
+.et-icone { font-size: 15px; width: 20px; text-align: center; flex-shrink: 0; }
+.et-vide { padding: 6px 8px; font-size: 13px; color: var(--texte2); }
+.et-mobile { flex-shrink: 0; white-space: nowrap; padding: 5px 10px; border-radius: 9px; border: 1.5px solid var(--bord); background: #fff; cursor: pointer; font-size: 14px; font-weight: 700; color: var(--texte); }
+.et-panneau-mobile { position: absolute; left: 0; right: 0; top: 100%; background: #fff; border-bottom: 1px solid var(--bord); padding: 6px 12px 10px;
+  max-height: calc(100vh - 52px); overflow-y: auto; }
+.et-titre-accordeon { font-weight: 800; font-size: 14.5px; padding: 9px 8px; }
