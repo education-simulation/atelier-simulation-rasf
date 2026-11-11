@@ -370,6 +370,68 @@ function arbreAffichage(jetonsSaisie, curseur) {
   return morceaux;
 }
 
+// Écriture papier : dans quelle « case » (numérateur, dénominateur, exposant) le curseur
+// est-il affiché ? Renvoie { trouve, cas } ; cas = { noeud, genre } pour la case la plus
+// intérieure, "bloque" si le curseur est d'abord dans des parenthèses (l'opérateur y reste
+// de lui-même), null s'il n'est dans aucune case.
+function caseDuCurseur(n) {
+  const rien = { trouve: false, cas: null };
+  if (!n) return rien;
+  const dans = (enfant, cas) => {
+    const r = caseDuCurseur(enfant);
+    if (!r.trouve) return null;
+    return r.cas ? r : { trouve: true, cas };
+  };
+  switch (n.t) {
+    case "cur": return { trouve: true, cas: null };
+    case "trou": return n.cur ? { trouve: true, cas: null } : rien;
+    case "nb": return [...n.mantisse, ...(n.exposant ?? [])].some((x) => x.curseur) ? { trouve: true, cas: null } : rien;
+    case "frac": return dans(n.a, { noeud: n.a, genre: "num" }) ?? dans(n.b, { noeud: n.b, genre: "den" }) ?? rien;
+    case "pow": return dans(n.a, null) ?? dans(n.b, { noeud: n.b, genre: "exp" }) ?? rien;
+    case "par": return dans(n.a, "bloque") ?? rien;
+    case "fn": return dans(n.a, n.sansParentheses ? { noeud: n.a, genre: "fn" } : "bloque") ?? rien;
+    case "seq": for (const x of n.a) { const r = dans(x, null); if (r) return r; } return rien;
+    default: return dans(n.a, null) ?? dans(n.b, null) ?? rien; // bin, neg, post
+  }
+}
+
+// Premier et dernier jeton de saisie couverts par un nœud : [début, fin[ (null si vide).
+function bornesJetons(n) {
+  const js = [];
+  const visiter = (x) => {
+    if (!x || typeof x !== "object") return;
+    if (Array.isArray(x)) { x.forEach(visiter); return; }
+    for (const cle of ["j", "jo", "jf", "jExp"]) if (Number.isInteger(x[cle])) js.push(x[cle]);
+    for (const cle of ["a", "b", "mantisse", "exposant"]) visiter(x[cle]);
+  };
+  visiter(n);
+  return js.length ? [Math.min(...js), Math.max(...js) + 1] : null;
+}
+
+// Un opérateur tapé avec le curseur dans une case de l'écriture papier reste dans cette
+// case, comme sur une calculatrice « naturelle » : 7/6▮ puis + donne 7/(6+▮), pas 7/6 + ▮.
+// On entoure le contenu de la case de parenthèses (invisibles au dénominateur, au
+// numérateur et en exposant). Renvoie { jetons, curseur } ou null s'il n'y a rien à faire.
+const OPERATEURS = ["+", MOINS, "×", "÷"];
+// Seulement quand le curseur a été ramené dans le calcul : en bout de saisie, on écrit
+// en ligne (taper 7 ÷ 6 + 3 au clavier doit donner 7/6 + 3, pas 7/(6+3)).
+function operateurDansLaCase(jetons, curseur, op) {
+  if (!OPERATEURS.includes(op) || curseur >= jetons.length) return null;
+  let r = { trouve: false, cas: null };
+  for (const m of arbreAffichage(jetons, curseur)) { r = caseDuCurseur(m); if (r.trouve) break; }
+  if (!r.trouve || !r.cas || r.cas === "bloque") return null;
+  // Au numérateur, × et ÷ restent déjà dedans (7×▮÷6 se lit (7×▮)/6) : seuls + et − en sortiraient.
+  if (r.cas.genre === "num" && (op === "×" || op === "÷")) return null;
+  const b = bornesJetons(r.cas.noeud);
+  if (!b) return null;
+  const [debut, fin] = b;
+  if (!(debut < curseur && curseur <= fin)) return null; // case vide avant le curseur : signe, pas opération
+  return {
+    jetons: [...jetons.slice(0, debut), "(", ...jetons.slice(debut, curseur), op, ...jetons.slice(curseur, fin), ")", ...jetons.slice(fin)],
+    curseur: curseur + 2,
+  };
+}
+
 const sansParentheses = (n) => (n.t === "par" && n.ferme ? n.a : n);
 const COMPOSES = ["bin", "frac", "neg", "seq", "pow"];
 const Curseur = () => <span className="calc-curseur" aria-hidden="true" />;
@@ -706,12 +768,16 @@ export default function Calculatrice({ compacte = false, onInserer } = {}) {
         c = j.length; fini = false; res = null;
       } else if (ajout === "(" && c > 0 && j[c - 1].length > 1 && j[c - 1].endsWith("(")) {
         // « sin » ouvre déjà sa parenthèse : la « ( » tapée juste après est absorbée.
-      } else { j = [...j.slice(0, c), ajout, ...j.slice(c)]; c++; }
+      } else {
+        const dansLaCase = ecriture === "papier" ? operateurDansLaCase(j, c, ajout) : null;
+        if (dansLaCase) { j = dansLaCase.jetons; c = dansLaCase.curseur; }
+        else { j = [...j.slice(0, c), ajout, ...j.slice(c)]; c++; }
+      }
     }
     setJetons(j); setCurseur(c >= j.length ? null : c); setVientDeCalculer(fini); setResultat(res);
     if (nouvelAns !== null) setAns(nouvelAns);
     if (ajoutHist) setHistorique((h) => [ajoutHist, ...h].slice(0, 50));
-  }, [jetons, curseur, ans, degres, vientDeCalculer, resultat, setJetons, setCurseur, setResultat, setAns, setHistorique, setVientDeCalculer]);
+  }, [jetons, curseur, ans, degres, ecriture, vientDeCalculer, resultat, setJetons, setCurseur, setResultat, setAns, setHistorique, setVientDeCalculer]);
 
   // Toucher l'écran : le curseur se place avant ou après le morceau touché (selon le côté).
   const toucherEcran = (e) => {
