@@ -236,7 +236,7 @@ Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation 
 
 Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui affiche ce prompt : la personne pourra le reprendre plus tard pour une autre simulation.
 
-**L'exercice Métamérisme** : la page apprend à écrire un prompt. À chaque étape, la personne écrit son prompt **dans cette conversation**, en commençant par **« Exercice Métamérisme, étape N : »**. Quand un message commence ainsi :
+**L'exercice Métamérisme** : la page apprend à écrire un prompt. À chaque étape, la personne écrit son prompt **dans cette conversation**, en commençant par **« Exercice Métamérisme, étape N — analyse d'abord mon prompt… : »** (ou simplement « Exercice Métamérisme, étape N : »). Quand un message commence ainsi, **même si tu as déjà commencé la conversation avant**, applique ces règles :
 1. **Ne code pas tout de suite. Vérifie d'abord le prompt** avec les critères de l'étape N : ce sont les `indices` de l'étape N dans `simulations/Metamerisme.jsx` (lis ce fichier), et son `objectif` (`consigne`). Réponds en quelques lignes :
    - ✅ **Ce qui est réussi** (les critères présents dans le prompt) ;
    - ⚠️ **Ce qui manque ou reste ambigu** (les critères absents), formulé comme une question, **sans donner la réponse** et sans recopier la `proposition` ;
@@ -253,6 +253,7 @@ Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui af
 6. Termine par la question à choix, **avec exactement ces choix, dans cet ordre** : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. **Ne propose pas de mettre en ligne pendant l'exercice** : seulement après l'étape 6 (ou si la personne le demande).
    - « Je continue » : dis-lui de cliquer « Suivant » dans le guide de la page, puis d'écrire son prompt de l'étape suivante en commençant par « Exercice Métamérisme, étape N+1 : ».
    - « Je veux ajuster » : elle écrit ce qu'elle veut changer (c'est aussi un prompt : vérifie-le de la même façon s'il commence par « Exercice Métamérisme »).
+**Pendant l'exercice, ne touche jamais à `site.config.js`** : la page Métamérisme y est déjà inscrite (ne l'ajoute pas une deuxième fois). Ne lis pas la `proposition` pour compléter : elle sert seulement à la personne.
 Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
 
 ## 5. Dépannage

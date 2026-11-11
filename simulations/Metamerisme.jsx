@@ -104,7 +104,8 @@ function Guide() {
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, setCopie] = useState(null);
   const etape = ETAPES[n];
-  const debut = `Exercice Métamérisme, étape ${n + 1} : `;
+  // La consigne d'analyse est DANS le texte copié : l'agent ne peut pas la manquer, même s'il a lu un ancien AGENTS.md.
+  const debut = `Exercice Métamérisme, étape ${n + 1} — analyse d'abord mon prompt sans coder ni me donner la réponse, puis demande-moi si je l'exécute : `;
 
   const aller = (i) => { setN(i); setVoirProposition(false); setCopie(null); ecrire("metamerisme.etape", i); };
   const indiceSuivant = () => { const t = indices.map((x, i) => (i === n ? Math.min(etape.indices.length, x + 1) : x)); setIndices(t); ecrire("metamerisme.indices", t); };
