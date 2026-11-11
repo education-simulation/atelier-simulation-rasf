@@ -11,10 +11,10 @@ export const ETAPES = [
     consigne: "Rédige un prompt pour demander à l'IA d'ajouter plusieurs illuminants : on doit pouvoir choisir la lumière de la cabine.",
     indices: [
       "Nomme précisément les illuminants voulus et ce qu'ils représentent (A : lampe à incandescence, D65 : lumière du jour, F11 : tube fluorescent).",
-      "Dis où mettre le choix (par exemple trois boutons au-dessus de la scène) et ce qui doit changer quand on clique (la teinte de l'intérieur de la cabine).",
-      "Pense au confort : le choix doit être retenu quand on recharge la page. Et précise bien la page concernée (« Dans la page Métamérisme… »).",
+      "Pense à l'aspect : une cabine plate n'est pas parlante. Demande une cabine en 3D (murs, sol et plafond en perspective), avec les boutons sur son bord, comme sur une vraie cabine de lumière.",
+      "Dis ce qui change quand on clique (la teinte de tout l'intérieur de la cabine, un voyant sur le bouton choisi) et pense au confort : le choix est retenu quand on recharge la page.",
     ],
-    proposition: "Dans la page Métamérisme, ajoute au-dessus de la scène trois boutons pour choisir la lumière de la cabine : A (lampe à incandescence), D65 (lumière du jour) et F11 (tube fluorescent). L'intérieur de la cabine prend la teinte de la lumière choisie. Retiens le choix au rechargement de la page.",
+    proposition: "Dans la page Métamérisme, transforme la cabine en vraie cabine de lumière en 3D (plafond, fond, murs et sol en perspective) et place sur son bord supérieur trois boutons pour choisir la lumière : A (lampe à incandescence), D65 (lumière du jour) et F11 (tube fluorescent). L'intérieur de la cabine (murs, sol, plafond) prend la teinte de la lumière choisie, et un voyant s'allume sur le bouton actif. Retiens le choix au rechargement de la page.",
   },
   {
     titre: "Faire glisser les cartes dans la cabine",
