@@ -112,7 +112,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
   > 5. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
   > 6. Je te propose des idées pour la suite.
   >
-  > Des petites fenêtres vont te demander la permission avant chacune de mes actions : je te dirai à chaque fois sur quel choix cliquer.
+  > ⚠️ **Important : tu vas devoir accepter beaucoup de petites fenêtres** (souvent une vingtaine, surtout au début). Elles apparaissent sous notre conversation avant chacune de mes actions : lire un fichier, en écrire un, lancer une commande. **C'est normal et sans danger** : je ne touche qu'au dossier de ton site. À chaque fois, je te dis sur quel choix cliquer ; choisis **« … always allow »** quand je te le dis, il y en aura moins ensuite.
 
 - **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (précédée du message en gras sur la petite fenêtre, 2e choix).
   - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.

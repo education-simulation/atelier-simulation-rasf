@@ -21,7 +21,7 @@ Pas besoin de compte GitHub. Il te faut seulement **Antigravity**, installé sur
    > **Copie https://github.com/education-simulation/atelier-simulation-rasf sur mon ordinateur, puis lis AGENTS.md et guide-moi.**
 
 3. L'agent te présente ce qui va se passer, puis te demande dans quel dossier ranger ton site et quel nom lui donner : clique sur ta réponse.
-4. Des petites fenêtres te demandent la permission : l'agent te dit à chaque fois sur quel choix cliquer.
+4. **Attends-toi à accepter beaucoup de petites fenêtres** (souvent une vingtaine) : elles demandent la permission avant chaque action de l'agent. C'est normal et sans danger ; l'agent te dit à chaque fois sur quel choix cliquer.
 
 L'agent te guide ensuite pas à pas, avec des questions à cliquer : le nom et la couleur de ton site, le voir sur ton ordinateur, le mettre en ligne avec Vercel (la première fois : « Continue with Google »), puis des idées pour la suite.
 Au départ, il vérifie que **Node.js** est installé (le moteur gratuit qui fait tourner l'aperçu de ton site). S'il manque, il te guide pour l'installer en 5 minutes depuis nodejs.org.
