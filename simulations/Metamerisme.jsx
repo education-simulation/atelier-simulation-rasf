@@ -13,7 +13,7 @@ import { ETAPES, IDEES, MOTS_CLES } from "../src/outils/exercice/metamerisme.js"
 
 // Ce que fait la simulation EN CE MOMENT (affiché dans le guide). À mettre à jour après chaque changement.
 const ETAT_ACTUEL = [
-  "🃏 Les deux cartes de contraste sont vierges et ne peuvent pas être déplacées.",
+  "🃏 Les deux cartes de contraste sont vierges et pour le moment immobiles.",
   "💡 Les trois boutons de la cabine de lumière ne fonctionnent pas.",
   "📈 Aucune distribution spectrale des illuminants, aucune courbe de réflectance spectrale.",
 ];
