@@ -82,7 +82,7 @@ En haut de l'aperçu (jamais en ligne), il rappelle que la page affiche **le cod
 ### Les trois boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
 - **👆 Sélectionner un élément à modifier** (orange) : la personne clique dessus ; chaque grande zone de la page s'entoure de pointillés avec un numéro ; elle clique sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur page « instabilite », section n°3 · Titre de la page, élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus).
 - **📋 Les étapes** (bleu) : la liste des étapes du parcours, cochées d'après `PROGRESSION.md`. Il disparaît quand tout est fait.
-- **🎨 Style** (violet) : fait essayer les trois styles d'un clic, **sans rien enregistrer** (le site en ligne garde le `style` de `site.config.js`). Quand la personne te dit « garde le style barre latérale » (ou blocs, ou liste), mets ce style dans `site.config.js` (`"lateral"`, `"blocs"`, `"liste"`), puis remets le site en ligne.
+- **🎨 Style** (violet) : un clic sur un des trois styles l'**enregistre** dans `site.config.js` (le serveur d'aperçu réécrit la ligne `style`), et l'aperçu se met à jour. Le site en ligne prend ce style **à la prochaine mise en ligne** : si la personne a changé de style, propose de remettre le site en ligne.
 
 ### L'aperçu du site, et son lien
 
@@ -170,7 +170,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   > **Les trois boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
   > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
   > - 📋 **Les étapes** : où on en est dans la création de ton site.
-  > - 🎨 **Style** : essaie les autres styles d'un clic, pour comparer. Si l'un te plaît, dis-le-moi et je le garde.
+  > - 🎨 **Style** : change le style de ton site d'un clic (blocs de couleur, barre latérale ou liste). Il sera en ligne à la prochaine mise en ligne.
 
   Puis la question à choix « Qu'en penses-tu ? » → Tout est bon, on le met en ligne · Je veux changer quelque chose · Je ne vois pas mon site.
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.

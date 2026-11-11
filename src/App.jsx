@@ -11,7 +11,7 @@ import { BarreLaterale } from "./moteur/BarreLaterale";
 import { Accueil } from "./moteur/Accueil";
 import { PiedDePage, APropos } from "./moteur/PiedDePage";
 import { Apercu, estApercu } from "./moteur/Apercu";
-import { ChoixStyle, STYLES, CLE_STYLE_APERCU } from "./moteur/ChoixStyle";
+import { ChoixStyle, STYLES } from "./moteur/ChoixStyle";
 import { fermerCalculatrice, useCalculatriceOuverte } from "./outils/calculatriceFlottante.js";
 
 // La calculatrice flottante, commune à tout le site : chargée seulement quand on l'ouvre.
@@ -44,22 +44,9 @@ export default function App() {
   const calculatriceOuverte = useCalculatriceOuverte();
   // Style du site (site.config.js). Dans l'aperçu seulement, le bouton « 🎨 Style » permet d'en essayer un autre
   // sans rien enregistrer : le site en ligne garde toujours celui de site.config.js.
-  const styleDuSite = STYLES.some(([id]) => id === SITE.style) ? SITE.style : "blocs";
-  // L'essai est retenu avec le style du site de ce moment-là : si l'agent change le style dans site.config.js, l'essai est oublié.
-  const [styleEssai, setStyleEssai] = useState(() => {
-    try {
-      const e = estApercu ? JSON.parse(localStorage.getItem(CLE_STYLE_APERCU) || "null") : null;
-      return e && e.base === styleDuSite ? e.essai : null;
-    } catch { return null; }
-  });
-  const style = estApercu && STYLES.some(([id]) => id === styleEssai) ? styleEssai : styleDuSite;
-  function essayerStyle(id) {
-    setStyleEssai(id);
-    try {
-      if (id === styleDuSite) localStorage.removeItem(CLE_STYLE_APERCU);
-      else localStorage.setItem(CLE_STYLE_APERCU, JSON.stringify({ essai: id, base: styleDuSite }));
-    } catch { /* sans importance */ }
-  }
+  // Style du site : celui de site.config.js. Dans l'aperçu, le bouton « 🎨 Style » le change en réécrivant
+  // cette ligne de site.config.js (voir vite.config.js) : ce qu'on voit est donc ce qui sera mis en ligne.
+  const style = STYLES.some(([id]) => id === SITE.style) ? SITE.style : "blocs";
   const sim = (SITE.pages || []).find((s) => s.id === activeId);
 
   useEffect(() => { document.documentElement.style.setProperty("--accent", SITE.couleur || "#0b4f94"); }, []);
@@ -125,7 +112,7 @@ export default function App() {
       </main>
       </div>
       {calculatriceOuverte && <Suspense fallback={null}><CalculatriceFlottante onClose={fermerCalculatrice} /></Suspense>}
-      {estApercu && <ChoixStyle actuel={style} enregistre={styleDuSite} choisir={essayerStyle} />}
+      {estApercu && <ChoixStyle actuel={style} />}
       {estApercu && <InspecteurLocal />}
     </div>
   );
