@@ -297,7 +297,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         <div style={{ display: "flex", flexWrap: "wrap", gap: 8 }}>
           <button type="button" style={{ ...bouton(), opacity: fini ? 0.5 : 1 }} disabled={fini} onClick={plusUn}>💡 {indices === 0 ? "Un indice" : fini ? "Plus d'indice" : "Un autre indice"}</button>
           <button type="button" style={bouton()} onClick={() => setVoirProposition((v) => !v)}>{voirProposition ? "🙈 Cacher la proposition" : "👀 Proposition de réponse"}</button>
-          {etape.graphiques && outil && <button type="button" style={bouton()} onClick={() => setVoirCourbes(true)}>📈 Voir les distributions spectrales</button>}
+          {etape.graphiques && outil && <button type="button" style={bouton()} onClick={() => setVoirCourbes(true)}>{etape.boutonGraphiques || "📈 Voir les distributions spectrales"}</button>}
         </div>
         {indices > 0 && (
           <ol style={{ margin: "10px 0 0", padding: "8px 12px 8px 30px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10, lineHeight: 1.55, fontSize: 14 }}>

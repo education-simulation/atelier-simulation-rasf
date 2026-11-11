@@ -25,25 +25,16 @@ export const ETAPES = [
 
   {
     titre: "Choisir la couleur des cartes",
-    motsCles: ["sur chaque carte", "sous la scène", "échantillon", "carte de contraste", "une palette de couleurs", "quand on clique", "paire métamère", "illuminant D65", "illuminant A", "réflectance spectrale", "observateur CIE 1931", "calcule à partir des spectres", "calculé, pas choisi à la main", "avec le modèle couleur", "retiens le choix au rechargement"], // surlignés dans la liste des mots clés quand l'étape est ouverte
-    consigne: "Les deux cartes sont vierges. Rédige un prompt pour pouvoir choisir la couleur d'un échantillon peint sur la carte 1, la carte 2 étant calculée pour former avec elle une paire métamère.",
+    graphiques: ["paire-metamere"], // bouton « 📈 Voir … » : réflectances d'une paire métamère du modèle couleur
+    boutonGraphiques: "📈 Voir les courbes de réflectance",
+    motsCles: ["sur chaque carte", "un bouton", "dans une fenêtre (popup)", "échantillon", "carte de contraste", "une palette de couleurs", "quand on clique", "paire métamère", "illuminant D65", "illuminant A", "réflectance spectrale", "courbes superposées", "graphique de 380 à 780 nm", "légende", "retiens le choix au rechargement"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    consigne: "Les deux cartes sont vierges. Rédige un prompt pour choisir la couleur de la carte 1, la carte 2 formant avec elle une paire métamère, et pour voir leurs courbes de réflectance.",
     indices: [
-      "Où et comment choisir ? Un échantillon peint au centre de chaque carte, et une palette de quelques couleurs : un clic choisit la couleur de la carte 1.",
-      "La carte 2 n'est pas choisie : elle est calculée pour former une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Le modèle couleur du site sait le faire (voir « ❓ Voir le modèle par défaut »).",
-      "Les couleurs sont calculées par le modèle couleur, à partir des spectres : inutile de le préciser, l'agent l'utilise d'office.",
+      "Comment choisir ? Par exemple un bouton qui ouvre une fenêtre avec une palette de couleurs : un clic choisit la couleur de la carte 1.",
+      "La carte 2 n'est pas choisie : elle forme une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A).",
+      "Que montrer ? Les courbes de réflectance des deux cartes, superposées, de 380 à 780 nm : on voit qu'elles se croisent. Les couleurs et les courbes viennent du modèle couleur, d'office.",
     ],
-    proposition: "Ajoute une palette pour choisir la couleur de l'échantillon de la carte 1 ; la carte 2 est sa paire métamère, calculée avec le modèle couleur.",
-  },
-  {
-    titre: "Construire les distributions spectrales",
-    motsCles: ["sous la scène", "dans une fenêtre (popup)", "un bouton", "distribution spectrale", "réflectance spectrale", "illuminant A", "illuminant D65", "illuminant F11", "échantillon", "affiche", "graphique de 380 à 780 nm", "courbes superposées", "légende", "avec le modèle couleur"], // surlignés dans la liste des mots clés quand l'étape est ouverte
-    consigne: "Rédige un prompt pour voir la distribution spectrale de l'illuminant choisi et la réflectance spectrale des deux échantillons.",
-    indices: [
-      "Où les afficher ? À toi de choisir : sous la scène, ou dans une fenêtre qui s'ouvre avec un bouton.",
-      "Quel graphique ? Les longueurs d'onde de 380 à 780 nm, des courbes superposées pour comparer les deux échantillons, une légende, et des axes nommés.",
-      "Que doit-on remarquer ? Les deux réflectances se croisent en plusieurs points (marque-les avec leur longueur d'onde), et le graphique de la lumière change quand on clique sur A, D65 ou F11. Les données sont déjà dans le modèle couleur.",
-    ],
-    proposition: "Affiche sous la scène la distribution spectrale de l'illuminant choisi et les réflectances spectrales des deux échantillons, avec le modèle couleur.",
+    proposition: "Crée un bouton qui ouvre une fenêtre pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère. Montre les courbes de réflectance des deux cartes.",
   },
   {
     titre: "Faire glisser les cartes dans la cabine",

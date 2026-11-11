@@ -220,7 +220,7 @@ Propose, une par une : remplir une autre page, changer la grande phrase de l'acc
 ### Construire le prompt ensemble (avant d'écrire une nouvelle simulation)
 Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation à partir d'une idée floue** : aide d'abord la personne à préciser sa demande, puis montre-lui le prompt complet **avant** de coder. Elle peut le modifier.
 
-**Le modèle à montrer** : l'exercice **Métamérisme** (menu Construire avec l'IA) est un exercice guidé. Il part d'une scène fixe : la personne écrit elle-même ses prompts (parcours guidé en 6 étapes, ou exploration libre), aidée par une liste de mots clés ; tu les vérifies avant de les exécuter. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
+**Le modèle à montrer** : l'exercice **Métamérisme** (menu Construire avec l'IA) est un exercice guidé. Il part d'une scène fixe : la personne écrit elle-même ses prompts (parcours guidé en 5 étapes, ou exploration libre), aidée par une liste de mots clés ; tu les vérifies avant de les exécuter. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
 
 **Deux façons de faire, à proposer en une question à choix** : « Comment veux-tu décrire ta simulation ? » → **Étape par étape, je te guide** · **Je te donne mon idée en vrac, propose-moi un prompt**.
 
@@ -243,7 +243,7 @@ Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui af
 0. **Relis d'abord la page, à chaque message, sans exception.** Ouvre `simulations/Metamerisme.jsx` et lis `ETAT_ACTUEL` **avant** d'analyser ou de répondre. **Ne te fie jamais à ta mémoire de la conversation** : la personne peut, dans la page, cliquer sur **« ↺ Tout recommencer »** (la page revient au départ) ou **« Reprendre une version »** (la page revient à une sauvegarde), sans te le dire. Ce que tu as codé plus tôt peut donc avoir **disparu**. Seul le fichier dit ce qui existe.
    - Si le fichier ne correspond plus à ce que tu as fait plus tôt : dis-le simplement (« 🔄 La page a été remise au départ (ou une version a été reprise) : je repars de ce qu'elle contient maintenant. »), puis traite la demande comme si de rien n'était, **analyse comprise**.
    - Ne dis **jamais** « c'est déjà fait » ou « déjà actif » sans l'avoir vérifié dans le fichier à l'instant.
-1. **Repère l'étape** : compare la demande aux `consigne` des 6 étapes.
+1. **Repère l'étape** : compare la demande aux `consigne` des étapes.
    - **Elle correspond à une étape (parcours guidé)** : **ne code pas tout de suite. Analyse d'abord le prompt** avec les `indices` de cette étape, en quelques lignes :
      - ✅ **Ce qui est réussi** (les critères présents) ; **un prompt court est un bon prompt** : l'IA devine les détails ; **ce qui existe déjà** (dans la page : boutons, cartes, cabine ; dans le modèle couleur : illuminants, observateur, calculs) **n'a pas à être redécrit** : un prompt qui s'y réfère (« active les 3 boutons d'illuminants ») est **complet** ; ne signale comme ambigu que ce que tu ne pourrais vraiment pas déduire de la page et du modèle ; n'exige pas tous les critères, ne reproche jamais l'absence d'un détail secondaire, et ne pousse pas à allonger le prompt ;
      - ⚠️ **Ce qui manque ou reste ambigu**, formulé comme une question, **sans donner la réponse** et **sans jamais recopier ni utiliser la `proposition`** ;
