@@ -183,12 +183,13 @@ function AideOutil({ outil, fermer }) {
         </div>
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
         <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites du modèle :</strong> {outil.limites}</p>}
         <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
         {outil.equations && (
           <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
               <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
-              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 Les équations : de la réflectance à la couleur</strong>
+              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 Le modèle mathématique : de la réflectance à la couleur</strong>
             </summary>
             <div style={{ display: "grid", gap: 10, paddingBottom: 10 }}>
               {outil.equations.map((q) => (
@@ -206,7 +207,7 @@ function AideOutil({ outil, fermer }) {
         {donnees && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "14px 0 4px" }}>
-              <strong style={{ flex: 1 }}>Les données (380 à 780 nm, pas de 5 nm)</strong>
+              <strong style={{ flex: 1 }}>Les données du modèle (380 à 780 nm, pas de 5 nm)</strong>
               <button type="button" style={bouton()} onClick={() => telechargerCSV("colorimetrie-toutes-les-donnees", donnees)}>⬇️ Tout télécharger (CSV)</button>
             </div>
             {donnees.map((g) => <Graphique key={g.id} g={g} />)}

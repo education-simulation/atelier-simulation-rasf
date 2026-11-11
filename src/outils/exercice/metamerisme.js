@@ -82,14 +82,15 @@ export const OUTILS = [
   {
     nom: "colorimetrie.js",
     chemin: "src/outils/colorimetrie.js",
-    resume: "Un fichier déjà dans ton site, écrit pour cet exercice : il contient les données et les calculs de colorimétrie, vérifiés.",
+    resume: "C'est le modèle de la couleur sur lequel repose la simulation, déjà dans ton site. Modéliser, c'est décrire chaque acteur par des données, puis les relier par des équations. Ici, la couleur perçue naît de trois acteurs :",
     contenu: [
-      "📈 les distributions spectrales des illuminants A, D65 et F11, de 380 à 780 nm ;",
-      "👁 l'observateur de référence CIE 1931 ;",
-      "🧮 les calculs XYZ, L*a*b* et l'écart ΔE*ab ;",
-      "🖥 la couleur à afficher à l'écran, avec l'adaptation de l'œil à la lumière ;",
-      "🎨 la fabrication d'une paire métamère à partir d'une couleur (paireMetamere).",
+      "💡 la lumière : la distribution spectrale de chaque illuminant (A, D65, F11), de 380 à 780 nm ;",
+      "🃏 l'objet : la réflectance spectrale de l'échantillon (la part de lumière renvoyée à chaque longueur d'onde) ;",
+      "👁 l'œil : l'observateur de référence CIE 1931, un œil moyen ;",
+      "🧮 le calcul qui les relie : X, Y, Z, puis L*a*b*, l'écart ΔE*ab et la couleur à l'écran ;",
+      "🎨 et un outil pour fabriquer une paire métamère (paireMetamere).",
     ],
+    limites: "Comme tout modèle, il simplifie : un œil moyen (pas le tien), une adaptation de l'œil à la lumière idéalisée, et un écran qui ne peut pas afficher toutes les couleurs réelles.",
     conseil: "Écris simplement « avec colorimetrie.js » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
     equations: [ // montrées dans la fenêtre « À quoi sert … ? », section « 🧮 Les équations »
       { titre: "1. De la réflectance à X, Y, Z (sous un illuminant)",
