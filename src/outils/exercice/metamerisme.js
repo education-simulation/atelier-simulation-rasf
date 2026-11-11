@@ -30,7 +30,7 @@ export const ETAPES = [
     indices: [
       "Où et comment choisir ? Un échantillon peint au centre de chaque carte, et une palette de quelques couleurs : un clic choisit la couleur de la carte 1.",
       "La carte 2 n'est pas choisie : elle est calculée pour former une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Le modèle couleur du site sait le faire (voir « ❓ Voir le modèle par défaut »).",
-      "Les couleurs affichées doivent être calculées à partir des spectres (réflectance spectrale de l'échantillon, distribution spectrale de la lumière, observateur CIE 1931), pas choisies à la main.",
+      "Les couleurs sont calculées par le modèle couleur, à partir des spectres : inutile de le préciser, l'agent l'utilise d'office.",
     ],
     proposition: "Ajoute une palette pour choisir la couleur de l'échantillon de la carte 1 ; la carte 2 est sa paire métamère, calculée avec le modèle couleur.",
   },
