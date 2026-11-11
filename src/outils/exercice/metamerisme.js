@@ -5,6 +5,8 @@
 //  l'agent ne doit JAMAIS s'en servir pour compléter un prompt.
 // ============================================================
 
+import { LONGUEURS, XBAR, YBAR, ZBAR, ILLUMINANTS, xyz, blanc, lab, deltaE, versEcran, paireMetamere } from "../colorimetrie.js";
+
 export const ETAPES = [
   {
     titre: "Faire fonctionner les boutons des illuminants",
@@ -89,8 +91,32 @@ export const OUTILS = [
       "🎨 la fabrication d'une paire métamère à partir d'une couleur (paireMetamere).",
     ],
     conseil: "Écris simplement « avec colorimetrie.js » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
+    donnees: donneesColorimetrie, // courbes montrées (et téléchargeables) dans la fenêtre « À quoi sert … ? »
   },
 ];
+
+// Les données de colorimetrie.js, en courbes, pour la fenêtre « À quoi sert colorimetrie.js ? ».
+function donneesColorimetrie() {
+  const { A, D65, F11 } = ILLUMINANTS;
+  // Illuminants ramenés à la même luminosité (même Y), pour pouvoir les comparer.
+  const sy = YBAR.reduce((t, v) => t + v, 0);
+  const memeY = (S) => { const k = 100 * sy / S.reduce((t, v, i) => t + v * YBAR[i], 0); return S.map((v) => v * k); };
+  const sig = (x) => 1 / (1 + Math.exp(-x));
+  const carte1 = LONGUEURS.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
+  const carte2 = paireMetamere(carte1, LONGUEURS.map((l) => sig((l - 640) / 15) - 0.2 * Math.exp(-(((l - 440) / 25) ** 2))), 7);
+  const ecarts = [D65, A, F11].map((il) => { const w = blanc(il.spectre); return `${il.nom} : ${deltaE(lab(xyz(carte1, il.spectre), w), lab(xyz(carte2, il.spectre), w)).toFixed(1).replace(".", ",")}`; });
+  return [
+    { id: "illuminants", titre: "📈 Distributions spectrales des illuminants", unite: "puissance relative (même luminosité)",
+      explication: "A : lampe à incandescence (formule de Planck, 2856 K) · D65 : lumière du jour (table CIE) · F11 : tube fluorescent à trois bandes (table CIE).",
+      series: [A, D65, F11].map((il) => ({ nom: il.nom, couleur: il.couleur, valeurs: memeY(il.spectre) })) },
+    { id: "observateur", titre: "👁 Observateur de référence CIE 1931", unite: "sensibilité",
+      explication: "Les trois courbes x̄, ȳ, z̄ : comment l'œil moyen répond à chaque longueur d'onde (ȳ = la luminosité perçue).",
+      series: [["x̄", "#dc2626", XBAR], ["ȳ", "#16a34a", YBAR], ["z̄", "#2563eb", ZBAR]].map(([nom, couleur, valeurs]) => ({ nom, couleur, valeurs })) },
+    { id: "paire-metamere", titre: "🎨 Exemple de paire métamère (réflectances spectrales)", unite: "réflectance (0 à 1)",
+      explication: `Deux couleurs calculées avec paireMetamere : identiques sous D65, différentes sous A. Écart ΔE*ab — ${ecarts.join(" · ")}.`,
+      series: [{ nom: "carte 1", couleur: versEcran(xyz(carte1, D65.spectre), blanc(D65.spectre)), valeurs: carte1 }, { nom: "carte 2", couleur: "#0f172a", valeurs: carte2, tirets: true }] },
+  ].map((g) => ({ ...g, longueurs: LONGUEURS }));
+}
 
 // Sans la boîte à outils fournie (AVEC_COLORIMETRIE = false dans la page) : le fichier que l'on construit soi-même.
 export const FICHIER_PERSO = "maColorimetrie.js";

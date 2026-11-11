@@ -110,8 +110,58 @@ function BoiteOutils({ page, avec, outils, choix }) {
   );
 }
 
+// --- Un graphique de courbes spectrales (380 à 780 nm), avec légende et téléchargement CSV ---
+function Graphique({ g }) {
+  const L = 560, H = 210, mg = { g: 44, d: 10, h: 10, b: 30 };
+  const max = Math.max(...g.series.flatMap((s) => s.valeurs)) * 1.05, min = Math.min(0, ...g.series.flatMap((s) => s.valeurs));
+  const x = (l) => mg.g + ((l - 380) / 400) * (L - mg.g - mg.d);
+  const y = (v) => H - mg.b - ((v - min) / (max - min)) * (H - mg.h - mg.b);
+  const pas = max > 20 ? 50 : max > 2 ? 0.5 : max > 1 ? 0.25 : 0.1;
+  const graduations = []; for (let v = 0; v <= max; v += pas) graduations.push(Number(v.toFixed(2)));
+  return (
+    <figure style={{ margin: "10px 0 0", padding: "8px 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
+      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+        <strong style={{ flex: 1, fontSize: 14.5 }}>{g.titre}</strong>
+        <button type="button" style={bouton()} onClick={() => telechargerCSV(`colorimetrie-${g.id}`, [g])}>⬇️ CSV</button>
+      </div>
+      <svg viewBox={`0 0 ${L} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label={g.titre}>
+        {graduations.map((v) => (
+          <g key={v}><line x1={mg.g} x2={L - mg.d} y1={y(v)} y2={y(v)} stroke="#e2e8f0" /><text x={mg.g - 5} y={y(v) + 4} fontSize="10" textAnchor="end" fill="#64748b">{v}</text></g>
+        ))}
+        {[400, 450, 500, 550, 600, 650, 700, 750].map((l) => (
+          <text key={l} x={x(l)} y={H - mg.b + 14} fontSize="10" textAnchor="middle" fill="#64748b">{l}</text>
+        ))}
+        <text x={L - mg.d} y={H - 2} fontSize="10" textAnchor="end" fill="#64748b">longueur d'onde (nm)</text>
+        {g.series.map((s) => (
+          <polyline key={s.nom} fill="none" stroke={s.couleur} strokeWidth="2.2" strokeDasharray={s.tirets ? "6 4" : undefined}
+            points={s.valeurs.map((v, i) => `${x(g.longueurs[i]).toFixed(1)},${y(v).toFixed(1)}`).join(" ")} />
+        ))}
+      </svg>
+      <figcaption style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.5 }}>
+        <span style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 2 }}>
+          {g.series.map((s) => <span key={s.nom}><span style={{ display: "inline-block", width: 16, height: 3, background: s.couleur, verticalAlign: "middle", marginRight: 4 }} />{s.nom}</span>)}
+          <span style={{ color: "#94a3b8" }}>· axe vertical : {g.unite}</span>
+        </span>
+        {g.explication}
+      </figcaption>
+    </figure>
+  );
+}
+
+// Télécharge un ou plusieurs graphiques en CSV (séparateur « ; », virgule décimale : s'ouvre tel quel dans Excel en français).
+function telechargerCSV(nom, graphiques) {
+  const L = graphiques[0].longueurs;
+  const tete = ["longueur d'onde (nm)", ...graphiques.flatMap((g) => g.series.map((s) => `${g.id} : ${s.nom}`))];
+  const lignes = L.map((l, i) => [l, ...graphiques.flatMap((g) => g.series.map((s) => s.valeurs[i].toPrecision(6).replace(".", ",")))].join(";"));
+  const blob = new Blob(["\ufeff" + [tete.join(";"), ...lignes].join("\n")], { type: "text/csv;charset=utf-8" });
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = `${nom}.csv`; a.click();
+  setTimeout(() => URL.revokeObjectURL(a.href), 1000);
+}
+
 function AideOutil({ outil, fermer }) {
   const boite = useRef(null);
+  const [donnees] = useState(() => (outil.donnees ? outil.donnees() : null));
   useEffect(() => {
     const echap = (e) => { if (e.key === "Escape") fermer(); };
     document.addEventListener("keydown", echap);
@@ -119,9 +169,9 @@ function AideOutil({ outil, fermer }) {
   }, [fermer]);
   return createPortal(
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
-      style={{ position: "fixed", inset: 0, zIndex: 9500, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
+      style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
       <div ref={boite} role="dialog" aria-label={`À quoi sert ${outil.nom} ?`}
-        style={{ background: "#fff", borderRadius: 18, width: "min(520px, 100%)", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
+        style={{ background: "#fff", borderRadius: 18, width: outil.donnees ? "min(760px, 100%)" : "min(520px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <strong style={{ fontSize: 18, flex: 1 }}>🧰 À quoi sert <code>{outil.nom}</code> ?</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
@@ -129,6 +179,15 @@ function AideOutil({ outil, fermer }) {
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
         <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
         <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
+        {donnees && (
+          <>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "14px 0 4px" }}>
+              <strong style={{ flex: 1 }}>Les données (380 à 780 nm, pas de 5 nm)</strong>
+              <button type="button" style={bouton()} onClick={() => telechargerCSV("colorimetrie-toutes-les-donnees", donnees)}>⬇️ Tout télécharger (CSV)</button>
+            </div>
+            {donnees.map((g) => <Graphique key={g.id} g={g} />)}
+          </>
+        )}
         <p style={{ margin: "8px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 {outil.chemin}</p>
       </div>
     </div>,
