@@ -184,6 +184,25 @@ function AideOutil({ outil, fermer }) {
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
         <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
         <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
+        {outil.equations && (
+          <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
+            <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
+              <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
+              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 Les équations : de la réflectance à la couleur</strong>
+            </summary>
+            <div style={{ display: "grid", gap: 10, paddingBottom: 10 }}>
+              {outil.equations.map((q) => (
+                <div key={q.titre}>
+                  <strong style={{ fontSize: 14 }}>{q.titre}</strong>
+                  <div style={{ margin: "4px 0", padding: "6px 10px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, fontFamily: "'Cambria Math', 'STIX Two Math', Georgia, serif", fontSize: 15, lineHeight: 1.7 }}>
+                    {q.formules.map((f) => <div key={f}>{f}</div>)}
+                  </div>
+                  <span style={{ fontSize: 12.5, color: "#475569" }}>{q.note}</span>
+                </div>
+              ))}
+            </div>
+          </details>
+        )}
         {donnees && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "14px 0 4px" }}>
