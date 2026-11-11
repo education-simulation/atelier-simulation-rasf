@@ -243,7 +243,16 @@ Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui af
    - une appréciation en une ligne : « prompt complet », « presque complet » ou « à compléter ».
 2. Puis pose la question à choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e**. (Si le prompt est complet, mets « Exécute-le » en premier.)
 3. Si elle corrige, elle renvoie un nouveau message « Exercice Métamérisme, étape N : … » : recommence la vérification.
-4. Si elle choisit « Exécute-le tel quel », fais **exactement ce que dit son prompt**, rien de plus (ne prends pas d'avance sur les étapes suivantes, ne complète pas en douce ce qui manquait), puis montre le résultat (lien de l'aperçu, Cmd + R / Ctrl + R) et dis-lui de cliquer « Suivant » dans le guide de la page.
+   (Pour la question de l'étape 2, utilise exactement ces choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e**.)
+4. Si elle choisit « Exécute-le tel quel », fais **exactement ce que dit son prompt**, rien de plus (ne prends pas d'avance sur les étapes suivantes, ne complète pas en douce ce qui manquait).
+5. **Puis commente le résultat** (3 à 5 lignes, sans donner la réponse) :
+   - 👀 **Ce que ton prompt a produit** : ce qui a changé dans la page, en une ou deux phrases (le lien de l'aperçu, puis Cmd + R / Ctrl + R) ;
+   - ✅ **Ce qui correspond à l'objectif** de l'étape, en citant les mots du prompt qui l'ont permis ;
+   - ⚠️ **Ce qui manque encore** par rapport aux critères de l'étape, et **pourquoi** : relie-le à ce que le prompt ne disait pas (« ton prompt ne précisait pas … , donc je ne l'ai pas fait ») ;
+   - 💡 une astuce d'écriture de prompt en une ligne (être précis sur l'endroit, le comportement, ce qui doit être retenu…).
+6. Termine par la question à choix, **avec exactement ces choix, dans cet ordre** : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. **Ne propose pas de mettre en ligne pendant l'exercice** : seulement après l'étape 6 (ou si la personne le demande).
+   - « Je continue » : dis-lui de cliquer « Suivant » dans le guide de la page, puis d'écrire son prompt de l'étape suivante en commençant par « Exercice Métamérisme, étape N+1 : ».
+   - « Je veux ajuster » : elle écrit ce qu'elle veut changer (c'est aussi un prompt : vérifie-le de la même façon s'il commence par « Exercice Métamérisme »).
 Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
 
 ## 5. Dépannage
