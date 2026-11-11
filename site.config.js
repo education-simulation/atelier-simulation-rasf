@@ -53,6 +53,7 @@ export default {
   //   description : (facultatif) une phrase courte, affichée sur l'accueil des styles « lateral » et « liste »
   pages: [
     { id: "metamerisme", titre: "Métamérisme", icone: "🎨", menu: "IA", fichier: "Metamerisme", description: "Exercice : construis la simulation avec l'IA, une étape à la fois, à partir d'une cabine et de deux cartes." },
+    { id: "titrage-direct", titre: "Titrage direct", icone: "⚗️", menu: "IA", fichier: "TitrageDirect", description: "Exercice : construis le titrage du diiode du Lugol avec l'IA, à partir d'une burette et d'un bécher vides." },
 
     { id: "masse-volumique", titre: "Masse volumique au pycnomètre", icone: "⚖️", menu: "Ex", fichier: "MasseVolumique", description: "Parcours guidé : peser, calculer, comparer à la valeur attendue." },
     { id: "extrait-sec", titre: "Extrait sec à l'étuve", icone: "🔥", menu: "Ex", fichier: "ExtraitSec", description: "Sécher jusqu'à masse constante et calculer la teneur en matière sèche." },
