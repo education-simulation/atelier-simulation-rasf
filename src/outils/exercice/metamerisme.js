@@ -12,11 +12,11 @@ const MODELE_PERSO = import.meta.glob("../maColorimetrie.js");
 export const ETAPES = [
   {
     titre: "Faire fonctionner les boutons des illuminants",
-    graphiques: ["illuminants"], // bouton « 📈 Voir … » dans l'étape : courbes du modèle couleur choisi
+    graphiques: ["illuminants"], // bouton « 📈 Voir … » dans l'étape : courbes des modèles couleur choisi
     motsCles: ["sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre", "sur le fond de la cabine", "distribution spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [
-      "Les trois boutons et les trois illuminants existent déjà (sur la cabine et dans le modèle couleur) : inutile de les décrire, dis juste quoi en faire.",
+      "Les trois boutons et les trois illuminants existent déjà (sur la cabine et dans les modèles couleur) : inutile de les décrire, dis juste quoi en faire.",
       "Un verbe d'action et la cible suffisent : « active… », « fais fonctionner… ».",
       "Pour aller plus loin (facultatif) : tracer la distribution spectrale de l'illuminant choisi sur le fond de la cabine, un voyant sur le bouton actif, ou le choix retenu au rechargement.",
     ],
@@ -25,14 +25,14 @@ export const ETAPES = [
 
   {
     titre: "Choisir la couleur des cartes",
-    graphiques: ["paire-metamere"], // bouton « 📈 Voir … » : réflectances d'une paire métamère du modèle couleur
+    graphiques: ["paire-metamere"], // bouton « 📈 Voir … » : réflectances d'une paire métamère des modèles couleur
     boutonGraphiques: "📈 Voir les courbes de réflectance",
     motsCles: ["sur chaque carte", "un bouton", "dans une fenêtre (popup)", "échantillon", "carte de contraste", "une palette de couleurs", "quand on clique", "paire métamère", "illuminant D65", "illuminant A", "réflectance spectrale", "courbes superposées", "graphique de 380 à 780 nm", "légende", "retiens le choix au rechargement"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les deux cartes sont vierges. Rédige un prompt pour choisir la couleur de la carte 1, la carte 2 formant avec elle une paire métamère, et pour voir leurs courbes de réflectance.",
     indices: [
       "Comment choisir ? Par exemple un bouton qui ouvre une fenêtre avec une palette de couleurs : un clic choisit la couleur de la carte 1.",
       "La carte 2 n'est pas choisie : elle forme une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Ses courbes croisent celles de la carte 1 au moins 3 fois et s'en écartent dans le rouge.",
-      "Que montrer ? Les courbes de réflectance des deux cartes, superposées, de 380 à 780 nm : on voit qu'elles se croisent. Les couleurs et les courbes viennent du modèle couleur, d'office.",
+      "Que montrer ? Les courbes de réflectance des deux cartes, superposées, de 380 à 780 nm : on voit qu'elles se croisent. Les couleurs et les courbes viennent des modèles couleur, d'office.",
     ],
     proposition: "Crée un bouton qui ouvre une fenêtre pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère. Montre les courbes de réflectance des deux cartes.",
   },
@@ -49,10 +49,10 @@ export const ETAPES = [
   },
   {
     titre: "Mesurer l'écart de couleur",
-    motsCles: ["sous la scène", "écart ΔE*ab", "échantillon", "avec le modèle couleur", "calcule à partir des spectres", "affiche", "valeur arrondie", "vert / orange / rouge selon le résultat", "phrase d'explication pour l'élève", "surligne", "zone surlignée", "réflectance spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    motsCles: ["sous la scène", "écart ΔE*ab", "échantillon", "avec les modèles couleur", "calcule à partir des spectres", "affiche", "valeur arrondie", "vert / orange / rouge selon le résultat", "phrase d'explication pour l'élève", "surligne", "zone surlignée", "réflectance spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour mesurer et afficher la différence de couleur entre les deux cartes, sous la lumière où elles se trouvent.",
     indices: [
-      "Quelle mesure ? L'écart ΔE*ab entre les deux échantillons, calculé avec le modèle couleur, sous la lumière où sont les cartes.",
+      "Quelle mesure ? L'écart ΔE*ab entre les deux échantillons, calculé avec les modèles couleur, sous la lumière où sont les cartes.",
       "Comment le rendre lisible ? Une valeur arrondie, une couleur verte, orange ou rouge selon que la différence se voit ou non, et une phrase d'explication.",
       "Pour comprendre pourquoi : surligne sur le graphique des réflectances la zone où les deux courbes s'écartent le plus, et fais le lien avec la lumière choisie.",
     ],
@@ -72,7 +72,7 @@ export const ETAPES = [
 ];
 
 // Les outils déjà présents dans le site, expliqués dans le guide (« 🧰 C'est quoi … ? »).
-// Les équations du modèle couleur (fourni ou construit), montrées dans la fenêtre « ❓ Voir le modèle ».
+// Les équations des modèles couleur (fourni ou construit), montrées dans la fenêtre « ❓ Voir le modèle ».
 const EQUATIONS = [ // montrées dans la fenêtre « À quoi sert … ? », section « 🧮 Les équations »
   { titre: "1. De la réflectance à X, Y, Z (sous un illuminant)",
     formules: ["X = k · Σ S(λ) · R(λ) · x̄(λ)", "Y = k · Σ S(λ) · R(λ) · ȳ(λ)", "Z = k · Σ S(λ) · R(λ) · z̄(λ)", "k = 100 / Σ S(λ) · ȳ(λ)"],
@@ -88,7 +88,7 @@ const EQUATIONS = [ // montrées dans la fenêtre « À quoi sert … ? », sect
     note: "Repères : moins de 1, invisible ; de 1 à 3, visible pour un œil exercé ; au-delà, nettement visible." },
   { titre: "5. La couleur affichée à l'écran",
     formules: ["XYZ → adaptation de Bradford, à 40 % (blanc de l'illuminant → blanc D65)", "→ RVB linéaire (matrice sRGB)", "→ C = 12,92 · c  si c ≤ 0,0031308,  sinon  1,055 · c^(1/2,4) − 0,055"],
-    note: "L'adaptation de Bradford imite l'œil qui s'habitue à la lumière. Le modèle ne l'applique qu'à 40 % (choix pédagogique) : la teinte de la lampe et l'écart entre deux cartes métamères sautent aux yeux." },
+    note: "L'adaptation de Bradford imite l'œil qui s'habitue à la lumière. L'adaptation n'est appliquée qu'à 40 % (choix pédagogique) : la teinte de la lampe et l'écart entre deux cartes métamères sautent aux yeux." },
   { titre: "6. La paire métamère",
     formules: ["R₂(λ) = R₁(λ) + k · b(λ)", "Σ S_D65 · b · x̄ = Σ S_D65 · b · ȳ = Σ S_D65 · b · z̄ = 0"],
     note: "b est un « noir métamérique » : invisible sous D65. Les deux échantillons ont donc exactement les mêmes X, Y, Z sous D65, mais pas sous A ou F11 ; b change de signe au moins 3 fois, d'où les croisements des deux courbes." },
@@ -96,19 +96,20 @@ const EQUATIONS = [ // montrées dans la fenêtre « À quoi sert … ? », sect
 
 export const OUTILS = [
   {
-    titre: "Le modèle couleur fourni",
+    titre: "Les modèles couleur par défaut",
     nom: "colorimetrie.js",
     chemin: "src/outils/colorimetrie.js",
-    resume: "C'est le modèle de la couleur sur lequel repose la simulation, déjà dans ton site. Modéliser, c'est décrire chaque acteur par des données, puis les relier par des équations. Ici, la couleur perçue naît de trois acteurs :",
+    resume: "Ce sont les modèles de la couleur sur lesquels repose la simulation, déjà dans ton site. Modéliser, c'est décrire chaque acteur par des données, puis les relier par des équations. Ici, chaque acteur a son modèle :",
     contenu: [
-      "💡 la lumière : la distribution spectrale de chaque illuminant (A, D65, F11), de 380 à 780 nm ;",
+      "💡 la lumière : un modèle par illuminant, sa distribution spectrale (A par la loi de Planck, D65 et F11 par les tables CIE) ;",
       "🃏 l'objet : la réflectance spectrale de l'échantillon (la part de lumière renvoyée à chaque longueur d'onde) ;",
-      "👁 l'œil : l'observateur de référence CIE 1931, un œil moyen ;",
-      "🧮 le calcul qui les relie : X, Y, Z, puis L*a*b*, l'écart ΔE*ab et la couleur à l'écran ;",
-      "🎨 et un outil pour fabriquer une paire métamère (paireMetamere).",
+      "👁 l'œil : le modèle de l'observateur de référence CIE 1931, un œil moyen ;",
+      "🧮 la perception : le modèle CIELAB (L*a*b*, écart ΔE*ab) ;",
+      "🌗 l'adaptation de l'œil à la lumière : le modèle de Bradford ;",
+      "🎨 la paire métamère : le modèle du « noir métamérique », qui fabrique une carte 2 identique sous D65.",
     ],
-    limites: "Comme tout modèle, il simplifie : un œil moyen (pas le tien), une adaptation de l'œil volontairement faible (40 %) pour que les changements de couleur se voient bien, et un écran qui ne peut pas afficher toutes les couleurs réelles.",
-    conseil: "Écris simplement « avec le modèle couleur » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
+    limites: "Comme tout modèle, ils simplifient : un œil moyen (pas le tien), une adaptation de l'œil volontairement faible (40 %) pour que les changements de couleur se voient bien, et un écran qui ne peut pas afficher toutes les couleurs réelles.",
+    conseil: "Écris simplement « avec les modèles couleur » dans ton prompt (ou rien : l'agent les utilise d'office) : l'IA n'invente pas les données, et les couleurs sont justes.",
     equations: EQUATIONS, // montrées dans la fenêtre, section « 🧮 Le modèle mathématique »
     controlePaire,
     ecartJour,
@@ -198,7 +199,7 @@ function donneesColorimetrie(m = MODELE_FOURNI) {
     { id: "illuminants", titre: "📈 Distributions spectrales normalisées des illuminants (maximum = 1)", unite: "puissance normalisée",
       explication: m === MODELE_FOURNI
         ? "A : lampe à incandescence (formule de Planck, 2856 K) · D65 : lumière du jour (table CIE) · F11 : tube fluorescent à trois bandes (table CIE)."
-        : `A : ${A.detail || A.type || "lampe à incandescence"} · D65 : ${D65.detail || D65.type || "lumière du jour"} · F11 : ${F11.detail || F11.type || "tube fluorescent"} (données de ton modèle).`,
+        : `A : ${A.detail || A.type || "lampe à incandescence"} · D65 : ${D65.detail || D65.type || "lumière du jour"} · F11 : ${F11.detail || F11.type || "tube fluorescent"} (données de tes modèles).`,
       series: [A, D65, F11].map((il) => ({ nom: il.nom, couleur: il.couleur, valeurs: normalisee(il.spectre) })) },
     { id: "observateur", titre: "👁 Observateur de référence CIE 1931", unite: "sensibilité",
       explication: "Les trois courbes x̄, ȳ, z̄ : comment l'œil moyen répond à chaque longueur d'onde (ȳ = la luminosité perçue).",
@@ -214,26 +215,26 @@ export const FICHIER_PERSO = "maColorimetrie.js";
 
 // Étape 0, seulement sans la boîte à outils fournie : la construire.
 export const ETAPE_OUTILS = {
-  titre: "Construire ton modèle couleur",
-  motsCles: ["crée un fichier", "mon modèle couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "observateur CIE 1931", "illuminant A", "illuminant D65", "illuminant F11", "écart ΔE*ab", "paire métamère", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "calculé, pas choisi à la main", "n'utilise pas le modèle fourni"], // surlignés quand l'étape est ouverte
-  consigne: "Tu construis toi-même le modèle couleur. Rédige un prompt pour que l'IA crée les données spectrales et les calculs dont la simulation aura besoin, y compris la fabrication d'une paire métamère VÉRIFIÉE.",
+  titre: "Construire tes modèles couleur",
+  motsCles: ["crée un fichier", "mes modèles couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "observateur CIE 1931", "illuminant A", "illuminant D65", "illuminant F11", "écart ΔE*ab", "paire métamère", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "calculé, pas choisi à la main", "n'utilise pas les modèles par défaut"], // surlignés quand l'étape est ouverte
+  consigne: "Tu construis toi-même les modèles couleur. Rédige un prompt pour que l'IA crée les données spectrales et les calculs dont la simulation aura besoin, y compris la fabrication d'une paire métamère VÉRIFIÉE.",
   indices: [
     "Quelles données ? Les distributions spectrales des illuminants A, D65 et F11, et l'observateur CIE 1931, de 380 à 780 nm, tirées des tables officielles de la CIE (pas de mémoire : sinon l'IA peut en inventer une partie).",
     "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab et la couleur à l'écran.",
     "Le cœur du métamérisme : la carte 2 doit avoir EXACTEMENT la même couleur que la carte 1 sous D65, ses courbes doivent croiser celles de la carte 1 au moins 3 fois et s'en écarter dans le rouge. Exige que chaque paire soit vérifiée, et refusée puis refaite si une règle n'est pas respectée.",
   ],
-  proposition: "Crée mon modèle couleur avec les tables officielles de la CIE (pas de mémoire) : illuminants A, D65, F11 et observateur CIE 1931, de 380 à 780 nm. Ajoute XYZ, L*a*b*, ΔE*ab, la couleur à l'écran, et une paire métamère : même couleur sous D65, au moins 3 croisements, écart dans le rouge ; vérifie chaque paire et refais le tirage si une règle n'est pas respectée. N'utilise pas le modèle fourni.",
+  proposition: "Crée mes modèles couleur avec les tables officielles de la CIE (pas de mémoire) : illuminants A, D65, F11 et observateur CIE 1931, de 380 à 780 nm. Ajoute XYZ, L*a*b*, ΔE*ab, la couleur à l'écran, et une paire métamère : même couleur sous D65, au moins 3 croisements, écart dans le rouge ; vérifie chaque paire et refais le tirage si une règle n'est pas respectée. N'utilise pas les modèles par défaut.",
   // L'étape ne peut être terminée que si le contrôle automatique du modèle est entièrement ✅.
   exigeModeleValide: true,
 };
 
 export const OUTILS_SANS = [
   {
-    titre: "Modèle en cours de construction",
-    titreComplet: "Ton modèle couleur, complet", // quand tous les éléments sont ✅
+    titre: "Modèles en cours de construction",
+    titreComplet: "Tes modèles couleur, complets", // quand tous les éléments sont ✅
     nom: "maColorimetrie.js",
     chemin: "src/outils/maColorimetrie.js",
-    resume: "Ton propre modèle couleur, construit par l'IA à l'étape 0, à la place du modèle fourni. Il doit contenir :",
+    resume: "Tes propres modèles couleur, construits par l'IA à l'étape 0, à la place des modèles par défaut. Ils doivent contenir :",
     contenu: [
       "📈 les distributions spectrales des illuminants A, D65 et F11, de 380 à 780 nm, tirées des tables officielles de la CIE ;",
       "👁 l'observateur de référence CIE 1931 ;",
@@ -258,7 +259,7 @@ ETAPES.outilsSans = OUTILS_SANS;
 ETAPES.etapeOutils = ETAPE_OUTILS;
 ETAPES.fichierPerso = FICHIER_PERSO;
 // Mots clés montrés seulement quand on construit sa boîte à outils.
-ETAPES.motsSansSeulement = ["crée un fichier", "mon modèle couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas le modèle fourni"];
+ETAPES.motsSansSeulement = ["crée un fichier", "mes modèles couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas les modèles par défaut"];
 
 // Idées de l'exploration libre : les mêmes objectifs que le parcours guidé, en demandes courtes, dans n'importe quel ordre.
 export const IDEES = [
@@ -274,9 +275,9 @@ export const IDEES = [
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
   { titre: "📍 Où ?", mots: ["sur le bord de la cabine", "sur le fond de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
-  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "une palette de couleurs", "le modèle couleur", "mon modèle couleur", "tables officielles de la CIE", "distribution spectrale", "réflectance spectrale", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
+  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "une palette de couleurs", "les modèles couleur", "mes modèles couleur", "tables officielles de la CIE", "distribution spectrale", "réflectance spectrale", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
   { titre: "🛠 Les actions", mots: ["crée un fichier", "ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
   { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "encadré « À retenir »", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
-  { titre: "✅ Les exigences", mots: ["pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "n'utilise pas le modèle fourni", "calculé, pas choisi à la main", "avec le modèle couleur", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
+  { titre: "✅ Les exigences", mots: ["pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "n'utilise pas les modèles par défaut", "calculé, pas choisi à la main", "avec les modèles couleur", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
 ];

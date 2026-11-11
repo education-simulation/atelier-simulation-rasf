@@ -20,6 +20,12 @@ export function publierCourbes(series) {
 
 export const courbesPubliees = () => courbes;
 
+// Appelé par le cadre au montage de la page : les courbes d'une version précédente de la page sont oubliées.
+// Le bandeau de contrôle ne s'affiche donc que si la page ACTUELLE a des cartes colorées et les publie.
+export function oublierCourbes() {
+  courbes = null;
+}
+
 export function useCourbesPubliees() {
   return useSyncExternalStore((f) => { abonnes.add(f); return () => abonnes.delete(f); }, () => courbes);
 }

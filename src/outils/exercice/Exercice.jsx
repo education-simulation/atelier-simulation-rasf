@@ -12,7 +12,7 @@
 // ============================================================
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { courbesPubliees, useCourbesPubliees } from "./courbes.js";
+import { courbesPubliees, useCourbesPubliees, oublierCourbes } from "./courbes.js";
 import { estApercu } from "../../moteur/Apercu";
 
 const lire = (cle, defaut) => { try { const v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); } catch { return defaut; } };
@@ -70,12 +70,12 @@ function MotsCles({ groupes, surlignes = new Set(), pourEtapes = [] }) {
 }
 
 // --- État actuel de la simulation : ce qui existe déjà et ce qui ne marche pas encore ---
-function EtatActuel({ etat }) {
+function EtatActuel({ etat, ligneModele }) {
   if (!etat?.length) return null;
   return (
     <div style={{ background: "#fff", border: "1px solid #fcd34d", borderLeft: "5px solid #f59e0b", borderRadius: 10, padding: "8px 12px", fontSize: 14, lineHeight: 1.55 }}>
       <strong>📍 État actuel de la simulation</strong>
-      <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>{etat.map((l, i) => <li key={i}>{l}</li>)}</ul>
+      <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>{etat.map((l, i) => <li key={i}>{l}</li>)}{ligneModele && <li>{ligneModele}</li>}</ul>
     </div>
   );
 }
@@ -93,9 +93,9 @@ function BoiteOutils({ page, avec, outils, choix }) {
   const o = outils?.[0];
   return (
     <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 13.5, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "6px 10px" }}>
-      <span style={{ fontWeight: 800 }}>🧰 Modèle couleur</span>
+      <span style={{ fontWeight: 800 }}>🧰 Modèles couleur</span>
       {choix && (
-        <div role="tablist" aria-label="Modèle couleur" className="ex-bascule ex-bascule-petite">
+        <div role="tablist" aria-label="Modèles couleur" className="ex-bascule ex-bascule-petite">
           <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Par défaut</button>
           <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 À construire</button>
         </div>
@@ -103,7 +103,7 @@ function BoiteOutils({ page, avec, outils, choix }) {
       {message && <span>{message}</span>}
       {o && (
         <button type="button" onClick={() => setAide(o)} style={{ marginLeft: "auto", border: "none", background: "none", padding: "4px 2px", font: "inherit", fontSize: 13.5, fontWeight: 700, color: "var(--accent)", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          ❓ Voir le modèle {avec ? "par défaut" : "à construire"}
+          ❓ Voir les modèles {avec ? "par défaut" : "à construire"}
         </button>
       )}
       {aide && <AideOutil outil={aide} fermer={() => setAide(null)} />}
@@ -190,19 +190,19 @@ function FenetreGraphiques({ outil, ids, fermer }) {
   const publiees = courbesPubliees();
   const liste = (Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : []).map((g) => (g.id === "paire-metamere" && publiees
     ? { ...g, titre: "🎨 Réflectances spectrales de tes deux cartes", series: publiees.map((c, i) => ({ ...c, tirets: i > 0 })), explication: explicationPaire(publiees, outil) }
-    : g.id === "paire-metamere" ? { ...g, explication: `${g.explication} (Exemple tiré du modèle : ta simulation ne montre pas encore ses propres cartes ici.)` } : g));
+    : g.id === "paire-metamere" ? { ...g, explication: `${g.explication} (Exemple tiré des modèles : ta simulation ne montre pas encore ses propres cartes ici.)` } : g));
   return createPortal(
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
       style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
-      <div ref={boite} role="dialog" aria-label="Courbes du modèle couleur"
+      <div ref={boite} role="dialog" aria-label="Courbes des modèles couleur"
         style={{ background: "#fff", borderRadius: 18, width: "min(760px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <strong style={{ fontSize: 18, flex: 1 }}>📈 {outil.donnees ? "Modèle par défaut" : "Ton modèle couleur"}</strong>
+          <strong style={{ fontSize: 18, flex: 1 }}>📈 {outil.donnees ? "Modèles par défaut" : "Tes modèles couleur"}</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
-        {donnees === "chargement" && <p>⏳ Lecture de ton modèle…</p>}
-        {donnees === "absent" && <p>📭 Ton modèle n'existe pas encore : fais l'étape 0.</p>}
-        {donnees === "erreur" && <p>⚠️ Ton modèle contient une erreur : demande à l'agent de la corriger.</p>}
+        {donnees === "chargement" && <p>⏳ Lecture de tes modèles…</p>}
+        {donnees === "absent" && <p>📭 Tes modèles n'existent pas encore : fais l'étape 0.</p>}
+        {donnees === "erreur" && <p>⚠️ Tes modèles contiennent une erreur : demande à l'agent de la corriger.</p>}
         {liste.map((g) => <Graphique key={g.id} g={g} ouvert />)}
       </div>
     </div>,
@@ -243,16 +243,16 @@ function AideOutil({ outil, fermer }) {
         ) : (
           <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
         )}
-        {perso === "chargement" && <p style={{ margin: "0 0 10px" }}>⏳ Lecture de ton modèle…</p>}
-        {perso === "absent" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#f1f5f9", borderRadius: 10 }}>📭 <strong>Ton modèle n'existe pas encore.</strong> Fais l'étape 0 : ses éléments apparaîtront ici, vérifiés un par un, avec leurs courbes.</p>}
-        {perso === "erreur" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10 }}>⚠️ <strong>Ton modèle contient une erreur</strong> et ne peut pas être lu. Demande à l'agent de la corriger.</p>}
-        {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites du modèle :</strong> {outil.limites}</p>}
+        {perso === "chargement" && <p style={{ margin: "0 0 10px" }}>⏳ Lecture de tes modèles…</p>}
+        {perso === "absent" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#f1f5f9", borderRadius: 10 }}>📭 <strong>Tes modèles n'existent pas encore.</strong> Fais l'étape 0 : ses éléments apparaîtront ici, vérifiés un par un, avec leurs courbes.</p>}
+        {perso === "erreur" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10 }}>⚠️ <strong>Tes modèles contiennent une erreur</strong> et ne peuvent pas être lus. Demande à l'agent de la corriger.</p>}
+        {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites des modèles :</strong> {outil.limites}</p>}
         <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
         {outil.equations && (
           <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
               <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
-              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 Le modèle mathématique : de la réflectance à la couleur</strong>
+              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 Les modèles mathématiques : de la réflectance à la couleur</strong>
             </summary>
             <div style={{ display: "grid", gap: 10, paddingBottom: 10 }}>
               {outil.equations.map((q) => (
@@ -270,13 +270,13 @@ function AideOutil({ outil, fermer }) {
         {donnees && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "14px 0 4px" }}>
-              <strong style={{ flex: 1 }}>Les données du modèle (380 à 780 nm, pas de 5 nm)</strong>
+              <strong style={{ flex: 1 }}>Les données des modèles (380 à 780 nm, pas de 5 nm)</strong>
               <button type="button" style={bouton()} onClick={() => telechargerCSV("colorimetrie-toutes-les-donnees", donnees)}>⬇️ Tout télécharger (CSV)</button>
             </div>
             {donnees.map((g) => <Graphique key={g.id} g={g} />)}
           </>
         )}
-        <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : le modèle est dans le fichier <code>{outil.chemin}</code>.</p>
+        <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : les modèles sont dans le fichier <code>{outil.chemin}</code>.</p>
       </div>
     </div>,
     document.body,
@@ -320,7 +320,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
         {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>{parIA ? "✅ validée par l'IA" : "✅ terminée"}</span>}
-        {bloquee && <span style={{ fontSize: 12.5, color: "#b91c1c", background: "#fee2e2", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>❌ modèle à corriger</span>}
+        {bloquee && <span style={{ fontSize: 12.5, color: "#b91c1c", background: "#fee2e2", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>❌ modèles à corriger</span>}
         {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {precedente}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
@@ -345,15 +345,15 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         {voirCourbes && <FenetreGraphiques outil={outil} ids={etape.graphiques} fermer={() => setVoirCourbes(false)} />}
         {controle && (
           <div style={{ marginTop: 12, padding: "8px 12px", borderRadius: 10, fontSize: 14, background: bloquee ? "#fef2f2" : "#f0fdf4", border: `1px solid ${bloquee ? "#fecaca" : "#bbf7d0"}` }}>
-            <strong>🔎 Contrôle automatique de ton modèle</strong>
-            {controle === "absent" && <div>📭 Le modèle n'existe pas encore.</div>}
-            {controle === "erreur" && <div>⚠️ Le modèle contient une erreur et ne peut pas être lu.</div>}
+            <strong>🔎 Contrôle automatique de tes modèles</strong>
+            {controle === "absent" && <div>📭 Les modèles n'existent pas encore.</div>}
+            {controle === "erreur" && <div>⚠️ Les modèles contiennent une erreur et ne peuvent pas être lus.</div>}
             {Array.isArray(controle) && (
               <ul style={{ margin: "4px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 2 }}>
                 {controle.map((v) => <li key={v.texte}>{v.ok ? "✅" : "❌"} {v.texte}</li>)}
               </ul>
             )}
-            {bloquee && <div style={{ marginTop: 4, fontWeight: 700 }}>Tant qu'une ligne est ❌, l'étape n'est pas terminée : demande à l'IA de corriger son modèle.</div>}
+            {bloquee && <div style={{ marginTop: 4, fontWeight: 700 }}>Tant qu'une ligne est ❌, l'étape n'est pas terminée : demande à l'IA de corriger ses modèles.</div>}
           </div>
         )}
         <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12, padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontSize: 14.5, fontWeight: 700,
@@ -400,7 +400,7 @@ function Sauvegardes({ page }) {
   };
   const reprendre = async (fichier) => {
     if (confirmer !== fichier) return setConfirmer(fichier);
-    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier }); setMessage("✅ Version reprise : la page se recharge. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : l'agent repartira de cette version."); }
+    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier }); setMessage("✅ Version reprise : la page se recharge. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : l'agent repartira de cette version.");  setTimeout(() => window.location.reload(), 1800);}
     catch (e) { setMessage(`⚠️ ${e.message}`); }
   };
   const lisible = (f) => f.replace(/\.jsx$/, "").replace(/^(\d{4})-(\d\d)-(\d\d)_(\d\d)h(\d\d)-\d\d-?/, "$3/$2/$1 à $4h$5 · ").replace(/-/g, " ");
@@ -445,7 +445,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
       remiseAZero();
       await appel("zero", { page });
       setEtat("✅ C'est reparti du début. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : sinon l'agent croit que tout est encore fait.");
-      setTimeout(fermer, 1500);
+      setTimeout(() => window.location.reload(), 1800); // recharge complète : rien ne reste de l'ancienne version
     } catch (e) { setEtat(`⚠️ ${e.message}`); }
   };
   return (
@@ -483,6 +483,8 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   const outils = sans ? etapes.outilsSans || [] : etapes.outils || [];
   const groupesMots = sans ? motsCles.map((g) => ({ ...g, mots: g.mots.map(adapter) })) : motsCles.map((g) => ({ ...g, mots: g.mots.filter((m) => !(etapes.motsSansSeulement || []).includes(m)) }));
 
+  // Oublie les courbes d'une version précédente de la page (avant que la scène ne publie les siennes).
+  useState(() => { oublierCourbes(); return null; });
   const [mode, setMode] = useState(() => (lire(`${page}.mode`, "guide") === "libre" ? "libre" : "guide"));
   // « 🙈 Masquer le guide » : la simulation seule, sans toucher au code (retenu au rechargement).
   const [guideMasque, setGuideMasque] = useState(() => lire(`${page}.guideMasque`, false) === true);
@@ -583,7 +585,9 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
               ))}
             </div>
           </div>
-          <EtatActuel etat={etat} />
+          <EtatActuel etat={etat} ligneModele={etapes.etapeOutils ? (sans
+            ? "🧰 Tu construis tes propres modèles couleur (étape 0). Tu peux revenir aux modèles par défaut avec « Modèles couleur » ci-dessous."
+            : "🧰 Les modèles couleur par défaut sont prêts. Tu peux aussi construire les tiens : « Modèles couleur » → « À construire ».") : null} />
           <ControleJour outil={outils[0]} />
           <BoiteOutils page={page} avec={!sans} outils={outils} choix={estApercu && !!etapes.etapeOutils} />
           {mode === "guide"
