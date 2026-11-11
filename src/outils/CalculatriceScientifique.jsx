@@ -190,7 +190,7 @@ export function CalculatriceScientifique({ onClose, onInserer }) {
           </div>
           {!repliee && (
             <div style={{ padding: 6 }}>
-              <Calculatrice compacte onInserer={(v) => { onInserer?.(versReponse(v)); onClose?.(); }} />
+              <Calculatrice compacte onInserer={onInserer ? (v) => { onInserer(versReponse(v)); onClose?.(); } : undefined} />
             </div>
           )}
         </div>
