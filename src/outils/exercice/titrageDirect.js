@@ -22,7 +22,7 @@ export const ETAPES = [
     consigne: "La burette et le bécher sont vides. Rédige un prompt pour préparer le titrage : chaque solution à sa place.",
     indices: [
       "Qui va où ? La solution de concentration connue (solution titrante) va dans la burette ; celle dont on cherche la concentration (solution titrée) est prélevée à la pipette jaugée et va dans le bécher.",
-      "Les flacons, les concentrations, le volume prélevé et la couleur du Lugol existent déjà (sur la paillasse et dans le modèle chimique) : inutile de les décrire.",
+      "Les flacons, les concentrations, le volume prélevé et la couleur du Lugol existent déjà (sur la paillasse et dans les modèles chimiques) : inutile de les décrire.",
       "Pour aller plus loin (facultatif) : un bouton « Remplir », la burette ajustée au zéro, l'agitateur magnétique qui se met à tourner.",
     ],
     proposition: "Remplis la burette de thiosulfate et le bécher de Lugol.",
@@ -35,7 +35,7 @@ export const ETAPES = [
     consigne: "Le robinet de la burette ne fait rien. Rédige un prompt pour verser la solution titrante dans le bécher et voir la couleur changer.",
     indices: [
       "Comment verser ? Un robinet qu'on ouvre et qu'on ferme (écoulement continu), et des boutons pour verser précisément : + 1 mL, goutte à goutte (0,05 mL).",
-      "Que voir ? Le volume versé, lu sur la burette, et la couleur du bécher : le modèle chimique la calcule d'office, à chaque goutte.",
+      "Que voir ? Le volume versé, lu sur la burette, et la couleur du bécher : les modèles chimiques la calculent d'office, à chaque goutte.",
       "Pour aller plus loin (facultatif) : un zoom sur la graduation, et un bouton « Nouveau titrage » qui remet tout au départ.",
     ],
     proposition: "Fais fonctionner le robinet de la burette, avec un bouton goutte à goutte.",
@@ -48,7 +48,7 @@ export const ETAPES = [
     consigne: "Sans indicateur, la solution pâlit lentement : l'équivalence est difficile à voir. Rédige un prompt pour pouvoir utiliser le flacon de thiodène.",
     indices: [
       "Le flacon de thiodène est déjà sur la paillasse : dis seulement quoi en faire (un clic l'ajoute au bécher).",
-      "Le thiodène forme avec le diiode un composé bleu très foncé, qui disparaît d'un coup à l'équivalence. La couleur vient du modèle chimique.",
+      "Le thiodène forme avec le diiode un composé bleu très foncé, qui disparaît d'un coup à l'équivalence. La couleur vient des modèles chimiques.",
       "Pour mesurer (facultatif) : un bouton « C'est l'équivalence ! » qui note le volume versé et le compare au volume équivalent calculé.",
     ],
     proposition: "Fais fonctionner le flacon de thiodène.",
@@ -62,7 +62,7 @@ export const ETAPES = [
     indices: [
       "Quel graphique ? n = f(V) : la quantité de matière de chaque espèce (I₂, S₂O₃²⁻, I⁻, S₄O₆²⁻) en fonction du volume versé, courbes superposées, avec une légende.",
       "Où en est-on ? Un trait au volume versé et un autre à V_éq : on voit le réactif limitant changer à l'équivalence.",
-      "Les valeurs viennent du modèle chimique (tableau d'avancement), d'office : aucune n'est choisie à la main.",
+      "Les valeurs viennent des modèles chimiques (tableau d'avancement), d'office : aucune n'est choisie à la main.",
     ],
     proposition: "Trace sous la scène n = f(V) pour les 4 espèces, avec V_éq.",
   },
@@ -217,6 +217,7 @@ function verifierModele(m) {
     ["⚗️ la réaction : I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻", reaction],
     ["🧪 les données : M(I₂), le Lugol, V_A, c_B, la burette de 25 mL", donnees],
     ["🧮 les calculs : V_éq, quantités de matière, concentration, couleur", fonctions],
+    ["📐 les équations des modèles, écrites (pour les montrer)", Array.isArray(m.EQUATIONS) && m.EQUATIONS.length > 0 && m.EQUATIONS.every((q) => q && q.titre && Array.isArray(q.formules))],
     ["🟰 contrôle n° 1 (5 jeux de valeurs testés) : le diiode disparaît EXACTEMENT à V_éq = 2·c_A·V_A / c_B", equivalence],
     ["⚖️ contrôle (5 jeux) : les quantités de matière suivent le tableau d'avancement ; les atomes d'iode et de soufre sont conservés", matiere],
     ["🎨 contrôle (5 jeux) : la solution se décolore à l'équivalence ; avec le thiodène, elle passe du bleu à l'incolore en une goutte", virage],
@@ -224,13 +225,13 @@ function verifierModele(m) {
 }
 
 const COMMUN = {
-  nomModele: "Modèle chimique",
-  nomPerso: "Ton modèle chimique",
-  titreEquations: "🧮 Le modèle mathématique : de la réaction à la couleur",
-  titreDonnees: "Les données du modèle (volume versé de 0 à 25 mL, goutte à goutte)",
+  nomModele: "Modèles chimiques",
+  nomPerso: "Tes modèles chimiques",
+  titreEquations: "🧮 Les modèles mathématiques : de la réaction à la couleur",
+  titreDonnees: "Les données des modèles (volume versé de 0 à 25 mL, goutte à goutte)",
   prefixeCSV: "titrage",
-  libelleVoir: "Voir le modèle",
-  titreDefautCourt: "Modèle par défaut",
+  libelleVoir: "Voir les modèles",
+  titreDefautCourt: "Modèles par défaut",
   controleDirect,
   avecPubliees,
 };
@@ -238,18 +239,19 @@ const COMMUN = {
 export const OUTILS = [
   {
     ...COMMUN,
-    titre: "Le modèle chimique par défaut",
-    resume: "C'est le modèle du titrage sur lequel repose la simulation, déjà dans ton site. Modéliser, c'est décrire chaque acteur par des données, puis les relier par des équations. Ici :",
+    titre: "Les modèles chimiques par défaut",
+    resume: "Ce sont les modèles du titrage sur lesquels repose la simulation, déjà dans ton site. Modéliser, c'est décrire chaque acteur par des données, puis les relier par des équations. Ici, chaque acteur a son modèle :",
     contenu: [
-      "⚗️ la réaction : I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻, rapide et totale ;",
-      "🧪 les solutions : le Lugol (1,00 g de diiode pour 100 mL, prise d'essai V_A = 10,0 mL) et le thiosulfate (c_B = 0,0500 mol/L) ;",
-      "🧮 les calculs qui les relient : tableau d'avancement, quantités de matière, volume équivalent, concentration du diiode ;",
-      "🎨 la couleur de la solution, avec ou sans thiodène (loi de Beer-Lambert).",
+      "⚗️ la transformation : le modèle de la réaction I₂ + 2 S₂O₃²⁻ → 2 I⁻ + S₄O₆²⁻, rapide et totale ;",
+      "🧪 les solutions : le modèle des données (Lugol à 1,00 g de diiode pour 100 mL, prise d'essai V_A = 10,0 mL, thiosulfate à c_B = 0,0500 mol/L) ;",
+      "📋 l'évolution du système : le modèle du tableau d'avancement (quantités de matière selon le volume versé) ;",
+      "🎯 l'équivalence : le modèle du volume équivalent, V_éq = 2·c_A·V_A / c_B ;",
+      "🎨 la couleur : le modèle de Beer-Lambert, avec ou sans thiodène.",
     ],
-    limites: "Comme tout modèle, il simplifie : réaction instantanée et totale, burette idéale (gouttes de 0,05 mL, pas d'erreur de lecture), coefficients d'absorption approchés (choisis pour que la couleur à l'écran ressemble à la réalité), et thiodène supposé capter tout le diiode.",
+    limites: "Comme tout modèle, ils simplifient : réaction instantanée et totale, burette idéale (gouttes de 0,05 mL, pas d'erreur de lecture), coefficients d'absorption approchés (choisis pour que la couleur à l'écran ressemble à la réalité), et thiodène supposé capter tout le diiode.",
     equations: EQUATIONS, // en mode « à construire », les équations sont reconstruites aussi : pas celles-ci
     chemin: "src/outils/titrage.js",
-    code: { lire: source("../titrage.js"), nom: "modele-chimique-par-defaut.js" },
+    code: { lire: source("../titrage.js"), nom: "modeles-chimiques-par-defaut.js" },
     donnees: () => donneesTitrage(),
   },
 ];
@@ -259,15 +261,15 @@ export const FICHIER_PERSO = "monTitrage.js";
 
 // Étape 0, seulement sans le modèle par défaut : le construire.
 export const ETAPE_OUTILS = {
-  titre: "Construire ton modèle chimique",
-  motsCles: ["crée un fichier", "mon modèle chimique", "données de référence", "pas de valeurs de mémoire", "réaction totale", "tableau d'avancement", "quantité de matière", "volume équivalent V_éq", "loi de Beer-Lambert", "matière conservée", "vérifie avec plusieurs jeux de valeurs", "calculé, pas choisi à la main", "n'utilise pas le modèle fourni"],
-  consigne: "Tu construis toi-même le modèle chimique. Rédige un prompt pour que l'IA crée la réaction, les données et les calculs dont la simulation aura besoin, avec un volume équivalent VÉRIFIÉ.",
+  titre: "Construire tes modèles chimiques",
+  motsCles: ["crée un fichier", "mes modèles chimiques", "données de référence", "pas de valeurs de mémoire", "réaction totale", "tableau d'avancement", "quantité de matière", "volume équivalent V_éq", "loi de Beer-Lambert", "matière conservée", "vérifie avec plusieurs jeux de valeurs", "calculé, pas choisi à la main", "n'utilise pas le modèle fourni"],
+  consigne: "Tu construis toi-même les modèles chimiques, pour pouvoir au final trouver le volume équivalent et vérifier le titrage. Rédige un prompt pour que l'IA crée la réaction, les données et les calculs dont la simulation aura besoin, avec un volume équivalent VÉRIFIÉ.",
   indices: [
     "Quelles données ? La réaction de titrage du diiode par le thiosulfate, la masse molaire du diiode (données de référence, pas de mémoire), et les solutions du TP : Lugol à 1,00 g de diiode pour 100 mL, V_A = 10,0 mL, c_B = 0,0500 mol/L.",
     "Quels calculs ? Les quantités de matière de chaque espèce selon le volume versé (tableau d'avancement, réaction totale), la concentration du diiode, et la couleur de la solution avec et sans thiodène (loi de Beer-Lambert).",
     "Le cœur du titrage : le diiode doit disparaître EXACTEMENT à V_éq = 2·c_A·V_A / c_B, la matière doit être conservée, et la couleur doit virer à l'équivalence. Exige que ce soit vérifié sur plusieurs jeux de valeurs, et corrigé sinon.",
   ],
-  proposition: "Crée mon modèle chimique du titrage du Lugol par le thiosulfate (données de référence) : quantités de matière selon le volume versé, couleur avec et sans thiodène. Vérifie sur plusieurs jeux de valeurs que le diiode disparaît à V_éq = 2·c_A·V_A / c_B et que la matière est conservée. N'utilise pas le modèle fourni.",
+  proposition: "Crée mes modèles chimiques du titrage du Lugol par le thiosulfate (données de référence) : quantités de matière selon le volume versé, couleur avec et sans thiodène. Vérifie sur plusieurs jeux de valeurs que le diiode disparaît à V_éq = 2·c_A·V_A / c_B et que la matière est conservée. N'utilise pas le modèle fourni.",
   // L'étape ne peut être terminée que si le contrôle automatique du modèle est entièrement ✅.
   exigeModeleValide: true,
 };
@@ -275,18 +277,19 @@ export const ETAPE_OUTILS = {
 export const OUTILS_SANS = [
   {
     ...COMMUN,
-    titre: "Modèle en cours de construction",
-    titreComplet: "Ton modèle chimique, complet", // quand tous les éléments sont ✅
-    resume: "Ton propre modèle du titrage, construit par l'IA à l'étape 0, à la place du modèle par défaut. Il doit contenir :",
+    titre: "Modèles en cours de construction",
+    titreComplet: "Tes modèles chimiques, complets", // quand tous les éléments sont ✅
+    resume: "Tes propres modèles du titrage, construits par l'IA à l'étape 0, à la place des modèles par défaut. Ils doivent contenir :",
     contenu: [
       "⚗️ la réaction de titrage et ses coefficients ;",
       "🧪 les données : masse molaire du diiode, Lugol, prise d'essai, thiosulfate, burette ;",
       "🧮 les quantités de matière selon le volume versé, le volume équivalent, la concentration du diiode ;",
-      "🎨 la couleur de la solution, avec et sans thiodène.",
+      "🎨 la couleur de la solution, avec et sans thiodène ;",
+      "📐 et les équations de tous ces modèles, écrites.",
     ],
     // Le fichier construit : chargé s'il existe, puis montré (courbes) et vérifié automatiquement.
     chemin: "src/outils/monTitrage.js",
-    code: { lire: source("../monTitrage.js"), nom: "mon-modele-chimique.js" },
+    code: { lire: source("../monTitrage.js"), nom: "mes-modeles-chimiques.js" },
     charger: async () => { const f = MODELE_PERSO["../monTitrage.js"]; return f ? f() : null; },
     donneesDe: (m) => { try { return donneesTitrage(m); } catch { return null; } },
     verifier: verifierModele,
@@ -300,11 +303,11 @@ ETAPES.etapeOutils = ETAPE_OUTILS;
 ETAPES.fichierPerso = FICHIER_PERSO;
 // Ligne ajoutée à « État actuel » et idée ajoutée à l'exploration libre, selon le choix du modèle.
 ETAPES.ligneModele = (construit) => (construit
-  ? "🧰 Tu construis ton propre modèle chimique (étape 0). Tu peux revenir au modèle par défaut avec « Modèle chimique » ci-dessous."
-  : "🧰 Le modèle chimique par défaut est prêt. Tu peux aussi construire le tien : « Modèle chimique » → « À construire ».");
-ETAPES.ideeOutils = "construis mon modèle chimique du titrage du Lugol par le thiosulfate, avec des données de référence, et vérifie que le diiode disparaît exactement à l'équivalence";
+  ? "🧰 Tu construis tes propres modèles chimiques (étape 0). Tu peux revenir aux modèles par défaut avec « Modèles chimiques » ci-dessous."
+  : "🧰 Les modèles chimiques par défaut sont prêts. Tu peux aussi construire les tiens : « Modèles chimiques » → « À construire ».");
+ETAPES.ideeOutils = "construis mes modèles chimiques du titrage du Lugol par le thiosulfate, avec des données de référence, et vérifie que le diiode disparaît exactement à l'équivalence";
 // Mots clés montrés seulement quand on construit son modèle.
-ETAPES.motsSansSeulement = ["crée un fichier", "mon modèle chimique", "données de référence", "pas de valeurs de mémoire", "loi de Beer-Lambert", "vérifie avec plusieurs jeux de valeurs", "n'utilise pas le modèle fourni"];
+ETAPES.motsSansSeulement = ["crée un fichier", "mes modèles chimiques", "données de référence", "pas de valeurs de mémoire", "loi de Beer-Lambert", "vérifie avec plusieurs jeux de valeurs", "n'utilise pas le modèle fourni"];
 
 export const IDEES = [
   "remplis la burette de thiosulfate et le bécher de Lugol",
@@ -317,7 +320,7 @@ export const IDEES = [
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
   { titre: "📍 Où ?", mots: ["sur la paillasse", "sur la burette", "dans le bécher", "au-dessus de la scène", "sous la scène", "dans une fenêtre (popup)"] },
-  { titre: "🧱 Les objets", mots: ["burette graduée", "robinet", "bécher", "agitateur magnétique", "pipette jaugée", "flacon de Lugol", "thiosulfate de sodium", "flacon de thiodène", "solution titrante", "solution titrée", "le modèle chimique", "mon modèle chimique", "données de référence", "quantité de matière", "volume équivalent V_éq", "couleur de la solution", "tableau d'avancement"] },
+  { titre: "🧱 Les objets", mots: ["burette graduée", "robinet", "bécher", "agitateur magnétique", "pipette jaugée", "flacon de Lugol", "thiosulfate de sodium", "flacon de thiodène", "solution titrante", "solution titrée", "le modèle chimique", "mes modèles chimiques", "données de référence", "quantité de matière", "volume équivalent V_éq", "couleur de la solution", "tableau d'avancement"] },
   { titre: "🛠 Les actions", mots: ["crée un fichier", "ajoute", "fais fonctionner", "remplis", "remplace", "trace", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "robinet ouvert / fermé", "goutte à goutte (0,05 mL)", "+ 1 mL", "à la souris et au doigt", "la couleur change progressivement", "retiens le choix au rechargement"] },
   { titre: "📈 L'affichage", mots: ["lecture du volume", "zoom sur la graduation", "graphique n = f(V)", "courbes superposées", "légende", "trait vertical à V_éq", "encadré « À retenir »", "valeur arrondie"] },
