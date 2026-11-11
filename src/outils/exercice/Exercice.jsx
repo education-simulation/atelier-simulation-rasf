@@ -149,7 +149,7 @@ function Sauvegardes({ page }) {
   };
   const reprendre = async (fichier) => {
     if (confirmer !== fichier) return setConfirmer(fichier);
-    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier }); setMessage("✅ Version reprise : la page se recharge."); }
+    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier }); setMessage("✅ Version reprise : la page se recharge. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : l'agent repartira de cette version."); }
     catch (e) { setMessage(`⚠️ ${e.message}`); }
   };
   const lisible = (f) => f.replace(/\.jsx$/, "").replace(/^(\d{4})-(\d\d)-(\d\d)_(\d\d)h(\d\d)-\d\d-?/, "$3/$2/$1 à $4h$5 · ").replace(/-/g, " ");
@@ -193,7 +193,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
       setEtat("⏳ Retour au départ…");
       remiseAZero();
       await appel("zero", { page });
-      setEtat("✅ C'est reparti du début : la page se recharge.");
+      setEtat("✅ C'est reparti du début. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : sinon l'agent croit que tout est encore fait.");
       setTimeout(fermer, 1500);
     } catch (e) { setEtat(`⚠️ ${e.message}`); }
   };
@@ -207,6 +207,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
           <li>La page revient au <strong>point de départ</strong> : la cabine éteinte et les deux cartes vierges.</li>
           <li>Les étapes se replient, les indices se cachent, et « État actuel » revient au départ.</li>
           <li>Ta version actuelle est <strong>sauvegardée automatiquement</strong> avant : tu pourras la reprendre.</li>
+          <li>💬 Ensuite, dans Antigravity, <strong>ouvre une nouvelle conversation</strong> (bouton <strong>+</strong>) : sinon l'agent peut croire que tout est encore fait.</li>
         </ul>
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
           <button type="button" style={bouton()} onClick={fermer}>Annuler</button>
