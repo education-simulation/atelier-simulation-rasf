@@ -297,6 +297,8 @@ export const OUTILS_SANS = [
 ];
 
 // Rattachés aux étapes : le cadre les affiche sans que la page ait à les passer.
+// Crédit affiché sous l'introduction de la page (par le cadre : l'agent ne peut pas l'effacer).
+ETAPES.credit = { texte: "Page inspirée de la simulation « Titrage direct » de la Paillasse virtuelle de Nils Aronssohn", lien: "https://paillasse-virtuelle.fr/?sim=2", lienTexte: "paillasse-virtuelle.fr" };
 ETAPES.outils = OUTILS;
 ETAPES.outilsSans = OUTILS_SANS;
 ETAPES.etapeOutils = ETAPE_OUTILS;

@@ -645,6 +645,12 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
           </span>
         </div>
 
+        {etapes.credit && (
+          <p style={{ margin: "-4px 0 0", fontSize: 12.5, color: "#64748b" }}>
+            🙏 {etapes.credit.texte} : <a href={etapes.credit.lien} target="_blank" rel="noreferrer" style={{ color: "var(--accent)", fontWeight: 700 }}>{etapes.credit.lienTexte || etapes.credit.lien}</a>.
+          </p>
+        )}
+
         {children}
 
         {!guideMasque && <section aria-label="Construis cette simulation avec l'IA" style={{ background: "#f8fafc", border: "2px solid var(--accent)", borderRadius: 18, padding: "14px 16px", display: "grid", gap: 10 }}>
