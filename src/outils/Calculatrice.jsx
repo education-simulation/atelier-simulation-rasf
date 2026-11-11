@@ -4,7 +4,7 @@
 //
 // Le calcul ne passe JAMAIS par eval() : l'expression est découpée puis lue par
 // un petit analyseur (priorités : fonctions/puissance > × ÷ > + −).
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 // ───────────────────────────── Moteur de calcul ─────────────────────────────
 
@@ -698,10 +698,42 @@ const STYLE = `
 @media (max-width:420px){.calc-touche{min-height:46px}.calc-corps{padding:8px}.calc-touches{gap:5px}}
 `;
 
+// ─────────────── Plusieurs calculatrices à l'écran : une seule au clavier ──────────────
+// Chaque calculatrice affichée s'inscrit dans une pile ; celle du dessus est « active » et
+// reçoit seule le clavier. Monter (ouvrir), toucher, cliquer ou donner le focus la remet
+// au-dessus ; démontée (fermée, page quittée), elle sort de la pile et le clavier revient
+// à la précédente encore affichée.
+const PILE_ACTIVES = [];
+function activer(racine) {
+  const i = PILE_ACTIVES.indexOf(racine);
+  if (i !== -1) PILE_ACTIVES.splice(i, 1);
+  PILE_ACTIVES.push(racine);
+}
+function retirer(racine) {
+  const i = PILE_ACTIVES.indexOf(racine);
+  if (i !== -1) PILE_ACTIVES.splice(i, 1);
+}
+// Rend active la calculatrice contenue dans `noeud` (clic sur la barre d'une fenêtre, par ex.).
+export function activerCalculatriceDans(noeud) {
+  const r = PILE_ACTIVES.find((x) => noeud && x.current && noeud.contains(x.current));
+  if (r) activer(r);
+}
+// Vrai si `noeud` est (ou contient) la calculatrice active. Sert aussi à une fenêtre qui
+// enveloppe une calculatrice (Échap pour fermer, par exemple).
+export function calculatriceActiveDans(noeud) {
+  const haut = PILE_ACTIVES[PILE_ACTIVES.length - 1];
+  return !!(noeud && haut?.current && noeud.contains(haut.current));
+}
+
 // Props facultatives (utilisées quand la calculatrice est ouverte en fenêtre dans un exercice) :
 //   compacte  : masque le panneau Historique / aide à droite
 //   onInserer : affiche un bouton « Insérer » qui renvoie la valeur du résultat (nombre)
 export default function Calculatrice({ compacte = false, onInserer } = {}) {
+  const racine = useRef(null);
+  useEffect(() => {
+    activer(racine);
+    return () => retirer(racine);
+  }, []);
   const [jetons, setJetons] = useLocal("saisie", []);
   const [resultat, setResultat] = useLocal("resultat", null); // { valeur } | { erreur }
   const [ans, setAns] = useLocal("ans", 0);
@@ -805,6 +837,7 @@ export default function Calculatrice({ compacte = false, onInserer } = {}) {
   useEffect(() => {
     const surTouche = (e) => {
       if (e.metaKey || e.ctrlKey || e.altKey) return;
+      if (!calculatriceActiveDans(racine.current)) return; // une autre calculatrice a le clavier
       const cible = e.target;
       if (cible && (cible.tagName === "INPUT" || cible.tagName === "TEXTAREA" || cible.tagName === "SELECT" || cible.isContentEditable)) return;
       // Entrée sur un bouton qui a le focus : laisser le bouton répondre.
@@ -886,7 +919,7 @@ export default function Calculatrice({ compacte = false, onInserer } = {}) {
   else ligneResultat = <div className="calc-resultat apercu">&nbsp;</div>;
 
   return (
-    <div className="calc">
+    <div className="calc" ref={racine} onPointerDownCapture={() => activer(racine)} onFocusCapture={() => activer(racine)}>
       <style>{STYLE}</style>
       <section className="calc-corps" aria-label="Calculatrice scientifique">
         <div className="calc-ecran">

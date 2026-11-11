@@ -7,7 +7,7 @@
 // en gardant ses proportions (tout le contenu est mis à l'échelle). Double-clic sur
 // un coin : retour à la taille standard. Taille, position repliée : retenues au rechargement.
 import { useEffect, useLayoutEffect, useRef, useState } from "react";
-import Calculatrice from "./Calculatrice";
+import Calculatrice, { activerCalculatriceDans, calculatriceActiveDans } from "./Calculatrice";
 
 const LARGEUR = 380;     // largeur standard (échelle 1)
 const ECHELLE_MIN = 0.7; // en dessous, les touches deviennent difficiles à lire et à viser
@@ -133,7 +133,9 @@ export function CalculatriceScientifique({ onClose, onInserer }) {
   useEffect(() => {
     const surTouche = (e) => {
       if (repliee) return;
-      if (e.key === "Escape" && !document.querySelector(".calc-saisie")?.textContent.trim()) onClose();
+      // Seulement si c'est cette fenêtre qui a le clavier (une autre calculatrice peut être affichée).
+      if (e.key !== "Escape" || !calculatriceActiveDans(fenetre.current)) return;
+      if (!fenetre.current.querySelector(".calc-saisie")?.textContent.trim()) onClose();
     };
     window.addEventListener("keydown", surTouche);
     return () => window.removeEventListener("keydown", surTouche);
@@ -144,6 +146,7 @@ export function CalculatriceScientifique({ onClose, onInserer }) {
       ref={fenetre}
       role="dialog"
       aria-label="Calculatrice scientifique"
+      onPointerDownCapture={() => activerCalculatriceDans(fenetre.current)}
       style={{
         position: "fixed", left: pos.x, top: pos.y, zIndex: 10000,
         width: `min(${Math.round(LARGEUR * echelle)}px, calc(100vw - 16px))`,
