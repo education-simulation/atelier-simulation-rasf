@@ -58,6 +58,9 @@ button { font-family: inherit; }
 @media (max-width: 480px) { .ab-niv, .ab-carte { border-radius: 22px; padding: 20px; } .barre-titre, .zone-sim { padding-left: 1rem; padding-right: 1rem; } }
 
 /* Aperçu (sur l'ordinateur, localhost) : bandeau et volet des étapes, jamais sur le site publié. */
+/* Dans l'aperçu, les boutons ronds (en bas à droite) ne doivent rien cacher : on laisse une marge à droite. */
+@media (min-width: 600px) and (max-width: 1240px) { .racine.avec-apercu .zone-sim, .racine.avec-apercu .principal > footer { padding-right: 84px; } }
+.racine.avec-apercu .principal { padding-bottom: 230px; } /* on peut toujours faire défiler le bas de page au-dessus des boutons ronds */
 .bandeau-apercu { background: #336fa3; color: #fff; padding: 10px 16px; font-size: 15px; line-height: 1.45; }
 .bandeau-dossier { background: rgba(255,255,255,.18); padding: 1px 7px; border-radius: 6px; font-size: 13.5px; user-select: all; word-break: break-all; }
 .volet-etapes { background: #fff; border-bottom: 1px solid var(--bord); padding: 6px 16px; font-size: 14px; }

@@ -84,7 +84,7 @@ export default function App() {
   const entete = <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />;
 
   return (
-    <div className={`racine racine-${style}`}>
+    <div className={`racine racine-${style}${estApercu ? " avec-apercu" : ""}`}>
       {estApercu && <Apercu />}
       <div className="cadre">
       {style === "lateral" && <BarreLaterale titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />}

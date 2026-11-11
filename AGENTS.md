@@ -236,7 +236,9 @@ Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation 
 
 Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui affiche ce prompt : la personne pourra le reprendre plus tard pour une autre simulation.
 
-**L'exercice Métamérisme** : quand la personne colle une demande venant du guide de cette page, fais exactement cette étape-là, rien de plus (ne prends pas d'avance sur les étapes suivantes). Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
+**L'exercice Métamérisme** : la page apprend à écrire un prompt. À chaque étape, la personne écrit elle-même son prompt ; elle a des indices et une proposition de réponse cachée. Deux sortes de messages peuvent t'arriver :
+- **« Analyse mon prompt pour l'étape N de l'exercice Métamérisme… »** : **n'écris aucun code et ne donne pas la réponse.** Dis en quelques lignes ce qui est clair, ce qui manque ou ce qui est ambigu (par rapport à l'objectif de l'étape), puis pose une ou deux questions pour l'aider à l'améliorer. Termine par la question à choix : Je corrige mon prompt · Je l'envoie tel quel · 😕 Je suis perdu·e.
+- **Un prompt d'étape** (il commence en général par « Dans la page Métamérisme… ») : fais exactement cette étape-là, rien de plus (ne prends pas d'avance sur les étapes suivantes), puis montre le résultat. Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
 
 ## 5. Dépannage
 
