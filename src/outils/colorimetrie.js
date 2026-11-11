@@ -6,7 +6,8 @@
 //   - illuminant A : formule de Planck définie par la CIE (2856 K) ;
 //   - illuminant D65 : table CIE (10 nm), interpolée à 5 nm ;
 //   - illuminant F11 : table CIE (5 nm), fluorescent à trois bandes.
-//  Fournit XYZ, L*a*b*, ΔE*ab, et une couleur d'écran (sRGB) avec adaptation de l'œil à la lumière.
+//  Fournit XYZ, L*a*b*, ΔE*ab, une couleur d'écran (sRGB) avec adaptation de l'œil à la lumière,
+//  et des paires métamères vérifiées (au moins 3 croisements, écart surtout dans le rouge).
 // ============================================================
 
 export const LONGUEURS = Array.from({ length: 81 }, (_, i) => 380 + 5 * i);
@@ -71,7 +72,7 @@ export function versEcran(XYZ, blancSource, degre = 1) {
 // --- Paire métamère : deux réflectances qui donnent EXACTEMENT les mêmes XYZ sous D65 ---
 // R2 = R1 + k·b, où b est un « noir métamérique » pour D65 : une courbe invisible sous D65
 // (sa contribution à X, Y et Z est nulle). b croise forcément zéro au moins 3 fois → les deux courbes se croisent.
-export function paireMetamere(R1, perturbation, cibleDeltaEsousA = 8) {
+function paireBrute(R1, perturbation, cibleDeltaEsousA) {
   const S = D65;
   const bases = [XBAR, YBAR, ZBAR].map((c) => LONGUEURS.map((_, i) => S[i] * c[i]));
   const ortho = [];
@@ -88,6 +89,37 @@ export function paireMetamere(R1, perturbation, cibleDeltaEsousA = 8) {
   const kMax = Math.min(...R1.map((r, i) => (b[i] > 0 ? (0.95 - r) / b[i] : b[i] < 0 ? (r - 0.02) / -b[i] : Infinity)));
   k = Math.min(k, kMax);
   return R1.map((r, i) => r + k * b[i]);
+}
+
+// Perturbations essayées par défaut : une bosse dans le ROUGE, pour que les deux courbes s'écartent dans le rouge.
+const BOSSES_ROUGES = [[650, 35], [640, 30], [660, 40], [630, 30], [670, 35]]
+  .map(([c, w]) => LONGUEURS.map((l) => Math.exp(-(((l - c) / w) ** 2))));
+
+// Une vraie paire métamère pour l'exercice : mêmes XYZ sous D65, AU MOINS 3 croisements,
+// et le plus grand écart dans le rouge (600 à 700 nm).
+export function verifierPaire(R1, R2, minCroisements = 3) {
+  const n = croisements(R1, R2).length;
+  const d = R1.map((v, i) => Math.abs(v - R2[i]));
+  const pic = LONGUEURS[d.indexOf(Math.max(...d))];
+  const ecart = (S) => { const w = blanc(S); return deltaE(lab(xyz(R1, S), w), lab(xyz(R2, S), w)); };
+  const ecartD65 = ecart(D65), ecartA = ecart(A);
+  const divergeRouge = pic >= 600 && pic <= 700;
+  return { croisements: n, pic, divergeRouge, ecartD65, ecartA, ok: n >= minCroisements && divergeRouge && ecartD65 < 0.1 && ecartA > 1 };
+}
+
+// Fabrique la carte 2 à partir de la carte 1. Chaque essai est vérifié (verifierPaire) : un essai qui ne
+// respecte pas les règles est REFUSÉ et on recommence avec une autre perturbation.
+export function paireMetamere(R1, perturbation, cibleDeltaEsousA = 7) {
+  const essais = [...(perturbation ? [perturbation] : []), ...BOSSES_ROUGES];
+  let meilleur = null;
+  for (const p of essais) {
+    const R2 = paireBrute(R1, p, cibleDeltaEsousA);
+    const v = verifierPaire(R1, R2);
+    if (v.ok) return R2;
+    if (!meilleur || v.croisements > meilleur.v.croisements) meilleur = { R2, v };
+  }
+  console.warn("paireMetamere : aucune paire ne respecte toutes les règles pour cette couleur", meilleur.v);
+  return meilleur.R2;
 }
 
 // Longueurs d'onde où deux courbes se croisent (interpolation linéaire).

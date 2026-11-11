@@ -31,7 +31,7 @@ export const ETAPES = [
     consigne: "Les deux cartes sont vierges. Rédige un prompt pour choisir la couleur de la carte 1, la carte 2 formant avec elle une paire métamère, et pour voir leurs courbes de réflectance.",
     indices: [
       "Comment choisir ? Par exemple un bouton qui ouvre une fenêtre avec une palette de couleurs : un clic choisit la couleur de la carte 1.",
-      "La carte 2 n'est pas choisie : elle forme une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A).",
+      "La carte 2 n'est pas choisie : elle forme une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Ses courbes croisent celles de la carte 1 au moins 3 fois et s'en écartent dans le rouge.",
       "Que montrer ? Les courbes de réflectance des deux cartes, superposées, de 380 à 780 nm : on voit qu'elles se croisent. Les couleurs et les courbes viennent du modèle couleur, d'office.",
     ],
     proposition: "Crée un bouton qui ouvre une fenêtre pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère. Montre les courbes de réflectance des deux cartes.",
@@ -110,9 +110,24 @@ export const OUTILS = [
     limites: "Comme tout modèle, il simplifie : un œil moyen (pas le tien), une adaptation de l'œil à la lumière idéalisée, et un écran qui ne peut pas afficher toutes les couleurs réelles.",
     conseil: "Écris simplement « avec le modèle couleur » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
     equations: EQUATIONS, // montrées dans la fenêtre, section « 🧮 Le modèle mathématique »
+    controlePaire,
     donnees: () => donneesColorimetrie(), // courbes montrées (et téléchargeables) dans la fenêtre « À quoi sert … ? »
   },
 ];
+
+// Règles d'une paire métamère pour l'exercice : AU MOINS 3 croisements, et le plus grand écart dans le rouge (600 à 700 nm).
+export function compterCroisements(R1, R2, L) {
+  let n = 0;
+  for (let i = 1; i < L.length; i++) { const a = R1[i - 1] - R2[i - 1], b = R1[i] - R2[i]; if (a * b < 0 || (a === 0 && i > 1)) n++; }
+  return n;
+}
+export function controlePaire(R1, R2, L = MODELE_FOURNI.LONGUEURS) {
+  const croisements = compterCroisements(R1, R2, L);
+  const d = R1.map((v, i) => Math.abs(v - R2[i]));
+  const pic = L[d.indexOf(Math.max(...d))];
+  const rouge = pic >= 600 && pic <= 700;
+  return { croisements, pic, rouge, ok: croisements >= 3 && rouge };
+}
 
 // Vérifie, élément par élément, un modèle couleur construit par la personne (même forme que le modèle fourni).
 function verifierModele(m) {
@@ -128,9 +143,9 @@ function verifierModele(m) {
   });
   const paire = fn(m.paireMetamere) && illum && essai(() => {
     const R1 = m.LONGUEURS.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
-    const R2 = m.paireMetamere(R1, m.LONGUEURS.map((l) => 1 / (1 + Math.exp(-(l - 640) / 15)) - 0.2 * Math.exp(-(((l - 440) / 25) ** 2))), 7);
+    const R2 = m.paireMetamere(R1);
     const dE = (S) => { const w = m.blanc(S); return m.deltaE(m.lab(m.xyz(R1, S), w), m.lab(m.xyz(R2, S), w)); };
-    return dE(m.ILLUMINANTS.D65.spectre) < 0.5 && dE(m.ILLUMINANTS.A.spectre) > 1;
+    return dE(m.ILLUMINANTS.D65.spectre) < 0.5 && dE(m.ILLUMINANTS.A.spectre) > 1 && controlePaire(R1, R2, m.LONGUEURS).ok;
   });
   return [
     ["📏 les longueurs d'onde (380 à 780 nm)", n > 0 && m.LONGUEURS[0] === 380 && m.LONGUEURS[n - 1] === 780],
@@ -140,7 +155,7 @@ function verifierModele(m) {
     ["🖥 la couleur à l'écran", fn(m.versEcran)],
     ["🎨 la fabrication d'une paire métamère", fn(m.paireMetamere)],
     ["🔎 contrôle : F11 a trois pics vers 435, 545 et 610 nm", pics],
-    ["🔎 contrôle : la paire est identique sous D65, différente sous A", paire],
+    ["🔎 contrôle : la paire est identique sous D65, différente sous A, se croise au moins 3 fois et s'écarte dans le rouge", paire],
   ].map(([texte, ok]) => ({ texte, ok: Boolean(ok) }));
 }
 
@@ -150,9 +165,9 @@ function donneesColorimetrie(m = MODELE_FOURNI) {
   const { A, D65, F11 } = ILLUMINANTS;
   // Distribution spectrale normalisée : chaque courbe divisée par son maximum (maximum = 1).
   const normalisee = (S) => { const m = Math.max(...S); return S.map((v) => v / m); };
-  const sig = (x) => 1 / (1 + Math.exp(-x));
   const carte1 = LONGUEURS.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
-  const carte2 = paireMetamere(carte1, LONGUEURS.map((l) => sig((l - 640) / 15) - 0.2 * Math.exp(-(((l - 440) / 25) ** 2))), 7);
+  const carte2 = paireMetamere(carte1);
+  const nCrois = compterCroisements(carte1, carte2, LONGUEURS);
   const ecarts = [D65, A, F11].map((il) => { const w = blanc(il.spectre); return `${il.nom} : ${deltaE(lab(xyz(carte1, il.spectre), w), lab(xyz(carte2, il.spectre), w)).toFixed(1).replace(".", ",")}`; });
   return [
     { id: "illuminants", titre: "📈 Distributions spectrales normalisées des illuminants (maximum = 1)", unite: "puissance normalisée",
@@ -164,7 +179,7 @@ function donneesColorimetrie(m = MODELE_FOURNI) {
       explication: "Les trois courbes x̄, ȳ, z̄ : comment l'œil moyen répond à chaque longueur d'onde (ȳ = la luminosité perçue).",
       series: [["x̄", "#dc2626", XBAR], ["ȳ", "#16a34a", YBAR], ["z̄", "#2563eb", ZBAR]].map(([nom, couleur, valeurs]) => ({ nom, couleur, valeurs })) },
     { id: "paire-metamere", titre: "🎨 Exemple de paire métamère (réflectances spectrales)", unite: "réflectance",
-      explication: `Deux couleurs calculées avec paireMetamere : identiques sous D65, différentes sous A. Écart ΔE*ab — ${ecarts.join(" · ")}.`,
+      explication: `Deux couleurs calculées avec paireMetamere : identiques sous D65, différentes sous A. Les courbes se croisent ${nCrois} fois et s'écartent surtout dans le rouge. Écart ΔE*ab — ${ecarts.join(" · ")}.`,
       series: [{ nom: "carte 1", couleur: versEcran(xyz(carte1, D65.spectre), blanc(D65.spectre)), valeurs: carte1 }, { nom: "carte 2", couleur: "#0f172a", valeurs: carte2, tirets: true }] },
   ].map((g) => ({ ...g, longueurs: LONGUEURS }));
 }
@@ -180,7 +195,7 @@ export const ETAPE_OUTILS = {
   indices: [
     "Quelles données ? Les distributions spectrales des illuminants A, D65 et F11, et l'observateur CIE 1931, de 380 à 780 nm.",
     "D'où viennent-elles ? Exige les tables officielles de la CIE, pas des valeurs de mémoire : sinon l'IA peut en inventer une partie.",
-    "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab, la couleur à l'écran, et une paire métamère calculée (même couleur sous D65).",
+    "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab, la couleur à l'écran, et une paire métamère calculée : même couleur sous D65, au moins 3 croisements, et les courbes qui s'écartent dans le rouge.",
   ],
   proposition: "Crée mon modèle couleur avec les tables officielles de la CIE (pas de mémoire) : illuminants A, D65, F11 et observateur CIE 1931, de 380 à 780 nm. Ajoute XYZ, L*a*b*, ΔE*ab, la couleur à l'écran et une paire métamère calculée. N'utilise pas le modèle fourni.",
 };
@@ -202,6 +217,7 @@ export const OUTILS_SANS = [
     conseil: "Vérifie-la : F11 doit avoir trois pics étroits (vers 435, 545 et 610 nm), et les deux cartes doivent être identiques sous D65.",
     // Le fichier construit : chargé s'il existe, puis montré (courbes) et vérifié automatiquement.
     equations: EQUATIONS,
+    controlePaire,
     charger: async () => { const f = MODELE_PERSO["../maColorimetrie.js"]; return f ? f() : null; },
     donneesDe: (m) => { try { return donneesColorimetrie(m); } catch { return null; } },
     verifier: verifierModele,

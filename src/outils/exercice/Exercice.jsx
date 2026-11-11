@@ -166,6 +166,14 @@ function telechargerCSV(nom, graphiques) {
 }
 
 // --- Fenêtre « 📈 Voir … » d'une étape : les courbes du modèle couleur choisi (par défaut ou construit) ---
+// Contrôle automatique d'une paire publiée : au moins 3 croisements, écart surtout dans le rouge.
+function explicationPaire(series, outil) {
+  const base = "Les courbes actuelles de ta simulation : elles changent quand tu choisis une autre couleur.";
+  if (series.length < 2 || !outil.controlePaire) return base;
+  const c = outil.controlePaire(series[0].valeurs, series[1].valeurs);
+  return `${base} Contrôle : ${c.croisements} croisement${c.croisements > 1 ? "s" : ""} ${c.croisements >= 3 ? "✅" : "❌ (il en faut au moins 3)"} · plus grand écart à ${c.pic} nm ${c.rouge ? "✅ dans le rouge" : "❌ (il doit être dans le rouge, 600 à 700 nm)"}.`;
+}
+
 function FenetreGraphiques({ outil, ids, fermer }) {
   const boite = useRef(null);
   const [donnees, setDonnees] = useState(outil.donnees ? outil.donnees() : "chargement");
@@ -181,7 +189,7 @@ function FenetreGraphiques({ outil, ids, fermer }) {
   // Les réflectances : celles que la simulation a publiées (ses cartes actuelles), sinon l'exemple du modèle.
   const publiees = courbesPubliees();
   const liste = (Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : []).map((g) => (g.id === "paire-metamere" && publiees
-    ? { ...g, titre: "🎨 Réflectances spectrales de tes deux cartes", series: publiees.map((c, i) => ({ ...c, tirets: i > 0 })), explication: "Les courbes actuelles de ta simulation : elles changent quand tu choisis une autre couleur." }
+    ? { ...g, titre: "🎨 Réflectances spectrales de tes deux cartes", series: publiees.map((c, i) => ({ ...c, tirets: i > 0 })), explication: explicationPaire(publiees, outil) }
     : g.id === "paire-metamere" ? { ...g, explication: `${g.explication} (Exemple tiré du modèle : ta simulation ne montre pas encore ses propres cartes ici.)` } : g));
   return createPortal(
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
