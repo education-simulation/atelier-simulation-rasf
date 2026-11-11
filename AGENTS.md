@@ -67,11 +67,11 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 
 - Le site est fait avec **React + Vite**. Navigation : `…/?sim=<id>` (un rafraîchissement reste sur la même page).
 - **5 menus** au départ : **Exemples**, **Menu A**, **Menu B**, **Menu C** et **Outils**. L'accueil montre chaque menu (bloc, carte ou liste selon le style).
-  - **Exemples** : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), cohésion de la matière (schémas animés), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
+  - **Exemples** : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), cohésion de la matière (schémas animés), métamérisme (cabine de lumière, spectres calculés, avec le prompt qui l'a créé), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
   - **Outils** : diagramme ternaire (construire ou s'exercer), calculatrice scientifique, graphe vierge (papier millimétré, log ou ternaire, à exporter). Ils viennent de reula.fr ; leur code est dans `src/outils/` : **ne le modifie jamais** (il utilise Tailwind, activé seulement pour ces outils). La personne peut retirer un outil du menu (ligne dans `pages`) sans toucher à son code.
   - **Menu A, B, C** : chacun deux pages vides (`PageA1.jsx`, `PageA2.jsx`…) que la personne remplacera. Elle dira par exemple « renomme le menu A en Analyse » (→ `nom` du menu dans `site.config.js`) ou « remplace la page A1 par une simulation sur … ».
 - **Ajouter ou remplacer une page, en deux gestes :**
-  1. créer (ou réécrire) `simulations/<NomEnMajuscule>.jsx` : un composant React `export default function …`, styles écrits dans le fichier (`style={{ … }}`), sans nouvelle bibliothèque. Prends modèle sur l'exemple le plus proche : `Instabilite.jsx` (curseurs + animation), `ForcesIntermoleculaires.jsx` (onglets + schémas SVG), `JeuEquations.jsx` (jeu avec score), `ExtraitSec.jsx` (parcours guidé avec calculatrice et formules) ;
+  1. créer (ou réécrire) `simulations/<NomEnMajuscule>.jsx` : un composant React `export default function …`, styles écrits dans le fichier (`style={{ … }}`), sans nouvelle bibliothèque. Prends modèle sur l'exemple le plus proche : `Metamerisme.jsx` (objets à faire glisser, fenêtres de graphiques, bouton du prompt), `Instabilite.jsx` (curseurs + animation), `ForcesIntermoleculaires.jsx` (onglets + schémas SVG), `JeuEquations.jsx` (jeu avec score), `ExtraitSec.jsx` (parcours guidé avec calculatrice et formules) ;
   2. dans `pages` de `site.config.js` : `{ id, titre, icone, menu, fichier }` (`menu` = l'`id` d'un menu, `fichier` = le nom du fichier sans `.jsx`). Quand une page vide est remplacée, supprime son ancien fichier `PageXn.jsx` s'il n'est plus utilisé.
 - Une bonne page : des réglages (curseurs, boutons), un résultat qui change aussitôt (nombre, schéma, couleur), une consigne courte. Les nombres s'affichent à la française (`toLocaleString("fr-FR")`).
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
@@ -194,15 +194,35 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 ### Étape 5 — Choisir la suite (des idées à cliquer)
 Beaucoup de profs ne savent pas par où commencer ; d'autres savent déjà. **Ne pose pas de question ouverte** (« que veux-tu faire manipuler ? ») : propose des idées, en une question à choix :
 « Et maintenant, que veux-tu faire ? »
-→ **M'entraîner sur l'exemple Instabilité** · **Remplacer la page A1 par une simulation de mon cours** · **Renommer les menus A, B et C** · **J'ai déjà mon idée** (écris-la).
+→ **M'entraîner sur l'exemple Instabilité** · **Créer une simulation de mon cours (dans la page A1)** · **Renommer les menus A, B et C** · **J'ai déjà mon idée** (écris-la).
 - **M'entraîner sur l'exemple Instabilité** : propose 3 améliorations à cliquer (« ajouter la coalescence des gouttes », « ajouter une question à résoudre », « ajouter un graphique vitesse / rayon »), fais-en une, montre-la.
-- **Remplacer la page A1** : demande le thème en une question à choix avec 3 idées courantes (ex. « dilution d'une solution », « dosage par étalonnage », « titrage acide-base ») et Autre ; puis demande si la personne a un document de cours à te donner (elle peut glisser un PDF ou une capture dans la conversation). Écris la page, renomme-la dans `site.config.js`.
+- **Créer une simulation de mon cours** ou **J'ai déjà mon idée** : construis d'abord le prompt avec la personne (section « Construire le prompt ensemble » ci-dessous), puis écris la page et renomme-la dans `site.config.js`.
 - **Renommer les menus** : une question par menu (3 idées + Autre + « Garder ce nom »).
 - Après chaque changement : le lien de l'aperçu, puis question à choix « Ça marche, on le met en ligne » · « Je veux le modifier ». Puis remise en ligne (commande de l'étape 3, sans la connexion), et coche l'étape 5.
 - Ce que tu dois cliquer maintenant : l'idée qui te tente.
 
 ### Ensuite
 Propose, une par une : remplir une autre page, changer la grande phrase de l'accueil, ajouter un menu, retirer le menu Exemples quand il y a assez de pages à soi. Chaque fois : aperçu, puis remise en ligne.
+
+### Construire le prompt ensemble (avant d'écrire une nouvelle simulation)
+Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation à partir d'une idée floue** : aide d'abord la personne à préciser sa demande, puis montre-lui le prompt complet **avant** de coder. Elle peut le modifier.
+
+**Le modèle à montrer** : l'exemple **Métamérisme** (menu Exemples) a un bouton « 📝 Le prompt de cet exemple ». C'est la demande qui a servi à le créer. Propose à la personne de l'ouvrir : elle voit à quoi ressemble une bonne demande.
+
+**Deux façons de faire, à proposer en une question à choix** : « Comment veux-tu décrire ta simulation ? » → **Étape par étape, je te guide** · **Je te donne mon idée en vrac, propose-moi un prompt**.
+
+1. **Étape par étape** : pose ces questions **une par message**, chacune avec 3 propositions adaptées au sujet et « Autre » :
+   1. **Le sujet** : la notion à faire comprendre (ex. « le métamérisme », « la dilution », « le dosage par étalonnage »). Demande si la personne a un document de cours (PDF, capture) à glisser dans la conversation.
+   2. **La scène** : ce qu'on voit à l'écran (ex. « une cabine de lumière et deux cartes », « une fiole jaugée et une pipette »).
+   3. **Ce qu'on manipule** : curseurs, boutons, objets à faire glisser, choix dans une liste.
+   4. **Ce qu'on affiche** : valeurs calculées, graphiques, fenêtres (popups) avec des spectres ou des tableaux, messages selon le résultat.
+   5. **Le message à retenir** : la phrase que la personne veut que l'on comprenne à la fin.
+   6. **Les exigences** (facultatif) : données réelles, unités, formules, niveau de la classe.
+2. **Idée en vrac** : la personne écrit ce qu'elle veut, comme ça lui vient (ex. « voilà ce que je veux faire, que proposes-tu comme prompt ? »). Réorganise son idée dans les mêmes six parties, en complétant ce qui manque par des propositions raisonnables, signalées comme telles.
+
+**Dans les deux cas**, montre ensuite le prompt complet, rédigé comme celui de l'exemple Métamérisme (une partie par paragraphe), puis pose la question à choix : **C'est bon, crée la simulation** · **Je veux le modifier** (elle écrit ses changements, tu montres la nouvelle version). Ne commence à coder qu'après « C'est bon ».
+
+Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui affiche ce prompt (comme dans `Metamerisme.jsx`) : la personne pourra le reprendre plus tard pour une autre simulation.
 
 ## 5. Dépannage
 

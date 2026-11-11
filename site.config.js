@@ -54,6 +54,7 @@ export default {
     { id: "masse-volumique", titre: "Masse volumique au pycnomètre", icone: "⚖️", menu: "Ex", fichier: "MasseVolumique", description: "Parcours guidé : peser, calculer, comparer à la valeur attendue." },
     { id: "extrait-sec", titre: "Extrait sec à l'étuve", icone: "🔥", menu: "Ex", fichier: "ExtraitSec", description: "Sécher jusqu'à masse constante et calculer la teneur en matière sèche." },
     { id: "forces-intermoleculaires", titre: "Cohésion de la matière : forces intermoléculaires", icone: "🧲", menu: "Ex", fichier: "ForcesIntermoleculaires", description: "Polarisation, London, liaison hydrogène : voir les nuages se déformer." },
+    { id: "metamerisme", titre: "Métamérisme : la cabine de lumière", icone: "🎨", menu: "Ex", fichier: "Metamerisme", description: "Deux cartes identiques au jour, différentes sous une lampe : spectres et ΔE à l'appui." },
     { id: "jeu-equations", titre: "Jeu : défi chrono des équations", icone: "🎮", menu: "Ex", fichier: "JeuEquations", description: "60 secondes pour équilibrer un maximum d'équations." },
     { id: "instabilite", titre: "Instabilité des milieux dispersés", icone: "🫧", menu: "Ex", fichier: "Instabilite", description: "Crémage et sédimentation, loi de Stokes. Exemple à améliorer." },
 
