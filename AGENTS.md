@@ -219,7 +219,7 @@ Propose, une par une : remplir une autre page, changer la grande phrase de l'acc
 ### Construire le prompt ensemble (avant d'écrire une nouvelle simulation)
 Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation à partir d'une idée floue** : aide d'abord la personne à préciser sa demande, puis montre-lui le prompt complet **avant** de coder. Elle peut le modifier.
 
-**Le modèle à montrer** : l'exemple **Métamérisme** (menu Exemples) est un exercice guidé. Il part d'une scène fixe et donne, une étape à la fois, des demandes bien rédigées (que la personne peut modifier) pour construire la simulation avec toi. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
+**Le modèle à montrer** : l'exemple **Métamérisme** (menu Exemples) est un exercice guidé. Il part d'une scène fixe et donne, une étape à la fois, un objectif : la personne écrit elle-même son prompt, tu le vérifies avant de l'exécuter. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
 
 **Deux façons de faire, à proposer en une question à choix** : « Comment veux-tu décrire ta simulation ? » → **Étape par étape, je te guide** · **Je te donne mon idée en vrac, propose-moi un prompt**.
 
@@ -236,9 +236,15 @@ Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation 
 
 Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui affiche ce prompt : la personne pourra le reprendre plus tard pour une autre simulation.
 
-**L'exercice Métamérisme** : la page apprend à écrire un prompt. À chaque étape, la personne écrit elle-même son prompt ; elle a des indices et une proposition de réponse cachée. Deux sortes de messages peuvent t'arriver :
-- **« Analyse mon prompt pour l'étape N de l'exercice Métamérisme… »** : **n'écris aucun code et ne donne pas la réponse.** Dis en quelques lignes ce qui est clair, ce qui manque ou ce qui est ambigu (par rapport à l'objectif de l'étape), puis pose une ou deux questions pour l'aider à l'améliorer. Termine par la question à choix : Je corrige mon prompt · Je l'envoie tel quel · 😕 Je suis perdu·e.
-- **Un prompt d'étape** (il commence en général par « Dans la page Métamérisme… ») : fais exactement cette étape-là, rien de plus (ne prends pas d'avance sur les étapes suivantes), puis montre le résultat. Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
+**L'exercice Métamérisme** : la page apprend à écrire un prompt. À chaque étape, la personne écrit son prompt **dans cette conversation**, en commençant par **« Exercice Métamérisme, étape N : »**. Quand un message commence ainsi :
+1. **Ne code pas tout de suite. Vérifie d'abord le prompt** avec les critères de l'étape N : ce sont les `indices` de l'étape N dans `simulations/Metamerisme.jsx` (lis ce fichier), et son `objectif` (`consigne`). Réponds en quelques lignes :
+   - ✅ **Ce qui est réussi** (les critères présents dans le prompt) ;
+   - ⚠️ **Ce qui manque ou reste ambigu** (les critères absents), formulé comme une question, **sans donner la réponse** et sans recopier la `proposition` ;
+   - une appréciation en une ligne : « prompt complet », « presque complet » ou « à compléter ».
+2. Puis pose la question à choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e**. (Si le prompt est complet, mets « Exécute-le » en premier.)
+3. Si elle corrige, elle renvoie un nouveau message « Exercice Métamérisme, étape N : … » : recommence la vérification.
+4. Si elle choisit « Exécute-le tel quel », fais **exactement ce que dit son prompt**, rien de plus (ne prends pas d'avance sur les étapes suivantes, ne complète pas en douce ce qui manquait), puis montre le résultat (lien de l'aperçu, Cmd + R / Ctrl + R) et dis-lui de cliquer « Suivant » dans le guide de la page.
+Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
 
 ## 5. Dépannage
 

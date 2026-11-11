@@ -1,11 +1,11 @@
 // ============================================================
 //  MÉTAMÉRISME — exemple-exercice de l'Atelier simulation RASF : apprendre à écrire un prompt.
 //  Au départ, la page ne montre qu'une scène fixe : une cabine de lumière et deux cartes de même couleur.
-//  En dessous, un guide propose 6 étapes. Pour chacune : un objectif, et c'est au prof d'écrire le prompt.
-//  Aides : des indices (un à la fois), une proposition de réponse (cachée tant qu'on ne la demande pas),
-//  et un bouton qui prépare une demande d'analyse du prompt, à coller dans la conversation avec l'agent.
-//  Pour calculer les couleurs à partir des spectres, l'agent peut utiliser src/outils/colorimetrie.js
-//  (observateur CIE 1931, illuminants A, D65, F11, paire de cartes métamères, ΔE*ab).
+//  En dessous, un guide propose 6 étapes. Pour chacune : un objectif et une consigne. Le prof écrit son prompt
+//  DANS ANTIGRAVITY, en commençant par « Exercice Métamérisme, étape N : ». L'agent vérifie d'abord le prompt
+//  avec les critères de l'étape (les « indices » ci-dessous), fait ses remarques, puis l'exécute si le prof le veut.
+//  Aides dans la page : des indices (un à la fois) et une proposition de réponse (cachée tant qu'on ne la demande pas).
+//  Pour calculer les couleurs à partir des spectres, l'agent peut utiliser src/outils/colorimetrie.js.
 // ============================================================
 import { useState } from "react";
 
@@ -100,26 +100,18 @@ const ecrire = (cle, v) => { try { localStorage.setItem(cle, JSON.stringify(v));
 // --- Le guide : une étape à la fois ---
 function Guide() {
   const [n, setN] = useState(() => Math.min(ETAPES.length - 1, Math.max(0, lire("metamerisme.etape", 0))));
-  const [brouillons, setBrouillons] = useState(() => lire("metamerisme.brouillons", ETAPES.map(() => "")));
   const [indices, setIndices] = useState(() => lire("metamerisme.indices", ETAPES.map(() => 0)));    // nombre d'indices montrés
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, setCopie] = useState(null);
-  const etape = ETAPES[n], texte = brouillons[n] || "";
+  const etape = ETAPES[n];
+  const debut = `Exercice Métamérisme, étape ${n + 1} : `;
 
   const aller = (i) => { setN(i); setVoirProposition(false); setCopie(null); ecrire("metamerisme.etape", i); };
-  const changerTexte = (v) => { const b = brouillons.map((x, i) => (i === n ? v : x)); setBrouillons(b); ecrire("metamerisme.brouillons", b); };
   const indiceSuivant = () => { const t = indices.map((x, i) => (i === n ? Math.min(etape.indices.length, x + 1) : x)); setIndices(t); ecrire("metamerisme.indices", t); };
   const copier = (quoi, valeur) => navigator.clipboard?.writeText(valeur).then(() => { setCopie(quoi); setTimeout(() => setCopie(null), 2000); });
 
-  const demandeAnalyse = `Analyse mon prompt pour l'étape ${n + 1} de l'exercice Métamérisme (« ${etape.titre} »).
-Objectif de l'étape : ${etape.consigne}
-Mon prompt :
-« ${texte.trim()} »
-N'écris pas de code et ne me donne pas la réponse : dis-moi ce qui est clair, ce qui manque ou ce qui est ambigu, et pose-moi une ou deux questions pour m'aider à l'améliorer.`;
-
   const bouton = (principal, inactif = false) => ({ padding: "9px 14px", borderRadius: 12, cursor: inactif ? "not-allowed" : "pointer", fontWeight: 800, fontSize: 14, border: "none",
     background: principal ? "var(--accent)" : "#fff", color: principal ? "#fff" : "#334155", boxShadow: "inset 0 0 0 1px #d5dfeb", opacity: inactif ? 0.5 : 1 });
-  const vide = !texte.trim();
 
   return (
     <section aria-label="Construis cette simulation avec l'IA" style={{ background: "#fff", border: "2px solid var(--accent)", borderRadius: 18, padding: "16px 18px" }}>
@@ -132,19 +124,21 @@ N'écris pas de code et ne me donne pas la réponse : dis-moi ce qui est clair, 
       </div>
 
       <h3 style={{ margin: "0 0 4px", fontSize: 18 }}>{n + 1}. {etape.titre}</h3>
-      <p style={{ margin: "0 0 10px", fontSize: 15, color: "#0f172a" }}>✍️ <strong>{etape.consigne}</strong></p>
+      <p style={{ margin: "0 0 12px", fontSize: 15, color: "#0f172a" }}>✍️ <strong>{etape.consigne}</strong></p>
 
-      <textarea value={texte} onChange={(e) => changerTexte(e.target.value)} rows={5}
-        placeholder="Écris ici ton prompt, avec tes mots. Commence par « Dans la page Métamérisme… »"
-        style={{ width: "100%", boxSizing: "border-box", font: "inherit", fontSize: 14.5, lineHeight: 1.55, padding: "10px 12px", borderRadius: 12, border: "1.5px solid #cbd5e1", resize: "vertical" }} />
+      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "10px 14px", lineHeight: 1.6, fontSize: 14.5 }}>
+        👉 <strong>Écris ton prompt dans la conversation avec l'agent, dans Antigravity</strong>, en commençant par :
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "6px 0" }}>
+          <code style={{ background: "#fff", border: "1px solid #cbd5e1", borderRadius: 8, padding: "4px 10px", fontSize: 14.5 }}>{debut}</code>
+          <button type="button" style={bouton(false)} onClick={() => copier("debut", debut)}>{copie === "debut" ? "✓ Copié !" : "📋 Copier ce début"}</button>
+        </div>
+        L'agent <strong>vérifie d'abord ton prompt</strong> : il te dit ce qui est réussi et ce qui manque, sans te donner la réponse. Ensuite, à toi de choisir : corriger ton prompt, ou le faire exécuter. Regarde le résultat dans l'aperçu, puis passe à l'étape suivante.
+      </div>
 
       <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 10 }}>
         <button type="button" style={bouton(false, indices[n] >= etape.indices.length)} onClick={indiceSuivant} disabled={indices[n] >= etape.indices.length}>
           💡 {indices[n] === 0 ? "Un indice" : indices[n] < etape.indices.length ? "Un autre indice" : "Plus d'indice"}
         </button>
-        <button type="button" style={bouton(false, vide)} disabled={vide} title={vide ? "Écris d'abord ton prompt" : ""}
-          onClick={() => copier("analyse", demandeAnalyse)}>{copie === "analyse" ? "✓ Copié : colle-le à l'agent" : "🤖 Faire analyser par l'agent"}</button>
-        <button type="button" style={bouton(false, vide)} disabled={vide} onClick={() => copier("prompt", texte)}>{copie === "prompt" ? "✓ Copié !" : "📋 Copier mon prompt"}</button>
         <button type="button" style={bouton(false)} onClick={() => setVoirProposition((v) => !v)}>{voirProposition ? "🙈 Cacher la proposition" : "👀 Proposition de réponse"}</button>
       </div>
 
@@ -157,14 +151,11 @@ N'écris pas de code et ne me donne pas la réponse : dis-moi ce qui est clair, 
         <div style={{ marginTop: 12, padding: "10px 14px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 12 }}>
           <strong style={{ fontSize: 14 }}>Une proposition (il y en a d'autres de justes) :</strong>
           <p style={{ margin: "6px 0 8px", fontSize: 14.5, lineHeight: 1.55 }}>{etape.proposition}</p>
-          <button type="button" style={bouton(false)} onClick={() => copier("proposition", etape.proposition)}>{copie === "proposition" ? "✓ Copié !" : "📋 Copier la proposition"}</button>
+          <button type="button" style={bouton(false)} onClick={() => copier("proposition", debut + etape.proposition)}>{copie === "proposition" ? "✓ Copié !" : "📋 Copier la proposition"}</button>
         </div>
       )}
 
-      <p style={{ margin: "12px 0 0", fontSize: 13.5, color: "#64748b", lineHeight: 1.5 }}>
-        Quand ton prompt te convient : copie-le, colle-le dans la conversation avec l'agent, regarde le résultat dans l'aperçu, puis passe à l'étape suivante.
-      </p>
-      <div style={{ display: "flex", gap: 8, marginTop: 10, justifyContent: "flex-end" }}>
+      <div style={{ display: "flex", gap: 8, marginTop: 14, justifyContent: "flex-end" }}>
         {n > 0 && <button type="button" style={bouton(false)} onClick={() => aller(n - 1)}>← Précédent</button>}
         {n < ETAPES.length - 1
           ? <button type="button" style={bouton(true)} onClick={() => aller(n + 1)}>Suivant →</button>
@@ -177,7 +168,7 @@ N'écris pas de code et ne me donne pas la réponse : dis-moi ce qui est clair, 
 export default function Metamerisme() {
   return (
     <div style={{ maxWidth: 980, margin: "0 auto", display: "grid", gap: 14 }}>
-      <p style={{ margin: 0 }}>Deux cartes de même couleur et une cabine de lumière : c'est le point de départ. À toi de construire la simulation du <strong>métamérisme</strong> en écrivant toi-même les demandes à l'IA, une étape à la fois.</p>
+      <p style={{ margin: 0 }}>Deux cartes de même couleur et une cabine de lumière : c'est le point de départ. À toi de construire la simulation du <strong>métamérisme</strong> en écrivant toi-même tes demandes à l'agent, dans Antigravity, une étape à la fois.</p>
       <Scene />
       <Guide />
     </div>
