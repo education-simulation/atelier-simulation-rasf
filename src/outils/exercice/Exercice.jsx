@@ -87,10 +87,13 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
   const fini = indices >= etape.indices.length;
   return (
     <details open={ouverte && !verrouillee} onToggle={(e) => { if (!verrouillee && e.currentTarget.open !== ouverte) basculer(); }}
-      style={{ background: verrouillee ? "#f1f5f9" : "#fff", border: `1px solid ${faite ? "#86efac" : "#d5dfeb"}`, borderRadius: 12, padding: "0 14px", opacity: verrouillee ? 0.65 : 1 }}>
+      style={{ background: verrouillee ? "#f1f5f9" : ouverte ? "color-mix(in srgb, var(--accent) 7%, #fff)" : "#fff",
+        border: ouverte && !verrouillee ? "2px solid var(--accent)" : `1px solid ${faite ? "#86efac" : "#d5dfeb"}`,
+        boxShadow: ouverte && !verrouillee ? "0 2px 10px color-mix(in srgb, var(--accent) 22%, transparent)" : "none",
+        borderRadius: 12, padding: ouverte && !verrouillee ? "0 13px" : "0 14px", opacity: verrouillee ? 0.65 : 1, transition: "background .2s, box-shadow .2s" }}>
       <summary onClick={(e) => { if (verrouillee) e.preventDefault(); }} aria-disabled={verrouillee || undefined}
         title={verrouillee ? `Coche d'abord « Étape terminée » à l'étape ${numero - 1}` : undefined}
-        style={{ cursor: verrouillee ? "not-allowed" : "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
+        style={{ cursor: verrouillee ? "not-allowed" : "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, color: ouverte && !verrouillee ? "var(--accent)" : undefined, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
         {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>{parIA ? "✅ validée par l'IA" : "✅ terminée"}</span>}
