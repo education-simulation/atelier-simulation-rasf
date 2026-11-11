@@ -1,6 +1,6 @@
 // ============================================================
 //  EN-TÊTE DU SITE (moteur, ne pas modifier) — d'après la « Paillasse virtuelle » de Nils Aronssohn.
-//  Toujours visible : il se range quand on descend dans la page et revient quand on remonte.
+//  Toujours visible, collé en haut de l'écran, même quand on fait défiler la page.
 //  Titre (retour à l'accueil) · un menu déroulant compact par menu de site.config.js.
 //  Sur écran étroit, les menus se regroupent derrière un bouton « Menu ».
 // ============================================================
@@ -36,21 +36,12 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
   const [ouvert, setOuvert] = useState(null);        // id du menu déroulé (grand écran) ou 'mobile'
   const [accordeon, setAccordeon] = useState(null);  // menu déplié dans le menu mobile
   const [large, setLarge] = useState(() => window.innerWidth >= 760);
-  const [cache, setCache] = useState(false);
   const ref = useRef(null);
-  const dernierY = useRef(0);
 
   useEffect(() => {
-    const defile = () => {
-      const y = window.scrollY, dy = y - dernierY.current;
-      if (Math.abs(dy) < 8) return;
-      dernierY.current = y;
-      setCache(dy > 0 && y > HAUTEUR_ENTETE);
-    };
     const taille = () => setLarge(window.innerWidth >= 760);
-    window.addEventListener("scroll", defile, { passive: true });
     window.addEventListener("resize", taille);
-    return () => { window.removeEventListener("scroll", defile); window.removeEventListener("resize", taille); };
+    return () => window.removeEventListener("resize", taille);
   }, []);
   useEffect(() => {
     if (!ouvert) return undefined;
@@ -61,7 +52,6 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
     return () => { document.removeEventListener("mousedown", dehors); document.removeEventListener("keydown", echap); };
   }, [ouvert]);
 
-  const masque = cache && !ouvert;
   const aller = (id) => { setOuvert(null); naviguer(id); };
 
   const lienPage = (p) => (
@@ -73,7 +63,7 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
   const listePages = (m) => (m.pages.length ? m.pages.map(lienPage) : <span className="et-vide">Pas encore de page ici.</span>);
 
   return (
-    <header ref={ref} className="entete" style={{ height: HAUTEUR_ENTETE, transform: masque ? "translateY(-110%)" : "none" }}>
+    <header ref={ref} className="entete" style={{ height: HAUTEUR_ENTETE }}>
       <div className="entete-ligne">
         <a href="?" onClick={(e) => { e.preventDefault(); aller(null); }} title="Retour à l'accueil" className="entete-titre">
           <Logo />
