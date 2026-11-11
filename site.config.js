@@ -25,10 +25,16 @@ export default {
   // Couleur principale (titre, boutons, menu actif). Code couleur au format #RRGGBB.
   couleur: "#0b4f94",
 
-  // Les menus, en haut du site, dans l'ordre. Chacun a aussi son bloc de couleur sur l'accueil.
+  // Le style du site :
+  //   "blocs"   : menus en haut, accueil en grands blocs de couleur (d'après la Paillasse virtuelle)
+  //   "lateral" : barre de menus sombre à gauche, accueil sobre en cartes
+  //   "liste"   : menus en haut, accueil en simple liste, le plus rapide à lire
+  style: "blocs",
+
+  // Les menus, dans l'ordre. Chacun a aussi sa place sur l'accueil.
   //   id    : abréviation courte (sert au rangement des pages, affichée en gros sur l'accueil)
   //   nom   : nom affiché dans le menu
-  //   fond  : couleur du bloc sur l'accueil ; texte : couleur des écritures sur ce bloc
+  //   fond  : couleur du bloc sur l'accueil (style « blocs ») ; texte : couleur des écritures sur ce bloc
   menus: [
     { id: "Ex", nom: "Exemples", fond: "#f5a31a", texte: "#3a2500" },
     { id: "A", nom: "Menu A", fond: "#5b4bdb", texte: "#ffffff" },
@@ -42,13 +48,14 @@ export default {
   //   icone   : un émoji
   //   menu    : l'id du menu où la ranger
   //   fichier : le nom du fichier dans simulations/ (sans « .jsx »)
+  //   description : (facultatif) une phrase courte, affichée sur l'accueil des styles « lateral » et « liste »
   pages: [
-    { id: "masse-volumique", titre: "Masse volumique au pycnomètre", icone: "⚖️", menu: "Ex", fichier: "MasseVolumique" },
-    { id: "extrait-sec", titre: "Extrait sec à l'étuve", icone: "🔥", menu: "Ex", fichier: "ExtraitSec" },
-    { id: "calculatrice", titre: "Calculatrice scientifique", icone: "🧮", menu: "Ex", fichier: "Calculatrice" },
-    { id: "forces-intermoleculaires", titre: "Cohésion de la matière : forces intermoléculaires", icone: "🧲", menu: "Ex", fichier: "ForcesIntermoleculaires" },
-    { id: "jeu-equations", titre: "Jeu : défi chrono des équations", icone: "🎮", menu: "Ex", fichier: "JeuEquations" },
-    { id: "instabilite", titre: "Instabilité des milieux dispersés", icone: "🫧", menu: "Ex", fichier: "Instabilite" },
+    { id: "masse-volumique", titre: "Masse volumique au pycnomètre", icone: "⚖️", menu: "Ex", fichier: "MasseVolumique", description: "Parcours guidé : peser, calculer, comparer à la valeur attendue." },
+    { id: "extrait-sec", titre: "Extrait sec à l'étuve", icone: "🔥", menu: "Ex", fichier: "ExtraitSec", description: "Sécher jusqu'à masse constante et calculer la teneur en matière sèche." },
+    { id: "calculatrice", titre: "Calculatrice scientifique", icone: "🧮", menu: "Ex", fichier: "Calculatrice", description: "Une calculatrice scientifique, utilisable partout." },
+    { id: "forces-intermoleculaires", titre: "Cohésion de la matière : forces intermoléculaires", icone: "🧲", menu: "Ex", fichier: "ForcesIntermoleculaires", description: "Polarisation, London, liaison hydrogène : voir les nuages se déformer." },
+    { id: "jeu-equations", titre: "Jeu : défi chrono des équations", icone: "🎮", menu: "Ex", fichier: "JeuEquations", description: "60 secondes pour équilibrer un maximum d'équations." },
+    { id: "instabilite", titre: "Instabilité des milieux dispersés", icone: "🫧", menu: "Ex", fichier: "Instabilite", description: "Crémage et sédimentation, loi de Stokes. Exemple à améliorer." },
 
     { id: "a1", titre: "Page A1", icone: "📄", menu: "A", fichier: "PageA1" },
     { id: "a2", titre: "Page A2", icone: "📄", menu: "A", fichier: "PageA2" },

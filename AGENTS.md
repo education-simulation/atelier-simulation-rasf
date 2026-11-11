@@ -73,6 +73,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
   2. dans `pages` de `site.config.js` : `{ id, titre, icone, menu, fichier }` (`menu` = l'`id` d'un menu, `fichier` = le nom du fichier sans `.jsx`). Quand une page vide est remplacée, supprime son ancien fichier `PageXn.jsx` s'il n'est plus utilisé.
 - Une page pour élèves : des réglages (curseurs, boutons), un résultat qui change aussitôt (nombre, schéma, couleur), une consigne courte. Les nombres s'affichent à la française (`toLocaleString("fr-FR")`).
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
+- **Trois styles**, choisis par `style` dans `site.config.js` : `"blocs"` (menus en haut, accueil en blocs de couleur), `"lateral"` (barre sombre à gauche, accueil en cartes ; sur téléphone, menu en haut), `"liste"` (menus en haut, accueil en liste). Changer de style = changer ce seul mot. Les pages, les menus et le fil d'Ariane restent les mêmes. Le champ facultatif `description` d'une page s'affiche sur l'accueil des styles `lateral` et `liste` : écris-en une courte pour chaque nouvelle page.
 
 ### Les deux boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
 - **👆 Sélectionner un élément à modifier** (orange) : la personne clique dessus ; chaque grande zone de la page s'entoure de pointillés avec un numéro ; elle clique sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur page « instabilite », section n°3 · Titre de la page, élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus).
@@ -99,7 +100,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
   > Bonjour ! Ensemble, on va créer ton site de simulations pour tes élèves, en 15 minutes environ. Voici ce qui va se passer :
   > 1. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom).
-  > 2. Quelques questions à cliquer : le nom du site, sa couleur, ton établissement, ton nom.
+  > 2. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
   > 3. Tu vois ton site, sur ton ordinateur seulement.
   > 4. On le met en ligne, gratuitement, à une adresse que tu donneras à tes élèves.
   > 5. Je te propose des idées pour la suite.
@@ -145,13 +146,14 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
 1. **Le nom de ton site ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse de mes élèves », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mon atelier de simulations »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
-3. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement).
-4. **Ton nom ou ton pseudo ?** (affiché en bas du site) → « Prof de sciences » · Autre (écris ton nom ou ton pseudo).
-- **Vérification :** tu as les quatre réponses.
+3. **Le style de ton site ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
+4. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement).
+5. **Ton nom ou ton pseudo ?** (affiché en bas du site) → « Prof de sciences » · Autre (écris ton nom ou ton pseudo).
+- **Vérification :** tu as les cinq réponses.
 - Ce que tu dois cliquer maintenant : la réponse qui te convient, puis « Submit » (ou écris le numéro).
 
 ### Étape 2 — Voir ton site sur ton ordinateur
-- Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
+- Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
 - Lance l'aperçu (section 3), puis écris **ce message, avec le vrai lien** :
 
   > Clique sur ce lien : http://localhost:NNNN/ — il ouvre ton site dans ton navigateur.

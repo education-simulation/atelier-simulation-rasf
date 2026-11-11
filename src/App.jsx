@@ -7,6 +7,7 @@
 import { lazy, useEffect, useMemo, useState } from "react";
 import SITE from "../site.config.js";
 import { EnTete } from "./moteur/EnTete";
+import { BarreLaterale } from "./moteur/BarreLaterale";
 import { Accueil } from "./moteur/Accueil";
 import { PiedDePage, APropos } from "./moteur/PiedDePage";
 import { Apercu, estApercu } from "./moteur/Apercu";
@@ -73,11 +74,16 @@ export default function App() {
   else if (!Composant) { titre = sim.titre; contenu = <p className="erreur">Fichier <code>simulations/{sim.fichier}.jsx</code> introuvable. Vérifie la ligne <code>fichier</code> de cette page dans site.config.js.</p>; }
   else { titre = sim.titre; contenu = <EnChargement key={sim.id}><Composant /></EnChargement>; }
 
+  const style = ["blocs", "lateral", "liste"].includes(SITE.style) ? SITE.style : "blocs";
+  const entete = <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />;
+
   return (
-    <div className="racine">
+    <div className={`racine racine-${style}`}>
       {estApercu && <Apercu />}
-      <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />
+      <div className="cadre">
+      {style === "lateral" && <BarreLaterale titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />}
       <main className="principal">
+        {entete}
         {titre && (
           <nav aria-label="Fil d'Ariane" className="fil-ariane">
             <a href="?" onClick={(e) => { e.preventDefault(); naviguer(null); }}>Accueil</a>
@@ -99,6 +105,7 @@ export default function App() {
         <div className="zone-sim">{contenu}</div>
         <PiedDePage site={SITE} naviguer={naviguer} />
       </main>
+      </div>
       {estApercu && <InspecteurLocal />}
     </div>
   );

@@ -7,6 +7,7 @@ import { useState, useEffect } from "react";
 function trouverSections() {
   const liste = [];
   const ajouter = (el, nom) => { if (el && el.offsetHeight > 20 && !liste.some((x) => x.el === el)) liste.push({ el, nom }); };
+  ajouter(document.querySelector("aside.barre-laterale"), "Barre latérale et menus");
   ajouter(document.querySelector("header.entete"), "En-tête et menus");
   ajouter(document.querySelector(".fil-ariane"), "Fil d'Ariane");
   ajouter(document.querySelector(".barre-titre"), "Titre de la page");

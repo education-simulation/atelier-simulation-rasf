@@ -1,5 +1,7 @@
-// PAGE D'ACCUEIL (moteur, ne pas modifier) — d'après la « Paillasse virtuelle » de Nils Aronssohn.
-// Grande phrase, présentation, puis un bloc de couleur par menu avec ses pages.
+// PAGE D'ACCUEIL (moteur, ne pas modifier). Trois styles, choisis par « style » dans site.config.js :
+//   blocs   : grande phrase, puis un bloc de couleur par menu (d'après la « Paillasse virtuelle » de Nils Aronssohn)
+//   lateral : titre sobre, puis une carte par page, rangées par menu
+//   liste   : titre, puis chaque menu en liste dépliable
 // Les textes et les couleurs se changent dans site.config.js.
 
 // « Essayer, [comprendre.] » → le morceau entre crochets est surligné.
@@ -7,7 +9,73 @@ function Accroche({ texte }) {
   return texte.split(/(\[[^\]]*\])/).map((m, i) => (m.startsWith("[") ? <mark key={i}>{m.slice(1, -1)}</mark> : m));
 }
 
-export function Accueil({ site, menus, naviguer }) {
+const texteSeul = (t) => String(t || "").replace(/[[\]]/g, "");
+
+export function Accueil(props) {
+  const style = props.site.style;
+  if (style === "lateral") return <AccueilLateral {...props} />;
+  if (style === "liste") return <AccueilListe {...props} />;
+  return <AccueilBlocs {...props} />;
+}
+
+function AccueilLateral({ site, menus, naviguer }) {
+  return (
+    <div className="al">
+      <header className="al-tete">
+        <span className="al-trait" aria-hidden="true" />
+        <h1>{site.titre}</h1>
+        <p>{texteSeul(site.accroche)}</p>
+        {site.presentation && <p className="al-pres">{site.presentation}</p>}
+      </header>
+      {menus.map((m) => (
+        <section key={m.id} id={`menu-${m.id}`} className="al-section" aria-label={m.label}>
+          <h2>{m.label}</h2>
+          <div className="al-grille">
+            {m.pages.map((p) => (
+              <button key={p.id} type="button" className="al-carte" onClick={() => naviguer(p.id)}>
+                <span className="al-trait" aria-hidden="true" />
+                <strong><span aria-hidden="true">{p.icone}</span> {p.titre}</strong>
+                {p.description && <span>{p.description}</span>}
+              </button>
+            ))}
+            {!m.pages.length && <p className="al-vide">Bientôt des pages ici.</p>}
+          </div>
+        </section>
+      ))}
+      <p className="al-auteur">{site.auteur}{site.etablissement ? ` · ${site.etablissement}` : ""}</p>
+    </div>
+  );
+}
+
+function AccueilListe({ site, menus, naviguer }) {
+  return (
+    <div className="li">
+      <header className="li-tete">
+        <h1>{site.titre}</h1>
+        <p>{texteSeul(site.accroche)} {site.presentation}</p>
+      </header>
+      {menus.map((m) => (
+        <details key={m.id} id={`menu-${m.id}`} className="li-menu" open>
+          <summary><span>{m.label}</span><span className="li-nb">{m.pages.length} page{m.pages.length > 1 ? "s" : ""}</span></summary>
+          <ul>
+            {m.pages.map((p) => (
+              <li key={p.id}>
+                <button type="button" onClick={() => naviguer(p.id)}>
+                  <span aria-hidden="true" className="li-icone">{p.icone}</span>
+                  <span><strong>{p.titre}</strong>{p.description && <span className="li-desc">{p.description}</span>}</span>
+                </button>
+              </li>
+            ))}
+            {!m.pages.length && <li className="li-vide">Bientôt des pages ici.</li>}
+          </ul>
+        </details>
+      ))}
+      <p className="li-auteur">{site.auteur}{site.etablissement ? ` · ${site.etablissement}` : ""}</p>
+    </div>
+  );
+}
+
+function AccueilBlocs({ site, menus, naviguer }) {
   const total = (site.pages || []).length;
   return (
     <div className="ab">

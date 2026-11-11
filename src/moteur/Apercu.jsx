@@ -7,7 +7,7 @@ import { STYLE_BOUTONS_RONDS } from "./InspecteurLocal";
 
 const ETAPES = [
   ["Copier le modèle sur l'ordinateur", "L'agent copie le modèle dans le dossier que tu as choisi et vérifie que Node.js est installé (sinon, il te guide pour l'installer). C'est fait si tu lis ce texte."],
-  ["Faire connaissance", "Quelques questions à cliquer : le nom du site, sa couleur, ton établissement, ton nom ou pseudo."],
+  ["Faire connaissance", "Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom ou pseudo."],
   ["Voir ton site sur ton ordinateur", "C'est cette page. Les menus Exemples, A, B et C sont là pour démarrer : tu les changeras en parlant à l'agent."],
   ["Mettre en ligne avec Vercel", "La première fois : clique sur le lien donné par l'agent, « Continue with Google » avec ton compte d'établissement, vérifie le code, puis « Confirm »."],
   ["Voir le site en ligne", "Ouvre l'adresse en .vercel.app donnée par l'agent, aussi sur ton téléphone. Tu pourras plus tard choisir un nom de domaine."],

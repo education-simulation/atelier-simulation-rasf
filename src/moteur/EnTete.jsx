@@ -8,6 +8,17 @@ import { useState, useEffect, useRef } from "react";
 
 export const HAUTEUR_ENTETE = 52;
 
+// Le petit logo (une fiole) aux couleurs du site.
+export function Logo({ taille = 28 }) {
+  return (
+    <svg width={taille} height={taille} viewBox="0 0 64 64" aria-hidden="true" style={{ flexShrink: 0 }}>
+      <rect width="64" height="64" rx="14" fill="var(--accent)" />
+      <path d="M26 12h12M28 12v14L16 48a4 4 0 0 0 3.5 6h25a4 4 0 0 0 3.5-6L36 26V12" fill="none" stroke="#fff" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" />
+      <path d="M21 42h22" stroke="#f5a31a" strokeWidth="4" strokeLinecap="round" />
+    </svg>
+  );
+}
+
 // menus : [{ id, label, pages: [{ id, icone, titre }] }]
 export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
   const [ouvert, setOuvert] = useState(null);        // id du menu déroulé (grand écran) ou 'mobile'
@@ -53,11 +64,7 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
     <header ref={ref} className="entete" style={{ height: HAUTEUR_ENTETE, transform: masque ? "translateY(-110%)" : "none" }}>
       <div className="entete-ligne">
         <a href="?" onClick={(e) => { e.preventDefault(); aller(null); }} title="Retour à l'accueil" className="entete-titre">
-          <svg width="28" height="28" viewBox="0 0 64 64" aria-hidden="true" style={{ flexShrink: 0 }}>
-            <rect width="64" height="64" rx="14" fill="var(--accent)" />
-            <path d="M26 12h12M28 12v14L16 48a4 4 0 0 0 3.5 6h25a4 4 0 0 0 3.5-6L36 26V12" fill="none" stroke="#fff" strokeWidth="4" strokeLinejoin="round" strokeLinecap="round" />
-            <path d="M21 42h22" stroke="#f5a31a" strokeWidth="4" strokeLinecap="round" />
-          </svg>
+          <Logo />
           <span>{titre}</span>
         </a>
 
