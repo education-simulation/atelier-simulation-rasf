@@ -7,7 +7,7 @@
 //  Aides dans la page : des indices (un à la fois) et une proposition de réponse (cachée tant qu'on ne la demande pas).
 //  Pour calculer les couleurs à partir des spectres, l'agent peut utiliser src/outils/colorimetrie.js.
 // ============================================================
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { estApercu } from "../src/moteur/Apercu";
 
 const ETAPES = [
@@ -197,6 +197,58 @@ function ExplorationLibre({ copier, copie, bouton }) {
   );
 }
 
+// --- Journal : les prompts envoyés à l'agent et ses conseils (écrits par l'agent dans journal/Metamerisme.json) ---
+// Visible seulement sur l'ordinateur (aperçu). Se met à jour tout seul toutes les 5 secondes.
+function Journal({ etapeCourante, mode }) {
+  const [entrees, setEntrees] = useState([]);
+  const [ouvert, setOuvert] = useState(() => lire("metamerisme.journalOuvert", true));
+  useEffect(() => {
+    let fini = false;
+    const charger = () => fetch(`journal/Metamerisme.json?t=${Date.now()}`, { cache: "no-store" })
+      .then((r) => (r.ok ? r.text() : "[]"))
+      .then((t) => { if (fini || /<html/i.test(t)) return; try { const j = JSON.parse(t); setEntrees(Array.isArray(j) ? j : []); } catch { /* fichier en cours d'écriture */ } })
+      .catch(() => {});
+    charger();
+    const id = setInterval(charger, 5000);
+    return () => { fini = true; clearInterval(id); };
+  }, []);
+  const basculer = () => { setOuvert((o) => { ecrire("metamerisme.journalOuvert", !o); return !o; }); };
+  const liste = [...entrees].reverse();
+  const couleur = (a) => (/complet\b/i.test(a || "") && !/presque|à compléter/i.test(a || "") ? "#15803d" : /presque/i.test(a || "") ? "#b45309" : "#b91c1c");
+  const puces = (titre, l, c) => (Array.isArray(l) && l.length ? <div style={{ marginTop: 4 }}><span style={{ fontWeight: 800, color: c }}>{titre}</span>
+    <ul style={{ margin: "2px 0 0", paddingLeft: 20 }}>{l.map((x, i) => <li key={i}>{x}</li>)}</ul></div> : null);
+
+  return (
+    <div style={{ marginTop: 14, border: "1px solid #c7d2fe", background: "#eef2ff", borderRadius: 12, padding: "10px 14px" }}>
+      <button type="button" onClick={basculer} style={{ all: "unset", cursor: "pointer", display: "flex", width: "100%", alignItems: "center", gap: 8, fontWeight: 800, fontSize: 14.5 }}>
+        <span style={{ flex: 1 }}>📜 Mes prompts et les conseils de l'IA ({entrees.length})</span><span aria-hidden="true">{ouvert ? "▲" : "▼"}</span>
+      </button>
+      {ouvert && (liste.length === 0
+        ? <p style={{ margin: "8px 0 0", fontSize: 13.5, color: "#475569" }}>Rien pour l'instant. Dès que tu envoies un prompt « Exercice Métamérisme… » à l'agent, il le note ici avec ses conseils.</p>
+        : <ol style={{ listStyle: "none", margin: "8px 0 0", padding: 0, display: "grid", gap: 8 }}>
+          {liste.map((e, i) => {
+            const actuelle = mode === "guide" ? e.etape === etapeCourante + 1 : e.mode === "libre";
+            return (
+              <li key={i} style={{ background: "#fff", border: `1px solid ${actuelle ? "var(--accent)" : "#e2e8f0"}`, borderRadius: 10, padding: "8px 12px", fontSize: 13.5, lineHeight: 1.5 }}>
+                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", alignItems: "baseline" }}>
+                  <strong>{e.mode === "libre" ? "🧪 Exploration libre" : `🧭 Étape ${e.etape}`}</strong>
+                  <span style={{ color: "#64748b" }}>{e.date}</span>
+                  {e.appreciation && <span style={{ fontWeight: 800, color: couleur(e.appreciation) }}>· {e.appreciation}</span>}
+                  {e.execute !== undefined && <span style={{ color: "#64748b" }}>· {e.execute ? "exécuté" : "pas encore exécuté"}</span>}
+                </div>
+                <blockquote style={{ margin: "6px 0", padding: "4px 10px", borderLeft: "3px solid #94a3b8", color: "#0f172a", background: "#f8fafc" }}>{e.prompt}</blockquote>
+                {puces("✅ Réussi", e.reussi, "#15803d")}
+                {puces("⚠️ À améliorer", e.a_ameliorer, "#b45309")}
+                {e.astuce && <div style={{ marginTop: 4 }}><span style={{ fontWeight: 800, color: "#4338ca" }}>💡 Astuce :</span> {e.astuce}</div>}
+                {e.resultat && <div style={{ marginTop: 4 }}><span style={{ fontWeight: 800 }}>👀 Résultat :</span> {e.resultat}</div>}
+              </li>
+            );
+          })}
+        </ol>)}
+    </div>
+  );
+}
+
 // --- Le guide : une étape à la fois ---
 function Guide() {
   const [n, setN] = useState(() => Math.min(ETAPES.length - 1, Math.max(0, lire("metamerisme.etape", 0))));
@@ -273,6 +325,7 @@ function Guide() {
           : <span style={{ alignSelf: "center", fontWeight: 800, color: "#15803d" }}>🎉 Dernière étape</span>}
       </div>
       </>) : <div style={{ marginTop: 12 }}><ExplorationLibre copier={copier} copie={copie} bouton={bouton} /></div>}
+      {estApercu && <Journal etapeCourante={n} mode={mode} />}
       {estApercu && <Sauvegardes page="Metamerisme" remiseAZero={() => { ecrire("metamerisme.etape", 0); ecrire("metamerisme.indices", ETAPES.map(() => 0)); }} />}
     </section>
   );

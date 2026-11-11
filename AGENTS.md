@@ -253,8 +253,21 @@ Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui af
 6. Termine par la question à choix, **avec exactement ces choix, dans cet ordre** : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. **Ne propose pas de mettre en ligne pendant l'exercice** : seulement après l'étape 6 (ou si la personne le demande).
    - « Je continue » : dis-lui de cliquer « Suivant » dans le guide de la page, puis d'écrire son prompt de l'étape suivante en commençant par « Exercice Métamérisme, étape N+1 : ».
    - « Je veux ajuster » : elle écrit ce qu'elle veut changer (c'est aussi un prompt : vérifie-le de la même façon s'il commence par « Exercice Métamérisme »).
+**Journal (à tenir à CHAQUE prompt de l'exercice, guidé ou libre)** : la page affiche, sous le guide, « 📜 Mes prompts et les conseils de l'IA », lu dans le fichier **`journal/Metamerisme.json`** (un tableau JSON ; crée le dossier et le fichier s'ils n'existent pas, avec `[]`). À chaque message « Exercice Métamérisme… », **ajoute une entrée à la fin du tableau** (ne modifie pas les anciennes, sauf pour passer `execute` à `true` quand tu exécutes ensuite le même prompt) :
+```json
+{ "date": "11/11/2026 19:40", "mode": "guide", "etape": 3,
+  "prompt": "le texte exact du prompt, sans le début « Exercice Métamérisme… : »",
+  "appreciation": "complet | presque complet | à compléter",
+  "reussi": ["ce qui est réussi, une phrase par point"],
+  "a_ameliorer": ["ce qui manque, sous forme de question, sans donner la réponse"],
+  "astuce": "une astuce d'écriture de prompt",
+  "execute": false,
+  "resultat": "après exécution : ce qui a changé, en une phrase" }
+```
+En exploration libre : `"mode": "libre"`, pas de champ `etape` ni `appreciation`, et `execute: true` avec le `resultat`. Garde le JSON valide (vérifie-le). Rien de personnel dans ce fichier. **C'est la seule écriture autorisée en dehors de `simulations/Metamerisme.jsx` pendant l'exercice.**
+
 **Exploration libre** : le guide a aussi un mode « 🧪 Exploration libre », sans étapes. Les messages commencent alors par **« Exercice Métamérisme, exploration libre : »**. Pour ceux-là, **pas de vérification préalable** : fais directement ce qui est demandé (et seulement ça), puis réponds en deux lignes : 👀 ce qui a changé (avec le lien de l'aperçu et Cmd + R / Ctrl + R) et 💡 une astuce pour rendre la prochaine demande plus précise. Termine par la question à choix : **J'ai une autre idée** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat** · **😕 Je suis perdu·e**. Si la demande est trop floue pour être faite, pose **une** question à choix pour la préciser, sans coder.
-**Sauvegardes** : sous le guide, des boutons « 💾 Sauvegarder cette version », « 📂 Reprendre une version » et « ↺ Recommencer à zéro » copient la page dans `versions/Metamerisme/` (sur l'ordinateur, jamais en ligne). Si la personne te demande de sauvegarder, reprendre ou recommencer, dis-lui d'utiliser ces boutons. **Ne modifie et ne supprime jamais** le dossier `versions/` (surtout `versions/depart/`, la page de départ).
+**Sauvegardes** : sous le guide, des boutons « 💾 Sauvegarder cette version », « 📂 Reprendre une version » et « ↺ Recommencer à zéro » copient la page dans `versions/Metamerisme/` (sur l'ordinateur, jamais en ligne). Si la personne te demande de sauvegarder, reprendre ou recommencer, dis-lui d'utiliser ces boutons. **Ne modifie et ne supprime jamais** le dossier `versions/` (surtout `versions/depart/`, la page de départ). Le journal `journal/Metamerisme.json` reste quand on recommence à zéro : c'est l'historique de la personne.
 **Pendant l'exercice, ne touche jamais à `site.config.js`** : la page Métamérisme y est déjà inscrite (ne l'ajoute pas une deuxième fois). Ne lis pas la `proposition` pour compléter : elle sert seulement à la personne.
 Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `blanc`, `lab`, `deltaE`, `versEcran`, `paireMetamere`, `croisements`). Une paire de cartes qui marche bien : carte 1 = `0,30 + 0,15·exp(−((λ−530)/70)²)` ; carte 2 = `paireMetamere(carte1, sig((λ−640)/15) − 0,2·exp(−((λ−440)/25)²), 7)` (3 croisements, ΔE ≈ 7 sous A, 0 sous D65).
 
