@@ -261,6 +261,8 @@ export const OUTILS_SANS = [
 ETAPES.outils = OUTILS;
 ETAPES.outilsSans = OUTILS_SANS;
 ETAPES.etapeOutils = ETAPE_OUTILS;
+// Idée ajoutée EN PREMIER à l'exploration libre quand on construit ses modèles (mode « À construire »).
+ETAPES.ideeOutils = "construis mes modèles couleur avec les tables officielles de la CIE, et une paire métamère vérifiée : même couleur sous D65, au moins 3 croisements, écart dans le rouge";
 ETAPES.fichierPerso = FICHIER_PERSO;
 // Mots clés montrés seulement quand on construit sa boîte à outils.
 ETAPES.motsSansSeulement = ["crée un fichier", "mes modèles couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas les modèles par défaut"];

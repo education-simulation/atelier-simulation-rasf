@@ -638,7 +638,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
                 faite={faites.includes(num)} parIA={parIA.includes(num)} verrouillee={verrouillee(num)} cocher={() => cocher(num)}
                 precedente={premiereNonFaite(num) ?? nums[nums.indexOf(num) - 1]} outil={outils[0]} controle={num === 0 && sans ? controle : null} bloquee={bloqueeParControle(num)} />
             ))
-            : <ExplorationLibre idees={idees} />}
+            : <ExplorationLibre idees={sans && etapes.ideeOutils ? [etapes.ideeOutils, ...idees] : idees} />}
         </section>}
 
       </div>
