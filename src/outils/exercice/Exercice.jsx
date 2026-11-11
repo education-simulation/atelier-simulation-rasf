@@ -132,7 +132,7 @@ function ExplorationLibre({ idees }) {
       <p style={{ margin: "0 0 6px", fontWeight: 800, fontSize: 14.5 }}>💡 Besoin d'une idée ?</p>
       <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 6 }}>
         {idees.map((idee, i) => {
-          const texte = `Dans la page Métamérisme, ${idee}.`;
+          const texte = `${idee.charAt(0).toUpperCase() + idee.slice(1)}.`;
           return (
             <li key={i} style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "6px 10px" }}>
               <span style={{ flex: "1 1 240px" }}>{idee.charAt(0).toUpperCase() + idee.slice(1)}.</span>
