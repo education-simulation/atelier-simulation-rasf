@@ -78,6 +78,21 @@ function EtatActuel({ etat }) {
   );
 }
 
+// --- Les outils déjà présents dans le site, expliqués (ex. colorimetrie.js) ---
+function Outils({ outils }) {
+  if (!outils?.length) return null;
+  return outils.map((o) => (
+    <details key={o.nom} style={{ background: "#fff", border: "1px solid #c7d2fe", borderLeft: "5px solid #6366f1", borderRadius: 10, padding: "0 12px", fontSize: 14, lineHeight: 1.55 }}>
+      <summary style={{ cursor: "pointer", padding: "8px 0", fontWeight: 800 }}>🧰 C'est quoi <code>{o.nom}</code> ?</summary>
+      <div style={{ paddingBottom: 10 }}>
+        <p style={{ margin: "0 0 4px" }}>{o.resume} <span style={{ color: "#64748b" }}>({o.chemin})</span></p>
+        <ul style={{ margin: "0 0 6px", paddingLeft: 20 }}>{o.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        <p style={{ margin: 0 }}>💡 <strong>{o.conseil}</strong></p>
+      </div>
+    </details>
+  ));
+}
+
 // --- Une étape du parcours guidé : section repliable ---
 function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher }) {
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
@@ -232,7 +247,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
 }
 
 // --- Le cadre complet ---
-export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], validees = [], children }) {
+export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], validees = [], outils = etapes.outils || [], children }) {
   const [mode, setMode] = useState(() => (lire(`${page}.mode`, "guide") === "libre" ? "libre" : "guide"));
   const [ouvertes, setOuvertes] = useState(() => lire(`${page}.ouvertes`, [0]));
   const [recommencer, setRecommencer] = useState(false);
@@ -306,6 +321,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             </div>
           </div>
           <EtatActuel etat={etat} />
+          <Outils outils={outils} />
           {mode === "guide"
             ? etapes.map((etape, i) => (
               <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)}

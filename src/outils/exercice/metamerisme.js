@@ -20,23 +20,23 @@ export const ETAPES = [
 
   {
     titre: "Choisir la couleur des cartes",
-    motsCles: ["sur chaque carte", "sous la scène", "échantillon", "carte de contraste", "une palette de couleurs", "quand on clique", "paire métamère", "illuminant D65", "illuminant A", "réflectance spectrale", "observateur CIE 1931", "calcule à partir des spectres", "calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "retiens le choix au rechargement"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    motsCles: ["sur chaque carte", "sous la scène", "échantillon", "carte de contraste", "une palette de couleurs", "quand on clique", "paire métamère", "illuminant D65", "illuminant A", "réflectance spectrale", "observateur CIE 1931", "calcule à partir des spectres", "calculé, pas choisi à la main", "avec colorimetrie.js", "retiens le choix au rechargement"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les deux cartes sont vierges. Rédige un prompt pour pouvoir choisir la couleur d'un échantillon peint sur la carte 1, la carte 2 étant calculée pour former avec elle une paire métamère.",
     indices: [
       "Où et comment choisir ? Un échantillon peint au centre de chaque carte, et une palette de quelques couleurs : un clic choisit la couleur de la carte 1.",
-      "La carte 2 n'est pas choisie : elle est calculée pour former une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Le site a déjà un outil pour ça : src/outils/colorimetrie.js (fonction paireMetamere).",
+      "La carte 2 n'est pas choisie : elle est calculée pour former une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Le site a déjà un outil pour ça : colorimetrie.js (voir « 🧰 C'est quoi colorimetrie.js ? »).",
       "Les couleurs affichées doivent être calculées à partir des spectres (réflectance spectrale de l'échantillon, distribution spectrale de la lumière, observateur CIE 1931), pas choisies à la main.",
     ],
     proposition: "Ajoute une palette pour choisir la couleur de l'échantillon de la carte 1 ; la carte 2 est sa paire métamère, calculée avec colorimetrie.js.",
   },
   {
     titre: "Construire les distributions spectrales",
-    motsCles: ["sous la scène", "dans une fenêtre (popup)", "un bouton", "distribution spectrale", "réflectance spectrale", "illuminant A", "illuminant D65", "illuminant F11", "échantillon", "affiche", "graphique de 380 à 780 nm", "courbes superposées", "légende", "utilise src/outils/colorimetrie.js"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    motsCles: ["sous la scène", "dans une fenêtre (popup)", "un bouton", "distribution spectrale", "réflectance spectrale", "illuminant A", "illuminant D65", "illuminant F11", "échantillon", "affiche", "graphique de 380 à 780 nm", "courbes superposées", "légende", "avec colorimetrie.js"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour voir la distribution spectrale de l'illuminant choisi et la réflectance spectrale des deux échantillons.",
     indices: [
       "Où les afficher ? À toi de choisir : sous la scène, ou dans une fenêtre qui s'ouvre avec un bouton.",
       "Quel graphique ? Les longueurs d'onde de 380 à 780 nm, des courbes superposées pour comparer les deux échantillons, une légende, et des axes nommés.",
-      "Que doit-on remarquer ? Les deux réflectances se croisent en plusieurs points (marque-les avec leur longueur d'onde), et le graphique de la lumière change quand on clique sur A, D65 ou F11. Les données sont déjà dans src/outils/colorimetrie.js.",
+      "Que doit-on remarquer ? Les deux réflectances se croisent en plusieurs points (marque-les avec leur longueur d'onde), et le graphique de la lumière change quand on clique sur A, D65 ou F11. Les données sont déjà dans colorimetrie.js.",
     ],
     proposition: "Affiche sous la scène la distribution spectrale de l'illuminant choisi et les réflectances spectrales des deux échantillons, avec colorimetrie.js.",
   },
@@ -53,10 +53,10 @@ export const ETAPES = [
   },
   {
     titre: "Mesurer l'écart de couleur",
-    motsCles: ["sous la scène", "écart ΔE*ab", "échantillon", "utilise src/outils/colorimetrie.js", "calcule à partir des spectres", "affiche", "valeur arrondie", "vert / orange / rouge selon le résultat", "phrase d'explication pour l'élève", "surligne", "zone surlignée", "réflectance spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    motsCles: ["sous la scène", "écart ΔE*ab", "échantillon", "avec colorimetrie.js", "calcule à partir des spectres", "affiche", "valeur arrondie", "vert / orange / rouge selon le résultat", "phrase d'explication pour l'élève", "surligne", "zone surlignée", "réflectance spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour mesurer et afficher la différence de couleur entre les deux cartes, sous la lumière où elles se trouvent.",
     indices: [
-      "Quelle mesure ? L'écart ΔE*ab entre les deux échantillons, calculé avec src/outils/colorimetrie.js, sous la lumière où sont les cartes.",
+      "Quelle mesure ? L'écart ΔE*ab entre les deux échantillons, calculé avec colorimetrie.js, sous la lumière où sont les cartes.",
       "Comment le rendre lisible ? Une valeur arrondie, une couleur verte, orange ou rouge selon que la différence se voit ou non, et une phrase d'explication.",
       "Pour comprendre pourquoi : surligne sur le graphique des réflectances la zone où les deux courbes s'écartent le plus, et fais le lien avec la lumière choisie.",
     ],
@@ -75,6 +75,26 @@ export const ETAPES = [
   },
 ];
 
+// Les outils déjà présents dans le site, expliqués dans le guide (« 🧰 C'est quoi … ? »).
+export const OUTILS = [
+  {
+    nom: "colorimetrie.js",
+    chemin: "src/outils/colorimetrie.js",
+    resume: "Un fichier déjà dans ton site, écrit pour cet exercice : il contient les données et les calculs de colorimétrie, vérifiés.",
+    contenu: [
+      "📈 les distributions spectrales des illuminants A, D65 et F11, de 380 à 780 nm ;",
+      "👁 l'observateur de référence CIE 1931 ;",
+      "🧮 les calculs XYZ, L*a*b* et l'écart ΔE*ab ;",
+      "🖥 la couleur à afficher à l'écran, avec l'adaptation de l'œil à la lumière ;",
+      "🎨 la fabrication d'une paire métamère à partir d'une couleur (paireMetamere).",
+    ],
+    conseil: "Écris simplement « avec colorimetrie.js » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
+  },
+];
+
+// Rattachés aux étapes : le cadre les affiche sans que la page ait à les passer.
+ETAPES.outils = OUTILS;
+
 export const IDEES = [
   "ajoute une troisième carte, d'une autre couleur, qui reste identique sous les trois lumières (elle sert de témoin)",
   "ajoute un curseur pour régler la température de couleur de la lampe de la cabine, de 2700 K à 6500 K",
@@ -89,5 +109,5 @@ export const MOTS_CLES = [
   { titre: "🛠 Les actions", mots: ["ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
   { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "encadré « À retenir »", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
-  { titre: "✅ Les exigences", mots: ["calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
+  { titre: "✅ Les exigences", mots: ["calculé, pas choisi à la main", "avec colorimetrie.js", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
 ];
