@@ -217,7 +217,7 @@ export const FICHIER_PERSO = "maColorimetrie.js";
 export const ETAPE_OUTILS = {
   titre: "Construire tes modèles couleur",
   motsCles: ["crée un fichier", "mes modèles couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "observateur CIE 1931", "illuminant A", "illuminant D65", "illuminant F11", "écart ΔE*ab", "paire métamère", "au moins 3 croisements", "écart dans le rouge", "vérifie et refais le tirage", "calculé, pas choisi à la main", "n'utilise pas les modèles par défaut"], // surlignés quand l'étape est ouverte
-  consigne: "Tu construis toi-même les modèles couleur. Rédige un prompt pour que l'IA crée les données spectrales et les calculs dont la simulation aura besoin, y compris la fabrication d'une paire métamère VÉRIFIÉE.",
+  consigne: "Tu construis toi-même les modèles couleur, pour pouvoir au final calculer l'écart ΔE*ab entre les deux cartes et vérifier le métamérisme. Rédige un prompt pour que l'IA crée les données spectrales et les calculs nécessaires, y compris la fabrication d'une paire métamère VÉRIFIÉE.",
   indices: [
     "Quelles données ? Les distributions spectrales des illuminants A, D65 et F11, et l'observateur CIE 1931, de 380 à 780 nm, tirées des tables officielles de la CIE (pas de mémoire : sinon l'IA peut en inventer une partie).",
     "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab et la couleur à l'écran.",
