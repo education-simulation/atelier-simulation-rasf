@@ -418,6 +418,10 @@ function VueParcoursGuide({ etapes, echantillon, guideState, setGuideState, rese
     if (etapeConfig.anim) declencherAnimation(etapeConfig.anim, 1400);
     setFeedback({ valide: true, message: etapeConfig.messageAction ? etapeConfig.messageAction(echantillon) : "Action effectuée !" });
     setGuideState((prev) => ({ ...prev, valides: { ...prev.valides, [etp]: true } }));
+    // Une action (sécher, peser…) passe d'elle-même à l'étape suivante, une fois l'animation finie.
+    const etapeFaite = etp, derniere = etapes.length - 1;
+    setTimeout(() => setGuideState((prev) => (prev.etape === etapeFaite && etapeFaite < derniere
+      ? { ...prev, etape: etapeFaite + 1, showIndice: false } : prev)), etapeConfig.anim ? 1500 : 500);
   }
 
   function verifierEtape() {

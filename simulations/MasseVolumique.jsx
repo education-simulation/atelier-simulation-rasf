@@ -623,6 +623,11 @@ function VueParcoursGuide({
       ...prev,
       valides: { ...prev.valides, [etp]: true },
     }));
+    // Une action (verser, peser, sécher…) passe d'elle-même à l'étape suivante, une fois l'animation finie :
+    // pas besoin de cliquer « Étape suivante ».
+    const etapeFaite = etp, derniere = etapes.length - 1;
+    setTimeout(() => setGuideState(prev => (prev.etape === etapeFaite && etapeFaite < derniere
+      ? { ...prev, etape: etapeFaite + 1, showIndice: false } : prev)), typeAnim ? 1500 : 500);
   }
 
   function verifierEtape() {
