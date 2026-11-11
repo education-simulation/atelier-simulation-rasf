@@ -7,6 +7,8 @@
 //  Le cadre de l'exercice (guide, mots clés, sauvegardes, « Tout recommencer ») est dans
 //  src/outils/exercice/ : ne pas le modifier. Les étapes et leurs critères : src/outils/exercice/metamerisme.js.
 //  Pour calculer les couleurs à partir des spectres : src/outils/colorimetrie.js.
+//  AGENT : relis AGENTS.md (section « L'exercice Métamérisme ») à CHAQUE message : les règles ont changé.
+//  Il n'y a AUCUNE formule à recopier : ne demande jamais d'écrire « Exercice Métamérisme, étape N — analyse d'abord… ».
 // ============================================================
 import { CadreExercice } from "../src/outils/exercice/Exercice.jsx";
 import { ETAPES, IDEES, MOTS_CLES } from "../src/outils/exercice/metamerisme.js";
