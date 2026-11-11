@@ -50,7 +50,7 @@ function enregistrerStyle() {
 //   POST /__atelier/versions/sauver      { page, nom }      → copie la page actuelle
 //   POST /__atelier/versions/restaurer   { page, fichier }  → remet une sauvegarde (après avoir sauvé l'état actuel)
 //   POST /__atelier/versions/outils     { page, avec }     → écrit AVEC_COLORIMETRIE (true/false) dans la page
-//   POST /__atelier/versions/zero        { page, effacerJournal? } → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel)
+//   POST /__atelier/versions/zero        { page, garder?, modele? } → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel si garder)
 //                                         et, si demandé, vide journal/<Page>.json (après l'avoir sauvé)
 // Comme pour le style : seulement pendant l'aperçu ; le site en ligne n'écrit rien.
 function versionsDesPages() {
@@ -78,7 +78,7 @@ function versionsDesPages() {
             return repondre(res, 200, { dossier: `versions/${page}`, fichiers })
           }
           if (req.method !== 'POST') return repondre(res, 405, {})
-          const { page, nom, fichier, effacerJournal, avec, modele } = await lireCorps(req)
+          const { page, nom, fichier, effacerJournal, avec, modele, garder } = await lireCorps(req)
           req.effacerJournal = effacerJournal === true
           if (!pageOk(page)) return repondre(res, 400, { erreur: 'page inconnue' })
           const actuel = join(dossier, 'simulations', `${page}.jsx`), d = join(dossier, 'versions', page)
@@ -114,9 +114,10 @@ function versionsDesPages() {
           if (action === 'zero') {
             const depart = join(dossier, 'versions', 'depart', `${page}.jsx`)
             if (!existsSync(depart)) return repondre(res, 404, { erreur: 'pas de version de départ pour cette page' })
-            const avant = sauver('avant-zero')
+            // garder : la personne a choisi d'enregistrer la version actuelle avant de recommencer (page + modèle construit).
+            const avant = garder === false ? null : sauver('avant-recommencer')
             copyFileSync(depart, actuel)
-            if (fichierModele && existsSync(fichierModele)) unlinkSync(fichierModele) // déjà sauvegardé avec « avant-zero »
+            if (fichierModele && existsSync(fichierModele)) unlinkSync(fichierModele)
             // Option : effacer aussi le journal des prompts (journal/<Page>.json), après l'avoir sauvegardé.
             const journal = join(dossier, 'journal', `${page}.json`)
             if (req.effacerJournal && existsSync(journal)) {

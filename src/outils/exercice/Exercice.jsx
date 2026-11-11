@@ -388,84 +388,72 @@ function ExplorationLibre({ idees }) {
 }
 
 // --- Sauvegardes (sauver / reprendre) ---
-function Sauvegardes({ page, modele }) {
-  const [nom, setNom] = useState("");
+// --- Les versions enregistrées (page + modèle construit) : liste et reprise ---
+function ListeVersions({ page, modele }) {
   const [liste, setListe] = useState(null);
   const [confirmer, setConfirmer] = useState(null);
   const [message, setMessage] = useState("");
-  const charger = async () => { const j = await fetch(`__atelier/versions?page=${page}`).then((r) => r.json()); setListe(j.fichiers || []); };
-  const sauver = async () => {
-    try { const j = await appel("sauver", { page, nom, modele }); setMessage(`✅ Sauvegardé : versions/${page}/${j.fichier}`); setNom(""); if (liste) charger(); }
-    catch (e) { setMessage(`⚠️ ${e.message}`); }
-  };
+  useEffect(() => { fetch(`__atelier/versions?page=${page}`).then((r) => r.json()).then((j) => setListe(j.fichiers || [])).catch(() => setListe([])); }, [page]);
   const reprendre = async (fichier) => {
     if (confirmer !== fichier) return setConfirmer(fichier);
-    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier, modele }); setMessage("✅ Version reprise : la page se recharge. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : l'agent repartira de cette version.");  setTimeout(() => window.location.reload(), 1800);}
+    try { setMessage("⏳ Reprise…"); await appel("restaurer", { page, fichier, modele }); setMessage("✅ Reprise : la page se recharge."); setTimeout(() => window.location.reload(), 1200); }
     catch (e) { setMessage(`⚠️ ${e.message}`); }
   };
   const lisible = (f) => f.replace(/\.jsx$/, "").replace(/^(\d{4})-(\d\d)-(\d\d)_(\d\d)h(\d\d)-\d\d-?/, "$3/$2/$1 à $4h$5 · ").replace(/-/g, " ");
+  if (!liste) return <p style={{ margin: "8px 0 0", fontSize: 13.5 }}>⏳</p>;
   return (
-    <div style={{ padding: "12px 14px", background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12 }}>
-      <strong style={{ fontSize: 14 }}>💾 Sauvegardes</strong>
-      <span style={{ fontSize: 12.5, color: "#64748b" }}> · 🔒 sur ton ordinateur, dans le dossier <code>versions/{page}</code></span>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8, alignItems: "center" }}>
-        <input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom (facultatif) : étape 2 réussie…" maxLength={40}
-          style={{ flex: "1 1 180px", minWidth: 0, padding: "8px 10px", borderRadius: 10, border: "1px solid #cbd5e1", font: "inherit", fontSize: 13.5 }} />
-        <button type="button" style={bouton()} onClick={sauver}>💾 Sauvegarder cette version</button>
-        <button type="button" style={bouton()} onClick={() => (liste ? setListe(null) : charger())}>{liste ? "📂 Fermer la liste" : "📂 Reprendre une version"}</button>
-      </div>
-      {liste && (
-        <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "grid", gap: 6 }}>
-          {liste.length === 0 && <li style={{ fontSize: 13.5, color: "#64748b" }}>Aucune sauvegarde pour l'instant.</li>}
-          {liste.map((f) => (
-            <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", fontSize: 13.5 }}>
-              <span style={{ flex: 1, minWidth: 0 }}>{lisible(f)}</span>
-              <button type="button" style={bouton()} onClick={() => reprendre(f)}>{confirmer === f ? "⚠️ Clique encore pour reprendre" : "Reprendre"}</button>
-            </li>
-          ))}
-        </ul>
-      )}
+    <div style={{ marginTop: 10 }}>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 6, maxHeight: 240, overflowY: "auto" }}>
+        {liste.length === 0 && <li style={{ fontSize: 13.5, color: "#64748b" }}>Aucune version enregistrée.</li>}
+        {liste.map((f) => (
+          <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", fontSize: 13.5 }}>
+            <span style={{ flex: 1, minWidth: 0 }}>{lisible(f)}</span>
+            <button type="button" style={bouton()} onClick={() => reprendre(f)}>{confirmer === f ? "⚠️ Confirmer" : "Reprendre"}</button>
+          </li>
+        ))}
+      </ul>
       {message && <p style={{ margin: "8px 0 0", fontSize: 13.5 }}>{message}</p>}
     </div>
   );
 }
 
-// --- « Tout recommencer » : fenêtre de confirmation ---
+// --- « Tout recommencer » : une question, enregistrer ou non la version actuelle ---
 function ToutRecommencer({ page, fermer, remiseAZero, modele }) {
   const [etat, setEtat] = useState("");
+  const [versions, setVersions] = useState(false);
   const boite = useRef(null);
   useEffect(() => {
     const echap = (e) => { if (e.key === "Escape") fermer(); };
     document.addEventListener("keydown", echap);
     return () => document.removeEventListener("keydown", echap);
   }, [fermer]);
-  const valider = async () => {
+  const recommencer = async (garder) => {
     try {
-      setEtat("⏳ Retour au départ…");
+      setEtat("⏳");
       remiseAZero();
-      await appel("zero", { page, modele });
-      setEtat("✅ C'est reparti du début. Dans Antigravity, ouvre une nouvelle conversation (bouton +) : sinon l'agent croit que tout est encore fait.");
-      setTimeout(() => window.location.reload(), 1800); // recharge complète : rien ne reste de l'ancienne version
+      await appel("zero", { page, modele, garder });
+      setEtat("✅ C'est reparti. Ouvre une nouvelle conversation dans Antigravity.");
+      setTimeout(() => window.location.reload(), 1200); // recharge complète : rien ne reste de l'ancienne version
     } catch (e) { setEtat(`⚠️ ${e.message}`); }
   };
   return (
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
       style={{ position: "fixed", inset: 0, zIndex: 9500, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
       <div ref={boite} role="dialog" aria-label="Tout recommencer"
-        style={{ background: "#fff", borderRadius: 18, width: "min(480px, 100%)", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)" }}>
+        style={{ background: "#fff", borderRadius: 18, width: "min(440px, 100%)", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5 }}>
         <strong style={{ fontSize: 18 }}>↺ Tout recommencer ?</strong>
-        <ul style={{ margin: "10px 0", paddingLeft: 20, lineHeight: 1.6, fontSize: 14.5 }}>
-          <li>La page revient au <strong>point de départ</strong> : la cabine éteinte et les deux cartes vierges.</li>
-          {modele && <li>Les modèles que tu as construits sont <strong>mis de côté</strong> : en « À construire », tu repars de modèles <strong>vierges</strong>.</li>}
-          <li>Les étapes se replient, les indices se cachent, et « État actuel » revient au départ.</li>
-          <li>Ta version actuelle est <strong>sauvegardée automatiquement</strong> avant : tu pourras la reprendre.</li>
-          <li>💬 Ensuite, dans Antigravity, <strong>ouvre une nouvelle conversation</strong> (bouton <strong>+</strong>) : sinon l'agent peut croire que tout est encore fait.</li>
-        </ul>
-        <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
+        <p style={{ margin: "8px 0 12px" }}>Enregistrer d'abord la version actuelle ?</p>
+        <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+          <button type="button" style={{ ...bouton(), background: "var(--accent)", color: "#fff", boxShadow: "none" }} onClick={() => recommencer(true)}>💾 Oui, enregistrer</button>
+          <button type="button" style={bouton("danger")} onClick={() => recommencer(false)}>Non</button>
           <button type="button" style={bouton()} onClick={fermer}>Annuler</button>
-          <button type="button" style={{ ...bouton("danger"), background: "#dc2626", color: "#fff", boxShadow: "none" }} onClick={valider}>↺ Tout recommencer</button>
         </div>
-        {etat && <p style={{ margin: "10px 0 0", fontSize: 14 }}>{etat}</p>}
+        {etat && <p style={{ margin: "10px 0 0" }}>{etat}</p>}
+        <button type="button" onClick={() => setVersions((v) => !v)}
+          style={{ marginTop: 12, border: "none", background: "none", padding: 0, font: "inherit", fontSize: 13, color: "#64748b", cursor: "pointer", textDecoration: "underline" }}>
+          {versions ? "Fermer" : "📂 Reprendre une version enregistrée"}
+        </button>
+        {versions && <ListeVersions page={page} modele={modele} />}
       </div>
     </div>
   );
@@ -600,7 +588,6 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             : <ExplorationLibre idees={idees} />}
         </section>}
 
-        {estApercu && !guideMasque && <Sauvegardes page={page} modele={etapes.outilsSans?.[0]?.chemin} />}
       </div>
       {!guideMasque && groupesMots.length > 0 && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} modele={etapes.outilsSans?.[0]?.chemin} />}
