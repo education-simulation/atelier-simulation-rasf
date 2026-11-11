@@ -7,15 +7,16 @@
 
 export const ETAPES = [
   {
-    titre: "Ajouter le choix des illuminants",
-    consigne: "Rédige un prompt pour demander à l'IA d'ajouter plusieurs illuminants : on doit pouvoir choisir la lumière de la cabine.",
+    titre: "Faire fonctionner les boutons des illuminants",
+    consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [
-      "Nomme précisément les illuminants voulus et ce qu'ils représentent (A : lampe à incandescence, D65 : lumière du jour, F11 : tube fluorescent).",
-      "Pense à l'aspect : une cabine plate n'est pas parlante. Demande une cabine en 3D (murs, sol et plafond en perspective), avec les boutons sur son bord, comme sur une vraie cabine de lumière.",
-      "Dis ce qui change quand on clique (la teinte de tout l'intérieur de la cabine, un voyant sur le bouton choisi) et pense au confort : le choix est retenu quand on recharge la page.",
+      "Nomme précisément les illuminants et ce qu'ils représentent (A : lampe à incandescence, D65 : lumière du jour, F11 : tube fluorescent) : l'IA saura quelle teinte donner à chacun.",
+      "Dis ce qui doit changer quand on clique : la teinte de TOUT l'intérieur de la cabine (fond, murs, sol, plafond), et un voyant allumé sur le bouton choisi.",
+      "Pense au confort : le choix est retenu quand on recharge la page. Et précise bien la page et l'endroit (« Dans la page Métamérisme, les boutons sur le bord de la cabine… »).",
     ],
-    proposition: "Dans la page Métamérisme, transforme la cabine en vraie cabine de lumière en 3D (plafond, fond, murs et sol en perspective) et place sur son bord supérieur trois boutons pour choisir la lumière : A (lampe à incandescence), D65 (lumière du jour) et F11 (tube fluorescent). L'intérieur de la cabine (murs, sol, plafond) prend la teinte de la lumière choisie, et un voyant s'allume sur le bouton actif. Retiens le choix au rechargement de la page.",
+    proposition: "Dans la page Métamérisme, fais fonctionner les trois boutons A (lampe à incandescence), D65 (lumière du jour) et F11 (tube fluorescent) placés sur le bord de la cabine 3D : un clic choisit la lumière de la cabine, tout l'intérieur (fond, murs, sol, plafond) prend sa teinte, et un voyant s'allume sur le bouton actif. Retiens le choix au rechargement de la page.",
   },
+
   {
     titre: "Faire glisser les cartes dans la cabine",
     consigne: "Rédige un prompt pour que l'on puisse déplacer les deux cartes de la table jusque dans la cabine.",
@@ -28,13 +29,13 @@ export const ETAPES = [
   },
   {
     titre: "Calculer les couleurs à partir des spectres",
-    consigne: "Rédige un prompt pour que les couleurs des cartes soient calculées (et non choisies à la main), avec une différence visible sous l'illuminant A.",
+    consigne: "Rédige un prompt pour peindre un échantillon sur chaque carte, avec des couleurs calculées (et non choisies à la main) : identiques à la lumière du jour, différentes sous l'illuminant A.",
     indices: [
-      "À partir de quoi calcule-t-on une couleur ? Des spectres (de la lumière et de la carte) et de l'observateur CIE 1931. Le site a déjà un outil pour ça : src/outils/colorimetrie.js.",
+      "Les cartes sont vierges (cartes de contraste noir et blanc) : demande d'y peindre un échantillon de couleur sur chacune. Et à partir de quoi calcule-t-on sa couleur ? Des spectres (de la lumière et de l'échantillon) et de l'observateur CIE 1931 : le site a déjà un outil pour ça, src/outils/colorimetrie.js.",
       "Que doit-on observer ? Les deux cartes ont la même couleur sous D65, mais pas sous A : c'est une « paire métamère ».",
       "Comment mesurer la différence ? Demande d'afficher l'écart ΔE*ab entre les deux cartes, avec une phrase qui dit si la différence se voit.",
     ],
-    proposition: "Dans la page Métamérisme, calcule la couleur des cartes à partir des spectres, avec src/outils/colorimetrie.js : observateur CIE 1931, illuminants A, D65 et F11. Les deux cartes forment une paire métamère : exactement la même couleur sous D65, mais une différence nette sous A. Affiche sous la scène l'écart ΔE*ab entre les deux cartes quand elles sont toutes les deux dans la cabine, avec une phrase qui dit si la différence se voit.",
+    proposition: "Dans la page Métamérisme, peins un échantillon de couleur au centre de chaque carte de contraste, et calcule sa couleur à partir des spectres, avec src/outils/colorimetrie.js : observateur CIE 1931, illuminants A, D65 et F11. Les deux échantillons forment une paire métamère : exactement la même couleur sous D65, mais une différence nette sous A. Affiche sous la scène l'écart ΔE*ab entre les deux cartes quand elles sont toutes les deux dans la cabine, avec une phrase qui dit si la différence se voit.",
   },
   {
     titre: "Montrer les spectres des illuminants",
@@ -73,4 +74,14 @@ export const IDEES = [
   "ajoute un curseur pour régler la température de couleur de la lampe de la cabine, de 2700 K à 6500 K",
   "affiche en grand, sous la scène, l'écart ΔE*ab entre les deux cartes, avec une couleur verte, orange ou rouge selon qu'il se voit ou non",
   "ajoute une question à choix pour l'élève : « Sous quelle lumière les deux cartes sont-elles différentes ? », avec la correction",
+];
+
+// Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
+export const MOTS_CLES = [
+  { titre: "📍 Où ?", mots: ["dans la page Métamérisme", "sur le bord de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
+  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "spectre de réflexion", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
+  { titre: "🛠 Les actions", mots: ["ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
+  { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
+  { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
+  { titre: "✅ Les exigences", mots: ["calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
 ];

@@ -5,8 +5,9 @@
 //   - le guide, en deux modes : 🧭 Parcours guidé (toutes les étapes, en sections repliables)
 //     et 🧪 Exploration libre (idées à copier) ;
 //   - les sauvegardes (sauver / reprendre une version) — sur l'ordinateur seulement ;
-//   - à droite (en dessous sur petit écran) : le journal des prompts et des conseils de l'IA,
-//     que l'agent écrit dans journal/<page>.json — sur l'ordinateur seulement.
+//   - dans le guide (les deux modes) : « 📍 État actuel de la simulation », fourni par la page (prop etat),
+//     que l'agent tient à jour à chaque changement ;
+//   - à droite (en dessous sur petit écran) : les mots clés qui rendent un prompt précis (un clic copie le mot).
 //  Les écritures sur l'ordinateur passent par le serveur d'aperçu (vite.config.js) : jamais en ligne.
 // ============================================================
 import { useEffect, useRef, useState } from "react";
@@ -32,56 +33,44 @@ function useCopie() {
   return [copie, copier];
 }
 
-// --- Le journal : lu dans journal/<page>.json, mis à jour toutes les 5 secondes ---
-function useJournal(page) {
-  const [entrees, setEntrees] = useState([]);
-  useEffect(() => {
-    if (!estApercu) return undefined;
-    let fini = false;
-    const charger = () => fetch(`journal/${page}.json?t=${Date.now()}`, { cache: "no-store" })
-      .then((r) => (r.ok ? r.text() : "[]"))
-      .then((t) => { if (fini || /<html/i.test(t)) return; try { const j = JSON.parse(t); setEntrees(Array.isArray(j) ? j : []); } catch { /* en cours d'écriture */ } })
-      .catch(() => {});
-    charger();
-    const id = setInterval(charger, 5000);
-    return () => { fini = true; clearInterval(id); };
-  }, [page]);
-  return entrees;
-}
-const couleurAppreciation = (a = "") => (/presque/i.test(a) ? "#b45309" : /compléter/i.test(a) ? "#b91c1c" : "#15803d");
-
-function Journal({ entrees }) {
-  const liste = [...entrees].reverse();
-  const puces = (titre, l, c) => (Array.isArray(l) && l.length ? <div style={{ marginTop: 4 }}><span style={{ fontWeight: 800, color: c }}>{titre}</span>
-    <ul style={{ margin: "2px 0 0", paddingLeft: 18 }}>{l.map((x, i) => <li key={i}>{x}</li>)}</ul></div> : null);
+// --- Mots clés : le vocabulaire qui rend un prompt précis (un clic copie le mot) ---
+function MotsCles({ groupes }) {
+  const [copie, copier] = useCopie();
   return (
-    <aside className="ex-journal" aria-label="Mes prompts et les conseils de l'IA">
-      <strong style={{ display: "block", fontSize: 15, marginBottom: 2 }}>📜 Mes prompts et les conseils de l'IA</strong>
-      <span style={{ display: "block", fontSize: 12, color: "#64748b", marginBottom: 8 }}>🔒 Visible seulement sur ton ordinateur · {entrees.length} prompt{entrees.length > 1 ? "s" : ""}</span>
-      {liste.length === 0
-        ? <p style={{ margin: 0, fontSize: 13.5, color: "#475569", lineHeight: 1.5 }}>Rien pour l'instant. Écris ta demande à l'agent dans Antigravity : il la note ici, avec ses conseils.</p>
-        : <ol style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 8 }}>
-          {liste.map((e, i) => (
-            <li key={i} style={{ background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "8px 10px", fontSize: 13, lineHeight: 1.5 }}>
-              <div style={{ display: "flex", gap: 6, flexWrap: "wrap", alignItems: "baseline" }}>
-                <strong>{e.etape ? `🧭 Étape ${e.etape}` : "🧪 Libre"}</strong>
-                <span style={{ color: "#64748b" }}>{e.date}</span>
-              </div>
-              {e.appreciation && <div style={{ fontWeight: 800, color: couleurAppreciation(e.appreciation) }}>{e.appreciation}{e.execute ? " · exécuté" : ""}</div>}
-              <blockquote style={{ margin: "6px 0", padding: "4px 8px", borderLeft: "3px solid #94a3b8", background: "#f8fafc", color: "#0f172a" }}>{e.prompt}</blockquote>
-              {puces("✅ Réussi", e.reussi, "#15803d")}
-              {puces("⚠️ À améliorer", e.a_ameliorer, "#b45309")}
-              {e.astuce && <div style={{ marginTop: 4 }}><span style={{ fontWeight: 800, color: "#4338ca" }}>💡</span> {e.astuce}</div>}
-              {e.resultat && <div style={{ marginTop: 4 }}><span style={{ fontWeight: 800 }}>👀</span> {e.resultat}</div>}
-            </li>
-          ))}
-        </ol>}
+    <aside className="ex-mots" aria-label="Mots clés pour un prompt précis">
+      <strong style={{ display: "block", fontSize: 15, marginBottom: 2 }}>🔑 Mots clés pour un prompt précis</strong>
+      <span style={{ display: "block", fontSize: 12.5, color: "#64748b", marginBottom: 8 }}>Utilise-les dans tes demandes à l'agent. Un clic copie le mot.</span>
+      <div style={{ display: "grid", gap: 10 }}>
+        {groupes.map((g) => (
+          <div key={g.titre}>
+            <div style={{ fontWeight: 800, fontSize: 13.5, marginBottom: 4 }}>{g.titre}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 5 }}>
+              {g.mots.map((m) => (
+                <button key={m} type="button" onClick={() => copier(m, m)} title="Copier"
+                  style={{ border: "1px solid #c7d2fe", background: copie === m ? "#4f46e5" : "#fff", color: copie === m ? "#fff" : "#312e81",
+                    borderRadius: 999, padding: "3px 10px", fontSize: 12.5, fontWeight: 700, cursor: "pointer" }}>{copie === m ? "✓ copié" : m}</button>
+              ))}
+            </div>
+          </div>
+        ))}
+      </div>
     </aside>
   );
 }
 
+// --- État actuel de la simulation : ce qui existe déjà et ce qui ne marche pas encore ---
+function EtatActuel({ etat }) {
+  if (!etat?.length) return null;
+  return (
+    <div style={{ background: "#fff", border: "1px solid #fcd34d", borderLeft: "5px solid #f59e0b", borderRadius: 10, padding: "8px 12px", fontSize: 14, lineHeight: 1.55 }}>
+      <strong>📍 État actuel de la simulation</strong>
+      <ul style={{ margin: "4px 0 0", paddingLeft: 20 }}>{etat.map((l, i) => <li key={i}>{l}</li>)}</ul>
+    </div>
+  );
+}
+
 // --- Une étape du parcours guidé : section repliable ---
-function Etape({ page, numero, etape, ouverte, basculer, dernier }) {
+function Etape({ page, numero, etape, ouverte, basculer }) {
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, copier] = useCopie();
@@ -93,7 +82,6 @@ function Etape({ page, numero, etape, ouverte, basculer, dernier }) {
       <summary style={{ cursor: "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
-        {dernier && <span style={{ fontSize: 12.5, fontWeight: 800, color: couleurAppreciation(dernier.appreciation) }}>{dernier.execute ? "✓ " : ""}{dernier.appreciation || ""}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
         <p style={{ margin: "0 0 10px", fontSize: 15 }}>✍️ <strong>{etape.consigne}</strong></p>
@@ -184,7 +172,6 @@ function Sauvegardes({ page }) {
 
 // --- « Tout recommencer » : fenêtre de confirmation ---
 function ToutRecommencer({ page, fermer, remiseAZero }) {
-  const [effacerJournal, setEffacerJournal] = useState(false);
   const [etat, setEtat] = useState("");
   const boite = useRef(null);
   useEffect(() => {
@@ -196,7 +183,7 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
     try {
       setEtat("⏳ Retour au départ…");
       remiseAZero();
-      await appel("zero", { page, effacerJournal });
+      await appel("zero", { page });
       setEtat("✅ C'est reparti du début : la page se recharge.");
       setTimeout(fermer, 1500);
     } catch (e) { setEtat(`⚠️ ${e.message}`); }
@@ -208,14 +195,10 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
         style={{ background: "#fff", borderRadius: 18, width: "min(480px, 100%)", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)" }}>
         <strong style={{ fontSize: 18 }}>↺ Tout recommencer ?</strong>
         <ul style={{ margin: "10px 0", paddingLeft: 20, lineHeight: 1.6, fontSize: 14.5 }}>
-          <li>La page revient au <strong>point de départ</strong> : la cabine et les deux cartes.</li>
-          <li>Les étapes se replient, les indices se cachent.</li>
+          <li>La page revient au <strong>point de départ</strong> : la cabine éteinte et les deux cartes vierges.</li>
+          <li>Les étapes se replient, les indices se cachent, et « État actuel » revient au départ.</li>
           <li>Ta version actuelle est <strong>sauvegardée automatiquement</strong> avant : tu pourras la reprendre.</li>
         </ul>
-        <label style={{ display: "flex", gap: 8, alignItems: "flex-start", fontSize: 14, margin: "4px 0 14px", cursor: "pointer" }}>
-          <input type="checkbox" checked={effacerJournal} onChange={(e) => setEffacerJournal(e.target.checked)} style={{ marginTop: 3 }} />
-          <span>Effacer aussi <strong>mes prompts et les conseils de l'IA</strong> (le journal est sauvegardé avant).</span>
-        </label>
         <div style={{ display: "flex", gap: 8, justifyContent: "flex-end", flexWrap: "wrap" }}>
           <button type="button" style={bouton()} onClick={fermer}>Annuler</button>
           <button type="button" style={{ ...bouton("danger"), background: "#dc2626", color: "#fff", boxShadow: "none" }} onClick={valider}>↺ Tout recommencer</button>
@@ -227,28 +210,26 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
 }
 
 // --- Le cadre complet ---
-export function CadreExercice({ page, sujet, etapes, idees, children }) {
+export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], children }) {
   const [mode, setMode] = useState(() => (lire(`${page}.mode`, "guide") === "libre" ? "libre" : "guide"));
   const [ouvertes, setOuvertes] = useState(() => lire(`${page}.ouvertes`, [0]));
   const [recommencer, setRecommencer] = useState(false);
-  const entrees = useJournal(page);
   const choisirMode = (m) => { setMode(m); ecrire(`${page}.mode`, m); };
   const basculer = (i) => setOuvertes((o) => { const n = o.includes(i) ? o.filter((x) => x !== i) : [...o, i]; ecrire(`${page}.ouvertes`, n); return n; });
   const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
-  const dernierPour = (num) => [...entrees].reverse().find((e) => e.etape === num);
 
   return (
     <div className="ex-conteneur">
-    <div className={`ex-cadre${estApercu ? " avec-journal" : ""}`}>
+    <div className={`ex-cadre${motsCles.length ? " avec-colonne" : ""}`}>
       <style>{`
         .ex-conteneur { container-type: inline-size; }
         .ex-cadre { max-width: 1360px; margin: 0 auto; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
         .ex-principal { display: grid; gap: 14px; min-width: 0; }
-        .ex-journal { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 14px; padding: 12px 12px; }
-        /* Le journal ne passe à droite que s'il RESTE assez de place pour la simulation (quel que soit le style du site) */
+        .ex-mots { background: #eef2ff; border: 1px solid #c7d2fe; border-radius: 14px; padding: 12px 12px; }
+        /* Les mots clés ne passent à droite que s'il RESTE assez de place pour la simulation (quel que soit le style du site) */
         @container (min-width: 1020px) {
-          .ex-cadre.avec-journal { grid-template-columns: minmax(0, 1fr) 310px; align-items: start; }
-          .ex-cadre.avec-journal .ex-journal { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow-y: auto; }
+          .ex-cadre.avec-colonne { grid-template-columns: minmax(0, 1fr) 300px; align-items: start; }
+          .ex-cadre.avec-colonne .ex-mots { position: sticky; top: 64px; max-height: calc(100vh - 80px); overflow-y: auto; }
         }
         .ex-bascule { display: inline-flex; background: #e2e8f0; border-radius: 999px; padding: 3px; gap: 2px; }
         .ex-bascule button { border: none; background: transparent; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 13.5px; font-weight: 800; color: #475569; cursor: pointer; white-space: nowrap; }
@@ -256,7 +237,7 @@ export function CadreExercice({ page, sujet, etapes, idees, children }) {
       `}</style>
       <div className="ex-principal">
         <div style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
-          <p style={{ margin: 0, flex: "1 1 320px" }}>Deux cartes de même couleur et une cabine de lumière : c'est le point de départ. À toi de construire la simulation du <strong>{sujet}</strong> en écrivant tes demandes à l'agent, dans Antigravity.</p>
+          <p style={{ margin: 0, flex: "1 1 320px" }}>À toi de construire la simulation du <strong>{sujet}</strong> en écrivant tes demandes à l'agent, dans Antigravity. Regarde d'abord l'<strong>état actuel</strong> dans le guide, puis aide-toi des <strong>mots clés</strong>.</p>
           {estApercu && <button type="button" style={bouton("danger")} onClick={() => setRecommencer(true)}>↺ Tout recommencer</button>}
         </div>
 
@@ -271,16 +252,17 @@ export function CadreExercice({ page, sujet, etapes, idees, children }) {
               ))}
             </div>
           </div>
+          <EtatActuel etat={etat} />
           {mode === "guide"
             ? etapes.map((etape, i) => (
-              <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)} dernier={dernierPour(i + 1)} />
+              <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)} />
             ))
             : <ExplorationLibre idees={idees} />}
         </section>
 
         {estApercu && <Sauvegardes page={page} />}
       </div>
-      {estApercu && <Journal entrees={entrees} />}
+      {motsCles.length > 0 && <MotsCles groupes={motsCles} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} />}
     </div>
     </div>
