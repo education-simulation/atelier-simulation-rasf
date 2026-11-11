@@ -24,7 +24,7 @@ export function ChoixStyle({ actuel, enregistre, choisir }) {
       <button type="button" className="bouton-rond" style={{ background: "#7c3aed" }} aria-expanded={ouvert}
         aria-label="Essayer un autre style" onClick={() => setOuvert((o) => !o)}>
         <span aria-hidden="true">{ouvert ? "✕" : "🎨"}</span>
-        {essai && <span className="pastille">essai</span>}
+        <span className="pastille">style</span>
         <span className="bulle">Essayer un autre style (aperçu seulement)</span>
       </button>
       {ouvert && (
