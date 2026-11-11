@@ -221,6 +221,8 @@ function AideOutil({ outil, fermer }) {
   const modele = perso && typeof perso === "object" ? perso : null;
   const donnees = outil.donnees ? outil.donnees() : modele && outil.donneesDe ? outil.donneesDe(modele) : null;
   const verifs = modele && outil.verifier ? outil.verifier(modele) : null;
+  // Équations : celles des modèles par défaut, ou celles que la personne a fait écrire dans SES modèles (rien sinon).
+  const equations = outil.equations || (modele && Array.isArray(modele.EQUATIONS) ? modele.EQUATIONS : null);
   useEffect(() => {
     const echap = (e) => { if (e.key === "Escape") fermer(); };
     document.addEventListener("keydown", echap);
@@ -248,14 +250,14 @@ function AideOutil({ outil, fermer }) {
         {perso === "erreur" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10 }}>⚠️ <strong>Tes modèles contiennent une erreur</strong> et ne peuvent pas être lus. Demande à l'agent de la corriger.</p>}
         {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites des modèles :</strong> {outil.limites}</p>}
         {outil.conseil && <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>}
-        {outil.equations && (
+        {equations && (
           <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
               <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
-              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 Les modèles mathématiques : de la réflectance à la couleur</strong>
+              <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 {outil.equations ? "Les modèles mathématiques : de la réflectance à la couleur" : "Les équations de tes modèles"}</strong>
             </summary>
             <div style={{ display: "grid", gap: 10, paddingBottom: 10 }}>
-              {outil.equations.map((q) => (
+              {equations.map((q) => (
                 <div key={q.titre}>
                   <strong style={{ fontSize: 14 }}>{q.titre}</strong>
                   <div style={{ margin: "4px 0", padding: "6px 10px", background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 8, fontFamily: "'Cambria Math', 'STIX Two Math', Georgia, serif", fontSize: 15, lineHeight: 1.7 }}>
