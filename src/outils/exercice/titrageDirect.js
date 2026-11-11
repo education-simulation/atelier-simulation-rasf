@@ -296,11 +296,12 @@ ETAPES.depart = "la burette et le bécher vides, rien ne fonctionne";
 ETAPES.motsSansSeulement = ["crée un fichier", "mon modèle chimique", "données de référence", "pas de valeurs de mémoire", "loi de Beer-Lambert", "vérifie avec plusieurs jeux de valeurs", "n'utilise pas le modèle fourni"];
 
 export const IDEES = [
-  "ajoute un bouton « C'est l'équivalence ! » qui note le volume versé, puis calcule la masse de diiode pour 100 mL et la compare à l'étiquette du Lugol (tolérance 5 %)",
-  "ajoute un curseur pour changer la concentration du thiosulfate, de 0,02 à 0,10 mol/L, et montre le volume équivalent changer",
-  "ajoute sous la scène un tableau d'avancement qui se remplit pendant le titrage",
-  "ajoute une question à choix : « Quel est le réactif limitant avant l'équivalence ? », avec la correction",
-];
+  "remplis la burette de thiosulfate et le bécher de Lugol",
+  "fais fonctionner le robinet de la burette, avec un bouton goutte à goutte",
+  "fais fonctionner le flacon de thiodène",
+  "trace sous la scène n = f(V) pour les 4 espèces, avec V_éq",
+  "ajoute sous la scène un encadré « À retenir » sur l'équivalence",
+]
 
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
