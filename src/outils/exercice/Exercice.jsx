@@ -112,26 +112,31 @@ function BoiteOutils({ page, avec, outils, choix }) {
 
 // --- Un graphique de courbes spectrales (380 à 780 nm), avec légende et téléchargement CSV ---
 function Graphique({ g }) {
-  const L = 560, H = 210, mg = { g: 44, d: 10, h: 10, b: 30 };
+  const L = 560, H = 220, mg = { g: 58, d: 10, h: 10, b: 32 };
   const max = Math.max(...g.series.flatMap((s) => s.valeurs)) * 1.05, min = Math.min(0, ...g.series.flatMap((s) => s.valeurs));
   const x = (l) => mg.g + ((l - 380) / 400) * (L - mg.g - mg.d);
   const y = (v) => H - mg.b - ((v - min) / (max - min)) * (H - mg.h - mg.b);
-  const pas = max > 20 ? 50 : max > 2 ? 0.5 : max > 1 ? 0.25 : 0.1;
+  const pas = max > 20 ? 50 : max > 1.2 ? 0.5 : 0.2;
   const graduations = []; for (let v = 0; v <= max; v += pas) graduations.push(Number(v.toFixed(2)));
   return (
-    <figure style={{ margin: "10px 0 0", padding: "8px 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
-      <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap" }}>
+    <details style={{ margin: "10px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
+      <summary style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
+        <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
         <strong style={{ flex: 1, fontSize: 14.5 }}>{g.titre}</strong>
-        <button type="button" style={bouton()} onClick={() => telechargerCSV(`colorimetrie-${g.id}`, [g])}>⬇️ CSV</button>
-      </div>
+        <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerCSV(`colorimetrie-${g.id}`, [g]); }}>⬇️ CSV</button>
+      </summary>
+      <figure style={{ margin: 0, paddingBottom: 8 }}>
       <svg viewBox={`0 0 ${L} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label={g.titre}>
         {graduations.map((v) => (
-          <g key={v}><line x1={mg.g} x2={L - mg.d} y1={y(v)} y2={y(v)} stroke="#e2e8f0" /><text x={mg.g - 5} y={y(v) + 4} fontSize="10" textAnchor="end" fill="#64748b">{v}</text></g>
+          <g key={v}><line x1={mg.g} x2={L - mg.d} y1={y(v)} y2={y(v)} stroke="#e2e8f0" /><text x={mg.g - 5} y={y(v) + 4} fontSize="10" textAnchor="end" fill="#64748b">{String(v).replace(".", ",")}</text></g>
         ))}
         {[400, 450, 500, 550, 600, 650, 700, 750].map((l) => (
           <text key={l} x={x(l)} y={H - mg.b + 14} fontSize="10" textAnchor="middle" fill="#64748b">{l}</text>
         ))}
-        <text x={L - mg.d} y={H - 2} fontSize="10" textAnchor="end" fill="#64748b">longueur d'onde (nm)</text>
+        <line x1={mg.g} x2={mg.g} y1={mg.h} y2={H - mg.b} stroke="#475569" />
+        <line x1={mg.g} x2={L - mg.d} y1={y(0)} y2={y(0)} stroke="#475569" />
+        <text x={(mg.g + L - mg.d) / 2} y={H - 3} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">Longueur d'onde λ (nm)</text>
+        <text transform={`translate(13 ${(mg.h + H - mg.b) / 2}) rotate(-90)`} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{g.unite.charAt(0).toUpperCase() + g.unite.slice(1)}</text>
         {g.series.map((s) => (
           <polyline key={s.nom} fill="none" stroke={s.couleur} strokeWidth="2.2" strokeDasharray={s.tirets ? "6 4" : undefined}
             points={s.valeurs.map((v, i) => `${x(g.longueurs[i]).toFixed(1)},${y(v).toFixed(1)}`).join(" ")} />
@@ -140,11 +145,11 @@ function Graphique({ g }) {
       <figcaption style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.5 }}>
         <span style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 2 }}>
           {g.series.map((s) => <span key={s.nom}><span style={{ display: "inline-block", width: 16, height: 3, background: s.couleur, verticalAlign: "middle", marginRight: 4 }} />{s.nom}</span>)}
-          <span style={{ color: "#94a3b8" }}>· axe vertical : {g.unite}</span>
         </span>
         {g.explication}
       </figcaption>
-    </figure>
+      </figure>
+    </details>
   );
 }
 
@@ -425,6 +430,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
         .ex-bascule button { border: none; background: transparent; border-radius: 999px; padding: 7px 14px; font: inherit; font-size: 13.5px; font-weight: 800; color: #475569; cursor: pointer; white-space: nowrap; }
         .ex-bascule button[aria-selected="true"] { background: #fff; color: var(--accent); box-shadow: 0 1px 3px rgba(15,23,42,.18); }
         .ex-bascule-petite { padding: 2px; }
+        details[open] > summary > .ex-fleche { display: inline-block; transform: rotate(90deg); }
         .ex-bascule-petite button { padding: 4px 10px; font-size: 12.5px; }
       `}</style>
       <div className="ex-principal">
