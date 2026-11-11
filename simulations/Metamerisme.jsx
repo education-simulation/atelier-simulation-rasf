@@ -12,6 +12,9 @@ import { CadreExercice } from "../src/outils/exercice/Exercice.jsx";
 import { ETAPES, IDEES, MOTS_CLES } from "../src/outils/exercice/metamerisme.js";
 
 // Ce que fait la simulation EN CE MOMENT (affiché dans le guide). À mettre à jour après chaque changement.
+// Étapes du parcours guidé VALIDÉES PAR L'IA (numéros 1 à 6) : l'agent ajoute le numéro quand l'étape marche.
+const ETAPES_VALIDEES = [];
+
 const ETAT_ACTUEL = [
   "🃏 Les deux cartes de contraste sont vierges et pour le moment immobiles.",
   "💡 Les trois boutons de la cabine de lumière ne fonctionnent pas.",
@@ -93,7 +96,7 @@ function Scene() {
 
 export default function Metamerisme() {
   return (
-    <CadreExercice page="Metamerisme" sujet="métamérisme" etapes={ETAPES} idees={IDEES} motsCles={MOTS_CLES} etat={ETAT_ACTUEL}>
+    <CadreExercice page="Metamerisme" sujet="métamérisme" etapes={ETAPES} idees={IDEES} motsCles={MOTS_CLES} etat={ETAT_ACTUEL} validees={ETAPES_VALIDEES}>
       <Scene />
     </CadreExercice>
   );

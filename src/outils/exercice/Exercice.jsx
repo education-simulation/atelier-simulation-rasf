@@ -79,7 +79,7 @@ function EtatActuel({ etat }) {
 }
 
 // --- Une étape du parcours guidé : section repliable ---
-function Etape({ page, numero, etape, ouverte, basculer, faite, verrouillee, cocher }) {
+function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher }) {
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, copier] = useCopie();
@@ -93,7 +93,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, verrouillee, coc
         style={{ cursor: verrouillee ? "not-allowed" : "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
-        {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>✅ terminée</span>}
+        {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>{parIA ? "✅ validée par l'IA" : "✅ terminée"}</span>}
         {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {numero - 1}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
@@ -116,8 +116,8 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, verrouillee, coc
         )}
         <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12, padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontSize: 14.5, fontWeight: 700,
           background: faite ? "#dcfce7" : "#f8fafc", border: `2px ${faite ? "solid #22c55e" : "dashed #94a3b8"}` }}>
-          <input type="checkbox" checked={faite} onChange={cocher} style={{ width: 18, height: 18, accentColor: "#16a34a", cursor: "pointer" }} />
-          ✅ Étape terminée : le résultat marche dans la simulation{faite ? "" : " (ouvre l'étape suivante)"}
+          <input type="checkbox" checked={faite} disabled={parIA} onChange={cocher} style={{ width: 18, height: 18, accentColor: "#16a34a", cursor: parIA ? "default" : "pointer" }} />
+          {parIA ? "✅ Étape validée par l'IA : le résultat marche dans la simulation" : <>✅ Étape terminée : le résultat marche dans la simulation{faite ? "" : " (ouvre l'étape suivante)"}</>}
         </label>
       </div>
     </details>
@@ -229,18 +229,35 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
 }
 
 // --- Le cadre complet ---
-export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], children }) {
+export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], validees = [], children }) {
   const [mode, setMode] = useState(() => (lire(`${page}.mode`, "guide") === "libre" ? "libre" : "guide"));
   const [ouvertes, setOuvertes] = useState(() => lire(`${page}.ouvertes`, [0]));
   const [recommencer, setRecommencer] = useState(false);
   const choisirMode = (m) => { setMode(m); ecrire(`${page}.mode`, m); };
   const basculer = (i) => setOuvertes((o) => { const n = o.includes(i) ? o.filter((x) => x !== i) : [...o, i]; ecrire(`${page}.ouvertes`, n); return n; });
   // Étapes terminées (cochées) : chaque étape ne s'ouvre qu'une fois la précédente cochée.
-  const [faites, setFaites] = useState(() => lire(`${page}.faites`, []));
+  const [cochees, setFaites] = useState(() => lire(`${page}.faites`, []));
+  // Étapes validées par l'IA : écrites dans la page (ETAPES_VALIDEES, numéros à partir de 1) par l'agent.
+  const parIA = validees.map((n) => n - 1);
+  const faites = [...new Set([...cochees, ...parIA])];
+  // Une étape que l'IA vient de valider : on la replie et on ouvre la suivante (une seule fois).
+  const cleVues = validees.join(",");
+  useEffect(() => {
+    const vues = lire(`${page}.valideesVues`, []);
+    const nouvelles = parIA.filter((i) => !vues.includes(i));
+    ecrire(`${page}.valideesVues`, parIA);
+    if (!nouvelles.length) return;
+    setOuvertes((o) => {
+      let m = o.filter((x) => !nouvelles.includes(x));
+      for (const i of nouvelles) if (i + 1 < etapes.length && !parIA.includes(i + 1) && !m.includes(i + 1)) m = [...m, i + 1];
+      ecrire(`${page}.ouvertes`, m); return m;
+    });
+  }, [cleVues]); // eslint-disable-line react-hooks/exhaustive-deps
   const cocher = (i) => {
-    const n = faites.includes(i) ? faites.filter((x) => x !== i) : [...faites, i];
+    if (parIA.includes(i)) return;
+    const n = cochees.includes(i) ? cochees.filter((x) => x !== i) : [...cochees, i];
     setFaites(n); ecrire(`${page}.faites`, n);
-    if (!faites.includes(i)) { // cochée : on replie celle-ci et on ouvre la suivante
+    if (!cochees.includes(i)) { // cochée : on replie celle-ci et on ouvre la suivante
       setOuvertes((o) => { const m = [...o.filter((x) => x !== i), ...(i + 1 < etapes.length && !o.includes(i + 1) ? [i + 1] : [])]; ecrire(`${page}.ouvertes`, m); return m; });
     }
   };
@@ -249,7 +266,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   const ouvertesLibres = ouvertes.filter((i) => i < etapes.length && !verrouillee(i)).sort((a, b) => a - b);
   const enCours = etapes.findIndex((_, i) => !faites.includes(i));
   const actives = mode !== "guide" ? [] : ouvertesLibres.length ? ouvertesLibres : enCours >= 0 ? [enCours] : [];
-  const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); ecrire(`${page}.faites`, []); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
+  const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); ecrire(`${page}.faites`, []); ecrire(`${page}.valideesVues`, []); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
 
   return (
     <div className="ex-conteneur">
@@ -289,7 +306,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
           {mode === "guide"
             ? etapes.map((etape, i) => (
               <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)}
-                faite={faites.includes(i)} verrouillee={i > 0 && !faites.includes(i - 1)} cocher={() => cocher(i)} />
+                faite={faites.includes(i)} parIA={parIA.includes(i)} verrouillee={i > 0 && !faites.includes(i - 1)} cocher={() => cocher(i)} />
             ))
             : <ExplorationLibre idees={idees} />}
         </section>
