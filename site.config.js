@@ -40,6 +40,7 @@ export default {
     { id: "A", nom: "Menu A", fond: "#5b4bdb", texte: "#ffffff" },
     { id: "B", nom: "Menu B", fond: "#1f8a7a", texte: "#ffffff" },
     { id: "C", nom: "Menu C", fond: "#c2410c", texte: "#ffffff" },
+    { id: "Outils", nom: "Outils", fond: "#0f766e", texte: "#ffffff" },
   ],
 
   // Les pages. Chacune :
@@ -52,7 +53,6 @@ export default {
   pages: [
     { id: "masse-volumique", titre: "Masse volumique au pycnomètre", icone: "⚖️", menu: "Ex", fichier: "MasseVolumique", description: "Parcours guidé : peser, calculer, comparer à la valeur attendue." },
     { id: "extrait-sec", titre: "Extrait sec à l'étuve", icone: "🔥", menu: "Ex", fichier: "ExtraitSec", description: "Sécher jusqu'à masse constante et calculer la teneur en matière sèche." },
-    { id: "calculatrice", titre: "Calculatrice scientifique", icone: "🧮", menu: "Ex", fichier: "Calculatrice", description: "Une calculatrice scientifique, utilisable partout." },
     { id: "forces-intermoleculaires", titre: "Cohésion de la matière : forces intermoléculaires", icone: "🧲", menu: "Ex", fichier: "ForcesIntermoleculaires", description: "Polarisation, London, liaison hydrogène : voir les nuages se déformer." },
     { id: "jeu-equations", titre: "Jeu : défi chrono des équations", icone: "🎮", menu: "Ex", fichier: "JeuEquations", description: "60 secondes pour équilibrer un maximum d'équations." },
     { id: "instabilite", titre: "Instabilité des milieux dispersés", icone: "🫧", menu: "Ex", fichier: "Instabilite", description: "Crémage et sédimentation, loi de Stokes. Exemple à améliorer." },
@@ -63,5 +63,9 @@ export default {
     { id: "b2", titre: "Page B2", icone: "📄", menu: "B", fichier: "PageB2" },
     { id: "c1", titre: "Page C1", icone: "📄", menu: "C", fichier: "PageC1" },
     { id: "c2", titre: "Page C2", icone: "📄", menu: "C", fichier: "PageC2" },
+
+    { id: "diagramme-ternaire", titre: "Diagramme ternaire", icone: "🔺", menu: "Outils", fichier: "DiagrammeTernaire", description: "Construire un diagramme ternaire ou s'exercer à lire et placer des points." },
+    { id: "calculatrice", titre: "Calculatrice scientifique", icone: "🧮", menu: "Outils", fichier: "Calculatrice", description: "Une calculatrice scientifique, utilisable partout." },
+    { id: "graphe-vierge", titre: "Graphe vierge", icone: "📈", menu: "Outils", fichier: "GrapheVierge", description: "Papier millimétré, logarithmique ou ternaire, à exporter ou imprimer." },
   ],
 };

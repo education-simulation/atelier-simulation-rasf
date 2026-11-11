@@ -1,0 +1,45 @@
+/* Habillage des outils repris de reula.fr (diagramme ternaire, graphe vierge).
+   Ils sont écrits avec Tailwind : on charge ses classes SEULEMENT pour ce dossier,
+   et sa remise à zéro des styles SEULEMENT à l'intérieur de .outil-reula,
+   pour ne rien changer au reste du site. */
+@layer theme, outils-base, utilities;
+@import "tailwindcss/theme.css" layer(theme);
+@import "tailwindcss/utilities.css" layer(utilities) source(none);
+@source "./";
+
+@theme {
+  --color-surface: var(--bg-card);
+  --color-canvas: var(--bg);
+  --color-default: var(--border);
+  --color-text: var(--text);
+  --color-heading: var(--text-h);
+  --color-muted: var(--text-muted);
+  --color-code-bg: var(--code-bg);
+  --color-accent: var(--accent);
+  --color-accent-bg: var(--accent-bg);
+  --color-accent-border: var(--accent-border);
+}
+
+.outil-reula {
+  --text: #6b6375; --text-h: #08060d; --bg: #fff; --border: #e5e4e7; --code-bg: #f4f3ec;
+  --accent-bg: color-mix(in srgb, var(--accent) 10%, transparent); --accent-border: color-mix(in srgb, var(--accent) 50%, transparent);
+  --bg-card: #ffffff; --text-muted: #666666;
+  --tip-bg: #ffffff; --tip-text: #1f2937; --tip-border: #16a34a;
+  font-family: system-ui, 'Segoe UI', Roboto, sans-serif;
+  color: #1f2937;
+}
+
+/* Remise à zéro (d'après celle de Tailwind), limitée aux outils. */
+@layer outils-base {
+  .outil-reula, .outil-reula *, .outil-reula ::before, .outil-reula ::after,
+  #headlessui-portal-root, #headlessui-portal-root * { box-sizing: border-box; border: 0 solid; margin: 0; padding: 0; }
+  .outil-reula :is(h1, h2, h3, h4, h5, h6), #headlessui-portal-root :is(h1, h2, h3) { font-size: inherit; font-weight: inherit; }
+  .outil-reula :is(ol, ul, menu), #headlessui-portal-root :is(ol, ul) { list-style: none; }
+  .outil-reula :is(img, svg, video, canvas) { display: block; vertical-align: middle; }
+  .outil-reula :is(img, video) { max-width: 100%; height: auto; }
+  .outil-reula :is(button, input, select, optgroup, textarea), #headlessui-portal-root :is(button, input) {
+    font: inherit; letter-spacing: inherit; color: inherit; border-radius: 0; background-color: transparent; opacity: 1; }
+  .outil-reula :is(button, [role="button"]), #headlessui-portal-root button { cursor: pointer; }
+  .outil-reula a { color: inherit; text-decoration: inherit; }
+  .outil-reula table { border-collapse: collapse; }
+}

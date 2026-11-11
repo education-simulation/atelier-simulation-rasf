@@ -60,13 +60,14 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 | `site.config.js` | Titre, grande phrase, couleur, **menus**, **liste des pages** | Oui, c'est le fichier principal |
 | `simulations/*.jsx` | Une page par fichier (React) : simulations, jeu, pages vides A1… | Oui, avec ton aide |
 | `PROGRESSION.md` | Les étapes faites et la phrase pour reprendre (tu le tiens à jour) | Non |
-| `src/`, `public/`, `index.html`, `vite.config.js`, `package.json` | Moteur du site (en-tête, accueil, menus, aperçu) | Non |
+| `src/`, `public/`, `index.html`, `vite.config.js`, `package.json` | Moteur du site (en-tête, accueil, menus, aperçu) et outils (`src/outils/`) | Non |
 | `README.md` | Page du modèle sur GitHub (le point de départ) | Non |
 | `.vercel/` | Lien entre ce dossier et le projet Vercel (créé à la 1re mise en ligne) | Non, ne jamais le supprimer |
 
 - Le site est fait avec **React + Vite**. Navigation : `…/?sim=<id>` (un rafraîchissement reste sur la même page).
-- En haut, **4 menus** au départ : **Exemples**, **Menu A**, **Menu B**, **Menu C**. L'accueil montre un bloc de couleur par menu.
-  - **Exemples** : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), calculatrice, cohésion de la matière (schémas animés), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
+- **5 menus** au départ : **Exemples**, **Menu A**, **Menu B**, **Menu C** et **Outils**. L'accueil montre chaque menu (bloc, carte ou liste selon le style).
+  - **Exemples** : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), cohésion de la matière (schémas animés), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
+  - **Outils** : diagramme ternaire (construire ou s'exercer), calculatrice scientifique, graphe vierge (papier millimétré, log ou ternaire, à exporter). Ils viennent de reula.fr ; leur code est dans `src/outils/` : **ne le modifie jamais** (il utilise Tailwind, activé seulement pour ces outils). La personne peut retirer un outil du menu (ligne dans `pages`) sans toucher à son code.
   - **Menu A, B, C** : chacun deux pages vides (`PageA1.jsx`, `PageA2.jsx`…) que la personne remplacera. Elle dira par exemple « renomme le menu A en Analyse » (→ `nom` du menu dans `site.config.js`) ou « remplace la page A1 par une simulation sur … ».
 - **Ajouter ou remplacer une page, en deux gestes :**
   1. créer (ou réécrire) `simulations/<NomEnMajuscule>.jsx` : un composant React `export default function …`, styles écrits dans le fichier (`style={{ … }}`), sans nouvelle bibliothèque. Prends modèle sur l'exemple le plus proche : `Instabilite.jsx` (curseurs + animation), `ForcesIntermoleculaires.jsx` (onglets + schémas SVG), `JeuEquations.jsx` (jeu avec score), `ExtraitSec.jsx` (parcours guidé avec calculatrice et formules) ;
@@ -74,6 +75,9 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - Une page pour élèves : des réglages (curseurs, boutons), un résultat qui change aussitôt (nombre, schéma, couleur), une consigne courte. Les nombres s'affichent à la française (`toLocaleString("fr-FR")`).
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
 - **Trois styles**, choisis par `style` dans `site.config.js` : `"blocs"` (menus en haut, accueil en blocs de couleur), `"lateral"` (barre sombre à gauche, accueil en cartes ; sur téléphone, menu en haut), `"liste"` (menus en haut, accueil en liste). Changer de style = changer ce seul mot. Les pages, les menus et le fil d'Ariane restent les mêmes. Le champ facultatif `description` d'une page s'affiche sur l'accueil des styles `lateral` et `liste` : écris-en une courte pour chaque nouvelle page.
+
+### Le bandeau bleu de l'aperçu
+En haut de l'aperçu (jamais en ligne), il rappelle que la page affiche **le code du dossier du site**, avec son chemin complet. Si la personne demande où est son site, montre-lui ce bandeau.
 
 ### Les deux boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
 - **👆 Sélectionner un élément à modifier** (orange) : la personne clique dessus ; chaque grande zone de la page s'entoure de pointillés avec un numéro ; elle clique sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur page « instabilite », section n°3 · Titre de la page, élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus).
@@ -158,7 +162,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
   > Clique sur ce lien : http://localhost:NNNN/ — il ouvre ton site dans ton navigateur.
   >
-  > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Exemples** montre ce qu'on peut faire (simulations, calculatrice, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant.
+  > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Exemples** montre ce qu'on peut faire (simulations, calculatrice, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant. Le menu **Outils** contient un diagramme ternaire, une calculatrice et un graphe vierge, prêts à servir.
   >
   > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel, pour tes élèves.
   >

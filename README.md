@@ -3,8 +3,9 @@
 Un site de simulations pour tes élèves, simple et gratuit, que tu construis en parlant à l'agent d'**Antigravity** (l'application gratuite de Google, avec ton compte Google d'établissement), et que **Vercel** met en ligne gratuitement.
 
 Ton site démarre avec :
-- un menu **Exemples**, rempli de pages toutes faites : masse volumique, extrait sec, calculatrice, cohésion de la matière, un jeu, et un exemple simple pour t'entraîner (instabilité des milieux dispersés) ;
-- trois menus **A, B et C**, avec des pages vides que tu renommes et remplis en le demandant à l'agent.
+- un menu **Exemples**, rempli de pages toutes faites : masse volumique, extrait sec, cohésion de la matière, un jeu, et un exemple simple pour t'entraîner (instabilité des milieux dispersés) ;
+- trois menus **A, B et C**, avec des pages vides que tu renommes et remplis en le demandant à l'agent ;
+- un menu **Outils** : diagramme ternaire, calculatrice scientifique et graphe vierge (repris de [reula.fr](https://reula.fr/outils)).
 
 Sa présentation (menus, page d'accueil en blocs de couleur) vient de la [Paillasse virtuelle](https://paillasse-virtuelle.fr/) de Nils Aronssohn, avec son autorisation.
 

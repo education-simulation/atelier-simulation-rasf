@@ -14,6 +14,9 @@ const ETAPES = [
   ["Choisir la suite", "L'agent te propose des idées à cliquer : améliorer un exemple, remplir la page A1, renommer un menu… ou ta propre idée."],
 ];
 
+// Chemin du dossier du site, fourni par vite.config.js pendant l'aperçu seulement (vide dans le site en ligne).
+const DOSSIER = typeof __DOSSIER_DU_SITE__ !== "undefined" ? __DOSSIER_DU_SITE__ : "";
+
 export const estApercu = typeof location !== "undefined" && ["localhost", "127.0.0.1"].includes(location.hostname);
 
 export function Apercu() {
@@ -37,8 +40,8 @@ export function Apercu() {
   return (
     <>
       <div className="bandeau-apercu">
-        <strong>👀 Ceci est l'aperçu de ton site.</strong> Toi seul le vois, sur ton ordinateur.
-        <br />Pour le modifier, <strong>parle à l'agent dans Antigravity</strong>. Ensuite, reviens ici et appuie sur <strong>Cmd + R</strong> (Mac) ou <strong>Ctrl + R</strong> (Windows) pour voir le changement.
+        <strong>👀 Aperçu de ton site, sur ton ordinateur.</strong> Cette page affiche le code rangé dans le dossier
+        {DOSSIER ? <> <code className="bandeau-dossier">{DOSSIER}</code></> : " de ton site"}. Toi seul la vois : tes élèves verront la version en ligne.
       </div>
       {charge && faites.size < ETAPES.length && (
         <div style={{ position: "fixed", bottom: 84, right: 20, zIndex: 9999 }}>

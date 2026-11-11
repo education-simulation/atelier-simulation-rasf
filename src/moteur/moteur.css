@@ -1,5 +1,9 @@
 /* Moteur du site (ne pas modifier) — habillage d'après la « Paillasse virtuelle » de Nils Aronssohn.
    La couleur principale vient de site.config.js (variable --accent). */
+/* Tout l'habillage du site est rangé dans la couche « moteur » : les outils repris de reula.fr
+   (src/outils/reula/reula.css) passent ainsi devant lui, sans rien changer au reste du site. */
+@layer moteur {
+
 :root {
   --accent: #0b4f94;
   --accent-clair: #dce9f7;
@@ -55,6 +59,7 @@ button { font-family: inherit; }
 
 /* Aperçu (sur l'ordinateur, localhost) : bandeau et volet des étapes, jamais sur le site publié. */
 .bandeau-apercu { background: #336fa3; color: #fff; padding: 10px 16px; font-size: 15px; line-height: 1.45; }
+.bandeau-dossier { background: rgba(255,255,255,.18); padding: 1px 7px; border-radius: 6px; font-size: 13.5px; user-select: all; word-break: break-all; }
 .volet-etapes { background: #fff; border-bottom: 1px solid var(--bord); padding: 6px 16px; font-size: 14px; }
 .volet-etapes summary { cursor: pointer; font-weight: 700; padding: 4px 0; }
 .volet-etapes ol { margin: 6px 0 10px; padding-left: 22px; }
@@ -157,3 +162,5 @@ button { font-family: inherit; }
 .li-vide { padding: 8px 16px; color: #64748b; font-size: 14px; }
 .li-auteur { color: #64748b; font-size: 14px; text-align: center; }
 .al-carte strong > span[aria-hidden] { margin-right: 6px; }
+
+}
