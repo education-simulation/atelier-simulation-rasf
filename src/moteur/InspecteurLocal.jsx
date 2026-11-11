@@ -1,10 +1,58 @@
+// Bouton « Sélectionner un élément à modifier » (moteur, ne pas modifier), visible seulement sur l'ordinateur.
+// Une fois activé : chaque grande zone de la page est entourée de pointillés avec un numéro ;
+// on clique sur un endroit, on écrit ce qu'on veut changer, et on copie le tout pour l'agent.
 import { useState, useEffect } from "react";
 
+// Les grandes zones de la page, dans l'ordre : en-tête, fil d'Ariane, titre, blocs de la page, pied de page.
+function trouverSections() {
+  const liste = [];
+  const ajouter = (el, nom) => { if (el && el.offsetHeight > 20 && !liste.some((x) => x.el === el)) liste.push({ el, nom }); };
+  ajouter(document.querySelector("header.entete"), "En-tête et menus");
+  ajouter(document.querySelector(".fil-ariane"), "Fil d'Ariane");
+  ajouter(document.querySelector(".barre-titre"), "Titre de la page");
+  const accueil = document.querySelector(".zone-sim .ab");
+  if (accueil) {
+    ajouter(accueil.querySelector(".ab-hero"), "Grande phrase et présentation");
+    ajouter(accueil.querySelector(".ab-titre-section"), "Titre « Les pages, par menu »");
+    accueil.querySelectorAll(".ab-niv").forEach((b) => ajouter(b, `Bloc du menu « ${b.getAttribute("aria-label")} »`));
+    ajouter(accueil.querySelector(".ab-carte"), "Carte auteur");
+  } else {
+    // Une page : ses blocs principaux (on descend d'un niveau si la page n'a qu'un seul bloc).
+    let racine = document.querySelector(".zone-sim > *");
+    while (racine && racine.children.length === 1) racine = racine.children[0];
+    [...(racine?.children || [])].forEach((b) => {
+      const titre = ["h2", "h3", "label", "strong", "[role=tablist]"].map((q) => b.querySelector(q)).find(Boolean);
+      const texte = (titre?.innerText || b.innerText || "").trim().split("\n")[0].slice(0, 40);
+      ajouter(b, texte || `Bloc <${b.tagName.toLowerCase()}>`);
+    });
+  }
+  ajouter(document.querySelector("footer"), "Pied de page");
+  return liste;
+}
+
 export function InspecteurLocal() {
+  const [sections, setSections] = useState([]); // [{ nom, haut, gauche, largeur, hauteur }] quand la sélection est active
   const [actif, setActif] = useState(false);
   const [elementSelectionne, setElementSelectionne] = useState(null);
   const [commentaire, setCommentaire] = useState("");
   const [copie, setCopie] = useState(false);
+
+  // Dessine les sections numérotées pendant la sélection, et les suit quand on fait défiler la page.
+  useEffect(() => {
+    if (!actif) { setSections([]); return undefined; }
+    let image = 0;
+    const mesurer = () => {
+      cancelAnimationFrame(image);
+      image = requestAnimationFrame(() => setSections(trouverSections().map(({ el, nom }) => {
+        const r = el.getBoundingClientRect();
+        return { nom, haut: r.top, gauche: r.left, largeur: r.width, hauteur: r.height };
+      })));
+    };
+    mesurer();
+    window.addEventListener("scroll", mesurer, { passive: true });
+    window.addEventListener("resize", mesurer);
+    return () => { cancelAnimationFrame(image); window.removeEventListener("scroll", mesurer); window.removeEventListener("resize", mesurer); };
+  }, [actif]);
 
   useEffect(() => {
     if (!actif) return;
@@ -37,8 +85,11 @@ export function InspecteurLocal() {
       const tag = el.tagName.toLowerCase();
       const texte = el.innerText ? el.innerText.trim().slice(0, 80) : "";
       const classes = el.className || "";
+      const liste = trouverSections();
+      const i = liste.findIndex((x) => x.el.contains(el));
 
       setElementSelectionne({
+        section: i >= 0 ? `n°${i + 1} · ${liste[i].nom}` : null,
         tag,
         texte,
         classes,
@@ -63,7 +114,9 @@ export function InspecteurLocal() {
   }, [actif]);
 
   function copierRapport() {
-    const rapport = `[Retour sur l'élément <${elementSelectionne.tag}> : "${elementSelectionne.texte}"]\nCommentaire : ${commentaire || "(aucun commentaire saisi)"}`;
+    const page = new URLSearchParams(window.location.search).get("sim") || "accueil";
+    const ou = elementSelectionne.section ? `page « ${page} », section ${elementSelectionne.section}, ` : `page « ${page} », `;
+    const rapport = `[Retour sur ${ou}élément <${elementSelectionne.tag}> : "${elementSelectionne.texte}"]\nCommentaire : ${commentaire || "(aucun commentaire saisi)"}`;
     navigator.clipboard.writeText(rapport);
     setCopie(true);
     setTimeout(() => {
@@ -81,18 +134,28 @@ export function InspecteurLocal() {
   return (
     <div id="inspecteur-local-ui">
       <style>{STYLE_BOUTONS_RONDS}</style>
+      {/* Sections numérotées en pointillé, pendant la sélection (elles laissent passer les clics) */}
+      {sections.map((x, i) => (
+        <div key={i} aria-hidden="true" style={{ position: "fixed", top: x.haut, left: x.gauche, width: x.largeur, height: x.hauteur,
+          border: "2px dashed #b45309", borderRadius: 10, pointerEvents: "none", zIndex: 9990, boxSizing: "border-box" }}>
+          <span style={{ position: "absolute", top: -2, left: -2, background: "#b45309", color: "#fff", font: "800 12px/1 'Nunito', sans-serif",
+            padding: "4px 7px", borderRadius: "8px 0 8px 0", whiteSpace: "nowrap", maxWidth: "100%", overflow: "hidden", textOverflow: "ellipsis" }}>
+            {i + 1} · {x.nom}
+          </span>
+        </div>
+      ))}
       {/* Bouton rond flottant en bas à droite ; son nom apparaît au survol */}
       <div style={{ position: "fixed", bottom: 20, right: 20, zIndex: 9999 }}>
         <button
           type="button"
           className="bouton-rond"
-          aria-label={actif ? "Annuler la sélection" : "Sélectionner un élément de la page"}
+          aria-label={actif ? "Annuler la sélection" : "Sélectionner un élément à modifier"}
           onClick={() => { setActif(!actif); setElementSelectionne(null); }}
           style={{ background: actif ? "#dc2626" : "#b45309" }}
         >
           <span aria-hidden="true">{actif ? "✕" : "👆"}</span>
           <span className={`bulle${actif ? " visible" : ""}`}>
-            {actif ? "Clique sur un élément de la page… (✕ pour annuler)" : "Sélectionner un élément pour le commenter"}
+            {actif ? "Clique sur l'endroit à modifier… (✕ pour annuler)" : "Sélectionner un élément à modifier"}
           </span>
         </button>
       </div>
@@ -123,7 +186,8 @@ export function InspecteurLocal() {
             </button>
           </div>
 
-          <div style={{ background: "#f8fafc", padding: 8, borderRadius: 6, marginBottom: 10, fontSize: 12, color: "#334155", maxHeight: 60, overflow: "hidden", textOverflow: "ellipsis" }}>
+          <div style={{ background: "#f8fafc", padding: 8, borderRadius: 6, marginBottom: 10, fontSize: 12, color: "#334155", maxHeight: 80, overflow: "hidden", textOverflow: "ellipsis" }}>
+            {elementSelectionne.section && <div style={{ fontWeight: 800, color: "#b45309", marginBottom: 2 }}>Section {elementSelectionne.section}</div>}
             <code>&lt;{elementSelectionne.tag}&gt;</code> {elementSelectionne.texte || "(élément sans texte)"}
           </div>
 

@@ -75,7 +75,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
 
 ### Les deux boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
-- **👆 Sélectionner un élément** (orange) : la personne clique dessus, puis sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur l'élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus).
+- **👆 Sélectionner un élément à modifier** (orange) : la personne clique dessus ; chaque grande zone de la page s'entoure de pointillés avec un numéro ; elle clique sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur page « instabilite », section n°3 · Titre de la page, élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus).
 - **📋 Les étapes** (bleu) : la liste des étapes du parcours, cochées d'après `PROGRESSION.md`. Il disparaît quand tout est fait.
 
 ### L'aperçu du site, et son lien
@@ -161,7 +161,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel, pour tes élèves.
   >
   > **Les deux boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
-  > - 👆 **Sélectionner un élément** : clique dessus, puis sur un endroit de la page, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
+  > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
   > - 📋 **Les étapes** : où on en est dans la création de ton site.
 
   Puis la question à choix « Qu'en penses-tu ? » → Tout est bon, on le met en ligne · Je veux changer quelque chose · Je ne vois pas mon site.
