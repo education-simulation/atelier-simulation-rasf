@@ -112,7 +112,6 @@ export const OUTILS = [
       "🎨 la paire métamère : le modèle du « noir métamérique », qui fabrique une carte 2 identique sous D65.",
     ],
     limites: "Comme tout modèle, ils simplifient : un œil moyen (pas le tien), une adaptation de l'œil volontairement faible (40 %) pour que les changements de couleur se voient bien, et un écran qui ne peut pas afficher toutes les couleurs réelles.",
-    conseil: "Écris simplement « avec les modèles couleur » dans ton prompt (ou rien : l'agent les utilise d'office) : l'IA n'invente pas les données, et les couleurs sont justes.",
     equations: EQUATIONS, // montrées dans la fenêtre, section « 🧮 Le modèle mathématique »
     controlePaire,
     ecartJour,

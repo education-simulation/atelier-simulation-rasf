@@ -210,39 +210,50 @@ function FenetreGraphiques({ outil, ids, fermer }) {
   );
 }
 
-// --- « 📄 PDF » : un document lisible (modèles, équations, limites, courbes, données) à enregistrer en PDF ---
-// Ouvre une page prête à imprimer ; la fenêtre d'impression du navigateur propose « Enregistrer au format PDF ».
-function imprimerModeles(outil, equations, boite) {
+// --- « 📄 PDF » : télécharge un VRAI fichier PDF lisible (modèles, équations, limites, courbes) ---
+// Fabriqué dans la page (html2pdf.js, chargé seulement au clic) : pas besoin de la fenêtre d'impression.
+async function telechargerPDF(outil, equations, boite, setEtat) {
   const esc = (t) => String(t ?? "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
   const courbes = boite ? [...boite.querySelectorAll("figure")].map((f) => {
     const titre = f.closest("details")?.querySelector("summary strong")?.textContent || "";
     const svg = f.querySelector("svg")?.outerHTML || "";
     const legende = f.querySelector("figcaption")?.innerText || "";
-    return `<section class="courbe"><h3>${esc(titre)}</h3>${svg}<p class="petit">${esc(legende)}</p></section>`;
+    return `<section style="break-inside:avoid;page-break-inside:avoid"><h3>${esc(titre)}</h3>${svg}<p class="petit">${esc(legende)}</p></section>`;
   }).join("") : "";
-  const html = `<!doctype html><html lang="fr"><head><meta charset="utf-8"><title>${esc(outil.titre || outil.nom)}</title>
-<style>
-  body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#0f172a;max-width:760px;margin:24px auto;padding:0 16px;line-height:1.55;font-size:13.5px}
-  h1{font-size:22px;margin:0 0 8px} h2{font-size:17px;margin:22px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px} h3{font-size:14px;margin:12px 0 4px}
-  .formules{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:15px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;margin:4px 0}
-  .petit{font-size:12px;color:#475569} .limites{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:6px 10px}
-  .courbe{break-inside:avoid} svg{width:100%;height:auto} @page{margin:14mm}
-</style></head><body>
-<h1>🧰 ${esc(outil.titre || outil.nom)}</h1>
-<p>${esc(outil.resume)}</p>
-<ul>${(outil.contenu || []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul>
-${outil.limites ? `<p class="limites">⚠️ <strong>Les limites des modèles :</strong> ${esc(outil.limites)}</p>` : ""}
-${equations?.length ? `<h2>🧮 Les équations</h2>${equations.map((q) => `<h3>${esc(q.titre)}</h3><div class="formules">${q.formules.map((f) => `<div>${esc(f)}</div>`).join("")}</div>${q.note ? `<p class="petit">${esc(q.note)}</p>` : ""}`).join("")}` : ""}
-${courbes ? `<h2>📈 Les courbes</h2>${courbes}` : ""}
-<script>window.onload=()=>setTimeout(()=>window.print(),300)</script>
-</body></html>`;
-  const w = window.open("", "_blank");
-  if (!w) return;
-  w.document.open(); w.document.write(html); w.document.close();
+  const doc = document.createElement("div");
+  doc.style.cssText = "position:fixed;left:-10000px;top:0;width:720px;background:#fff";
+  doc.innerHTML = `<style>
+    .pdf{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;color:#0f172a;line-height:1.5;font-size:13px;padding:4px}
+    .pdf h1{font-size:21px;margin:0 0 8px} .pdf h2{font-size:16px;margin:18px 0 6px;border-bottom:2px solid #e2e8f0;padding-bottom:3px} .pdf h3{font-size:13.5px;margin:10px 0 4px}
+    .pdf .formules{font-family:"Cambria Math","STIX Two Math",Georgia,serif;font-size:14.5px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;padding:6px 10px;margin:4px 0}
+    .pdf .petit{font-size:11.5px;color:#475569;margin:2px 0 6px} .pdf .limites{background:#fffbeb;border:1px solid #fde68a;border-radius:8px;padding:6px 10px}
+    .pdf svg{width:100%;height:auto} .pdf .bloc{break-inside:avoid;page-break-inside:avoid}
+  </style><div class="pdf">
+  <h1>🧰 ${esc(outil.titre || outil.nom)}</h1>
+  <p>${esc(outil.resume)}</p>
+  <ul>${(outil.contenu || []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul>
+  ${outil.limites ? `<p class="limites">⚠️ <strong>Les limites des modèles :</strong> ${esc(outil.limites)}</p>` : ""}
+  ${equations?.length ? `<h2>🧮 Les équations</h2>${equations.map((q) => `<div class="bloc"><h3>${esc(q.titre)}</h3><div class="formules">${q.formules.map((f) => `<div>${esc(f)}</div>`).join("")}</div>${q.note ? `<p class="petit">${esc(q.note)}</p>` : ""}</div>`).join("")}` : ""}
+  ${courbes ? `<h2>📈 Les courbes</h2>${courbes}` : ""}
+  </div>`;
+  document.body.appendChild(doc);
+  try {
+    setEtat("⏳");
+    const { default: html2pdf } = await import("html2pdf.js");
+    const nom = (outil.titre || "modeles").normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^A-Za-z0-9]+/g, "-").replace(/^-|-$/g, "").toLowerCase();
+    await html2pdf().set({
+      margin: 10, filename: `${nom}.pdf`, image: { type: "jpeg", quality: 0.95 },
+      html2canvas: { scale: 2, backgroundColor: "#ffffff" }, jsPDF: { unit: "mm", format: "a4", orientation: "portrait" },
+      pagebreak: { mode: ["css", "legacy"], avoid: [".bloc", "section"] },
+    }).from(doc.querySelector(".pdf")).save();
+    setEtat("");
+  } catch (e) { setEtat(`⚠️ ${e.message}`); }
+  finally { doc.remove(); }
 }
 
 function AideOutil({ outil, fermer }) {
   const boite = useRef(null);
+  const [etatPDF, setEtatPDF] = useState("");
   // Modèle fourni : données tout de suite. Modèle construit : on charge le fichier (s'il existe) et on le vérifie.
   const [perso, setPerso] = useState(outil.charger ? "chargement" : null);
   useEffect(() => {
@@ -286,7 +297,7 @@ function AideOutil({ outil, fermer }) {
             <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
               <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
               <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 {outil.equations ? "Les modèles mathématiques : de la réflectance à la couleur" : "Les équations de tes modèles"}</strong>
-              <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); imprimerModeles(outil, equations, boite.current); }}>📄 PDF</button>
+              <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerPDF(outil, equations, boite.current, setEtatPDF); }}>{etatPDF || "📄 PDF"}</button>
               {outil.code && <button type="button" style={bouton()} title="Le code des modèles, à redonner à l'agent" onClick={async (e) => {
                 e.preventDefault(); e.stopPropagation();
                 const texte = await outil.code.lire();
