@@ -162,9 +162,46 @@ function Sauvegardes({ page, remiseAZero }) {
   );
 }
 
+// --- Exploration libre : pas d'étapes, on demande ce qu'on veut ---
+const IDEES_LIBRES = [
+  "ajoute une troisième carte, d'une autre couleur, qui reste identique sous les trois lumières (elle sert de témoin)",
+  "ajoute un curseur pour régler la température de couleur de la lampe de la cabine, de 2700 K à 6500 K",
+  "affiche en grand, sous la scène, l'écart ΔE*ab entre les deux cartes, avec une couleur verte, orange ou rouge selon qu'il se voit ou non",
+  "ajoute une question à choix pour l'élève : « Sous quelle lumière les deux cartes sont-elles différentes ? », avec la correction",
+];
+function ExplorationLibre({ copier, copie, bouton }) {
+  const debut = "Exercice Métamérisme, exploration libre : ";
+  return (
+    <div>
+      <p style={{ margin: "0 0 10px", fontSize: 15, lineHeight: 1.55 }}>
+        🧪 <strong>Pas d'étapes :</strong> demande à l'agent ce que tu veux ajouter ou changer dans cette page. Il le fait directement, puis te dit en deux lignes ce qu'il a fait et comment rendre ta demande plus précise.
+      </p>
+      <div style={{ background: "#f8fafc", border: "1px solid #e2e8f0", borderRadius: 12, padding: "10px 14px", lineHeight: 1.6, fontSize: 14.5 }}>
+        👉 <strong>Écris ton prompt dans la conversation avec l'agent, dans Antigravity</strong>, en commençant par :
+        <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "6px 0 0" }}>
+          <code style={{ background: "#fff", border: "1px solid #cbd5e1", borderRadius: 8, padding: "4px 10px", fontSize: 14.5 }}>{debut}</code>
+          <button type="button" style={bouton(false)} onClick={() => copier("debut-libre", debut)}>{copie === "debut-libre" ? "✓ Copié !" : "📋 Copier ce début"}</button>
+        </div>
+      </div>
+      <p style={{ margin: "14px 0 6px", fontWeight: 800, fontSize: 14.5 }}>💡 Besoin d'une idée ?</p>
+      <ul style={{ listStyle: "none", margin: 0, padding: 0, display: "grid", gap: 6 }}>
+        {IDEES_LIBRES.map((idee, i) => (
+          <li key={i} style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 14, background: "#fff", border: "1px solid #e2e8f0", borderRadius: 10, padding: "6px 10px" }}>
+            <span style={{ flex: "1 1 260px" }}>{idee.charAt(0).toUpperCase() + idee.slice(1)}.</span>
+            <button type="button" style={bouton(false)} onClick={() => copier(`idee-${i}`, `${debut}dans la page Métamérisme, ${idee}.`)}>{copie === `idee-${i}` ? "✓ Copié !" : "📋 Copier"}</button>
+          </li>
+        ))}
+      </ul>
+      <p style={{ margin: "10px 0 0", fontSize: 13, color: "#64748b" }}>Pense à sauvegarder avant de te lancer : tu pourras toujours revenir en arrière, ou reprendre le parcours guidé.</p>
+    </div>
+  );
+}
+
 // --- Le guide : une étape à la fois ---
 function Guide() {
   const [n, setN] = useState(() => Math.min(ETAPES.length - 1, Math.max(0, lire("metamerisme.etape", 0))));
+  const [mode, setMode] = useState(() => (lire("metamerisme.mode", "guide") === "libre" ? "libre" : "guide")); // parcours guidé ou exploration libre
+  const choisirMode = (m) => { setMode(m); ecrire("metamerisme.mode", m); };
   const [indices, setIndices] = useState(() => lire("metamerisme.indices", ETAPES.map(() => 0)));    // nombre d'indices montrés
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, setCopie] = useState(null);
@@ -183,8 +220,16 @@ function Guide() {
     <section aria-label="Construis cette simulation avec l'IA" style={{ background: "#fff", border: "2px solid var(--accent)", borderRadius: 18, padding: "16px 18px" }}>
       <div style={{ display: "flex", alignItems: "baseline", justifyContent: "space-between", gap: 10, flexWrap: "wrap" }}>
         <strong style={{ fontSize: 17 }}>🤖 Construis cette simulation avec l'IA</strong>
-        <span style={{ fontSize: 14, color: "#64748b", fontWeight: 700 }}>Étape {n + 1} / {ETAPES.length}</span>
+        {mode === "guide" && <span style={{ fontSize: 14, color: "#64748b", fontWeight: 700 }}>Étape {n + 1} / {ETAPES.length}</span>}
       </div>
+      <div role="tablist" style={{ display: "flex", gap: 6, margin: "10px 0 0", flexWrap: "wrap" }}>
+        {[["guide", "🧭 Parcours guidé"], ["libre", "🧪 Exploration libre"]].map(([id, nom]) => (
+          <button key={id} type="button" role="tab" aria-selected={mode === id} onClick={() => choisirMode(id)}
+            style={{ padding: "8px 14px", borderRadius: 12, border: "none", cursor: "pointer", fontWeight: 800, fontSize: 14,
+              background: mode === id ? "var(--accent)" : "#fff", color: mode === id ? "#fff" : "#334155", boxShadow: "inset 0 0 0 1px #d5dfeb" }}>{nom}</button>
+        ))}
+      </div>
+      {mode === "guide" ? (<>
       <div style={{ height: 6, background: "#f1f5f9", borderRadius: 3, margin: "10px 0 14px", overflow: "hidden" }}>
         <div style={{ width: `${((n + 1) / ETAPES.length) * 100}%`, height: "100%", background: "var(--accent)", transition: "width .2s" }} />
       </div>
@@ -227,6 +272,7 @@ function Guide() {
           ? <button type="button" style={bouton(true)} onClick={() => aller(n + 1)}>Suivant →</button>
           : <span style={{ alignSelf: "center", fontWeight: 800, color: "#15803d" }}>🎉 Dernière étape</span>}
       </div>
+      </>) : <div style={{ marginTop: 12 }}><ExplorationLibre copier={copier} copie={copie} bouton={bouton} /></div>}
       {estApercu && <Sauvegardes page="Metamerisme" remiseAZero={() => { ecrire("metamerisme.etape", 0); ecrire("metamerisme.indices", ETAPES.map(() => 0)); }} />}
     </section>
   );
