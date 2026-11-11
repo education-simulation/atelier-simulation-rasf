@@ -244,7 +244,7 @@ Dans la page créée, ajoute un bouton « 📝 Le prompt de cette page » qui af
    - Ne dis **jamais** « c'est déjà fait » ou « déjà actif » sans l'avoir vérifié dans le fichier à l'instant.
 1. **Repère l'étape** : compare la demande aux `consigne` des 6 étapes.
    - **Elle correspond à une étape (parcours guidé)** : **ne code pas tout de suite. Analyse d'abord le prompt** avec les `indices` de cette étape, en quelques lignes :
-     - ✅ **Ce qui est réussi** (les critères présents) ; **un prompt court est un bon prompt** : l'IA devine les détails ; n'exige pas tous les critères, ne reproche jamais l'absence d'un détail secondaire, et ne pousse pas à allonger le prompt ;
+     - ✅ **Ce qui est réussi** (les critères présents) ; **un prompt court est un bon prompt** : l'IA devine les détails ; **ce qui existe déjà** (dans la page : boutons, cartes, cabine ; dans le modèle couleur : illuminants, observateur, calculs) **n'a pas à être redécrit** : un prompt qui s'y réfère (« active les 3 boutons d'illuminants ») est **complet** ; ne signale comme ambigu que ce que tu ne pourrais vraiment pas déduire de la page et du modèle ; n'exige pas tous les critères, ne reproche jamais l'absence d'un détail secondaire, et ne pousse pas à allonger le prompt ;
      - ⚠️ **Ce qui manque ou reste ambigu**, formulé comme une question, **sans donner la réponse** et **sans jamais recopier ni utiliser la `proposition`** ;
      - une appréciation : « complet », « presque complet » ou « à compléter ».
      Puis la question à choix : **Je corrige mon prompt** · **Exécute-le tel quel** · **😕 Je suis perdu·e** (« Exécute-le » en premier si le prompt est complet).

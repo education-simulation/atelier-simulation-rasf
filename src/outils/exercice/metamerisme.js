@@ -16,11 +16,11 @@ export const ETAPES = [
     motsCles: ["sur le bord de la cabine", "cabine de lumière 3D", "illuminant A", "illuminant D65", "illuminant F11", "fais fonctionner", "quand on clique", "un voyant s'allume", "retiens le choix au rechargement", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
     indices: [
-      "Nomme les boutons : A, D65 et F11. L'IA sait ce que sont ces illuminants, inutile de les décrire.",
-      "Dis en quelques mots ce que fait un clic : il éclaire la cabine avec cette lumière.",
-      "Pas besoin de dire « dans la page Métamérisme » : l'agent le sait. Le reste (teinte exacte, voyant), l'IA le devine.",
+      "Les trois boutons et les trois illuminants existent déjà (sur la cabine et dans le modèle couleur) : inutile de les décrire, dis juste quoi en faire.",
+      "Un verbe d'action et la cible suffisent : « active… », « fais fonctionner… ».",
+      "Pour aller plus loin (facultatif) : un voyant sur le bouton actif, ou le choix retenu au rechargement.",
     ],
-    proposition: "Fais fonctionner les boutons A, D65 et F11 : un clic éclaire la cabine avec cet illuminant.",
+    proposition: "Active les 3 boutons d'illuminants.",
   },
 
   {
