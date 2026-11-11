@@ -12,6 +12,7 @@
 // ============================================================
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
+import { courbesPubliees } from "./courbes.js";
 import { estApercu } from "../../moteur/Apercu";
 
 const lire = (cle, defaut) => { try { const v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); } catch { return defaut; } };
@@ -177,7 +178,11 @@ function FenetreGraphiques({ outil, ids, fermer }) {
     if (outil.donnees || !outil.charger) return;
     outil.charger().then((m) => setDonnees(m ? outil.donneesDe(m) || "erreur" : "absent")).catch(() => setDonnees("erreur"));
   }, [outil]);
-  const liste = Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : [];
+  // Les réflectances : celles que la simulation a publiées (ses cartes actuelles), sinon l'exemple du modèle.
+  const publiees = courbesPubliees();
+  const liste = (Array.isArray(donnees) ? donnees.filter((g) => ids.includes(g.id)) : []).map((g) => (g.id === "paire-metamere" && publiees
+    ? { ...g, titre: "🎨 Réflectances spectrales de tes deux cartes", series: publiees.map((c, i) => ({ ...c, tirets: i > 0 })), explication: "Les courbes actuelles de ta simulation : elles changent quand tu choisis une autre couleur." }
+    : g.id === "paire-metamere" ? { ...g, explication: `${g.explication} (Exemple tiré du modèle : ta simulation ne montre pas encore ses propres cartes ici.)` } : g));
   return createPortal(
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
       style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
