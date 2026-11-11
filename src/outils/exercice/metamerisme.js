@@ -92,8 +92,45 @@ export const OUTILS = [
   },
 ];
 
+// Sans la boîte à outils fournie (AVEC_COLORIMETRIE = false dans la page) : le fichier que l'on construit soi-même.
+export const FICHIER_PERSO = "maColorimetrie.js";
+
+// Étape 0, seulement sans la boîte à outils fournie : la construire.
+export const ETAPE_OUTILS = {
+  titre: "Construire ta boîte à outils de colorimétrie",
+  motsCles: ["crée un fichier", "maColorimetrie.js", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "observateur CIE 1931", "illuminant A", "illuminant D65", "illuminant F11", "écart ΔE*ab", "paire métamère", "calculé, pas choisi à la main", "n'utilise pas colorimetrie.js"], // surlignés quand l'étape est ouverte
+  consigne: "Tu construis toi-même les outils de colorimétrie. Rédige un prompt pour que l'IA crée un fichier avec les données spectrales et les calculs dont la simulation aura besoin.",
+  indices: [
+    "Quelles données ? Les distributions spectrales des illuminants A, D65 et F11, et l'observateur CIE 1931, de 380 à 780 nm.",
+    "D'où viennent-elles ? Exige les tables officielles de la CIE, pas des valeurs de mémoire : sinon l'IA peut en inventer une partie.",
+    "Quels calculs ? XYZ, L*a*b*, l'écart ΔE*ab, la couleur à l'écran, et une paire métamère calculée (même couleur sous D65). Donne un nom au fichier : maColorimetrie.js.",
+  ],
+  proposition: "Crée src/outils/maColorimetrie.js avec les tables officielles de la CIE (pas de mémoire) : illuminants A, D65, F11 et observateur CIE 1931, de 380 à 780 nm. Ajoute XYZ, L*a*b*, ΔE*ab, la couleur à l'écran et une paire métamère calculée. N'utilise pas colorimetrie.js.",
+};
+
+export const OUTILS_SANS = [
+  {
+    nom: "maColorimetrie.js",
+    chemin: "src/outils/maColorimetrie.js",
+    resume: "Ta propre boîte à outils, construite par l'IA à l'étape 0, à la place de colorimetrie.js. Elle doit contenir :",
+    contenu: [
+      "📈 les distributions spectrales des illuminants A, D65 et F11, de 380 à 780 nm, tirées des tables officielles de la CIE ;",
+      "👁 l'observateur de référence CIE 1931 ;",
+      "🧮 les calculs XYZ, L*a*b* et l'écart ΔE*ab ;",
+      "🖥 la couleur à afficher à l'écran ;",
+      "🎨 la fabrication d'une paire métamère calculée.",
+    ],
+    conseil: "Vérifie-la : F11 doit avoir trois pics étroits (vers 435, 545 et 610 nm), et les deux cartes doivent être identiques sous D65.",
+  },
+];
+
 // Rattachés aux étapes : le cadre les affiche sans que la page ait à les passer.
 ETAPES.outils = OUTILS;
+ETAPES.outilsSans = OUTILS_SANS;
+ETAPES.etapeOutils = ETAPE_OUTILS;
+ETAPES.fichierPerso = FICHIER_PERSO;
+// Mots clés montrés seulement quand on construit sa boîte à outils.
+ETAPES.motsSansSeulement = ["crée un fichier", "maColorimetrie.js", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas colorimetrie.js"];
 
 export const IDEES = [
   "ajoute une troisième carte, d'une autre couleur, qui reste identique sous les trois lumières (elle sert de témoin)",
@@ -105,9 +142,9 @@ export const IDEES = [
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
   { titre: "📍 Où ?", mots: ["sur le bord de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
-  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "une palette de couleurs", "distribution spectrale", "réflectance spectrale", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
-  { titre: "🛠 Les actions", mots: ["ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
+  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "une palette de couleurs", "maColorimetrie.js", "tables officielles de la CIE", "distribution spectrale", "réflectance spectrale", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
+  { titre: "🛠 Les actions", mots: ["crée un fichier", "ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
   { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "encadré « À retenir »", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
-  { titre: "✅ Les exigences", mots: ["calculé, pas choisi à la main", "avec colorimetrie.js", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
+  { titre: "✅ Les exigences", mots: ["pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas colorimetrie.js", "calculé, pas choisi à la main", "avec colorimetrie.js", "ne change rien d'autre", "une étape à la fois", "phrase d'explication pour l'élève"] },
 ];

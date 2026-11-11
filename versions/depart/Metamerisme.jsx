@@ -14,7 +14,11 @@ import { CadreExercice } from "../src/outils/exercice/Exercice.jsx";
 import { ETAPES, IDEES, MOTS_CLES } from "../src/outils/exercice/metamerisme.js";
 
 // Ce que fait la simulation EN CE MOMENT (affiché dans le guide). À mettre à jour après chaque changement.
-// Étapes du parcours guidé VALIDÉES PAR L'IA (numéros 1 à 6) : l'agent ajoute le numéro quand l'étape marche.
+// Boîte à outils : true = on utilise colorimetrie.js (fournie) ; false = on construit la sienne à l'étape 0
+// (src/outils/maColorimetrie.js) et on n'utilise PAS colorimetrie.js. Choisi avec le bouton « 🧰 » du guide.
+const AVEC_COLORIMETRIE = true;
+
+// Étapes du parcours guidé VALIDÉES PAR L'IA (numéros 0 à 6 ; 0 = boîte à outils) : l'agent ajoute le numéro quand l'étape marche.
 const ETAPES_VALIDEES = [];
 
 const ETAT_ACTUEL = [
@@ -91,14 +95,14 @@ function Scene() {
       <span style={{ position: "absolute", left: "3%", top: "6%", fontSize: 13, fontWeight: 800, color: "#475569" }}>☀️ Table, à la lumière du jour</span>
       <CarteContraste numero={1} style={{ left: "6%", top: "40%" }} />
       <CarteContraste numero={2} style={{ left: "21%", top: "40%" }} />
-      <Cabine style={{ left: "44%", top: "6%", width: "53%" }} />
+      <Cabine style={{ right: "4%", top: "7%", width: "min(53%, 430px)" }} />
     </div>
   );
 }
 
 export default function Metamerisme() {
   return (
-    <CadreExercice page="Metamerisme" sujet="métamérisme" etapes={ETAPES} idees={IDEES} motsCles={MOTS_CLES} etat={ETAT_ACTUEL} validees={ETAPES_VALIDEES}>
+    <CadreExercice page="Metamerisme" sujet="métamérisme" etapes={ETAPES} idees={IDEES} motsCles={MOTS_CLES} etat={ETAT_ACTUEL} validees={ETAPES_VALIDEES} avecOutils={AVEC_COLORIMETRIE}>
       <Scene />
     </CadreExercice>
   );

@@ -93,8 +93,29 @@ function Outils({ outils }) {
   ));
 }
 
+// --- Choix : boîte à outils fournie (colorimetrie.js) ou construite soi-même (étape 0) ---
+// Le choix est ÉCRIT dans la page (AVEC_COLORIMETRIE) par le serveur d'aperçu : l'agent le lit.
+function ChoixOutils({ page, avec }) {
+  const [message, setMessage] = useState("");
+  const choisir = async (v) => {
+    if (v === avec) return;
+    try { setMessage("⏳ …"); await appel("outils", { page, avec: v }); setMessage(""); }
+    catch (e) { setMessage(`⚠️ ${e.message}`); }
+  };
+  return (
+    <div style={{ display: "flex", gap: 8, alignItems: "center", flexWrap: "wrap", fontSize: 14 }}>
+      <strong>🧰 Boîte à outils :</strong>
+      <div role="tablist" aria-label="Boîte à outils" className="ex-bascule">
+        <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Fournie (colorimetrie.js)</button>
+        <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 Je construis la mienne</button>
+      </div>
+      {message && <span>{message}</span>}
+    </div>
+  );
+}
+
 // --- Une étape du parcours guidé : section repliable ---
-function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher }) {
+function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouillee, cocher, precedente }) {
   const [indices, setIndices] = useState(() => lire(`${page}.indices.${numero}`, 0));
   const [voirProposition, setVoirProposition] = useState(false);
   const [copie, copier] = useCopie();
@@ -107,12 +128,12 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         boxShadow: ouverte && !verrouillee ? "0 2px 10px color-mix(in srgb, var(--accent) 22%, transparent)" : "none",
         borderRadius: 12, padding: ouverte && !verrouillee ? "0 13px" : "0 14px", opacity: verrouillee ? 0.65 : 1, transition: "background .2s, box-shadow .2s" }}>
       <summary onClick={(e) => { if (verrouillee) e.preventDefault(); }} aria-disabled={verrouillee || undefined}
-        title={verrouillee ? `Coche d'abord « Étape terminée » à l'étape ${numero - 1}` : undefined}
+        title={verrouillee ? `Coche d'abord « Étape terminée » à l'étape ${precedente}` : undefined}
         style={{ cursor: verrouillee ? "not-allowed" : "pointer", padding: "11px 0", fontWeight: 800, fontSize: 15.5, color: ouverte && !verrouillee ? "var(--accent)" : undefined, display: "flex", gap: 8, alignItems: "center", listStyle: "none" }}>
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
         {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>{parIA ? "✅ validée par l'IA" : "✅ terminée"}</span>}
-        {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {numero - 1}</span>}
+        {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {precedente}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
         <p style={{ margin: "0 0 10px", fontSize: 15 }}>✍️ <strong>{etape.consigne}</strong></p>
@@ -247,45 +268,65 @@ function ToutRecommencer({ page, fermer, remiseAZero }) {
 }
 
 // --- Le cadre complet ---
-export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], validees = [], outils = etapes.outils || [], children }) {
+export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], validees = [], avecOutils = true, children }) {
+  // Sans la boîte à outils fournie : une étape 0 pour la construire, et les textes renvoient au fichier construit.
+  const sans = avecOutils === false && etapes.etapeOutils;
+  const adapter = (t) => (sans && typeof t === "string" && !t.includes("n'utilise pas") ? t.replace(/(^|[^A-Za-z])colorimetrie\.js/g, `$1${etapes.fichierPerso}`) : t);
+  const liste = [
+    ...(sans ? [{ num: 0, etape: etapes.etapeOutils }] : []),
+    ...etapes.map((e, i) => ({ num: i + 1, etape: sans ? { ...e, consigne: adapter(e.consigne), indices: e.indices.map(adapter), proposition: adapter(e.proposition), motsCles: (e.motsCles || []).map(adapter) } : e })),
+  ];
+  const nums = liste.map((x) => x.num);
+  const outils = sans ? etapes.outilsSans || [] : etapes.outils || [];
+  const groupesMots = sans ? motsCles.map((g) => ({ ...g, mots: g.mots.map(adapter) })) : motsCles.map((g) => ({ ...g, mots: g.mots.filter((m) => !(etapes.motsSansSeulement || []).includes(m)) }));
+
   const [mode, setMode] = useState(() => (lire(`${page}.mode`, "guide") === "libre" ? "libre" : "guide"));
-  const [ouvertes, setOuvertes] = useState(() => lire(`${page}.ouvertes`, [0]));
+  // Tout est repéré par le NUMÉRO de l'étape (0 = boîte à outils), pour ne rien décaler quand l'étape 0 apparaît.
+  const [ouvertes, setOuvertes] = useState(() => lire(`${page}.ouvertesN`, [nums[0]]));
   const [recommencer, setRecommencer] = useState(false);
   const choisirMode = (m) => { setMode(m); ecrire(`${page}.mode`, m); };
-  const basculer = (i) => setOuvertes((o) => { const n = o.includes(i) ? o.filter((x) => x !== i) : [...o, i]; ecrire(`${page}.ouvertes`, n); return n; });
-  // Étapes terminées (cochées) : chaque étape ne s'ouvre qu'une fois la précédente cochée.
-  const [cochees, setFaites] = useState(() => lire(`${page}.faites`, []));
-  // Étapes validées par l'IA : écrites dans la page (ETAPES_VALIDEES, numéros à partir de 1) par l'agent.
-  const parIA = validees.map((n) => n - 1);
+  const basculer = (n) => setOuvertes((o) => { const m = o.includes(n) ? o.filter((x) => x !== n) : [...o, n]; ecrire(`${page}.ouvertesN`, m); return m; });
+  const suivante = (n) => nums[nums.indexOf(n) + 1];
+  // Étapes terminées : cochées ici, ou validées par l'IA dans la page (ETAPES_VALIDEES).
+  const [cochees, setCochees] = useState(() => lire(`${page}.faitesN`, []));
+  const parIA = validees;
   const faites = [...new Set([...cochees, ...parIA])];
   // Une étape que l'IA vient de valider : on la replie et on ouvre la suivante (une seule fois).
   const cleVues = validees.join(",");
   useEffect(() => {
-    const vues = lire(`${page}.valideesVues`, []);
-    const nouvelles = parIA.filter((i) => !vues.includes(i));
-    ecrire(`${page}.valideesVues`, parIA);
+    const vues = lire(`${page}.valideesVuesN`, []);
+    const nouvelles = parIA.filter((n) => !vues.includes(n));
+    ecrire(`${page}.valideesVuesN`, parIA);
     if (!nouvelles.length) return;
     setOuvertes((o) => {
       let m = o.filter((x) => !nouvelles.includes(x));
-      for (const i of nouvelles) if (i + 1 < etapes.length && !parIA.includes(i + 1) && !m.includes(i + 1)) m = [...m, i + 1];
-      ecrire(`${page}.ouvertes`, m); return m;
+      for (const n of nouvelles) { const s2 = suivante(n); if (s2 !== undefined && !parIA.includes(s2) && !m.includes(s2)) m = [...m, s2]; }
+      ecrire(`${page}.ouvertesN`, m); return m;
     });
   }, [cleVues]); // eslint-disable-line react-hooks/exhaustive-deps
-  const cocher = (i) => {
-    if (parIA.includes(i)) return;
-    const n = cochees.includes(i) ? cochees.filter((x) => x !== i) : [...cochees, i];
-    setFaites(n); ecrire(`${page}.faites`, n);
-    if (!cochees.includes(i)) { // cochée : on replie celle-ci et on ouvre la suivante
-      setOuvertes((o) => { const m = [...o.filter((x) => x !== i), ...(i + 1 < etapes.length && !o.includes(i + 1) ? [i + 1] : [])]; ecrire(`${page}.ouvertes`, m); return m; });
+  // On vient de choisir de construire sa boîte à outils : l'étape 0 s'ouvre.
+  useEffect(() => {
+    if (sans && !faites.includes(0)) setOuvertes((o) => { if (o.includes(0)) return o; const m = [0, ...o.filter((x) => x !== 1)]; ecrire(`${page}.ouvertesN`, m); return m; });
+  }, [Boolean(sans)]); // eslint-disable-line react-hooks/exhaustive-deps
+  const cocher = (n) => {
+    if (parIA.includes(n)) return;
+    const m = cochees.includes(n) ? cochees.filter((x) => x !== n) : [...cochees, n];
+    setCochees(m); ecrire(`${page}.faitesN`, m);
+    if (!cochees.includes(n)) { // cochée : on replie celle-ci et on ouvre la suivante
+      const s2 = suivante(n);
+      setOuvertes((o) => { const k = [...o.filter((x) => x !== n), ...(s2 !== undefined && !o.includes(s2) ? [s2] : [])]; ecrire(`${page}.ouvertesN`, k); return k; });
     }
   };
+  const verrouillee = (n) => { const k = nums.indexOf(n); return k > 0 && !faites.includes(nums[k - 1]); };
   // Étapes dont on surligne les mots clés : celles qui sont ouvertes (et déverrouillées), sinon l'étape en cours.
-  const verrouillee = (i) => i > 0 && !faites.includes(i - 1);
-  const ouvertesLibres = ouvertes.filter((i) => i < etapes.length && !verrouillee(i)).sort((a, b) => a - b);
-  const enCours = etapes.findIndex((_, i) => !faites.includes(i));
-  const actives = mode !== "guide" ? [] : ouvertesLibres.length ? ouvertesLibres : enCours >= 0 ? [enCours] : [];
-  const remiseAZero = () => { ecrire(`${page}.ouvertes`, [0]); ecrire(`${page}.faites`, []); ecrire(`${page}.valideesVues`, []); etapes.forEach((_, i) => ecrire(`${page}.indices.${i + 1}`, 0)); };
-
+  const ouvertesLibres = nums.filter((n) => ouvertes.includes(n) && !verrouillee(n));
+  const enCours = nums.find((n) => !faites.includes(n));
+  const actives = mode !== "guide" ? [] : ouvertesLibres.length ? ouvertesLibres : enCours !== undefined ? [enCours] : [];
+  const parNum = Object.fromEntries(liste.map((x) => [x.num, x.etape]));
+  const remiseAZero = () => {
+    ecrire(`${page}.ouvertesN`, [0, 1]); ecrire(`${page}.faitesN`, []); ecrire(`${page}.valideesVuesN`, []);
+    [0, ...etapes.map((_, i) => i + 1)].forEach((n) => ecrire(`${page}.indices.${n}`, 0));
+  };
   return (
     <div className="ex-conteneur">
     <div className={`ex-cadre${motsCles.length ? " avec-colonne" : ""}`}>
@@ -321,18 +362,20 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             </div>
           </div>
           <EtatActuel etat={etat} />
+          {estApercu && etapes.etapeOutils && <ChoixOutils page={page} avec={!sans} />}
           <Outils outils={outils} />
           {mode === "guide"
-            ? etapes.map((etape, i) => (
-              <Etape key={i} page={page} numero={i + 1} etape={etape} ouverte={ouvertes.includes(i)} basculer={() => basculer(i)}
-                faite={faites.includes(i)} parIA={parIA.includes(i)} verrouillee={i > 0 && !faites.includes(i - 1)} cocher={() => cocher(i)} />
+            ? liste.map(({ num, etape }) => (
+              <Etape key={num} page={page} numero={num} etape={etape} ouverte={ouvertes.includes(num)} basculer={() => basculer(num)}
+                faite={faites.includes(num)} parIA={parIA.includes(num)} verrouillee={verrouillee(num)} cocher={() => cocher(num)}
+                precedente={nums[nums.indexOf(num) - 1]} />
             ))
             : <ExplorationLibre idees={idees} />}
         </section>
 
         {estApercu && <Sauvegardes page={page} />}
       </div>
-      {motsCles.length > 0 && <MotsCles groupes={motsCles} surlignes={new Set(actives.flatMap((i) => etapes[i].motsCles || []))} pourEtapes={actives.map((i) => i + 1)} />}
+      {groupesMots.length > 0 && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} />}
     </div>
     </div>

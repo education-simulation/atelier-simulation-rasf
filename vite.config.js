@@ -49,6 +49,7 @@ function enregistrerStyle() {
 //   GET  /__atelier/versions?page=P      → liste des sauvegardes
 //   POST /__atelier/versions/sauver      { page, nom }      → copie la page actuelle
 //   POST /__atelier/versions/restaurer   { page, fichier }  → remet une sauvegarde (après avoir sauvé l'état actuel)
+//   POST /__atelier/versions/outils     { page, avec }     → écrit AVEC_COLORIMETRIE (true/false) dans la page
 //   POST /__atelier/versions/zero        { page, effacerJournal? } → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel)
 //                                         et, si demandé, vide journal/<Page>.json (après l'avoir sauvé)
 // Comme pour le style : seulement pendant l'aperçu ; le site en ligne n'écrit rien.
@@ -77,7 +78,7 @@ function versionsDesPages() {
             return repondre(res, 200, { dossier: `versions/${page}`, fichiers })
           }
           if (req.method !== 'POST') return repondre(res, 405, {})
-          const { page, nom, fichier, effacerJournal } = await lireCorps(req)
+          const { page, nom, fichier, effacerJournal, avec } = await lireCorps(req)
           req.effacerJournal = effacerJournal === true
           if (!pageOk(page)) return repondre(res, 400, { erreur: 'page inconnue' })
           const actuel = join(dossier, 'simulations', `${page}.jsx`), d = join(dossier, 'versions', page)
@@ -87,6 +88,13 @@ function versionsDesPages() {
           if (action === 'sauver') {
             const etiquette = String(nom || 'version').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'version'
             return repondre(res, 200, { fichier: sauver(etiquette) })
+          }
+          if (action === 'outils') {
+            // Choix de la boîte à outils, écrit dans la page : const AVEC_COLORIMETRIE = true | false;
+            const texte = readFileSync(actuel, 'utf8'), motif = /const AVEC_COLORIMETRIE = (true|false);/
+            if (!motif.test(texte)) return repondre(res, 400, { erreur: 'AVEC_COLORIMETRIE introuvable dans la page' })
+            writeFileSync(actuel, texte.replace(motif, `const AVEC_COLORIMETRIE = ${avec === false ? 'false' : 'true'};`))
+            return repondre(res, 200, { ok: true })
           }
           if (action === 'restaurer') {
             if (typeof fichier !== 'string' || !/^[A-Za-z0-9_.-]+\.jsx$/.test(fichier) || !existsSync(join(d, fichier))) return repondre(res, 400, { erreur: 'sauvegarde introuvable' })
