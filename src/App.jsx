@@ -4,7 +4,7 @@
 //  L'adresse d'une simulation est de la forme  …/?sim=identifiant  : un rafraîchissement
 //  (Cmd + R / F5) ramène toujours sur la même page.
 // ============================================================
-import { lazy, useEffect, useMemo, useState } from "react";
+import { lazy, Suspense, useEffect, useMemo, useState } from "react";
 import SITE from "../site.config.js";
 import { EnTete } from "./moteur/EnTete";
 import { BarreLaterale } from "./moteur/BarreLaterale";
@@ -12,6 +12,10 @@ import { Accueil } from "./moteur/Accueil";
 import { PiedDePage, APropos } from "./moteur/PiedDePage";
 import { Apercu, estApercu } from "./moteur/Apercu";
 import { ChoixStyle, STYLES, CLE_STYLE_APERCU } from "./moteur/ChoixStyle";
+import { fermerCalculatrice, useCalculatriceOuverte } from "./outils/calculatriceFlottante.js";
+
+// La calculatrice flottante, commune à tout le site : chargée seulement quand on l'ouvre.
+const CalculatriceFlottante = lazy(() => import("./outils/CalculatriceScientifique.jsx").then((m) => ({ default: m.CalculatriceScientifique })));
 import { EnChargement } from "./moteur/chargement";
 import { InspecteurLocal } from "./moteur/InspecteurLocal";
 
@@ -37,6 +41,7 @@ const lireId = () => new URLSearchParams(window.location.search).get("sim");
 export default function App() {
   const menus = useMemo(() => construireMenus(SITE), []);
   const [activeId, setActiveId] = useState(lireId);
+  const calculatriceOuverte = useCalculatriceOuverte();
   // Style du site (site.config.js). Dans l'aperçu seulement, le bouton « 🎨 Style » permet d'en essayer un autre
   // sans rien enregistrer : le site en ligne garde toujours celui de site.config.js.
   const styleDuSite = STYLES.some(([id]) => id === SITE.style) ? SITE.style : "blocs";
@@ -119,6 +124,7 @@ export default function App() {
         <PiedDePage site={SITE} naviguer={naviguer} />
       </main>
       </div>
+      {calculatriceOuverte && <Suspense fallback={null}><CalculatriceFlottante onClose={fermerCalculatrice} /></Suspense>}
       {estApercu && <ChoixStyle actuel={style} enregistre={styleDuSite} choisir={essayerStyle} />}
       {estApercu && <InspecteurLocal />}
     </div>
