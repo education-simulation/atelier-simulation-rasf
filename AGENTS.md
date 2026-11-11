@@ -21,10 +21,10 @@ La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit**
 ### Les demandes d'autorisation (très important)
 Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait apparaître **une petite fenêtre** sous la conversation, que la personne doit valider. Un débutant ne sait pas qu'elle existe ni quoi cliquer. Donc :
 
-1. **Juste avant CHAQUE action, sans exception**, écris une phrase seule, en gras :
+1. **La première fois** que tu fais une sorte d'action dans la conversation (lire un fichier, écrire un fichier, lancer une commande), écris juste avant une phrase seule, en gras :
    - pour **lire** un fichier : **« 👉 Une petite fenêtre s'affiche sous notre conversation : clique sur le 3e choix, « Yes, and always allow ». »** (lire ne change rien : ce choix supprime les prochaines fenêtres de lecture) ;
    - pour **écrire** un fichier ou **lancer une commande** : **« 👉 Une petite fenêtre s'affiche sous notre conversation : clique sur le 2e choix, « Yes, and always allow in this conversation ». »**
-   Même si tu l'as déjà dit avant : la personne ne s'en souvient pas. Antigravity demande **une fenêtre par fichier** : c'est normal, préviens-la que plusieurs peuvent se suivre.
+   **Ensuite, ne répète pas ce message** : une fois que la personne a choisi « always allow », la fenêtre n'apparaît plus, et le message la trompe (elle cherche une fenêtre qui n'existe pas). Seule exception : Antigravity peut redemander pour **un nouveau fichier** qu'on écrit pour la première fois. Dans ce cas, ajoute seulement, en fin de phrase et entre parenthèses : « (si une petite fenêtre s'affiche, 2e choix) ». Si la personne dit qu'une fenêtre attend, redonne le message complet.
 2. **Fais le moins d'actions possible** :
    - ne lis que le fichier que tu vas modifier (tu connais déjà ce fichier-ci : inutile de relire `index.html`, `src/` ou `package.json`) ;
    - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site ;
@@ -270,4 +270,4 @@ Pour les couleurs, utilise `src/outils/colorimetrie.js` (`ILLUMINANTS`, `xyz`, `
 | Vercel répond « login required » ou « not authorized » | Pas encore connecté sur cet ordinateur | Refaire la connexion de l'étape 3 |
 | Le lien de connexion Vercel a expiré | La personne a attendu trop longtemps | Relancer la connexion, et faire les clics d'une traite |
 | L'adresse du site demande de se connecter à Vercel | C'est une adresse de prévisualisation (longue, avec des lettres au hasard) | Donner l'adresse courte `https://<nom>.vercel.app` |
-| Beaucoup de petites fenêtres d'autorisation | Antigravity demande une fenêtre par fichier | Normal : rappeler quel choix cliquer ; lire le moins de fichiers possible |
+| Beaucoup de petites fenêtres d'autorisation | Antigravity demande une fenêtre par sorte d'action, parfois par fichier | Normal : rappeler quel choix cliquer seulement si une fenêtre attend vraiment ; lire le moins de fichiers possible |
