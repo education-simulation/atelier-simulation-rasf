@@ -78,8 +78,9 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 | `.vercel/` | Lien entre ce dossier et le projet Vercel (créé à la 1re mise en ligne) | Non, ne jamais le supprimer |
 
 - Le site est fait avec **React + Vite**. Navigation : `…/?sim=<id>` (un rafraîchissement reste sur la même page).
-- **5 menus** au départ : **Exemples**, **Menu A**, **Menu B**, **Menu C** et **Outils**. L'accueil montre chaque menu (bloc, carte ou liste selon le style).
-  - **Exemples** : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), cohésion de la matière (schémas animés), métamérisme (un exercice : une scène de départ et un guide qui donne, étape par étape, les demandes à faire à l'IA), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
+- **6 menus** au départ : **Construire avec l'IA**, **Menu A**, **Menu B**, **Menu C**, **Outils** et **Exemples**. L'accueil montre chaque menu (bloc, carte ou liste selon le style).
+  - **Construire avec l'IA** : métamérisme, un exercice pour apprendre à écrire ses demandes à l'IA (une scène de départ et un guide, étape par étape).
+  - **Exemples** (en dernier) : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), cohésion de la matière (schémas animés), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
   - **Outils** : diagramme ternaire (construire ou s'exercer), calculatrice scientifique, graphe vierge (papier millimétré, log ou ternaire, à exporter). Ils viennent de reula.fr ; leur code est dans `src/outils/` : **ne le modifie jamais** (il utilise Tailwind, activé seulement pour ces outils). La personne peut retirer un outil du menu (ligne dans `pages`) sans toucher à son code.
   - **Menu A, B, C** : chacun deux pages vides (`PageA1.jsx`, `PageA2.jsx`…) que la personne remplacera. Elle dira par exemple « renomme le menu A en Analyse » (→ `nom` du menu dans `site.config.js`) ou « remplace la page A1 par une simulation sur … ».
 - **Ajouter ou remplacer une page, en deux gestes :**
@@ -176,7 +177,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
   > Clique sur ce lien : http://localhost:NNNN/ — il ouvre ton site dans ton navigateur.
   >
-  > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Exemples** montre ce qu'on peut faire (simulations, calculatrice, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant. Le menu **Outils** contient un diagramme ternaire, une calculatrice et un graphe vierge, prêts à servir.
+  > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Construire avec l'IA** t'entraîne à écrire tes demandes à l'IA (exercice Métamérisme). Le menu **Exemples** montre ce qu'on peut faire (simulations, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant. Le menu **Outils** contient un diagramme ternaire, une calculatrice et un graphe vierge, prêts à servir.
   >
   > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel.
   >
@@ -219,7 +220,7 @@ Propose, une par une : remplir une autre page, changer la grande phrase de l'acc
 ### Construire le prompt ensemble (avant d'écrire une nouvelle simulation)
 Une bonne simulation part d'une bonne demande. **N'écris jamais une simulation à partir d'une idée floue** : aide d'abord la personne à préciser sa demande, puis montre-lui le prompt complet **avant** de coder. Elle peut le modifier.
 
-**Le modèle à montrer** : l'exemple **Métamérisme** (menu Exemples) est un exercice guidé. Il part d'une scène fixe : la personne écrit elle-même ses prompts (parcours guidé en 6 étapes, ou exploration libre), aidée par une liste de mots clés ; tu les vérifies avant de les exécuter. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
+**Le modèle à montrer** : l'exercice **Métamérisme** (menu Construire avec l'IA) est un exercice guidé. Il part d'une scène fixe : la personne écrit elle-même ses prompts (parcours guidé en 6 étapes, ou exploration libre), aidée par une liste de mots clés ; tu les vérifies avant de les exécuter. Propose-le à qui veut s'entraîner : il montre à quoi ressemble une bonne demande.
 
 **Deux façons de faire, à proposer en une question à choix** : « Comment veux-tu décrire ta simulation ? » → **Étape par étape, je te guide** · **Je te donne mon idée en vrac, propose-moi un prompt**.
 

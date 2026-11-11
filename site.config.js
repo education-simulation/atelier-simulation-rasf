@@ -36,11 +36,12 @@ export default {
   //   nom   : nom affiché dans le menu
   //   fond  : couleur du bloc sur l'accueil (style « blocs ») ; texte : couleur des écritures sur ce bloc
   menus: [
-    { id: "Ex", nom: "Exemples", fond: "#f5a31a", texte: "#3a2500" },
+    { id: "IA", nom: "Construire avec l'IA", fond: "#7c3aed", texte: "#ffffff" },
     { id: "A", nom: "Menu A", fond: "#5b4bdb", texte: "#ffffff" },
     { id: "B", nom: "Menu B", fond: "#1f8a7a", texte: "#ffffff" },
     { id: "C", nom: "Menu C", fond: "#c2410c", texte: "#ffffff" },
     { id: "Outils", nom: "Outils", fond: "#0f766e", texte: "#ffffff" },
+    { id: "Ex", nom: "Exemples", fond: "#f5a31a", texte: "#3a2500" },
   ],
 
   // Les pages. Chacune :
@@ -51,10 +52,11 @@ export default {
   //   fichier : le nom du fichier dans simulations/ (sans « .jsx »)
   //   description : (facultatif) une phrase courte, affichée sur l'accueil des styles « lateral » et « liste »
   pages: [
+    { id: "metamerisme", titre: "Métamérisme : construis-le avec l'IA", icone: "🎨", menu: "IA", fichier: "Metamerisme", description: "Exercice : construis la simulation avec l'IA, une étape à la fois, à partir d'une cabine et de deux cartes." },
+
     { id: "masse-volumique", titre: "Masse volumique au pycnomètre", icone: "⚖️", menu: "Ex", fichier: "MasseVolumique", description: "Parcours guidé : peser, calculer, comparer à la valeur attendue." },
     { id: "extrait-sec", titre: "Extrait sec à l'étuve", icone: "🔥", menu: "Ex", fichier: "ExtraitSec", description: "Sécher jusqu'à masse constante et calculer la teneur en matière sèche." },
     { id: "forces-intermoleculaires", titre: "Cohésion de la matière : forces intermoléculaires", icone: "🧲", menu: "Ex", fichier: "ForcesIntermoleculaires", description: "Polarisation, London, liaison hydrogène : voir les nuages se déformer." },
-    { id: "metamerisme", titre: "Métamérisme : construis-le avec l'IA", icone: "🎨", menu: "Ex", fichier: "Metamerisme", description: "Exercice : construis la simulation avec l'IA, une étape à la fois, à partir d'une cabine et de deux cartes." },
     { id: "jeu-equations", titre: "Jeu : défi chrono des équations", icone: "🎮", menu: "Ex", fichier: "JeuEquations", description: "60 secondes pour équilibrer un maximum d'équations." },
     { id: "instabilite", titre: "Instabilité des milieux dispersés", icone: "🫧", menu: "Ex", fichier: "Instabilite", description: "Crémage et sédimentation, loi de Stokes. Exemple à améliorer." },
 

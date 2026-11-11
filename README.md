@@ -3,9 +3,10 @@
 Un site de simulations, simple et gratuit, que tu construis en parlant à l'agent d'**Antigravity** (l'application gratuite de Google, avec ton compte Google d'établissement), et que **Vercel** met en ligne gratuitement.
 
 Ton site démarre avec :
-- un menu **Exemples**, rempli de pages toutes faites : masse volumique, extrait sec, cohésion de la matière, métamérisme, un jeu, et un exemple simple pour t'entraîner (instabilité des milieux dispersés) ;
+- un menu **Construire avec l'IA** : l'exercice Métamérisme, pour apprendre à écrire ses demandes à l'IA ;
 - trois menus **A, B et C**, avec des pages vides que tu renommes et remplis en le demandant à l'agent ;
-- un menu **Outils** : diagramme ternaire, calculatrice scientifique et graphe vierge (repris de [reula.fr](https://reula.fr/outils)).
+- un menu **Outils** : diagramme ternaire, calculatrice scientifique et graphe vierge (repris de [reula.fr](https://reula.fr/outils)) ;
+- un menu **Exemples**, en dernier, rempli de pages toutes faites : masse volumique, extrait sec, cohésion de la matière, un jeu, et un exemple simple pour t'entraîner (instabilité des milieux dispersés).
 
 Sa présentation (menus, page d'accueil en blocs de couleur) vient de la [Paillasse virtuelle](https://paillasse-virtuelle.fr/) de Nils Aronssohn, avec son autorisation.
 
