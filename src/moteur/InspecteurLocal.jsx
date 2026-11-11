@@ -156,7 +156,7 @@ export function InspecteurLocal() {
         >
           <span aria-hidden="true">{actif ? "✕" : "👆"}</span>
           <span className={`bulle${actif ? " visible" : ""}`}>
-            {actif ? "Clique sur l'endroit à modifier… (✕ pour annuler)" : "Sélectionner un élément à modifier"}
+            {actif ? "Clique sur l'endroit à modifier… (✕ pour annuler)" : "Sélectionner un élément à modifier · visible seulement sur ton ordinateur"}
           </span>
         </button>
       </div>

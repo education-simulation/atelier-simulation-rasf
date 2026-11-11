@@ -2,7 +2,8 @@
 // Le bouton des étapes disparaît quand toutes les étapes sont cochées.
 // Visibles seulement sur l'ordinateur (localhost), pendant que le prof travaille avec Antigravity,
 // jamais sur le site publié. Les étapes cochées viennent de PROGRESSION.md, tenu à jour par l'assistant.
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
+import { useFermerDehors } from "./ChoixStyle";
 import { STYLE_BOUTONS_RONDS } from "./InspecteurLocal";
 
 const ETAPES = [
@@ -37,6 +38,10 @@ export function Apercu() {
       .finally(() => setCharge(true));
   }, []);
 
+  const refEtapes = useRef(null);
+  const changerOuvert = (o) => { setOuvert(o); try { localStorage.setItem("atelier.voletEtapes", o ? "1" : "0"); } catch { /* sans importance */ } };
+  useFermerDehors(refEtapes, ouvert, () => changerOuvert(false));
+
   return (
     <>
       <div className="bandeau-apercu">
@@ -44,14 +49,14 @@ export function Apercu() {
         {DOSSIER ? <> <code className="bandeau-dossier">{DOSSIER}</code></> : " de ton site"}. Toi seul la vois : le site en ligne, lui, est visible par tous.
       </div>
       {charge && faites.size < ETAPES.length && (
-        <div style={{ position: "fixed", bottom: 84, right: 20, zIndex: 9999 }}>
+        <div ref={refEtapes} style={{ position: "fixed", bottom: 84, right: 20, zIndex: 9999 }}>
           <style>{STYLE_BOUTONS_RONDS}</style>
           <button type="button" className="bouton-rond" style={{ background: "#336fa3" }}
             aria-label="Les étapes de ton site" aria-expanded={ouvert}
-            onClick={() => { const o = !ouvert; setOuvert(o); try { localStorage.setItem("atelier.voletEtapes", o ? "1" : "0"); } catch { /* sans importance */ } }}>
+            onClick={() => changerOuvert(!ouvert)}>
             <span aria-hidden="true">{ouvert ? "✕" : "📋"}</span>
             <span className="pastille">{faites.size}/{ETAPES.length}</span>
-            <span className="bulle">Les étapes de ton site ({faites.size}/{ETAPES.length} faites)</span>
+            <span className="bulle">Les étapes de ton site ({faites.size}/{ETAPES.length} faites) · visible seulement sur ton ordinateur</span>
           </button>
           {ouvert && (
             <div className="volet-etapes" role="dialog" aria-label="Les étapes de ton site"

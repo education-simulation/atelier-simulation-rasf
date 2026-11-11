@@ -3,7 +3,7 @@
 //  Il fait essayer les trois styles du site (blocs, latéral, liste) d'un clic, SANS rien enregistrer :
 //  le site en ligne garde le style écrit dans site.config.js. Pour garder un style, on le dit à l'agent.
 // ============================================================
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { STYLE_BOUTONS_RONDS } from "./InspecteurLocal";
 
 export const STYLES = [
@@ -13,19 +13,36 @@ export const STYLES = [
 ];
 export const CLE_STYLE_APERCU = "atelier.styleApercu";
 
+// Ferme une fenêtre quand on clique en dehors de `ref`, ou qu'on appuie sur Échap.
+export function useFermerDehors(ref, ouvert, fermer) {
+  useEffect(() => {
+    if (!ouvert) return undefined;
+    const dehors = (e) => { if (ref.current && !ref.current.contains(e.target)) fermer(); };
+    const echap = (e) => { if (e.key === "Escape") fermer(); };
+    document.addEventListener("pointerdown", dehors);
+    document.addEventListener("keydown", echap);
+    return () => { document.removeEventListener("pointerdown", dehors); document.removeEventListener("keydown", echap); };
+  }, [ref, ouvert, fermer]);
+}
+
 export function ChoixStyle({ actuel, enregistre, choisir }) {
   const [ouvert, setOuvert] = useState(false);
+  const ref = useRef(null);
+  useFermerDehors(ref, ouvert, () => setOuvert(false));
   const nom = (id) => (STYLES.find((s) => s[0] === id) || STYLES[0])[1];
   const essai = actuel !== enregistre;
 
   return (
-    <div style={{ position: "fixed", bottom: 148, right: 20, zIndex: 9999 }}>
+    <div ref={ref} style={{ position: "fixed", bottom: 148, right: 20, zIndex: 9999 }}>
       <style>{STYLE_BOUTONS_RONDS}</style>
+      {/* Rappel au-dessus des boutons ronds : ils n'existent que dans l'aperçu */}
+      <span style={{ position: "absolute", bottom: 62, right: 0, whiteSpace: "nowrap", background: "#0f172a", color: "#fff", font: "700 11px/1.2 'Nunito', sans-serif",
+        padding: "4px 8px", borderRadius: 999, opacity: 0.85, pointerEvents: "none" }}>🔒 visible seulement sur ton ordinateur</span>
       <button type="button" className="bouton-rond" style={{ background: "#7c3aed" }} aria-expanded={ouvert}
         aria-label="Essayer un autre style" onClick={() => setOuvert((o) => !o)}>
         <span aria-hidden="true">{ouvert ? "✕" : "🎨"}</span>
         <span className="pastille">style</span>
-        <span className="bulle">Essayer un autre style (aperçu seulement)</span>
+        <span className="bulle">Essayer un autre style · visible seulement sur ton ordinateur</span>
       </button>
       {ouvert && (
         <div role="dialog" aria-label="Essayer un autre style"
