@@ -320,7 +320,7 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
         <span aria-hidden="true" style={{ fontSize: 11, color: "#64748b", width: 12 }}>{verrouillee ? "" : ouverte ? "▼" : "▶"}</span>
         <span style={{ flex: 1 }}>{numero}. {etape.titre}</span>
         {faite && <span style={{ fontSize: 12.5, color: "#15803d", background: "#dcfce7", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>{parIA ? "✅ validée par l'IA" : "✅ terminée"}</span>}
-        {bloquee && <span style={{ fontSize: 12.5, color: "#b91c1c", background: "#fee2e2", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>❌ modèles à corriger</span>}
+        {bloquee && controle && controle !== "absent" && <span style={{ fontSize: 12.5, color: "#b91c1c", background: "#fee2e2", borderRadius: 999, padding: "2px 9px", whiteSpace: "nowrap" }}>❌ modèles à corriger</span>}
         {verrouillee && <span style={{ fontSize: 12.5, color: "#64748b", whiteSpace: "nowrap" }}>🔒 termine l'étape {precedente}</span>}
       </summary>
       <div style={{ paddingBottom: 14 }}>
@@ -343,17 +343,16 @@ function Etape({ page, numero, etape, ouverte, basculer, faite, parIA, verrouill
           </div>
         )}
         {voirCourbes && <FenetreGraphiques outil={outil} ids={etape.graphiques} fermer={() => setVoirCourbes(false)} />}
-        {controle && (
+        {controle && controle !== "absent" && (
           <div style={{ marginTop: 12, padding: "8px 12px", borderRadius: 10, fontSize: 14, background: bloquee ? "#fef2f2" : "#f0fdf4", border: `1px solid ${bloquee ? "#fecaca" : "#bbf7d0"}` }}>
             <strong>🔎 Contrôle automatique de tes modèles</strong>
-            {controle === "absent" && <div>📭 Les modèles n'existent pas encore.</div>}
             {controle === "erreur" && <div>⚠️ Les modèles contiennent une erreur et ne peuvent pas être lus.</div>}
             {Array.isArray(controle) && (
               <ul style={{ margin: "4px 0 0", padding: 0, listStyle: "none", display: "grid", gap: 2 }}>
                 {controle.map((v) => <li key={v.texte}>{v.ok ? "✅" : "❌"} {v.texte}</li>)}
               </ul>
             )}
-            {bloquee && <div style={{ marginTop: 4, fontWeight: 700 }}>Tant qu'une ligne est ❌, l'étape n'est pas terminée : demande à l'IA de corriger ses modèles.</div>}
+            {bloquee && Array.isArray(controle) && <div style={{ marginTop: 4, fontWeight: 700 }}>Tant qu'une ligne est ❌, l'étape n'est pas terminée : demande à l'IA de corriger ses modèles.</div>}
           </div>
         )}
         <label style={{ display: "flex", gap: 8, alignItems: "center", marginTop: 12, padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontSize: 14.5, fontWeight: 700,
