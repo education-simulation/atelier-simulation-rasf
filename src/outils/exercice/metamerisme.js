@@ -19,48 +19,48 @@ export const ETAPES = [
   },
 
   {
+    titre: "Choisir la couleur des cartes",
+    motsCles: ["sur chaque carte", "sous la scène", "échantillon", "carte de contraste", "une palette de couleurs", "quand on clique", "paire métamère", "illuminant D65", "illuminant A", "réflectance spectrale", "observateur CIE 1931", "calcule à partir des spectres", "calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "retiens le choix au rechargement"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    consigne: "Les deux cartes sont vierges. Rédige un prompt pour pouvoir choisir la couleur d'un échantillon peint sur la carte 1, la carte 2 étant calculée pour former avec elle une paire métamère.",
+    indices: [
+      "Où et comment choisir ? Un échantillon peint au centre de chaque carte, et une palette de quelques couleurs : un clic choisit la couleur de la carte 1.",
+      "La carte 2 n'est pas choisie : elle est calculée pour former une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A). Le site a déjà un outil pour ça : src/outils/colorimetrie.js (fonction paireMetamere).",
+      "Les couleurs affichées doivent être calculées à partir des spectres (réflectance spectrale de l'échantillon, distribution spectrale de la lumière, observateur CIE 1931), pas choisies à la main.",
+    ],
+    proposition: "Dans la page Métamérisme, peins un échantillon au centre de chaque carte de contraste. Ajoute sous la scène une palette de quelques couleurs : un clic choisit la couleur de l'échantillon de la carte 1. L'échantillon de la carte 2 est calculé avec src/outils/colorimetrie.js (paireMetamere) pour former une paire métamère : même couleur sous D65, différente sous A. Les couleurs affichées sont calculées à partir des spectres, pas choisies à la main. Retiens le choix au rechargement.",
+  },
+  {
+    titre: "Construire les distributions spectrales",
+    motsCles: ["sous la scène", "dans une fenêtre (popup)", "un bouton", "distribution spectrale", "réflectance spectrale", "illuminant A", "illuminant D65", "illuminant F11", "échantillon", "affiche", "graphique de 380 à 780 nm", "courbes superposées", "légende", "utilise src/outils/colorimetrie.js"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    consigne: "Rédige un prompt pour voir la distribution spectrale de l'illuminant choisi et la réflectance spectrale des deux échantillons.",
+    indices: [
+      "Où les afficher ? À toi de choisir : sous la scène, ou dans une fenêtre qui s'ouvre avec un bouton.",
+      "Quel graphique ? Les longueurs d'onde de 380 à 780 nm, des courbes superposées pour comparer les deux échantillons, une légende, et des axes nommés.",
+      "Que doit-on remarquer ? Les deux réflectances se croisent en plusieurs points (marque-les avec leur longueur d'onde), et le graphique de la lumière change quand on clique sur A, D65 ou F11. Les données sont déjà dans src/outils/colorimetrie.js.",
+    ],
+    proposition: "Dans la page Métamérisme, ajoute sous la scène deux graphiques de 380 à 780 nm, avec légende et axes nommés : à gauche, la distribution spectrale de l'illuminant choisi dans la cabine (il change quand on clique sur A, D65 ou F11) ; à droite, les réflectances spectrales des deux échantillons, superposées, avec leurs points de croisement marqués et leur longueur d'onde. Utilise les données de src/outils/colorimetrie.js.",
+  },
+  {
     titre: "Faire glisser les cartes dans la cabine",
-    motsCles: ["dans la page Métamérisme", "carte de contraste", "cabine de lumière 3D", "un bouton", "rends déplaçable", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    motsCles: ["dans la page Métamérisme", "carte de contraste", "cabine de lumière 3D", "un bouton", "rends déplaçable", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "calcule à partir des spectres", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour que l'on puisse déplacer les deux cartes de la table jusque dans la cabine.",
     indices: [
       "Comment déplace-t-on les cartes ? Pense à la souris ET au doigt (tablette, téléphone).",
       "Sur un petit écran, glisser est difficile : demande aussi un bouton qui place les deux cartes dans la cabine.",
-      "Dis ce qui change quand une carte entre dans la cabine (elle prend la lumière de la cabine) et quand elle est sur la table (lumière du jour).",
+      "Dis ce qui change quand une carte entre dans la cabine : sa couleur est recalculée sous la lumière de la cabine ; sur la table, elle reste à la lumière du jour (D65).",
     ],
-    proposition: "Dans la page Métamérisme, rends les deux cartes déplaçables : on peut les faire glisser, à la souris ou au doigt, de la table jusque dans la cabine. Ajoute aussi un bouton « Mettre les deux cartes dans la cabine » pour le téléphone. Une carte dans la cabine prend la lumière de la cabine ; sur la table, elle reste à la lumière du jour.",
+    proposition: "Dans la page Métamérisme, rends les deux cartes déplaçables : on peut les faire glisser, à la souris ou au doigt, de la table jusque dans la cabine. Ajoute aussi un bouton « Mettre les deux cartes dans la cabine » pour le téléphone. Dans la cabine, la couleur des échantillons est recalculée sous la lumière choisie ; sur la table, elle reste celle de la lumière du jour (D65).",
   },
   {
-    titre: "Calculer les couleurs à partir des spectres",
-    motsCles: ["sur chaque carte", "sous la scène", "échantillon", "carte de contraste", "observateur CIE 1931", "illuminant A", "illuminant D65", "paire métamère", "écart ΔE*ab", "calcule à partir des spectres", "calculé, pas choisi à la main", "utilise src/outils/colorimetrie.js", "valeur arrondie", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
-    consigne: "Rédige un prompt pour peindre un échantillon sur chaque carte, avec des couleurs calculées (et non choisies à la main) : identiques à la lumière du jour, différentes sous l'illuminant A.",
+    titre: "Mesurer l'écart de couleur",
+    motsCles: ["sous la scène", "écart ΔE*ab", "échantillon", "utilise src/outils/colorimetrie.js", "calcule à partir des spectres", "affiche", "valeur arrondie", "vert / orange / rouge selon le résultat", "phrase d'explication pour l'élève", "surligne", "zone surlignée", "réflectance spectrale"], // surlignés dans la liste des mots clés quand l'étape est ouverte
+    consigne: "Rédige un prompt pour mesurer et afficher la différence de couleur entre les deux cartes, sous la lumière où elles se trouvent.",
     indices: [
-      "Les cartes sont vierges (cartes de contraste noir et blanc) : demande d'y peindre un échantillon de couleur sur chacune. Et à partir de quoi calcule-t-on sa couleur ? Des spectres (de la lumière et de l'échantillon) et de l'observateur CIE 1931 : le site a déjà un outil pour ça, src/outils/colorimetrie.js.",
-      "Que doit-on observer ? Les deux cartes ont la même couleur sous D65, mais pas sous A : c'est une « paire métamère ».",
-      "Comment mesurer la différence ? Demande d'afficher l'écart ΔE*ab entre les deux cartes, avec une phrase qui dit si la différence se voit.",
+      "Quelle mesure ? L'écart ΔE*ab entre les deux échantillons, calculé avec src/outils/colorimetrie.js, sous la lumière où sont les cartes.",
+      "Comment le rendre lisible ? Une valeur arrondie, une couleur verte, orange ou rouge selon que la différence se voit ou non, et une phrase d'explication.",
+      "Pour comprendre pourquoi : surligne sur le graphique des réflectances la zone où les deux courbes s'écartent le plus, et fais le lien avec la lumière choisie.",
     ],
-    proposition: "Dans la page Métamérisme, peins un échantillon de couleur au centre de chaque carte de contraste, et calcule sa couleur à partir des spectres, avec src/outils/colorimetrie.js : observateur CIE 1931, illuminants A, D65 et F11. Les deux échantillons forment une paire métamère : exactement la même couleur sous D65, mais une différence nette sous A. Affiche sous la scène l'écart ΔE*ab entre les deux cartes quand elles sont toutes les deux dans la cabine, avec une phrase qui dit si la différence se voit.",
-  },
-  {
-    titre: "Montrer les spectres des illuminants",
-    motsCles: ["dans une fenêtre (popup)", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "affiche", "graphique de 380 à 780 nm", "courbes superposées", "légende", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
-    consigne: "Rédige un prompt pour afficher, dans une fenêtre, les spectres des trois illuminants.",
-    indices: [
-      "Où les afficher ? Par exemple un bouton qui ouvre une fenêtre (popup), pour ne pas encombrer la page.",
-      "Quel graphique ? Les longueurs d'onde de 380 à 780 nm, les trois courbes ramenées à la même luminosité pour pouvoir les comparer, avec une légende.",
-      "Quel message ? Une phrase qui fait remarquer que A est très fort dans le rouge, D65 presque plat, F11 fait de trois raies étroites.",
-    ],
-    proposition: "Dans la page Métamérisme, ajoute un bouton « Spectres des illuminants » qui ouvre une fenêtre avec un graphique : les spectres de A, D65 et F11 entre 380 et 780 nm, ramenés à la même luminosité, avec une légende. Ajoute une phrase : A est très fort dans le rouge, D65 est presque plat, F11 a trois raies étroites.",
-  },
-  {
-    titre: "Montrer les spectres des deux cartes",
-    motsCles: ["dans une fenêtre (popup)", "un bouton", "carte de contraste", "spectre de réflexion", "illuminant A", "affiche", "surligne", "graphique de 380 à 780 nm", "courbes superposées", "zone surlignée", "légende", "phrase d'explication pour l'élève"], // surlignés dans la liste des mots clés quand l'étape est ouverte
-    consigne: "Rédige un prompt pour afficher les spectres de réflexion des deux cartes et faire comprendre pourquoi elles paraissent différentes sous A.",
-    indices: [
-      "Les deux spectres doivent être superposés sur le même graphique, pour pouvoir les comparer.",
-      "Qu'est-ce qui doit sauter aux yeux ? Les courbes sont très proches et se croisent en 3 points : demande de marquer ces points avec leur longueur d'onde.",
-      "Où sont-elles différentes ? Surtout dans le rouge : demande de surligner cette zone, et d'expliquer le lien avec l'illuminant A.",
-    ],
-    proposition: "Dans la page Métamérisme, ajoute un bouton « Spectres des deux cartes » qui ouvre une fenêtre avec leurs spectres de réflexion superposés (380 à 780 nm). On doit voir que les deux courbes sont très proches, se croisent en 3 points (marque-les avec leur longueur d'onde) et divergent surtout dans le rouge (surligne la zone 600-700 nm). Explique en deux phrases pourquoi les cartes paraissent différentes sous A.",
+    proposition: "Dans la page Métamérisme, affiche sous la scène l'écart ΔE*ab entre les deux échantillons, calculé avec src/outils/colorimetrie.js sous la lumière où se trouvent les cartes : valeur arrondie à 0,1, en vert sous 1, orange de 1 à 3, rouge au-delà, avec une phrase qui dit si la différence se voit. Sur le graphique des réflectances, surligne la zone où les deux courbes s'écartent le plus.",
   },
   {
     titre: "Le message à retenir",
@@ -85,7 +85,7 @@ export const IDEES = [
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
   { titre: "📍 Où ?", mots: ["dans la page Métamérisme", "sur le bord de la cabine", "au-dessus de la scène", "sous la scène", "sur chaque carte", "dans une fenêtre (popup)"] },
-  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "spectre de réflexion", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
+  { titre: "🧱 Les objets", mots: ["cabine de lumière 3D", "un bouton", "illuminant A", "illuminant D65", "illuminant F11", "carte de contraste", "échantillon", "une palette de couleurs", "distribution spectrale", "réflectance spectrale", "observateur CIE 1931", "écart ΔE*ab", "paire métamère"] },
   { titre: "🛠 Les actions", mots: ["ajoute", "fais fonctionner", "remplace", "rends déplaçable", "calcule à partir des spectres", "affiche", "surligne", "retire"] },
   { titre: "⚙️ Le comportement", mots: ["quand on clique", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "retiens le choix au rechargement", "un voyant s'allume"] },
   { titre: "📈 L'affichage", mots: ["graphique de 380 à 780 nm", "courbes superposées", "légende", "zone surlignée", "encadré « À retenir »", "valeur arrondie", "vert / orange / rouge selon le résultat"] },
