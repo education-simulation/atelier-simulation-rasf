@@ -11,6 +11,7 @@ import { BarreLaterale } from "./moteur/BarreLaterale";
 import { Accueil } from "./moteur/Accueil";
 import { PiedDePage, APropos } from "./moteur/PiedDePage";
 import { Apercu, estApercu } from "./moteur/Apercu";
+import { ChoixStyle, STYLES, CLE_STYLE_APERCU } from "./moteur/ChoixStyle";
 import { EnChargement } from "./moteur/chargement";
 import { InspecteurLocal } from "./moteur/InspecteurLocal";
 
@@ -36,6 +37,24 @@ const lireId = () => new URLSearchParams(window.location.search).get("sim");
 export default function App() {
   const menus = useMemo(() => construireMenus(SITE), []);
   const [activeId, setActiveId] = useState(lireId);
+  // Style du site (site.config.js). Dans l'aperçu seulement, le bouton « 🎨 Style » permet d'en essayer un autre
+  // sans rien enregistrer : le site en ligne garde toujours celui de site.config.js.
+  const styleDuSite = STYLES.some(([id]) => id === SITE.style) ? SITE.style : "blocs";
+  // L'essai est retenu avec le style du site de ce moment-là : si l'agent change le style dans site.config.js, l'essai est oublié.
+  const [styleEssai, setStyleEssai] = useState(() => {
+    try {
+      const e = estApercu ? JSON.parse(localStorage.getItem(CLE_STYLE_APERCU) || "null") : null;
+      return e && e.base === styleDuSite ? e.essai : null;
+    } catch { return null; }
+  });
+  const style = estApercu && STYLES.some(([id]) => id === styleEssai) ? styleEssai : styleDuSite;
+  function essayerStyle(id) {
+    setStyleEssai(id);
+    try {
+      if (id === styleDuSite) localStorage.removeItem(CLE_STYLE_APERCU);
+      else localStorage.setItem(CLE_STYLE_APERCU, JSON.stringify({ essai: id, base: styleDuSite }));
+    } catch { /* sans importance */ }
+  }
   const sim = (SITE.pages || []).find((s) => s.id === activeId);
 
   useEffect(() => { document.documentElement.style.setProperty("--accent", SITE.couleur || "#0b4f94"); }, []);
@@ -64,13 +83,12 @@ export default function App() {
 
   const Composant = sim && composant(sim.fichier);
   let titre = null, contenu;
-  if (!activeId) contenu = <Accueil site={SITE} menus={menus} naviguer={naviguer} />;
+  if (!activeId) contenu = <Accueil site={{ ...SITE, style }} menus={menus} naviguer={naviguer} />;
   else if (activeId === "a-propos") { titre = "À propos"; contenu = <APropos site={SITE} />; }
   else if (!sim) contenu = <p className="erreur">Page « {activeId} » introuvable. Vérifie son <code>id</code> dans site.config.js.</p>;
   else if (!Composant) { titre = sim.titre; contenu = <p className="erreur">Fichier <code>simulations/{sim.fichier}.jsx</code> introuvable. Vérifie la ligne <code>fichier</code> de cette page dans site.config.js.</p>; }
   else { titre = sim.titre; contenu = <EnChargement key={sim.id}><Composant /></EnChargement>; }
 
-  const style = ["blocs", "lateral", "liste"].includes(SITE.style) ? SITE.style : "blocs";
   const entete = <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />;
 
   return (
@@ -101,6 +119,7 @@ export default function App() {
         <PiedDePage site={SITE} naviguer={naviguer} />
       </main>
       </div>
+      {estApercu && <ChoixStyle actuel={style} enregistre={styleDuSite} choisir={essayerStyle} />}
       {estApercu && <InspecteurLocal />}
     </div>
   );
