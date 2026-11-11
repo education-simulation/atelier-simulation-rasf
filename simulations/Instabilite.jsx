@@ -70,8 +70,7 @@ export default function Instabilite() {
   return (
     <div style={{ maxWidth: 940, margin: "0 auto", display: "grid", gap: 16 }}>
       <div role="note" style={{ background: "#fff7e6", border: "2px solid #f5a31a", borderRadius: 16, padding: "12px 16px", color: "#5c3a00" }}>
-        <strong>🏋️ Entraîne-toi : améliore cet exemple !</strong> Il est volontairement simple. Demande par exemple à ton agent :
-        « Dans Instabilité, ajoute la coalescence des gouttes » ou « ajoute une question à résoudre ».
+        🏋️ Cet exemple est volontairement simple, donne des instructions à l'IA pour l'améliorer.
       </div>
 
       <div style={{ display: "grid", gridTemplateColumns: "minmax(140px, 200px) 1fr", gap: 18, alignItems: "start" }}>
