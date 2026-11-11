@@ -111,6 +111,7 @@ export const OUTILS = [
     conseil: "Écris simplement « avec le modèle couleur » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
     equations: EQUATIONS, // montrées dans la fenêtre, section « 🧮 Le modèle mathématique »
     controlePaire,
+    ecartJour,
     donnees: () => donneesColorimetrie(), // courbes montrées (et téléchargeables) dans la fenêtre « À quoi sert … ? »
   },
 ];
@@ -121,6 +122,17 @@ export function compterCroisements(R1, R2, L) {
   for (let i = 1; i < L.length; i++) { const a = R1[i - 1] - R2[i - 1], b = R1[i] - R2[i]; if (a * b < 0 || (a === 0 && i > 1)) n++; }
   return n;
 }
+// Écart ΔE*ab entre deux cartes à la lumière du jour (D65), mesuré avec le modèle par défaut (référence).
+// Les réflectances sont ramenées sur 380 → 780 nm, pas de 5 nm, si besoin.
+export function ecartJour(R1, R2, L = MODELE_FOURNI.LONGUEURS) {
+  const M = MODELE_FOURNI, ref = M.LONGUEURS;
+  const surRef = (R) => ref.map((l) => { const i = L.indexOf(l); return i >= 0 ? R[i] : NaN; });
+  const a = surRef(R1), b = surRef(R2);
+  if (a.some((v) => !Number.isFinite(v)) || b.some((v) => !Number.isFinite(v))) return NaN;
+  const S = M.ILLUMINANTS.D65.spectre, w = M.blanc(S);
+  return M.deltaE(M.lab(M.xyz(a, S), w), M.lab(M.xyz(b, S), w));
+}
+
 export function controlePaire(R1, R2, L = MODELE_FOURNI.LONGUEURS) {
   const croisements = compterCroisements(R1, R2, L);
   const d = R1.map((v, i) => Math.abs(v - R2[i]));
@@ -145,13 +157,20 @@ function verifierModele(m) {
   const g = (l, c, w) => Math.exp(-(((l - c) / w) ** 2));
   const COULEURS_TEST = [(l) => 0.30 + 0.15 * g(l, 530, 70), (l) => 0.20 + 0.22 * g(l, 475, 55), (l) => 0.15 + 0.35 / (1 + Math.exp(-(l - 600) / 25)),
     (l) => 0.25 + 0.30 / (1 + Math.exp(-(l - 560) / 30)), () => 0.4];
-  const paire = fn(m.paireMetamere) && illum && essai(() => COULEURS_TEST.every((f) => {
+  const paires = fn(m.paireMetamere) && illum ? COULEURS_TEST.map((f) => essai(() => {
     const R1 = m.LONGUEURS.map(f);
     const R2 = m.paireMetamere(R1);
-    if (!Array.isArray(R2) || R2.length !== n) return false;
+    if (!Array.isArray(R2) || R2.length !== n) return null;
+    return { R1, R2 };
+  })) : [];
+  const toutes = (test) => paires.length > 0 && paires.every((p) => p && essai(() => test(p)));
+  // LA règle n° 1 : sous la lumière du jour, les deux cartes ont EXACTEMENT la même couleur.
+  // Elle est mesurée avec le modèle par défaut (référence indépendante), pas avec le modèle construit.
+  const memeCouleurJour = toutes(({ R1, R2 }) => ecartJour(R1, R2, m.LONGUEURS) < 0.5);
+  const paire = toutes(({ R1, R2 }) => {
     const dE = (S) => { const w = m.blanc(S); return m.deltaE(m.lab(m.xyz(R1, S), w), m.lab(m.xyz(R2, S), w)); };
-    return dE(m.ILLUMINANTS.D65.spectre) < 0.5 && dE(m.ILLUMINANTS.A.spectre) > 1 && controlePaire(R1, R2, m.LONGUEURS).ok;
-  }));
+    return dE(m.ILLUMINANTS.A.spectre) > 1 && controlePaire(R1, R2, m.LONGUEURS).ok;
+  });
   return [
     ["📏 les longueurs d'onde (380 à 780 nm)", n > 0 && m.LONGUEURS[0] === 380 && m.LONGUEURS[n - 1] === 780],
     ["📈 les distributions spectrales de A, D65 et F11", illum],
@@ -160,7 +179,8 @@ function verifierModele(m) {
     ["🖥 la couleur à l'écran", fn(m.versEcran)],
     ["🎨 la fabrication d'une paire métamère", fn(m.paireMetamere)],
     ["🔎 contrôle : F11 a trois pics vers 435, 545 et 610 nm", pics],
-    ["🔎 contrôle (5 couleurs testées) : chaque paire est identique sous D65, différente sous A, se croise au moins 3 fois et s'écarte dans le rouge", paire],
+    ["🟰 contrôle n° 1 (5 couleurs testées) : sous la lumière du jour (D65), les deux cartes ont EXACTEMENT la même couleur", memeCouleurJour],
+    ["🔎 contrôle (5 couleurs testées) : sous A, les cartes sont différentes ; leurs courbes se croisent au moins 3 fois et s'écartent dans le rouge", paire],
   ].map(([texte, ok]) => ({ texte, ok: Boolean(ok) }));
 }
 
@@ -225,6 +245,7 @@ export const OUTILS_SANS = [
     // Le fichier construit : chargé s'il existe, puis montré (courbes) et vérifié automatiquement.
     equations: EQUATIONS,
     controlePaire,
+    ecartJour,
     charger: async () => { const f = MODELE_PERSO["../maColorimetrie.js"]; return f ? f() : null; },
     donneesDe: (m) => { try { return donneesColorimetrie(m); } catch { return null; } },
     verifier: verifierModele,

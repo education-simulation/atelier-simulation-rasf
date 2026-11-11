@@ -12,7 +12,7 @@
 // ============================================================
 import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
-import { courbesPubliees } from "./courbes.js";
+import { courbesPubliees, useCourbesPubliees } from "./courbes.js";
 import { estApercu } from "../../moteur/Apercu";
 
 const lire = (cle, defaut) => { try { const v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); } catch { return defaut; } };
@@ -280,6 +280,23 @@ function AideOutil({ outil, fermer }) {
       </div>
     </div>,
     document.body,
+  );
+}
+
+// --- Contrôle EN DIRECT : à la lumière du jour, les deux cartes doivent avoir exactement la même couleur ---
+function ControleJour({ outil }) {
+  const series = useCourbesPubliees();
+  if (!series || series.length < 2 || !outil?.ecartJour) return null;
+  const dE = outil.ecartJour(series[0].valeurs, series[1].valeurs);
+  if (!Number.isFinite(dE)) return null;
+  const ok = dE < 0.5;
+  return (
+    <div role="status" style={{ padding: "8px 12px", borderRadius: 10, fontSize: 14.5, lineHeight: 1.5,
+      background: ok ? "#f0fdf4" : "#fef2f2", border: `2px solid ${ok ? "#22c55e" : "#ef4444"}` }}>
+      {ok
+        ? <>✅ <strong>Sur la table (lumière du jour, D65), les deux cartes ont la même couleur</strong> (ΔE*ab = {dE.toFixed(1).replace(".", ",")}). C'est bien une paire métamère.</>
+        : <>❌ <strong>Sur la table (lumière du jour, D65), les deux cartes n'ont PAS la même couleur</strong> (ΔE*ab = {dE.toFixed(1).replace(".", ",")}). Ce n'est pas une paire métamère : la carte 2 doit être recalculée.</>}
+    </div>
   );
 }
 
@@ -561,6 +578,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
             </div>
           </div>
           <EtatActuel etat={etat} />
+          <ControleJour outil={outils[0]} />
           <BoiteOutils page={page} avec={!sans} outils={outils} choix={estApercu && !!etapes.etapeOutils} />
           {mode === "guide"
             ? liste.map(({ num, etape }) => (
