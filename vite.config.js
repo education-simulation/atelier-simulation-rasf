@@ -4,7 +4,7 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite' // seulement pour les outils de src/outils/reula/
 import { basename, dirname, join } from 'node:path'
-import { readFileSync, writeFileSync } from 'node:fs'
+import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, copyFileSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
 // Le dossier du site = celui qui contient ce fichier.
@@ -45,10 +45,71 @@ function enregistrerStyle() {
   }
 }
 
+// Sauvegardes d'une page (exercice Métamérisme…) : copies de simulations/<Page>.jsx dans versions/<Page>/, sur l'ordinateur.
+//   GET  /__atelier/versions?page=P      → liste des sauvegardes
+//   POST /__atelier/versions/sauver      { page, nom }      → copie la page actuelle
+//   POST /__atelier/versions/restaurer   { page, fichier }  → remet une sauvegarde (après avoir sauvé l'état actuel)
+//   POST /__atelier/versions/zero        { page }           → remet versions/depart/<Page>.jsx (après avoir sauvé l'état actuel)
+// Comme pour le style : seulement pendant l'aperçu ; le site en ligne n'écrit rien.
+function versionsDesPages() {
+  const pageOk = (s) => typeof s === 'string' && /^[A-Za-z0-9_-]{1,60}$/.test(s)
+  const lireCorps = (req) => new Promise((ok, ko) => {
+    let c = ''
+    req.on('data', (m) => { c += m; if (c.length > 2000) req.destroy() })
+    req.on('end', () => { try { ok(JSON.parse(c || '{}')) } catch (e) { ko(e) } })
+  })
+  const repondre = (res, code, obj) => { res.statusCode = code; res.setHeader('Content-Type', 'application/json'); res.end(JSON.stringify(obj)) }
+  const horodatage = () => { const d = new Date(), z = (n) => String(n).padStart(2, '0'); return `${d.getFullYear()}-${z(d.getMonth() + 1)}-${z(d.getDate())}_${z(d.getHours())}h${z(d.getMinutes())}-${z(d.getSeconds())}` }
+  return {
+    name: 'atelier-versions',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/__atelier/versions', async (req, res) => {
+        try {
+          const url = new URL(req.url, 'http://local')
+          const action = url.pathname.replace(/^\/+/, '')
+          if (req.method === 'GET' && action === '') {
+            const page = url.searchParams.get('page')
+            if (!pageOk(page)) return repondre(res, 400, { erreur: 'page inconnue' })
+            const d = join(dossier, 'versions', page)
+            const fichiers = existsSync(d) ? readdirSync(d).filter((f) => f.endsWith('.jsx')).sort().reverse() : []
+            return repondre(res, 200, { dossier: `versions/${page}`, fichiers })
+          }
+          if (req.method !== 'POST') return repondre(res, 405, {})
+          const { page, nom, fichier } = await lireCorps(req)
+          if (!pageOk(page)) return repondre(res, 400, { erreur: 'page inconnue' })
+          const actuel = join(dossier, 'simulations', `${page}.jsx`), d = join(dossier, 'versions', page)
+          if (!existsSync(actuel)) return repondre(res, 404, { erreur: 'page introuvable' })
+          mkdirSync(d, { recursive: true })
+          const sauver = (etiquette) => { const f = `${horodatage()}-${etiquette}.jsx`; copyFileSync(actuel, join(d, f)); return f }
+          if (action === 'sauver') {
+            const etiquette = String(nom || 'version').normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[^A-Za-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 40) || 'version'
+            return repondre(res, 200, { fichier: sauver(etiquette) })
+          }
+          if (action === 'restaurer') {
+            if (typeof fichier !== 'string' || !/^[A-Za-z0-9_.-]+\.jsx$/.test(fichier) || !existsSync(join(d, fichier))) return repondre(res, 400, { erreur: 'sauvegarde introuvable' })
+            const avant = sauver('avant-reprise')
+            copyFileSync(join(d, fichier), actuel)
+            return repondre(res, 200, { ok: true, avant })
+          }
+          if (action === 'zero') {
+            const depart = join(dossier, 'versions', 'depart', `${page}.jsx`)
+            if (!existsSync(depart)) return repondre(res, 404, { erreur: 'pas de version de départ pour cette page' })
+            const avant = sauver('avant-zero')
+            copyFileSync(depart, actuel)
+            return repondre(res, 200, { ok: true, avant })
+          }
+          return repondre(res, 404, {})
+        } catch (e) { return repondre(res, 500, { erreur: String(e.message || e) }) }
+      })
+    },
+  }
+}
+
 // Le chemin du dossier du site, affiché dans le bandeau de l'aperçu (sur l'ordinateur seulement).
 // Il n'est JAMAIS mis dans le site en ligne : à la construction (npm run build), il reste vide.
 export default defineConfig(({ command }) => ({
-  plugins: [react(), tailwindcss(), enregistrerStyle()],
+  plugins: [react(), tailwindcss(), enregistrerStyle(), versionsDesPages()],
   base: './',
   server: { port },
   define: { __DOSSIER_DU_SITE__: JSON.stringify(command === 'serve' ? dossier : '') },

@@ -8,6 +8,7 @@
 //  Pour calculer les couleurs à partir des spectres, l'agent peut utiliser src/outils/colorimetrie.js.
 // ============================================================
 import { useState } from "react";
+import { estApercu } from "../src/moteur/Apercu";
 
 const ETAPES = [
   {
@@ -97,6 +98,70 @@ function Scene() {
 const lire = (cle, defaut) => { try { const v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); } catch { return defaut; } };
 const ecrire = (cle, v) => { try { localStorage.setItem(cle, JSON.stringify(v)); } catch { /* sans importance */ } };
 
+// --- Sauvegardes (seulement sur l'ordinateur, pendant l'aperçu) ---
+// Copies de cette page dans le dossier versions/Metamerisme du site ; « Recommencer à zéro » remet la page de départ.
+// Avant une reprise ou un retour à zéro, l'état actuel est toujours sauvegardé : on ne perd rien.
+function Sauvegardes({ page, remiseAZero }) {
+  const [nom, setNom] = useState("");
+  const [liste, setListe] = useState(null);      // null = fermée
+  const [confirmer, setConfirmer] = useState(null); // "zero" ou nom de fichier à reprendre
+  const [message, setMessage] = useState("");
+  const appel = async (action, corps) => {
+    const r = await fetch(`__atelier/versions/${action}`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ page, ...corps }) });
+    const j = await r.json().catch(() => ({}));
+    if (!r.ok) throw new Error(j.erreur || `erreur ${r.status}`);
+    return j;
+  };
+  const charger = async () => {
+    const r = await fetch(`__atelier/versions?page=${page}`);
+    const j = await r.json();
+    setListe(j.fichiers || []);
+  };
+  const sauver = async () => {
+    try { const j = await appel("sauver", { nom }); setMessage(`✅ Sauvegardé : versions/${page}/${j.fichier}`); setNom(""); if (liste) charger(); }
+    catch (e) { setMessage(`⚠️ ${e.message}`); }
+  };
+  const reprendre = async (fichier) => {
+    if (confirmer !== fichier) return setConfirmer(fichier);
+    try { setMessage("⏳ Reprise…"); await appel("restaurer", { fichier }); setMessage("✅ Version reprise : la page se recharge."); }
+    catch (e) { setMessage(`⚠️ ${e.message}`); }
+  };
+  const zero = async () => {
+    if (confirmer !== "zero") return setConfirmer("zero");
+    try { remiseAZero(); setMessage("⏳ Retour au départ…"); await appel("zero", {}); setMessage("✅ Page de départ remise : la page se recharge."); }
+    catch (e) { setMessage(`⚠️ ${e.message}`); }
+  };
+  const lisible = (f) => f.replace(/\.jsx$/, "").replace(/^(\d{4})-(\d\d)-(\d\d)_(\d\d)h(\d\d)-\d\d-?/, "$3/$2/$1 à $4h$5 · ").replace(/-/g, " ");
+  const bouton = (danger) => ({ padding: "8px 12px", borderRadius: 10, cursor: "pointer", fontWeight: 800, fontSize: 13.5, border: "none",
+    background: danger ? "#fef2f2" : "#fff", color: danger ? "#b91c1c" : "#334155", boxShadow: `inset 0 0 0 1px ${danger ? "#fecaca" : "#d5dfeb"}` });
+
+  return (
+    <div style={{ marginTop: 14, padding: "12px 14px", background: "#f8fafc", border: "1px dashed #cbd5e1", borderRadius: 12 }}>
+      <strong style={{ fontSize: 14 }}>💾 Sauvegardes</strong>
+      <span style={{ fontSize: 12.5, color: "#64748b" }}> · rangées sur ton ordinateur, dans le dossier <code>versions/{page}</code> de ton site (visible seulement ici)</span>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, marginTop: 8, alignItems: "center" }}>
+        <input value={nom} onChange={(e) => setNom(e.target.value)} placeholder="Nom (facultatif) : étape 2 réussie…" maxLength={40}
+          style={{ flex: "1 1 180px", minWidth: 0, padding: "8px 10px", borderRadius: 10, border: "1px solid #cbd5e1", font: "inherit", fontSize: 13.5 }} />
+        <button type="button" style={bouton(false)} onClick={sauver}>💾 Sauvegarder cette version</button>
+        <button type="button" style={bouton(false)} onClick={() => (liste ? setListe(null) : charger())}>{liste ? "📂 Fermer la liste" : "📂 Reprendre une version"}</button>
+        <button type="button" style={bouton(true)} onClick={zero}>{confirmer === "zero" ? "⚠️ Sûr ? Clique encore pour tout recommencer" : "↺ Recommencer à zéro"}</button>
+      </div>
+      {liste && (
+        <ul style={{ listStyle: "none", margin: "10px 0 0", padding: 0, display: "grid", gap: 6 }}>
+          {liste.length === 0 && <li style={{ fontSize: 13.5, color: "#64748b" }}>Aucune sauvegarde pour l'instant.</li>}
+          {liste.map((f) => (
+            <li key={f} style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", fontSize: 13.5 }}>
+              <span style={{ flex: 1, minWidth: 0 }}>{lisible(f)}</span>
+              <button type="button" style={bouton(false)} onClick={() => reprendre(f)}>{confirmer === f ? "⚠️ Clique encore pour reprendre" : "Reprendre"}</button>
+            </li>
+          ))}
+        </ul>
+      )}
+      {message && <p style={{ margin: "8px 0 0", fontSize: 13.5 }}>{message}</p>}
+    </div>
+  );
+}
+
 // --- Le guide : une étape à la fois ---
 function Guide() {
   const [n, setN] = useState(() => Math.min(ETAPES.length - 1, Math.max(0, lire("metamerisme.etape", 0))));
@@ -162,6 +227,7 @@ function Guide() {
           ? <button type="button" style={bouton(true)} onClick={() => aller(n + 1)}>Suivant →</button>
           : <span style={{ alignSelf: "center", fontWeight: 800, color: "#15803d" }}>🎉 Dernière étape</span>}
       </div>
+      {estApercu && <Sauvegardes page="Metamerisme" remiseAZero={() => { ecrire("metamerisme.etape", 0); ecrire("metamerisme.indices", ETAPES.map(() => 0)); }} />}
     </section>
   );
 }
