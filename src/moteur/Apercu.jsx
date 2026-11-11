@@ -10,7 +10,7 @@ const ETAPES = [
   ["Copier le modèle sur l'ordinateur", "L'agent copie le modèle dans le dossier que tu as choisi et vérifie que Node.js est installé (sinon, il te guide pour l'installer). C'est fait si tu lis ce texte."],
   ["Faire connaissance", "Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom ou pseudo."],
   ["Voir ton site sur ton ordinateur", "C'est cette page. Les menus Exemples, A, B et C sont là pour démarrer : tu les changeras en parlant à l'agent."],
-  ["Mettre en ligne avec Vercel", "La première fois : clique sur le lien donné par l'agent, « Continue with Google » avec ton compte d'établissement, vérifie le code, puis « Confirm »."],
+  ["Mettre en ligne avec Vercel", "L'agent met ton site sur Internet. Si Vercel n'est pas encore connecté sur cet ordinateur, il te donne un lien : « Continue with Google » avec ton compte d'établissement, vérifie le code, puis « Confirm ». Sinon, rien à faire."],
   ["Voir le site en ligne", "Ouvre l'adresse en .vercel.app donnée par l'agent, aussi sur ton téléphone. Tu pourras plus tard choisir un nom de domaine."],
   ["Choisir la suite", "L'agent te propose des idées à cliquer : améliorer un exemple, remplir la page A1, renommer un menu… ou ta propre idée."],
 ];
@@ -32,6 +32,8 @@ export function Apercu() {
         if (!t || /<html/i.test(t)) return;
         const f = new Set([0]); // la copie est forcément faite si l'agent a écrit ce fichier
         t.split("\n").forEach((l) => { const m = l.match(/\[x\]\s*Étape\s*(\d+)/i); if (m) f.add(+m[1]); });
+        // Une adresse en ligne notée = le site a été mis en ligne, même si l'étape n'a pas été cochée.
+        if (/Adresse du site\s*:\s*https?:\/\//i.test(t)) f.add(3);
         setFaites(f);
       })
       .catch(() => {})
@@ -63,6 +65,7 @@ export function Apercu() {
               style={{ position: "absolute", right: 66, bottom: 0, width: "min(380px, calc(100vw - 110px))", maxHeight: "70vh", overflow: "auto",
                 borderRadius: 14, border: "1px solid #cbd5e1", boxShadow: "0 10px 25px rgba(0,0,0,.2)", padding: "10px 14px" }}>
               <strong>📋 Les étapes de ton site</strong>
+              <span style={{ display: "block", fontSize: 12, color: "#64748b", marginTop: 2 }}>🔒 Ce bouton n'est visible que sur ton ordinateur.</span>
               <ol start="0">
                 {ETAPES.map(([titre, detail], i) => (
                   <li key={i} className={faites.has(i) ? "faite" : ""}>

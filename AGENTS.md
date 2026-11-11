@@ -16,6 +16,7 @@ La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit**
 **Ensuite seulement**, au début de l'étape 2 :
 - lis `PROGRESSION.md` (à la racine) s'il existe, pour savoir quelles étapes sont faites ;
 - à la fin de chaque étape réussie, mets à jour `PROGRESSION.md` (`- [x] Étape N — titre`, **sans date**).
+- **Coche une étape dès qu'elle est faite, même hors du parcours ou dans le désordre** (la personne fait souvent autre chose entre-temps) : après **toute** mise en ligne réussie, coche l'étape 3 et note `Adresse du site : https://….vercel.app` ; dès que la personne a ouvert le site en ligne, coche l'étape 4 ; dès qu'elle a changé ou ajouté quelque chose à son site (page, menu, style, texte), coche l'étape 5. Le panneau 📋 de l'aperçu se règle sur ce fichier.
 
 ### Les demandes d'autorisation (très important)
 Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait apparaître **une petite fenêtre** sous la conversation, que la personne doit valider. Un débutant ne sait pas qu'elle existe ni quoi cliquer. Donc :
@@ -177,13 +178,14 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
 ### Étape 3 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)
 - Explique en deux phrases : « Vercel est un service gratuit qui met ton site sur Internet. C'est Vercel qui choisit l'adresse, à partir du nom de ton dossier : par exemple `https://mon-site.vercel.app` (si ce nom est déjà pris, Vercel ajoute quelques lettres). Plus tard, si tu veux, tu pourras acheter un nom de domaine à toi (par exemple `mon-labo.fr`, environ 10 € par an) et le relier à ton site. »
-- **Connexion (une seule fois par ordinateur)** : lance `npx --yes vercel@latest login` **en arrière-plan** et lis ce qu'il affiche : une adresse `https://vercel.com/…` et un code. Donne à la personne l'adresse complète et le code, puis :
+- **Vercel est-il déjà connecté sur cet ordinateur ?** Vérifie d'abord avec `npx --yes vercel@latest whoami` : s'il affiche un nom de compte, **ne demande aucune connexion** et passe directement à la mise en ligne.
+- **Connexion (seulement si `whoami` répond qu'on n'est pas connecté)** : lance `npx --yes vercel@latest login` **en arrière-plan** et lis ce qu'il affiche : une adresse `https://vercel.com/…` et un code. Donne à la personne l'adresse complète et le code, puis :
   « Clique sur ce lien. Si tu n'as pas encore de compte Vercel, clique **Continue with Google** et choisis ton compte d'établissement (c'est gratuit, offre « Hobby »). Vérifie que le code affiché est le même que celui-ci, puis clique **Confirm** (ou « Allow »). Reviens ensuite ici et choisis « C'est fait ». »
   Pose la question à choix : C'est fait · Je suis bloqué·e. Tu ne crées pas le compte à sa place et tu ne demandes aucun mot de passe.
 - **Mise en ligne** : `npm run build && npx --yes vercel@latest deploy --prod --yes`
   À la fin, Vercel affiche l'adresse du site, de la forme `https://<nom-du-dossier>.vercel.app` (ligne « Production » ou « Aliased »). Garde **cette adresse courte** : c'est celle du site en ligne. Ajoute-la dans `PROGRESSION.md` (« Adresse du site : … »).
 - **Vérification :** « Ton site est en ligne : <adresse courte>. » puis question à choix : Je le vois · Je ne le vois pas.
-- Ce que tu dois cliquer maintenant : le lien de connexion, puis « Confirm ».
+- Ce que tu dois cliquer maintenant : le lien de connexion puis « Confirm » (seulement si la connexion était nécessaire), sinon rien.
 
 ### Étape 4 — Ouvrir le site sur le téléphone
 - Propose de l'ouvrir aussi sur son téléphone (en tapant l'adresse courte) pour voir le site comme tout le monde le verra. Rappelle que les boutons ronds et le bandeau bleu n'apparaissent pas en ligne.

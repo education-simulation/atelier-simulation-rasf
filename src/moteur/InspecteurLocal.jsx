@@ -178,7 +178,8 @@ export function InspecteurLocal() {
           fontSize: 13
         }}>
           <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
-            <strong style={{ color: "#b45309" }}>Élément sélectionné :</strong>
+            <span><strong style={{ color: "#b45309" }}>Élément sélectionné :</strong>
+              <span style={{ display: "block", fontSize: 11, color: "#64748b" }}>🔒 Ce bouton n'est visible que sur ton ordinateur.</span></span>
             <button
               onClick={() => setElementSelectionne(null)}
               style={{ background: "none", border: "none", cursor: "pointer", fontSize: 16, color: "#64748b" }}

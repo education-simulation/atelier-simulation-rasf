@@ -46,9 +46,6 @@ export function ChoixStyle({ actuel }) {
   return (
     <div ref={ref} style={{ position: "fixed", bottom: 148, right: 20, zIndex: 9999 }}>
       <style>{STYLE_BOUTONS_RONDS}</style>
-      {/* Rappel au-dessus des boutons ronds : ils n'existent que dans l'aperçu */}
-      <span style={{ position: "absolute", bottom: 62, right: 0, whiteSpace: "nowrap", background: "#0f172a", color: "#fff", font: "700 11px/1.2 'Nunito', sans-serif",
-        padding: "4px 8px", borderRadius: 999, opacity: 0.85, pointerEvents: "none" }}>🔒 visible seulement sur ton ordinateur</span>
       <button type="button" className="bouton-rond" style={{ background: "#7c3aed" }} aria-expanded={ouvert}
         aria-label="Changer le style du site" onClick={() => setOuvert((o) => !o)}>
         <span aria-hidden="true">{ouvert ? "✕" : "🎨"}</span>
@@ -60,6 +57,7 @@ export function ChoixStyle({ actuel }) {
           style={{ position: "absolute", right: 66, bottom: 0, width: "min(340px, calc(100vw - 110px))", background: "#fff", border: "1px solid #cbd5e1",
             borderRadius: 14, boxShadow: "0 10px 25px rgba(0,0,0,.2)", padding: "12px 14px", fontSize: 14, color: "#0f172a" }}>
           <strong>🎨 Style du site</strong>
+          <span style={{ display: "block", fontSize: 12, color: "#64748b", marginTop: 2 }}>🔒 Ce bouton n'est visible que sur ton ordinateur.</span>
           <div style={{ display: "grid", gap: 6, margin: "10px 0" }}>
             {STYLES.map(([id, titre, detail]) => (
               <button key={id} type="button" onClick={() => choisir(id)}
