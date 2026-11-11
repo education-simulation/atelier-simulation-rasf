@@ -13,7 +13,7 @@ export default {
   titre: "Mon atelier de simulations",
 
   // Grande phrase de la page d'accueil. Le morceau entre [crochets] est surligné.
-  accroche: "Manipuler, se tromper, [recommencer.]",
+  accroche: "Essayer, observer, [comprendre.]",
 
   // Petit texte de présentation, sous la grande phrase.
   presentation: "Des simulations pour mes élèves : on change les réglages, on observe, on comprend.",

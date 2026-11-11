@@ -2,7 +2,7 @@
 // Grande phrase, présentation, puis un bloc de couleur par menu avec ses pages.
 // Les textes et les couleurs se changent dans site.config.js.
 
-// « Manipuler, [recommencer.] » → le morceau entre crochets est surligné.
+// « Essayer, [comprendre.] » → le morceau entre crochets est surligné.
 function Accroche({ texte }) {
   return texte.split(/(\[[^\]]*\])/).map((m, i) => (m.startsWith("[") ? <mark key={i}>{m.slice(1, -1)}</mark> : m));
 }

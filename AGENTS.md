@@ -142,7 +142,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 - Ce que tu dois cliquer maintenant : le 2e choix de la petite fenêtre.
 
 ### Étape 1 — Faire connaissance (questions à cliquer, une par une)
-Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Manipuler, se tromper, recommencer. », que la personne changera plus tard si elle veut.
+Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
 1. **Le nom de ton site ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse de mes élèves », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mon atelier de simulations »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
 3. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement).
