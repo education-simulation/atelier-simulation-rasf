@@ -55,12 +55,14 @@ export const deltaE = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]
 
 // Couleur d'écran : adaptation de Bradford du blanc de l'illuminant vers D65 (l'œil s'habitue à la lumière),
 // avec un degré d'adaptation (1 = complète : un blanc paraît blanc ; < 1 : on voit encore la teinte de la lampe).
+// Par défaut 0,7 : dans la cabine, on voit à la fois la teinte de la lampe ET l'écart entre deux cartes métamères.
+export const ADAPTATION = 0.7;
 const BRAD = [[0.8951, 0.2664, -0.1614], [-0.7502, 1.7135, 0.0367], [0.0389, -0.0685, 1.0296]];
 const BRAD_INV = [[0.9869929, -0.1470543, 0.1599627], [0.4323053, 0.5183603, 0.0492912], [-0.0085287, 0.0400428, 0.9684867]];
 const mul = (M, v) => M.map((l) => l[0] * v[0] + l[1] * v[1] + l[2] * v[2]);
 const BLANC_D65 = blanc(D65);
 
-export function versEcran(XYZ, blancSource, degre = 1) {
+export function versEcran(XYZ, blancSource, degre = ADAPTATION) {
   const c = mul(BRAD, XYZ), ws = mul(BRAD, blancSource), wd = mul(BRAD, BLANC_D65);
   const adapte = mul(BRAD_INV, c.map((v, i) => v * (degre * wd[i] / ws[i] + (1 - degre))));
   const [X, Y, Z] = adapte.map((v) => v / 100);
@@ -120,6 +122,13 @@ export function paireMetamere(R1, perturbation, cibleDeltaEsousA = 7) {
   }
   console.warn("paireMetamere : aucune paire ne respecte toutes les règles pour cette couleur", meilleur.v);
   return meilleur.R2;
+}
+
+// Couleur d'une surface blanche (murs, fond, sol de la cabine) sous un illuminant, vue comme les cartes :
+// à utiliser pour peindre la cabine, plutôt que des couleurs choisies à la main.
+export function couleurLumiere(S, facteur = 0.85) {
+  const R = LONGUEURS.map(() => facteur);
+  return versEcran(xyz(R, S), blanc(S));
 }
 
 // Longueurs d'onde où deux courbes se croisent (interpolation linéaire).
