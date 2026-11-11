@@ -95,14 +95,14 @@ function BoiteOutils({ page, avec, outils, choix }) {
       <span style={{ fontWeight: 800 }}>🧰 Modèle couleur</span>
       {choix && (
         <div role="tablist" aria-label="Modèle couleur" className="ex-bascule ex-bascule-petite">
-          <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Données fournies (par défaut)</button>
-          <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 Je les construis</button>
+          <button type="button" role="tab" aria-selected={avec} onClick={() => choisir(true)}>Par défaut</button>
+          <button type="button" role="tab" aria-selected={!avec} onClick={() => choisir(false)}>🔨 À construire</button>
         </div>
       )}
       {message && <span>{message}</span>}
       {o && (
         <button type="button" onClick={() => setAide(o)} style={{ marginLeft: "auto", border: "none", background: "none", padding: "4px 2px", font: "inherit", fontSize: 13.5, fontWeight: 700, color: "var(--accent)", cursor: "pointer", textDecoration: "underline", textUnderlineOffset: 3 }}>
-          ❓ Voir le modèle
+          ❓ Voir le modèle {avec ? "par défaut" : "à construire"}
         </button>
       )}
       {aide && <AideOutil outil={aide} fermer={() => setAide(null)} />}
