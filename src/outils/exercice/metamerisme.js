@@ -260,12 +260,16 @@ ETAPES.fichierPerso = FICHIER_PERSO;
 // Mots clés montrés seulement quand on construit sa boîte à outils.
 ETAPES.motsSansSeulement = ["crée un fichier", "mon modèle couleur", "tables officielles de la CIE", "pas de valeurs de mémoire", "de 380 à 780 nm, pas de 5 nm", "n'utilise pas le modèle fourni"];
 
+// Idées de l'exploration libre : les mêmes objectifs que le parcours guidé, en demandes courtes, dans n'importe quel ordre.
 export const IDEES = [
-  "ajoute une troisième carte, d'une autre couleur, qui reste identique sous les trois lumières (elle sert de témoin)",
-  "ajoute un curseur pour régler la température de couleur de la lampe de la cabine, de 2700 K à 6500 K",
-  "affiche en grand, sous la scène, l'écart ΔE*ab entre les deux cartes, avec une couleur verte, orange ou rouge selon qu'il se voit ou non",
-  "ajoute une question à choix pour l'élève : « Sous quelle lumière les deux cartes sont-elles différentes ? », avec la correction",
-];
+  "active les 3 boutons d'illuminants",
+  "trace la distribution spectrale de l'illuminant choisi au fond de la cabine",
+  "ajoute une palette pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère",
+  "montre les courbes de réflectance des deux cartes, superposées",
+  "rends les deux cartes mobiles pour les placer dans la cabine, à la souris et au doigt",
+  "affiche l'écart ΔE*ab entre les deux cartes, en vert, orange ou rouge",
+  "ajoute sous la scène un encadré « À retenir » sur le métamérisme",
+]
 
 // Mots clés : le vocabulaire qui rend un prompt précis (affiché à côté de la simulation ; un clic copie le mot).
 export const MOTS_CLES = [
