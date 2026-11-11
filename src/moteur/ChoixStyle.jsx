@@ -37,7 +37,7 @@ export function ChoixStyle({ actuel, enregistre, choisir }) {
               <button key={id} type="button" onClick={() => choisir(id)}
                 style={{ textAlign: "left", padding: "8px 10px", borderRadius: 10, cursor: "pointer", font: "inherit",
                   border: `2px solid ${actuel === id ? "#7c3aed" : "#e2e8f0"}`, background: actuel === id ? "#f5f3ff" : "#fff" }}>
-                <strong>{actuel === id ? "● " : ""}{titre}</strong>{enregistre === id ? " (celui de ton site)" : ""}
+                <strong>{actuel === id ? "● " : ""}{titre}</strong>
                 <span style={{ display: "block", fontSize: 12.5, color: "#64748b" }}>{detail}</span>
               </button>
             ))}
