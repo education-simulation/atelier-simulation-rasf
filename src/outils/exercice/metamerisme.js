@@ -5,7 +5,9 @@
 //  l'agent ne doit JAMAIS s'en servir pour compléter un prompt.
 // ============================================================
 
-import { LONGUEURS, XBAR, YBAR, ZBAR, ILLUMINANTS, xyz, blanc, lab, deltaE, versEcran, paireMetamere } from "../colorimetrie.js";
+import * as MODELE_FOURNI from "../colorimetrie.js";
+// Le modèle couleur construit par la personne (étape 0), s'il existe déjà : chargé à la demande.
+const MODELE_PERSO = import.meta.glob("../maColorimetrie.js");
 
 export const ETAPES = [
   {
@@ -78,6 +80,28 @@ export const ETAPES = [
 ];
 
 // Les outils déjà présents dans le site, expliqués dans le guide (« 🧰 C'est quoi … ? »).
+// Les équations du modèle couleur (fourni ou construit), montrées dans la fenêtre « ❓ Voir le modèle ».
+const EQUATIONS = [ // montrées dans la fenêtre « À quoi sert … ? », section « 🧮 Les équations »
+  { titre: "1. De la réflectance à X, Y, Z (sous un illuminant)",
+    formules: ["X = k · Σ S(λ) · R(λ) · x̄(λ)", "Y = k · Σ S(λ) · R(λ) · ȳ(λ)", "Z = k · Σ S(λ) · R(λ) · z̄(λ)", "k = 100 / Σ S(λ) · ȳ(λ)"],
+    note: "S : distribution spectrale de l'illuminant ; R : réflectance de l'échantillon (0 à 1) ; x̄, ȳ, z̄ : observateur CIE 1931 ; somme de 380 à 780 nm, pas de 5 nm. Avec k, le blanc parfait (R = 1) a Y = 100." },
+  { titre: "2. Le blanc de référence",
+    formules: ["(Xn, Yn, Zn) = X, Y, Z du blanc parfait (R = 1) sous le même illuminant"],
+    note: "Les couleurs sont comparées à ce blanc : l'œil s'habitue à la lumière." },
+  { titre: "3. De X, Y, Z à L*, a*, b* (CIELAB)",
+    formules: ["L* = 116 · f(Y/Yn) − 16", "a* = 500 · [ f(X/Xn) − f(Y/Yn) ]", "b* = 200 · [ f(Y/Yn) − f(Z/Zn) ]", "f(t) = ∛t  si t > (6/29)³,  sinon  t / (3 · (6/29)²) + 4/29"],
+    note: "L* : clarté (0 noir, 100 blanc) ; a* : vert (−) → rouge (+) ; b* : bleu (−) → jaune (+)." },
+  { titre: "4. L'écart de couleur",
+    formules: ["ΔE*ab = √( ΔL*² + Δa*² + Δb*² )"],
+    note: "Repères : moins de 1, invisible ; de 1 à 3, visible pour un œil exercé ; au-delà, nettement visible." },
+  { titre: "5. La couleur affichée à l'écran",
+    formules: ["XYZ → adaptation de Bradford (blanc de l'illuminant → blanc D65)", "→ RVB linéaire (matrice sRGB)", "→ C = 12,92 · c  si c ≤ 0,0031308,  sinon  1,055 · c^(1/2,4) − 0,055"],
+    note: "L'adaptation de Bradford imite l'œil qui s'habitue à la lumière : un blanc paraît blanc sous A comme sous D65." },
+  { titre: "6. La paire métamère",
+    formules: ["R₂(λ) = R₁(λ) + k · b(λ)", "Σ S_D65 · b · x̄ = Σ S_D65 · b · ȳ = Σ S_D65 · b · z̄ = 0"],
+    note: "b est un « noir métamérique » : invisible sous D65. Les deux échantillons ont donc exactement les mêmes X, Y, Z sous D65, mais pas sous A ou F11 ; b change de signe au moins 3 fois, d'où les croisements des deux courbes." },
+    ];
+
 export const OUTILS = [
   {
     titre: "Le modèle couleur fourni",
@@ -93,34 +117,45 @@ export const OUTILS = [
     ],
     limites: "Comme tout modèle, il simplifie : un œil moyen (pas le tien), une adaptation de l'œil à la lumière idéalisée, et un écran qui ne peut pas afficher toutes les couleurs réelles.",
     conseil: "Écris simplement « avec le modèle couleur » dans ton prompt : l'IA n'invente pas les données, et les couleurs sont justes.",
-    equations: [ // montrées dans la fenêtre « À quoi sert … ? », section « 🧮 Les équations »
-      { titre: "1. De la réflectance à X, Y, Z (sous un illuminant)",
-        formules: ["X = k · Σ S(λ) · R(λ) · x̄(λ)", "Y = k · Σ S(λ) · R(λ) · ȳ(λ)", "Z = k · Σ S(λ) · R(λ) · z̄(λ)", "k = 100 / Σ S(λ) · ȳ(λ)"],
-        note: "S : distribution spectrale de l'illuminant ; R : réflectance de l'échantillon (0 à 1) ; x̄, ȳ, z̄ : observateur CIE 1931 ; somme de 380 à 780 nm, pas de 5 nm. Avec k, le blanc parfait (R = 1) a Y = 100." },
-      { titre: "2. Le blanc de référence",
-        formules: ["(Xn, Yn, Zn) = X, Y, Z du blanc parfait (R = 1) sous le même illuminant"],
-        note: "Les couleurs sont comparées à ce blanc : l'œil s'habitue à la lumière." },
-      { titre: "3. De X, Y, Z à L*, a*, b* (CIELAB)",
-        formules: ["L* = 116 · f(Y/Yn) − 16", "a* = 500 · [ f(X/Xn) − f(Y/Yn) ]", "b* = 200 · [ f(Y/Yn) − f(Z/Zn) ]", "f(t) = ∛t  si t > (6/29)³,  sinon  t / (3 · (6/29)²) + 4/29"],
-        note: "L* : clarté (0 noir, 100 blanc) ; a* : vert (−) → rouge (+) ; b* : bleu (−) → jaune (+)." },
-      { titre: "4. L'écart de couleur",
-        formules: ["ΔE*ab = √( ΔL*² + Δa*² + Δb*² )"],
-        note: "Repères : moins de 1, invisible ; de 1 à 3, visible pour un œil exercé ; au-delà, nettement visible." },
-      { titre: "5. La couleur affichée à l'écran",
-        formules: ["XYZ → adaptation de Bradford (blanc de l'illuminant → blanc D65)", "→ RVB linéaire (matrice sRGB)", "→ C = 12,92 · c  si c ≤ 0,0031308,  sinon  1,055 · c^(1/2,4) − 0,055"],
-        note: "L'adaptation de Bradford imite l'œil qui s'habitue à la lumière : un blanc paraît blanc sous A comme sous D65." },
-      { titre: "6. La paire métamère",
-        formules: ["R₂(λ) = R₁(λ) + k · b(λ)", "Σ S_D65 · b · x̄ = Σ S_D65 · b · ȳ = Σ S_D65 · b · z̄ = 0"],
-        note: "b est un « noir métamérique » : invisible sous D65. Les deux échantillons ont donc exactement les mêmes X, Y, Z sous D65, mais pas sous A ou F11 ; b change de signe au moins 3 fois, d'où les croisements des deux courbes." },
-    ],
-    donnees: donneesColorimetrie, // courbes montrées (et téléchargeables) dans la fenêtre « À quoi sert … ? »
+    equations: EQUATIONS, // montrées dans la fenêtre, section « 🧮 Le modèle mathématique »
+    donnees: () => donneesColorimetrie(), // courbes montrées (et téléchargeables) dans la fenêtre « À quoi sert … ? »
   },
 ];
 
+// Vérifie, élément par élément, un modèle couleur construit par la personne (même forme que le modèle fourni).
+function verifierModele(m) {
+  const n = m.LONGUEURS?.length;
+  const tableau = (t) => Array.isArray(t) && t.length === n && t.every(Number.isFinite);
+  const fn = (f) => typeof f === "function";
+  const essai = (f) => { try { return f(); } catch { return false; } };
+  const illum = n > 0 && ["A", "D65", "F11"].every((k) => tableau(m.ILLUMINANTS?.[k]?.spectre));
+  const pics = illum && essai(() => {
+    const S = m.ILLUMINANTS.F11.spectre, mx = Math.max(...S), L = m.LONGUEURS;
+    const sommets = S.map((v, i) => (v > 0.3 * mx && v >= (S[i - 1] ?? 0) && v >= (S[i + 1] ?? 0) ? L[i] : null)).filter((x) => x !== null);
+    return [435, 545, 610].every((c) => sommets.some((l) => Math.abs(l - c) <= 10));
+  });
+  const paire = fn(m.paireMetamere) && illum && essai(() => {
+    const R1 = m.LONGUEURS.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
+    const R2 = m.paireMetamere(R1, m.LONGUEURS.map((l) => 1 / (1 + Math.exp(-(l - 640) / 15)) - 0.2 * Math.exp(-(((l - 440) / 25) ** 2))), 7);
+    const dE = (S) => { const w = m.blanc(S); return m.deltaE(m.lab(m.xyz(R1, S), w), m.lab(m.xyz(R2, S), w)); };
+    return dE(m.ILLUMINANTS.D65.spectre) < 0.5 && dE(m.ILLUMINANTS.A.spectre) > 1;
+  });
+  return [
+    ["📏 les longueurs d'onde (380 à 780 nm)", n > 0 && m.LONGUEURS[0] === 380 && m.LONGUEURS[n - 1] === 780],
+    ["📈 les distributions spectrales de A, D65 et F11", illum],
+    ["👁 l'observateur CIE 1931 (x̄, ȳ, z̄)", tableau(m.XBAR) && tableau(m.YBAR) && tableau(m.ZBAR)],
+    ["🧮 les calculs XYZ, L*a*b*, ΔE*ab", fn(m.xyz) && fn(m.blanc) && fn(m.lab) && fn(m.deltaE)],
+    ["🖥 la couleur à l'écran", fn(m.versEcran)],
+    ["🎨 la fabrication d'une paire métamère", fn(m.paireMetamere)],
+    ["🔎 contrôle : F11 a trois pics vers 435, 545 et 610 nm", pics],
+    ["🔎 contrôle : la paire est identique sous D65, différente sous A", paire],
+  ].map(([texte, ok]) => ({ texte, ok: Boolean(ok) }));
+}
+
 // Les données de colorimetrie.js, en courbes, pour la fenêtre « À quoi sert colorimetrie.js ? ».
-function donneesColorimetrie() {
+function donneesColorimetrie(m = MODELE_FOURNI) {
+  const { LONGUEURS, XBAR, YBAR, ZBAR, ILLUMINANTS, xyz, blanc, lab, deltaE, versEcran, paireMetamere } = m;
   const { A, D65, F11 } = ILLUMINANTS;
-  // Illuminants ramenés à la même luminosité (même Y), pour pouvoir les comparer.
   // Distribution spectrale normalisée : chaque courbe divisée par son maximum (maximum = 1).
   const normalisee = (S) => { const m = Math.max(...S); return S.map((v) => v / m); };
   const sig = (x) => 1 / (1 + Math.exp(-x));
@@ -170,6 +205,11 @@ export const OUTILS_SANS = [
       "🎨 la fabrication d'une paire métamère calculée.",
     ],
     conseil: "Vérifie-la : F11 doit avoir trois pics étroits (vers 435, 545 et 610 nm), et les deux cartes doivent être identiques sous D65.",
+    // Le fichier construit : chargé s'il existe, puis montré (courbes) et vérifié automatiquement.
+    equations: EQUATIONS,
+    charger: async () => { const f = MODELE_PERSO["../maColorimetrie.js"]; return f ? f() : null; },
+    donneesDe: (m) => { try { return donneesColorimetrie(m); } catch { return null; } },
+    verifier: verifierModele,
   },
 ];
 

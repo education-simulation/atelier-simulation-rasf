@@ -166,7 +166,15 @@ function telechargerCSV(nom, graphiques) {
 
 function AideOutil({ outil, fermer }) {
   const boite = useRef(null);
-  const [donnees] = useState(() => (outil.donnees ? outil.donnees() : null));
+  // Modèle fourni : données tout de suite. Modèle construit : on charge le fichier (s'il existe) et on le vérifie.
+  const [perso, setPerso] = useState(outil.charger ? "chargement" : null);
+  useEffect(() => {
+    if (!outil.charger) return;
+    outil.charger().then((m) => setPerso(m || "absent")).catch(() => setPerso("erreur"));
+  }, [outil]);
+  const modele = perso && typeof perso === "object" ? perso : null;
+  const donnees = outil.donnees ? outil.donnees() : modele && outil.donneesDe ? outil.donneesDe(modele) : null;
+  const verifs = modele && outil.verifier ? outil.verifier(modele) : null;
   useEffect(() => {
     const echap = (e) => { if (e.key === "Escape") fermer(); };
     document.addEventListener("keydown", echap);
@@ -176,13 +184,22 @@ function AideOutil({ outil, fermer }) {
     <div onPointerDown={(e) => { if (boite.current && !boite.current.contains(e.target)) fermer(); }}
       style={{ position: "fixed", inset: 0, zIndex: 10050, background: "rgba(15,23,42,.45)", display: "flex", alignItems: "center", justifyContent: "center", padding: 14 }}>
       <div ref={boite} role="dialog" aria-label={outil.titre || outil.nom}
-        style={{ background: "#fff", borderRadius: 18, width: outil.donnees ? "min(760px, 100%)" : "min(520px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
+        style={{ background: "#fff", borderRadius: 18, width: outil.donnees || outil.charger ? "min(760px, 100%)" : "min(520px, 100%)", maxHeight: "calc(100vh - 28px)", overflowY: "auto", padding: "18px 20px", boxShadow: "0 20px 40px rgba(0,0,0,.25)", fontSize: 14.5, lineHeight: 1.6, color: "#0f172a" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
           <strong style={{ fontSize: 18, flex: 1 }}>🧰 {outil.titre || outil.nom}</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
-        <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        {verifs ? (
+          <ul style={{ margin: "0 0 10px", padding: 0, listStyle: "none", display: "grid", gap: 3 }}>
+            {verifs.map((v) => <li key={v.texte}>{v.ok ? "✅" : "❌"} {v.texte}</li>)}
+          </ul>
+        ) : (
+          <ul style={{ margin: "0 0 10px", paddingLeft: 20 }}>{outil.contenu.map((l, i) => <li key={i}>{l}</li>)}</ul>
+        )}
+        {perso === "chargement" && <p style={{ margin: "0 0 10px" }}>⏳ Lecture de ton modèle…</p>}
+        {perso === "absent" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#f1f5f9", borderRadius: 10 }}>📭 <strong>Ton modèle n'existe pas encore.</strong> Fais l'étape 0 : ses éléments apparaîtront ici, vérifiés un par un, avec leurs courbes.</p>}
+        {perso === "erreur" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10 }}>⚠️ <strong>Ton modèle contient une erreur</strong> et ne peut pas être lu. Demande à l'agent de la corriger.</p>}
         {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites du modèle :</strong> {outil.limites}</p>}
         <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>
         {outil.equations && (
