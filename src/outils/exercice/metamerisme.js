@@ -37,7 +37,7 @@ export const ETAPES = [
     proposition: "Crée un bouton qui ouvre une fenêtre pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère. Montre les courbes de réflectance des deux cartes.",
   },
   {
-    titre: "Faire glisser les cartes dans la cabine",
+    titre: "Demander à l'IA de rendre les cartes mobiles pour les placer dans la cabine",
     motsCles: ["carte de contraste", "cabine de lumière 3D", "un bouton", "rends déplaçable", "quand on fait glisser", "à la souris et au doigt", "sur téléphone", "calcule à partir des spectres", "ne change rien d'autre"], // surlignés dans la liste des mots clés quand l'étape est ouverte
     consigne: "Rédige un prompt pour que l'on puisse déplacer les deux cartes de la table jusque dans la cabine.",
     indices: [
