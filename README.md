@@ -23,9 +23,11 @@ Pas besoin de compte GitHub. Il te faut seulement **Antigravity**, installé sur
 3. **Crée le projet de ton site** (une seule fois) : c'est ce qui évite une petite fenêtre d'autorisation pour chaque fichier.
    - Dans la barre de gauche d'Antigravity, clique sur l'icône **dossier avec un +** (nouveau projet), puis **Add Folder**.
    - Dans la fenêtre qui s'ouvre, va sur ton **Bureau**, clique **Nouveau dossier**, appelle-le **mon-site** (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne), sélectionne-le, puis clique **Create**.
-4. Dans ce projet, copie cette phrase (sélectionne-la, puis **Cmd + C** sur Mac ou **Ctrl + C** sur Windows) et colle-la dans la conversation avec l'agent (**Cmd + V** ou **Ctrl + V**) :
+4. Dans ce projet, colle cette phrase dans la conversation avec l'agent. Pour la prendre, clique sur le petit bouton **⧉** à droite du cadre gris (ou sélectionne-la, puis **Cmd + C** sur Mac, **Ctrl + C** sur Windows). Pour la coller : **Cmd + V** ou **Ctrl + V**.
 
-   > **Copie https://github.com/education-simulation/atelier-simulation-rasf sur mon ordinateur, puis lis AGENTS.md et guide-moi.**
+   ```text
+   Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf, puis suis ses consignes pour me guider.
+   ```
 
 5. L'agent te présente ce qui va se passer et copie le modèle dans ton dossier. **Pendant qu'il copie, il te fait créer ton compte gratuit Vercel** (https://vercel.com/signup, « Continue with Google ») : c'est lui qui mettra ton site en ligne.
 6. **Attends-toi à accepter quelques petites fenêtres** (davantage si tu n'as pas pu choisir le mode Auto) : elles demandent la permission avant chaque action de l'agent. C'est normal et sans danger ; l'agent te dit à chaque fois sur quel choix cliquer.
