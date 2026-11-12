@@ -204,8 +204,9 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
 ### Étape 1 — Faire connaissance (questions à cliquer, une par une)
 Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
-0. **Le mail d'accueil (toujours en premier, une seule fois)** : « Quelle est ton adresse mail ? Je t'envoie un mail qui récapitule les étapes et explique comment reprendre ton site un autre jour. » → **« Je ne veux pas de mail »** · Autre (écris ton adresse mail).
-   - Si elle donne une adresse, envoie le mail avec **une seule commande courte** (lancée dans le dossier du site, sans `cd`), l'adresse écrite en clair à la fin :
+0. **Le mail d'accueil (toujours en premier, une seule fois)** : « Quelle est ton adresse mail **RASF** (elle finit par **@rasf.fr**) ? Je t'envoie un mail qui récapitule les étapes et explique comment reprendre ton site un autre jour. » → **« Je ne veux pas de mail »** · Autre (écris ton adresse RASF).
+   - **Vérifie d'abord, toi-même et sans commande, que l'adresse finit exactement par `@rasf.fr`** (une seule @, pas d'espace). Sinon, n'envoie rien : « Il me faut ton adresse RASF, celle qui finit par @rasf.fr. » et repose la question (avec le choix « Je ne veux pas de mail »).
+   - Si l'adresse RASF est valable, envoie le mail avec **une seule commande courte** (lancée dans le dossier du site, sans `cd`), l'adresse écrite en clair à la fin :
      - Mac et Linux : `curl "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"`
      - Windows : `curl.exe "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"` (**`curl.exe`**, jamais `curl` seul ni `Invoke-WebRequest`)
    - Réponse « OK : mail envoyé » → « ✅ C'est fait : je t'ai envoyé le mail récapitulatif (s'il n'arrive pas, regarde dans les courriers indésirables). » Toute autre réponse → « Je n'ai pas pu envoyer le mail : ce n'est pas grave, ta page guide contient les mêmes informations. » **Ne réessaie pas**, ne parle jamais du service qui envoie le mail, et continue.
