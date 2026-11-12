@@ -6,6 +6,49 @@
 // ============================================================
 import { useEffect, useState } from "react";
 
+// Envoi du mail d'instructions (depuis assistantia@rasf.fr) : c'est la personne qui clique, jamais l'agent.
+const ADRESSE_ENVOI = "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil";
+const CLE_MAIL = "atelier.mailInstructions";
+const lireMail = () => { try { return localStorage.getItem(CLE_MAIL) || ""; } catch { return ""; } };
+
+function CarteMail() {
+  const [envoyeA, setEnvoyeA] = useState(lireMail);
+  const [adresse, setAdresse] = useState("");
+  const [etat, setEtat] = useState("");
+  const valable = /^[^@\s]+@rasf\.fr$/i.test(adresse.trim());
+
+  async function envoyer(e) {
+    e.preventDefault();
+    if (!valable) { setEtat("erreur"); return; }
+    setEtat("envoi");
+    try {
+      await fetch(`${ADRESSE_ENVOI}?a=${encodeURIComponent(adresse.trim())}`, { mode: "no-cors" });
+      try { localStorage.setItem(CLE_MAIL, adresse.trim()); } catch { /* rien */ }
+      setEnvoyeA(adresse.trim()); setEtat("");
+    } catch { setEtat("panne"); }
+  }
+
+  return (
+    <section className="g-carte g-mail" aria-labelledby="g-mail">
+      <h2 id="g-mail"><span aria-hidden="true">📧</span> Reçois les instructions sur ton mail RASF</h2>
+      {envoyeA ? (
+        <p className="g-ok">✅ C'est envoyé à <b>{envoyeA}</b>. Regarde ta boîte mail dans une minute (et les courriers indésirables s'il n'arrive pas). <button type="button" className="g-lien" onClick={() => { setEnvoyeA(""); setAdresse(envoyeA); }}>Renvoyer</button></p>
+      ) : (
+        <>
+          <p>Un mail qui récapitule les étapes et explique comment reprendre ton site un autre jour. Facultatif.</p>
+          <form className="g-form" onSubmit={envoyer}>
+            <input type="email" inputMode="email" autoComplete="email" placeholder="prenom.nom@rasf.fr" value={adresse}
+              onChange={(e) => { setAdresse(e.target.value); if (etat === "erreur") setEtat(""); }} aria-label="Ton adresse mail RASF" />
+            <button type="submit" className="g-bouton bleu" disabled={etat === "envoi"}>{etat === "envoi" ? "Envoi…" : "M'envoyer les instructions"}</button>
+          </form>
+          {etat === "erreur" && <p className="g-alerte">Il faut ton adresse RASF, celle qui finit par <b>@rasf.fr</b>.</p>}
+          {etat === "panne" && <p className="g-alerte">L'envoi n'a pas marché : vérifie ta connexion à Internet, puis réessaie.</p>}
+        </>
+      )}
+    </section>
+  );
+}
+
 const ETAPES = [
   { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'agent copie le modèle et l'installe. Puis tu crées ton compte Vercel, avec la carte plus bas." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions à cliquer dans Antigravity : le nom du site, sa couleur, son style, ton établissement, ton nom." },
@@ -103,6 +146,15 @@ const CSS = `
 .g-vercel ol { margin:0 0 16px; padding-left:22px; display:flex; flex-direction:column; gap:6px; font-size:16px; }
 .g-vercel b { color:#fff; }
 .g-vercel .g-bouton { background:#fff; color:#0f172a; font-size:17px; padding:14px 24px; }
+.g-mail p { margin:0 0 12px; color:#334155; }
+.g-form { display:flex; flex-wrap:wrap; gap:10px; }
+.g-form input { flex:1 1 240px; min-width:0; font:inherit; font-size:16px; padding:12px 14px; border-radius:12px; border:2px solid #cbd5e1; }
+.g-form input:focus { outline:none; border-color:var(--g-bleu); box-shadow:0 0 0 4px rgba(37,99,235,.15); }
+.g-form button { border:0; cursor:pointer; }
+.g-form button:disabled { opacity:.6; cursor:wait; }
+.g-mail .g-alerte { color:#b91c1c; font-weight:700; margin:10px 0 0 !important; }
+.g-mail .g-ok { color:#166534 !important; font-size:16.5px; margin:0 !important; }
+.g-lien { background:none; border:0; padding:0; color:var(--g-bleu); font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; margin-left:6px; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -126,6 +178,8 @@ export function Guide() {
           <h1>Ton site, étape par étape</h1>
           <p className="g-sous">Garde cette page ouverte à côté d'Antigravity : elle te montre où tu en es, et elle se met à jour toute seule.</p>
         </header>
+
+        <CarteMail />
 
         <section className="g-carte" aria-labelledby="g-parcours">
           <h2 id="g-parcours"><span aria-hidden="true">🗺️</span> Où tu en es</h2>

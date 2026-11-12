@@ -31,10 +31,11 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
    **Ensuite, ne le répète pas** à chaque action : une fois « always allow » choisi, cette sorte de fenêtre ne revient plus, et un rappel inutile trompe la personne (elle cherche une fenêtre qui n'existe pas). Si la personne dit qu'une fenêtre attend, redis seulement : « 👉 Clique sur « Yes, and always allow » (le 3e choix). »
 2. **Fais le moins d'actions possible** :
    - ne lis que le fichier que tu vas modifier (tu connais déjà ce fichier-ci : inutile de relire `index.html`, `src/` ou `package.json`) ;
-   - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site (seule exception : le `curl` qui envoie le mail d'accueil, étape 0) ;
+   - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site ;
    - pour mettre le site en ligne, **une seule commande, exactement** : `npm run en-ligne` (elle construit le site puis l'envoie sur Vercel). Lance-la **dans le dossier du site en le donnant comme dossier de travail de ton outil de commande**, jamais avec `cd` ou `Set-Location` devant, jamais `npm.cmd` / `npx.cmd`, jamais la commande Vercel écrite en entier : la petite fenêtre doit afficher seulement `npm run en-ligne`. Les prochaines mises en ligne se feront sans fenêtre.
      (elle vérifie d'abord que le site se construit : s'il échoue, rien n'est envoyé et le site en ligne reste comme avant).
    - **Aucune commande Git** (`git add`, `commit`, `push`) : ce site n'utilise pas GitHub.
+   - **N'envoie jamais de mail toi-même** (ni `curl` vers un service d'envoi, ni autre moyen) : Antigravity affiche alors une grande fenêtre anglaise « cannot be undone » qui effraie. Le mail d'instructions s'envoie depuis la **page guide**, par la personne (carte « Reçois les instructions sur ton mail RASF »).
    - **Chaque commande est courte et lisible par une débutante : UNE seule action.** Jamais de script dans une commande : pas de variables (`$desktop`, `$target`…), pas de `if`, pas de `[Environment]::…` ni de `[System.IO.File]::…`, pas de plusieurs commandes enchaînées par `;`. Une commande longue affiche une grande fenêtre incompréhensible (« the auto-run safety check did not reach a decision ») qui fait peur et bloque la personne. Écris le vrai chemin en clair dans la commande. **Pour écrire un fichier (`PROGRESSION.md`, une page…), utilise ton outil d'écriture de fichier, jamais une commande.**
 3. Ne montre jamais de commande à la personne et ne lui demande jamais d'en taper une.
 
@@ -139,7 +140,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 - **D'abord, une courte présentation**, à peu près celle-ci :
 
   > Bonjour ! Ensemble, on va créer ton site de simulations, en 15 minutes environ. Voici ce qui va se passer :
-  > 1. Je vérifie qu'un logiciel gratuit, Node.js, est installé sur ton ordinateur (s'il manque, je te guide pour l'installer), puis je t'envoie un mail qui récapitule tout, sur ton adresse RASF.
+  > 1. Je vérifie qu'un logiciel gratuit, Node.js, est installé sur ton ordinateur (s'il manque, je te guide pour l'installer).
   > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom), puis je t'ouvre une **page guide** en français dans ton navigateur, qui te suivra jusqu'au bout. Tu y créeras ton compte gratuit Vercel, pour la mise en ligne.
   > 3. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
   > 4. Tu vois ton site, sur ton ordinateur seulement.
@@ -162,16 +163,6 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
     > Ce que tu dois cliquer maintenant : le bouton de téléchargement, dans la page qui vient de s'ouvrir dans ton navigateur.
 
     Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe aux deux questions ; sinon, demande-lui une capture de l'écran où elle bloque.
-- **Le mail d'accueil : c'est TA PREMIÈRE QUESTION**, juste après la vérification de Node.js et **avant** la question du dossier (une seule fois) : question à choix « Veux-tu recevoir les instructions par mail ? (un récapitulatif des étapes, et comment reprendre ton site un autre jour) » avec **exactement deux choix, rien d'autre** (ni « Je suis perdu·e », ni « Autre ») :
-    1. **Envoie-moi les instructions sur mon mail RASF**
-    2. **Ne m'envoie pas les instructions** → passe à la question du dossier.
-  - Si elle choisit 1, écris seulement, sans question à choix : « **💬 Pour toi :** écris ton adresse mail RASF ci-dessous (elle finit par **@rasf.fr**). » et attends sa réponse.
-  - **Vérifie d'abord, toi-même et sans commande, que l'adresse finit exactement par `@rasf.fr`** (une seule @, pas d'espace). Sinon, n'envoie rien : « Il me faut ton adresse RASF, celle qui finit par @rasf.fr. » et attends sa réponse (si elle ne veut plus, passe à la question du dossier).
-  - Si l'adresse RASF est valable, envoie le mail avec **une seule commande courte** (sans `cd`), l'adresse écrite en clair à la fin :
-    - Mac et Linux : `curl "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"`
-    - Windows : `curl.exe "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"` (**`curl.exe`**, jamais `curl` seul ni `Invoke-WebRequest`)
-  - Réponse « OK : mail envoyé » → « ✅ C'est fait : je t'ai envoyé le mail récapitulatif (s'il n'arrive pas, regarde dans les courriers indésirables). » Toute autre réponse → « Je n'ai pas pu envoyer le mail : ce n'est pas grave, ta page guide contient les mêmes informations. » **Ne réessaie pas**, ne parle jamais du service qui envoie le mail, et continue.
-  - Ne redemande jamais l'adresse (ni dans une nouvelle conversation, ni à la reprise) : note « Mail d'accueil : envoyé » (ou « refusé ») dans `PROGRESSION.md` dès que tu l'écris (étape 0), sous la ligne « Pour reprendre plus tard ».
 - **Les deux questions, une par message :**
   1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → **Bureau (recommandé)** · Documents · 😕 Je suis perdu·e. **Rien d'autre** : pas de choix « Autre », pas de fenêtre pour choisir un dossier (trop risqué pour une débutante). Si la personne écrit quand même un autre dossier, réponds qu'on range le site sur le Bureau ou dans Documents, et repose la question.
   *(Ces deux questions seulement si tu n'es pas déjà dans un projet sur un dossier vide : voir le début de ce fichier.)*
@@ -185,7 +176,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 - **Puis ouvre la page guide** : `npm install`, puis `npm run dev` en arrière-plan, puis ouvre `http://localhost:NNNN/?guide` dans son navigateur habituel (voir « L'aperçu du site » et « La page guide », section 3). Écris alors :
 
   > **💬 Pour toi :** je viens d'ouvrir dans ton navigateur ta **page guide**, en français. Garde-la à côté d'Antigravity : elle te montre où tu en es, et elle traduit les petites fenêtres en anglais.
-  > 👉 Dans cette page, lis la carte **« Ton compte Vercel »** et clique sur son bouton pour créer ton compte (2 minutes). Puis reviens ici.
+  > 👉 Dans cette page, tu peux recevoir les instructions sur ton mail RASF (carte du haut), puis crée ton compte Vercel avec le bouton de la carte **« Ton compte Vercel »** (2 minutes). Puis reviens ici.
 
   Puis, sans attendre, enchaîne sur la première question de l'étape 1 : elle y répondra en revenant.
 - **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
