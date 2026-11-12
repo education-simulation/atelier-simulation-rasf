@@ -162,8 +162,11 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
     > Ce que tu dois cliquer maintenant : le bouton de téléchargement, dans la page qui vient de s'ouvrir dans ton navigateur.
 
     Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe aux deux questions ; sinon, demande-lui une capture de l'écran où elle bloque.
-- **Le mail d'accueil : c'est TA PREMIÈRE QUESTION**, juste après la vérification de Node.js et **avant** la question du dossier (une seule fois) : « Quelle est ton adresse mail **RASF** (elle finit par **@rasf.fr**) ? Je t'envoie un mail qui récapitule les étapes et explique comment reprendre ton site un autre jour. » → **« Je ne veux pas de mail »** · Autre (écris ton adresse RASF).
-  - **Vérifie d'abord, toi-même et sans commande, que l'adresse finit exactement par `@rasf.fr`** (une seule @, pas d'espace). Sinon, n'envoie rien : « Il me faut ton adresse RASF, celle qui finit par @rasf.fr. » et repose la question (avec le choix « Je ne veux pas de mail »).
+- **Le mail d'accueil : c'est TA PREMIÈRE QUESTION**, juste après la vérification de Node.js et **avant** la question du dossier (une seule fois) : question à choix « Veux-tu recevoir les instructions par mail ? (un récapitulatif des étapes, et comment reprendre ton site un autre jour) » avec **exactement deux choix, rien d'autre** (ni « Je suis perdu·e », ni « Autre ») :
+    1. **Envoie-moi les instructions sur mon mail RASF**
+    2. **Ne m'envoie pas les instructions** → passe à la question du dossier.
+  - Si elle choisit 1, écris seulement, sans question à choix : « **💬 Pour toi :** écris ton adresse mail RASF ci-dessous (elle finit par **@rasf.fr**). » et attends sa réponse.
+  - **Vérifie d'abord, toi-même et sans commande, que l'adresse finit exactement par `@rasf.fr`** (une seule @, pas d'espace). Sinon, n'envoie rien : « Il me faut ton adresse RASF, celle qui finit par @rasf.fr. » et attends sa réponse (si elle ne veut plus, passe à la question du dossier).
   - Si l'adresse RASF est valable, envoie le mail avec **une seule commande courte** (sans `cd`), l'adresse écrite en clair à la fin :
     - Mac et Linux : `curl "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"`
     - Windows : `curl.exe "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"` (**`curl.exe`**, jamais `curl` seul ni `Invoke-WebRequest`)
