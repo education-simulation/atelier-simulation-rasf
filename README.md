@@ -1,5 +1,7 @@
 # Atelier simulation RASF
 
+> 🤖 **Agent d'Antigravity : tes consignes sont dans [`AGENTS.md`](AGENTS.md).** Lis-le en entier et suis-le à la lettre ; ignore la suite de ce README, qui s'adresse aux humains et peut être moins à jour.
+
 Un site de simulations, simple et gratuit, que tu construis en parlant à l'agent d'**Antigravity** (l'application gratuite de Google, avec ton compte Google d'établissement), et que **Vercel** met en ligne gratuitement.
 
 Ton site démarre avec :
