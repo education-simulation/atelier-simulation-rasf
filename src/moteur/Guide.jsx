@@ -229,9 +229,9 @@ const CSS = `
 .g-liste-parties button { all:unset; box-sizing:border-box; width:100%; display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:9px; font-size:14px; font-weight:700; color:#334155; cursor:pointer; border:2px solid transparent; }
 .g-liste-parties button:hover, .g-liste-parties button.actif { background:#fffbeb; border-color:#f59e0b; color:#0f172a; }
 .g-liste-parties .g-num-partie { min-width:24px; height:22px; font-size:12px; }
-.g-fiche { background:#f8fafc; border:2px solid #fde68a; border-radius:12px; padding:10px 12px; }
-.g-fiche b { display:flex; align-items:center; gap:8px; font-size:15px; }
-.g-fiche p { margin:6px 0 0; font-size:14px; line-height:1.45; color:#334155; }
+.g-fiche { margin-top:12px; background:#fffbeb; border:2px solid #f59e0b; border-radius:14px; padding:12px 16px; min-height:84px; }
+.g-fiche b { display:flex; align-items:center; gap:8px; font-size:17px; }
+.g-fiche p { margin:6px 0 0; font-size:16px; line-height:1.5; color:#1e293b; }
 @media (max-width:760px) { .g-aide-corps { grid-template-columns:1fr; } }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
@@ -378,11 +378,19 @@ function FenetreAntigravity({ fermer }) {
       <div className="g-fenetre-aide g-paysage" role="dialog" aria-modal="true" aria-labelledby="g-aide-titre" onClick={(e) => e.stopPropagation()}>
         <div className="g-aide-tete">
           <h2 id="g-aide-titre"><span aria-hidden="true">🧭</span> Antigravity en un coup d'œil</h2>
-          <span className="g-aide-astuce" style={{ margin: 0, flex: 1 }}>Survole un numéro : la partie s'entoure en orange et son explication s'affiche à droite.</span>
+          <span className="g-aide-astuce" style={{ margin: 0, flex: 1 }}>Survole ou clique un numéro : la partie s'entoure en orange et son explication s'affiche sous l'image.</span>
           <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>
         </div>
         <div className="g-aide-corps">
-          <div className="g-aide-schema"><SchemaAntigravity actif={montre} setActif={survol} /></div>
+          <div className="g-aide-schema">
+            <SchemaAntigravity actif={montre} setActif={survol} />
+            {fiche && (
+              <div className="g-fiche" aria-live="polite">
+                <b><span className="g-num-partie" aria-hidden="true">{fiche.id}</span> {fiche.titre}</b>
+                <p>{fiche.texte}</p>
+              </div>
+            )}
+          </div>
           <aside className="g-aide-cote">
             <ol className="g-liste-parties">
               {PARTIES.map((p) => (
@@ -393,12 +401,6 @@ function FenetreAntigravity({ fermer }) {
                 </li>
               ))}
             </ol>
-            {fiche && (
-              <div className="g-fiche" aria-live="polite">
-                <b><span className="g-num-partie" aria-hidden="true">{fiche.id}</span> {fiche.titre}</b>
-                <p>{fiche.texte}</p>
-              </div>
-            )}
           </aside>
         </div>
       </div>
