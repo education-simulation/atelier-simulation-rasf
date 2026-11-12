@@ -177,32 +177,60 @@ const CSS = `
 .g-fermer { border:0; background:#f1f5f9; width:38px; height:38px; border-radius:50%; font-size:24px; line-height:1; cursor:pointer; color:#334155; }
 .g-fermer:hover { background:#e2e8f0; }
 .g-parties { list-style:none; margin:16px 0 0; padding:0; display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:10px; }
-.g-parties li { display:flex; gap:10px; background:#f8fafc; border-radius:12px; padding:10px 12px; }
+.g-parties li { display:flex; gap:10px; background:#f8fafc; border-radius:12px; padding:10px 12px; border:2px solid transparent; cursor:default; transition:border-color .15s, background .15s; }
+.g-parties li.actif { border-color:#f59e0b; background:#fffbeb; }
+.g-aide-astuce { margin:0 0 10px; color:#64748b; font-size:14.5px; }
+.g-pastille-svg { cursor:pointer; outline:none; }
+.g-zone { animation:g-zone 1.2s ease-in-out infinite; }
+@keyframes g-zone { 50% { stroke-opacity:.45; } }
 .g-parties p { margin:3px 0 0; font-size:14.5px; color:#475569; line-height:1.4; }
-.g-num-partie { flex-shrink:0; width:26px; height:26px; border-radius:50%; background:#f59e0b; color:#1f1300; font-weight:800; display:grid; place-items:center; font-size:14px; }
+.g-num-partie { flex-shrink:0; min-width:26px; padding:0 4px; height:26px; border-radius:13px; background:#f59e0b; color:#1f1300; font-weight:800; display:grid; place-items:center; font-size:14px; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
 @media (prefers-reduced-motion:reduce) { .g * { animation:none !important; transition:none !important; } }
 `;
 
-// --- « Antigravity en un coup d'œil » : un schéma de la fenêtre, avec ses parties numérotées ---
+// --- « Antigravity en un coup d'œil » : un schéma de la fenêtre. Survoler un numéro (ou sa fiche) encadre la zone concernée. ---
 const PARTIES = [
-  { n: 1, titre: "La barre de gauche", texte: "Tes conversations. « New Conversation » en ouvre une nouvelle ; un clic sur une conversation y revient. Pour la cacher et gagner de la place : le bouton en forme de rectangle ▯ tout en haut à gauche, à côté des trois ronds (un 2e clic la rouvre)." },
-  { n: 2, titre: "La conversation", texte: "Ce que l'agent te dit. Ses messages pour toi commencent par 💬 Pour toi. Le reste (« Ran commands », « Explored file »…) est technique : tu peux l'ignorer." },
-  { n: 3, titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
-  { n: 4, titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles : choisis-en un pour la suite de la conversation." },
-  { n: 5, titre: "Ton usage", texte: "Dans ce même menu des modèles : « View Usage » montre ce qu'il te reste (limite des 5 heures et de la semaine). Quand c'est épuisé, attends ou change de modèle." },
-  { n: 6, titre: "Le volet de droite", texte: "Le navigateur d'Antigravity : ta page guide, ton site. Le × d'un onglet le ferme ; ↗ l'ouvre dans ton navigateur habituel." },
-  { n: 7, titre: "Fermer ou agrandir les volets", texte: "Tout en haut à droite : ▯ ferme ou rouvre le volet de droite ; ⤢ l'agrandit. En haut à gauche : ▯ cache la barre de gauche." },
+  { id: "1a", titre: "Réduire la barre de gauche", texte: "Le petit bouton en forme de rectangle, tout en haut à gauche, à côté des trois ronds. Un clic cache la barre de gauche pour gagner de la place ; un 2e clic la rouvre." },
+  { id: "1b", titre: "La barre de gauche", texte: "Tes conversations. « New Conversation » en ouvre une nouvelle ; un clic sur une conversation y revient. Tout en bas : Settings (les réglages)." },
+  { id: "2", titre: "La conversation", texte: "Ce que l'agent te dit. Ses messages pour toi commencent par 💬 Pour toi. Le reste (« Ran commands », « Explored file »…) est technique : tu peux l'ignorer." },
+  { id: "3", titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
+  { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles : choisis-en un pour la suite." },
+  { id: "5", titre: "Ton usage", texte: "Dans ce même menu des modèles : « View Usage » montre ce qu'il te reste (limite des 5 heures et de la semaine). Si Antigravity affiche « Model quota reached », choisis un autre modèle." },
+  { id: "6", titre: "Le volet de droite", texte: "Le navigateur d'Antigravity : ta page guide, ton site. Le × d'un onglet le ferme ; ↗ l'ouvre dans ton navigateur habituel." },
+  { id: "7a", titre: "Fermer le volet de droite", texte: "Le bouton en forme de rectangle, tout en haut à droite : un clic ferme le volet de droite, un 2e clic le rouvre." },
+  { id: "7b", titre: "Agrandir le volet de droite", texte: "Le bouton ⤢, tout en haut à droite : le volet prend toute la fenêtre. Un 2e clic le remet à côté de la conversation." },
 ];
 
-function Pastille({ x, y, n }) {
-  return (<g><circle cx={x} cy={y} r="13" fill="#f59e0b" stroke="#fff" strokeWidth="2.5" /><text x={x} y={y + 5} textAnchor="middle" fontSize="14" fontWeight="800" fill="#1f1300" fontFamily="Nunito, sans-serif">{n}</text></g>);
+// Zone encadrée pour chaque numéro (coordonnées du schéma) et position de sa pastille.
+const ZONES = {
+  "1a": { x: 59, y: 3, w: 28, h: 26, px: 102, py: 16 },
+  "1b": { x: 2, y: 34, w: 146, h: 394, px: 128, py: 82 },
+  "2": { x: 158, y: 40, w: 312, h: 290, px: 400, py: 140 },
+  "3": { x: 158, y: 338, w: 304, h: 78, px: 474, py: 352 },
+  "4": { x: 168, y: 386, w: 116, h: 22, px: 206, py: 424 },
+  "5": { x: 168, y: 386, w: 116, h: 22, px: 300, py: 398 },
+  "6": { x: 476, y: 32, w: 284, h: 398, px: 720, py: 100 },
+  "7a": { x: 702, y: 3, w: 26, h: 26, px: 680, py: 16 },
+  "7b": { x: 731, y: 3, w: 24, h: 26, px: 744, py: 44 },
+};
+
+function Pastille({ id, actif, setActif }) {
+  const z = ZONES[id], on = actif === id;
+  return (
+    <g className="g-pastille-svg" tabIndex={0} role="button" aria-label={`Partie ${id}`}
+      onMouseEnter={() => setActif(id)} onMouseLeave={() => setActif(null)} onFocus={() => setActif(id)} onBlur={() => setActif(null)}>
+      <circle cx={z.px} cy={z.py} r={on ? 15 : 13} fill={on ? "#fbbf24" : "#f59e0b"} stroke="#fff" strokeWidth="2.5" />
+      <text x={z.px} y={z.py + 4.5} textAnchor="middle" fontSize={id.length > 1 ? 11.5 : 14} fontWeight="800" fill="#1f1300" fontFamily="Nunito, sans-serif" pointerEvents="none">{id}</text>
+    </g>
+  );
 }
 
-function SchemaAntigravity() {
+function SchemaAntigravity({ actif, setActif }) {
   const t = { fontFamily: "Nunito, system-ui, sans-serif" };
+  const z = actif && ZONES[actif];
   return (
     <svg viewBox="0 0 760 430" role="img" aria-label="Schéma de la fenêtre d'Antigravity, avec ses parties numérotées" style={{ width: "100%", height: "auto", display: "block" }}>
       <rect x="0" y="0" width="760" height="430" rx="14" fill="#0b0b0f" />
@@ -210,7 +238,7 @@ function SchemaAntigravity() {
       <circle cx="18" cy="16" r="5" fill="#3f3f46" /><circle cx="34" cy="16" r="5" fill="#3f3f46" /><circle cx="50" cy="16" r="5" fill="#3f3f46" />
       <rect x="64" y="7" width="18" height="18" rx="3" fill="none" stroke="#a1a1aa" strokeWidth="1.6" /><line x1="70" y1="9" x2="70" y2="23" stroke="#a1a1aa" strokeWidth="1.6" />
       <rect x="706" y="7" width="18" height="18" rx="3" fill="none" stroke="#a1a1aa" strokeWidth="1.6" /><line x1="718" y1="9" x2="718" y2="23" stroke="#a1a1aa" strokeWidth="1.6" />
-      <text x="742" y="22" fontSize="15" fill="#a1a1aa" textAnchor="middle" style={t}>⤢</text>
+      <text x="743" y="22" fontSize="15" fill="#a1a1aa" textAnchor="middle" style={t}>⤢</text>
       {/* barre de gauche */}
       <rect x="0" y="32" width="150" height="398" fill="#16161b" />
       <rect x="10" y="44" width="130" height="22" rx="6" fill="#26262e" /><text x="20" y="59" fontSize="11" fill="#e4e4e7" style={t}>+ New Conversation</text>
@@ -220,33 +248,48 @@ function SchemaAntigravity() {
       {/* conversation */}
       <rect x="166" y="48" width="200" height="34" rx="10" fill="#1e1e25" /><text x="176" y="69" fontSize="10" fill="#d4d4d8" style={t}>Crée mon site avec le modèle…</text>
       <text x="166" y="106" fontSize="10" fill="#71717a" style={t}>Ran commands ›</text>
-      <text x="166" y="132" fontSize="11" fill="#fff" fontWeight="700" style={t}>💬 Pour toi : quel nom pour ton site ?</text>
-      <text x="166" y="152" fontSize="10.5" fill="#d4d4d8" style={t}>1. Mon labo virtuel</text>
-      <text x="166" y="168" fontSize="10.5" fill="#d4d4d8" style={t}>2. La paillasse virtuelle</text>
-      <text x="166" y="184" fontSize="10.5" fill="#d4d4d8" style={t}>3. 😕 Je suis perdu·e</text>
+      <text x="166" y="132" fontSize="11" fill="#fff" fontWeight="700" style={t}>💬 Pour toi :</text>
+      <text x="166" y="152" fontSize="10.5" fill="#e4e4e7" style={t}>Quel nom pour ton site ?</text>
+      <text x="166" y="174" fontSize="10.5" fill="#d4d4d8" style={t}>1. Mon labo virtuel</text>
+      <text x="166" y="190" fontSize="10.5" fill="#d4d4d8" style={t}>2. La paillasse virtuelle</text>
+      <text x="166" y="206" fontSize="10.5" fill="#d4d4d8" style={t}>3. 😕 Je suis perdu·e</text>
+      <text x="166" y="228" fontSize="10" fill="#a1a1aa" fontStyle="italic" style={t}>✍️ Écris le numéro dans la zone de message</text>
       {/* zone de message */}
       <rect x="160" y="340" width="300" height="74" rx="14" fill="#1e1e25" stroke="#3f3f46" />
       <text x="176" y="366" fontSize="11" fill="#71717a" style={t}>Ask anything…   ← écris ici</text>
-      <text x="176" y="400" fontSize="10.5" fill="#d4d4d8" style={t}>+   Gemini 3.8 Flash ⌃</text>
-      <text x="360" y="400" fontSize="10.5" fill="#d4d4d8" style={t}>Auto   🎤</text>
-      <circle cx="440" cy="396" r="10" fill="#fff" /><text x="440" y="400" fontSize="11" textAnchor="middle" fill="#0b0b0f" style={t}>↑</text>
+      <text x="176" y="401" fontSize="10.5" fill="#d4d4d8" style={t}>+   Gemini 3.8 Flash ⌃</text>
+      <text x="360" y="401" fontSize="10.5" fill="#d4d4d8" style={t}>Auto   🎤</text>
+      <circle cx="440" cy="397" r="10" fill="#fff" /><text x="440" y="401" fontSize="11" textAnchor="middle" fill="#0b0b0f" style={t}>↑</text>
       {/* volet de droite */}
       <rect x="476" y="32" width="284" height="398" fill="#f1f5f9" />
-      <rect x="476" y="32" width="284" height="26" fill="#1c1c22" /><rect x="482" y="36" width="140" height="18" rx="5" fill="#2e2e36" />
+      <rect x="476" y="32" width="284" height="26" fill="#1c1c22" /><rect x="482" y="36" width="150" height="18" rx="5" fill="#2e2e36" />
       <text x="490" y="49" fontSize="10" fill="#e4e4e7" style={t}>Ton site, étape par étape  ×</text>
-      <text x="742" y="49" fontSize="12" fill="#a1a1aa" textAnchor="middle" style={t}>↗</text>
-      <text x="618" y="100" fontSize="15" fontWeight="800" fill="#0f172a" textAnchor="middle" style={t}>Ta page guide</text>
+      <text x="712" y="49" fontSize="12" fill="#a1a1aa" textAnchor="middle" style={t}>↗</text>
+      <text x="610" y="100" fontSize="15" fontWeight="800" fill="#0f172a" textAnchor="middle" style={t}>Ta page guide</text>
       <rect x="496" y="118" width="244" height="40" rx="8" fill="#fff" /><rect x="496" y="168" width="244" height="80" rx="8" fill="#fff" />
       <rect x="506" y="182" width="224" height="18" rx="5" fill="#dcfce7" /><rect x="506" y="206" width="224" height="18" rx="5" fill="#fef3c7" stroke="#f59e0b" />
-      {/* pastilles */}
-      <Pastille x={128} y={78} n={1} /><Pastille x={392} y={140} n={2} /><Pastille x={474} y={366} n={3} />
-      <Pastille x={206} y={422} n={4} /><Pastille x={330} y={380} n={5} /><Pastille x={700} y={100} n={6} /><Pastille x={690} y={16} n={7} />
-      <Pastille x={96} y={16} n={1} />
+      {/* menu des modèles, montré pour 4 et 5 */}
+      {(actif === "4" || actif === "5") && (
+        <g>
+          <rect x="168" y="270" width="190" height="112" rx="10" fill="#26262e" stroke="#52525b" />
+          <text x="182" y="292" fontSize="10.5" fill="#e4e4e7" style={t}>✓ Gemini 3.8 Flash</text>
+          <text x="182" y="314" fontSize="10.5" fill="#d4d4d8" style={t}>Gemini 3.8 Pro</text>
+          <text x="182" y="336" fontSize="10.5" fill="#d4d4d8" style={t}>Claude…   GPT-OSS…</text>
+          <rect x="174" y="348" width="178" height="24" rx="6" fill={actif === "5" ? "#f59e0b" : "#33333c"} />
+          <text x="182" y="364" fontSize="10.5" fontWeight="700" fill={actif === "5" ? "#1f1300" : "#e4e4e7"} style={t}>View Usage</text>
+        </g>
+      )}
+      {/* zone encadrée */}
+      {z && (
+        <rect className="g-zone" x={z.x} y={z.y} width={z.w} height={z.h} rx="8" fill="rgba(245,158,11,.16)" stroke="#f59e0b" strokeWidth="3" pointerEvents="none" />
+      )}
+      {PARTIES.map((p) => <Pastille key={p.id} id={p.id} actif={actif} setActif={setActif} />)}
     </svg>
   );
 }
 
 function FenetreAntigravity({ fermer }) {
+  const [actif, setActif] = useState(null);
   useEffect(() => {
     const touche = (e) => { if (e.key === "Escape") fermer(); };
     window.addEventListener("keydown", touche);
@@ -259,10 +302,13 @@ function FenetreAntigravity({ fermer }) {
           <h2 id="g-aide-titre"><span aria-hidden="true">🧭</span> Antigravity en un coup d'œil</h2>
           <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>
         </div>
-        <SchemaAntigravity />
+        <p className="g-aide-astuce">Passe la souris sur un numéro (ou sur une fiche) : la partie correspondante s'entoure en orange.</p>
+        <SchemaAntigravity actif={actif} setActif={setActif} />
         <ol className="g-parties">
           {PARTIES.map((p) => (
-            <li key={p.n}><span className="g-num-partie" aria-hidden="true">{p.n}</span><div><b>{p.titre}</b><p>{p.texte}</p></div></li>
+            <li key={p.id} className={actif === p.id ? "actif" : ""} onMouseEnter={() => setActif(p.id)} onMouseLeave={() => setActif(null)}>
+              <span className="g-num-partie" aria-hidden="true">{p.id}</span><div><b>{p.titre}</b><p>{p.texte}</p></div>
+            </li>
           ))}
         </ol>
       </div>
