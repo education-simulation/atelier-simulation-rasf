@@ -199,7 +199,8 @@ const PARTIES = [
   { id: "3", titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
   { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles : choisis-en un pour la suite." },
   { id: "5", titre: "Ton usage", texte: "Dans ce même menu des modèles : « View Usage » montre ce qu'il te reste (limite des 5 heures et de la semaine). Si Antigravity affiche « Model quota reached », choisis un autre modèle." },
-  { id: "6", titre: "Le volet de droite", texte: "Le navigateur d'Antigravity : ta page guide, ton site. Le × d'un onglet le ferme ; ↗ l'ouvre dans ton navigateur habituel." },
+  { id: "6a", titre: "Le navigateur d'Antigravity", texte: "Le volet de droite est un navigateur intégré à Antigravity, avec des onglets, comme Chrome : ta page guide, ton site (localhost)… Clique sur un onglet pour passer de l'un à l'autre ; le × d'un onglet le ferme ; ↗ ouvre l'onglet dans ton navigateur habituel." },
+  { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page guide." },
   { id: "7a", titre: "Fermer le volet de droite", texte: "Le bouton en forme de rectangle, tout en haut à droite : un clic ferme le volet de droite, un 2e clic le rouvre." },
   { id: "7b", titre: "Agrandir le volet de droite", texte: "Le bouton ⤢, tout en haut à droite : le volet prend toute la fenêtre. Un 2e clic le remet à côté de la conversation." },
 ];
@@ -212,7 +213,8 @@ const ZONES = {
   "3": { x: 158, y: 338, w: 304, h: 78, px: 474, py: 352 },
   "4": { x: 168, y: 386, w: 116, h: 22, px: 206, py: 424 },
   "5": { x: 168, y: 386, w: 116, h: 22, px: 300, py: 398 },
-  "6": { x: 476, y: 32, w: 284, h: 398, px: 720, py: 100 },
+  "6a": { x: 476, y: 32, w: 284, h: 398, px: 722, py: 110 },
+  "6b": { x: 644, y: 35, w: 20, h: 20, px: 654, py: 76 },
   "7a": { x: 702, y: 3, w: 26, h: 26, px: 680, py: 16 },
   "7b": { x: 731, y: 3, w: 24, h: 26, px: 744, py: 44 },
 };
@@ -262,10 +264,13 @@ function SchemaAntigravity({ actif, setActif }) {
       <circle cx="440" cy="397" r="10" fill="#fff" /><text x="440" y="401" fontSize="11" textAnchor="middle" fill="#0b0b0f" style={t}>↑</text>
       {/* volet de droite */}
       <rect x="476" y="32" width="284" height="398" fill="#f1f5f9" />
-      <rect x="476" y="32" width="284" height="26" fill="#1c1c22" /><rect x="482" y="36" width="150" height="18" rx="5" fill="#2e2e36" />
-      <text x="490" y="49" fontSize="10" fill="#e4e4e7" style={t}>Ton site, étape par étape  ×</text>
-      <text x="712" y="49" fontSize="12" fill="#a1a1aa" textAnchor="middle" style={t}>↗</text>
-      <text x="610" y="100" fontSize="15" fontWeight="800" fill="#0f172a" textAnchor="middle" style={t}>Ta page guide</text>
+      <rect x="476" y="32" width="284" height="26" fill="#1c1c22" />
+      <rect x="482" y="36" width="84" height="18" rx="5" fill="#3a3a44" /><text x="489" y="49" fontSize="9.5" fill="#fff" style={t}>Page guide  ×</text>
+      <rect x="570" y="36" width="70" height="18" rx="5" fill="#26262e" /><text x="577" y="49" fontSize="9.5" fill="#a1a1aa" style={t}>Mon site  ×</text>
+      <text x="654" y="50" fontSize="14" fill="#d4d4d8" textAnchor="middle" style={t}>+</text>
+      <text x="700" y="49" fontSize="12" fill="#a1a1aa" textAnchor="middle" style={t}>↗</text>
+      <rect x="482" y="62" width="272" height="16" rx="8" fill="#e2e8f0" /><text x="492" y="73" fontSize="8.5" fill="#64748b" style={t}>localhost:5799/?guide</text>
+      <text x="610" y="104" fontSize="15" fontWeight="800" fill="#0f172a" textAnchor="middle" style={t}>Ta page guide</text>
       <rect x="496" y="118" width="244" height="40" rx="8" fill="#fff" /><rect x="496" y="168" width="244" height="80" rx="8" fill="#fff" />
       <rect x="506" y="182" width="224" height="18" rx="5" fill="#dcfce7" /><rect x="506" y="206" width="224" height="18" rx="5" fill="#fef3c7" stroke="#f59e0b" />
       {/* menu des modèles, montré pour 4 et 5 */}
