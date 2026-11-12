@@ -246,7 +246,7 @@ const PARTIES = [
   { id: "2", titre: "La conversation", texte: "Ce que l'IA Gemini te dit. Ses messages pour toi commencent par 💬 Pour toi. Le reste (« Ran commands », « Explored file »…) est technique : tu peux l'ignorer." },
   { id: "3", titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
   { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles. Passe la souris sur un modèle Gemini : 3 niveaux s'affichent, Low (faible : le plus rapide, consomme le moins), Medium (moyen) et High (élevé : plus réfléchi, consomme plus). Low ou Medium suffisent pour ton site." },
-  { id: "5", titre: "Ton usage", texte: "Dans le menu des modèles, « View Usage » montre ce qu'il te reste, en pourcentage, pour chaque famille : « Gemini Models » et « Claude and GPT models ». Deux jauges chacune : la semaine (Weekly Limit Remaining) et les 5 dernières heures (Five Hour Limit Remaining). À 0 %, Antigravity affiche « Model quota reached » : attends que ça revienne, ou choisis un modèle de l'autre famille." },
+  { id: "5", titre: "Ton usage", texte: "Dans le menu des modèles, passe la souris sur « View Usage » : Antigravity montre ce qu'il te reste pour la semaine, en pourcentage, pour chaque famille : « Gemini Models » (avec la date de remise à zéro, par exemple « resets in 6d 22h ») et « Claude and GPT models ». À 0 %, il affiche « Model quota reached » : attends la remise à zéro, ou choisis un modèle de l'autre famille." },
   { id: "6a", titre: "Le navigateur d'Antigravity", texte: "Le volet de droite est un navigateur intégré à Antigravity, avec des onglets, comme Chrome : ta page guide, ton site (localhost)… Clique sur un onglet pour passer de l'un à l'autre ; le × d'un onglet le ferme ; ↗ ouvre l'onglet dans ton navigateur habituel." },
   { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page guide." },
   { id: "6c", titre: "Régler la largeur", texte: "La fine barre verticale entre la conversation (2) et le volet de droite (6) se déplace : pose la souris dessus (le curseur devient ↔), garde le bouton appuyé et glisse à gauche ou à droite pour donner plus de place à l'un ou à l'autre." },
@@ -346,21 +346,23 @@ function SchemaAntigravity({ actif, setActif }) {
           <text x="380" y="356" fontSize="11" fill={actif === "5" ? "#1f1300" : "#a1a1aa"} textAnchor="end" style={t}>›</text>
         </g>
       )}
-      {/* View Usage : ce qu'il reste pour chaque famille de modèles (montré pour 5) */}
+      {/* View Usage : ce qu'il reste pour chaque famille de modèles (montré pour 5), comme dans Antigravity */}
       {actif === "5" && (
         <g>
-          <rect x="398" y="186" width="200" height="196" rx="10" fill="#1c1c22" stroke="#f59e0b" strokeWidth="1.5" />
-          {[["Gemini Models", 202, 72, 40], ["Claude and GPT models", 294, 100, 85]].map(([nom, y, semaine, cinq]) => (
-            <g key={nom}>
-              <text x="410" y={y} fontSize="10.5" fontWeight="800" fill="#fff" style={t}>{nom}</text>
-              <text x="410" y={y + 17} fontSize="9" fill="#a1a1aa" style={t}>Weekly Limit Remaining</text>
-              <text x="586" y={y + 17} fontSize="9" fontWeight="800" fill="#fff" textAnchor="end" style={t}>{semaine}%</text>
-              <rect x="410" y={y + 22} width="176" height="5" rx="2.5" fill="#3f3f46" /><rect x="410" y={y + 22} width={1.76 * semaine} height="5" rx="2.5" fill="#22c55e" />
-              <text x="410" y={y + 43} fontSize="9" fill="#a1a1aa" style={t}>Five Hour Limit Remaining</text>
-              <text x="586" y={y + 43} fontSize="9" fontWeight="800" fill="#fff" textAnchor="end" style={t}>{cinq}%</text>
-              <rect x="410" y={y + 48} width="176" height="5" rx="2.5" fill="#3f3f46" /><rect x="410" y={y + 48} width={1.76 * cinq} height="5" rx="2.5" fill={cinq < 50 ? "#f59e0b" : "#22c55e"} />
-            </g>
-          ))}
+          <rect x="398" y="262" width="210" height="112" rx="10" fill="#1c1c22" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x="410" y="280" fontSize="9.5" fill="#a1a1aa" style={t}>Usage</text>
+          {[["Gemini Models", "Weekly limit, resets in 6d 22h", 41, 300], ["Claude and GPT models", "Weekly limit", 100, 340]].map(([nom, sous, reste, y]) => {
+            const c = 2 * Math.PI * 6;
+            return (
+              <g key={nom}>
+                <text x="410" y={y} fontSize="10.5" fontWeight="700" fill="#fff" style={t}>{nom}</text>
+                <text x="410" y={y + 14} fontSize="9" fill="#a1a1aa" style={t}>{sous}</text>
+                <text x="584" y={y} fontSize="9.5" fill="#d4d4d8" textAnchor="end" style={t}>{reste}% left</text>
+                <circle cx="596" cy={y - 3.5} r="6" fill="none" stroke="#3f3f46" strokeWidth="2" />
+                <circle cx="596" cy={y - 3.5} r="6" fill="none" stroke="#4ade80" strokeWidth="2" strokeDasharray={`${(c * reste) / 100} ${c}`} transform={`rotate(-90 596 ${y - 3.5})`} />
+              </g>
+            );
+          })}
         </g>
       )}
       {/* les 3 niveaux de Gemini : ils s'ouvrent quand la souris passe sur le modèle */}
