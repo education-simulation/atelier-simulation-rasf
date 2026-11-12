@@ -10,7 +10,7 @@ export function Apercu() {
   return (
     <div style={{ position: "fixed", bottom: 84, right: 20, zIndex: 9999 }}>
       <style>{STYLE_BOUTONS_RONDS}</style>
-      <a href="./?guide" className="bouton-rond" style={{ background: "#16a34a", textDecoration: "none" }} aria-label="Ouvrir la page guide">
+      <a href="./?guide" target="_blank" rel="noreferrer" className="bouton-rond" style={{ background: "#16a34a", textDecoration: "none" }} aria-label="Ouvrir la page guide">
         <span aria-hidden="true">🗺️</span>
         <span className="pastille">guide</span>
         <span className="bulle">Ta page guide : où tu en es · visible seulement sur ton ordinateur</span>
