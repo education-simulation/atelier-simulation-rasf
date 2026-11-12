@@ -31,7 +31,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
    **Ensuite, ne le répète pas** à chaque action : une fois « always allow » choisi, cette sorte de fenêtre ne revient plus, et un rappel inutile trompe la personne (elle cherche une fenêtre qui n'existe pas). Si la personne dit qu'une fenêtre attend, redis seulement : « 👉 Clique sur « Yes, and always allow » (le 3e choix). »
 2. **Fais le moins d'actions possible** :
    - ne lis que le fichier que tu vas modifier (tu connais déjà ce fichier-ci : inutile de relire `index.html`, `src/` ou `package.json`) ;
-   - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site ;
+   - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site (seule exception : le `curl` qui envoie le mail d'accueil, étape 1) ;
    - pour mettre le site en ligne, **une seule commande, exactement** : `npm run en-ligne` (elle construit le site puis l'envoie sur Vercel). Lance-la **dans le dossier du site en le donnant comme dossier de travail de ton outil de commande**, jamais avec `cd` ou `Set-Location` devant, jamais `npm.cmd` / `npx.cmd`, jamais la commande Vercel écrite en entier : la petite fenêtre doit afficher seulement `npm run en-ligne`. Les prochaines mises en ligne se feront sans fenêtre.
      (elle vérifie d'abord que le site se construit : s'il échoue, rien n'est envoyé et le site en ligne reste comme avant).
    - **Aucune commande Git** (`git add`, `commit`, `push`) : ce site n'utilise pas GitHub.
@@ -204,12 +204,18 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
 ### Étape 1 — Faire connaissance (questions à cliquer, une par une)
 Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
+0. **Le mail d'accueil (toujours en premier, une seule fois)** : « Quelle est ton adresse mail ? Je t'envoie un mail qui récapitule les étapes et explique comment reprendre ton site un autre jour. » → **« Je ne veux pas de mail »** · Autre (écris ton adresse mail).
+   - Si elle donne une adresse, envoie le mail avec **une seule commande courte** (lancée dans le dossier du site, sans `cd`), l'adresse écrite en clair à la fin :
+     - Mac et Linux : `curl "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"`
+     - Windows : `curl.exe "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil?a=<adresse>"` (**`curl.exe`**, jamais `curl` seul ni `Invoke-WebRequest`)
+   - Réponse « OK : mail envoyé » → « ✅ C'est fait : je t'ai envoyé le mail récapitulatif (s'il n'arrive pas, regarde dans les courriers indésirables). » Toute autre réponse → « Je n'ai pas pu envoyer le mail : ce n'est pas grave, ta page guide contient les mêmes informations. » **Ne réessaie pas**, ne parle jamais du service qui envoie le mail, et continue.
+   - Ne redemande jamais l'adresse (ni dans une nouvelle conversation, ni à la reprise) : note « Mail d'accueil : envoyé » (ou « refusé ») dans `PROGRESSION.md`, sous la ligne « Pour reprendre plus tard ».
 1. **Le nom de ton site ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse virtuelle », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mon atelier de simulations »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
 3. **Le style de ton site ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
 4. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement). **N'ajoute pas d'option « Indiquer mon établissement »** : le choix « Autre » permet déjà de l'écrire, en une seule question.
 5. **Ton nom ou ton pseudo ?** (affiché en bas du site) → « Prof de sciences » · Autre (écris ton nom ou ton pseudo).
-- **Vérification :** tu as les cinq réponses.
+- **Vérification :** tu as les cinq réponses (et le mail d'accueil est envoyé ou refusé).
 - Ce que tu dois cliquer maintenant : la réponse qui te convient, puis « Submit » (ou écris le numéro).
 
 ### Étape 2 — Voir ton site sur ton ordinateur
