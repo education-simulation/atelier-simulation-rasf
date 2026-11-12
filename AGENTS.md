@@ -32,8 +32,8 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 2. **Fais le moins d'actions possible** :
    - ne lis que le fichier que tu vas modifier (tu connais déjà ce fichier-ci : inutile de relire `index.html`, `src/` ou `package.json`) ;
    - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site ;
-   - pour mettre le site en ligne, **une seule commande** : `npm run build && npx --yes vercel@latest deploy --prod --yes`
-     (le `npm run build` vérifie que le site se construit : s'il échoue, rien n'est envoyé et le site en ligne reste comme avant).
+   - pour mettre le site en ligne, **une seule commande, exactement** : `npm run en-ligne` (elle construit le site puis l'envoie sur Vercel). Lance-la **dans le dossier du site en le donnant comme dossier de travail de ton outil de commande**, jamais avec `cd` ou `Set-Location` devant, jamais `npm.cmd` / `npx.cmd`, jamais la commande Vercel écrite en entier : la petite fenêtre doit afficher seulement `npm run en-ligne`. La première fois, dis : **« 👉 Une petite fenêtre s'affiche : clique sur le 3e choix, « Yes, and always allow ». Les prochaines mises en ligne se feront sans fenêtre. »**
+     (elle vérifie d'abord que le site se construit : s'il échoue, rien n'est envoyé et le site en ligne reste comme avant).
    - **Aucune commande Git** (`git add`, `commit`, `push`) : ce site n'utilise pas GitHub.
    - **Chaque commande est courte et lisible par une débutante : UNE seule action.** Jamais de script dans une commande : pas de variables (`$desktop`, `$target`…), pas de `if`, pas de `[Environment]::…` ni de `[System.IO.File]::…`, pas de plusieurs commandes enchaînées par `;`. Une commande longue affiche une grande fenêtre incompréhensible (« the auto-run safety check did not reach a decision ») qui fait peur et bloque la personne. Écris le vrai chemin en clair dans la commande. **Pour écrire un fichier (`PROGRESSION.md`, une page…), utilise ton outil d'écriture de fichier, jamais une commande.**
 3. Ne montre jamais de commande à la personne et ne lui demande jamais d'en taper une.
@@ -225,7 +225,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 - **Connexion (seulement si `whoami` répond qu'on n'est pas connecté)** : lance `npx --yes vercel@latest login` **en arrière-plan** et lis ce qu'il affiche : une adresse `https://vercel.com/…` et un code. Ouvre l'adresse dans son navigateur habituel (commande ci-dessus), donne-lui aussi l'adresse complète et le code, puis :
   « La page Vercel s'est ouverte dans ton navigateur (sinon, copie le lien ci-dessus dans ton navigateur habituel). Clique **Continue with Google** et choisis le compte avec lequel tu as créé ton compte Vercel au début (s'il n'existe pas encore : offre gratuite « Hobby »). Vérifie que le code affiché est le même que celui-ci, puis clique **Confirm** (ou « Allow »). Reviens ensuite ici et choisis « C'est fait ». »
   Pose la question à choix : C'est fait · Je suis bloqué·e. Tu ne crées pas le compte à sa place et tu ne demandes aucun mot de passe.
-- **Mise en ligne** : `npm run build && npx --yes vercel@latest deploy --prod --yes`
+- **Mise en ligne** : `npm run en-ligne` (seule, sans `cd` ni `Set-Location` devant : voir « Les demandes d'autorisation », point 2)
   À la fin, Vercel affiche l'adresse du site, de la forme `https://<nom-du-dossier>.vercel.app` (ligne « Production » ou « Aliased »). Garde **cette adresse courte** : c'est celle du site en ligne. Ajoute-la dans `PROGRESSION.md` (« Adresse du site : … »).
 - **Vérification :** « Ton site est en ligne : <adresse courte>. » puis question à choix : Je le vois · Je ne le vois pas.
 - Ce que tu dois cliquer maintenant : le lien de connexion puis « Confirm » (seulement si la connexion était nécessaire), sinon rien.
