@@ -31,6 +31,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
    - pour mettre le site en ligne, **une seule commande** : `npm run build && npx --yes vercel@latest deploy --prod --yes`
      (le `npm run build` vérifie que le site se construit : s'il échoue, rien n'est envoyé et le site en ligne reste comme avant).
    - **Aucune commande Git** (`git add`, `commit`, `push`) : ce site n'utilise pas GitHub.
+   - **Chaque commande est courte et lisible par une débutante : UNE seule action.** Jamais de script dans une commande : pas de variables (`$desktop`, `$target`…), pas de `if`, pas de `[Environment]::…` ni de `[System.IO.File]::…`, pas de plusieurs commandes enchaînées par `;`. Une commande longue affiche une grande fenêtre incompréhensible (« the auto-run safety check did not reach a decision ») qui fait peur et bloque la personne. Écris le vrai chemin en clair dans la commande. **Pour écrire un fichier (`PROGRESSION.md`, une page…), utilise ton outil d'écriture de fichier, jamais une commande.**
 3. Ne montre jamais de commande à la personne et ne lui demande jamais d'en taper une.
 
 ## 1. Qui tu aides
@@ -144,7 +145,11 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 - **Les deux questions, une par message :**
   1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → Bureau · Documents · Autre (écris le nom du dossier).
   2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne). **Si ce dossier existe déjà**, dis-le et propose un autre nom : ne copie jamais par-dessus un dossier existant.
-- Puis copie : `git clone --depth 1 <adresse> <dossier choisi>/<nom choisi>` — ou, si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : `mv <chemin actuel> <dossier choisi>/<nom choisi>`. Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin.
+- Puis copie, avec **une seule commande courte, chemins écrits en clair** (jamais de variables ni de script, voir « Les demandes d'autorisation », point 2) :
+  - en général : `git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <chemin complet du nouveau dossier>` ;
+  - si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : sur Mac et Linux `mv <chemin actuel> <chemin complet du nouveau dossier>` ; sur Windows `Move-Item "<chemin actuel>" "<chemin complet du nouveau dossier>"` (par exemple `Move-Item "C:\Users\anne\.gemini\antigravity\scratch\atelier-simulation-rasf" "C:\Users\anne\Desktop\mon-site"`).
+  Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin. **Avant de copier, vérifie que ce dossier n'existe pas encore avec ton outil qui liste le contenu d'un dossier** (pas avec une commande) : s'il existe, dis-le et propose un autre nom (`mv` le rangerait dedans au lieu de le créer).
+- Puis écris `PROGRESSION.md` **avec ton outil d'écriture de fichier** (pas avec une commande).
 - **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
   - Mac : `/Users/<nom>/Desktop/mon-site`
   - Windows : `C:\Users\<nom>\Desktop\mon-site`
