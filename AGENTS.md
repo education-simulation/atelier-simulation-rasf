@@ -142,16 +142,16 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
 - **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (la règle des petites fenêtres est déjà donnée : 3e choix).
   - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
-  - Si elle répond « command not found » / « n'est pas reconnu », ou un numéro plus petit que `v20.19` : **arrête-toi là** (ne pose aucune question, ne copie rien) et affiche **exactement** ce message, sans rien ajouter :
+  - Si elle répond « command not found » / « n'est pas reconnu », ou un numéro plus petit que `v20.19` : **arrête-toi là** (ne pose aucune question, ne copie rien). **Ouvre d'abord la page de téléchargement dans son navigateur habituel**, jamais dans le navigateur d'Antigravity, avec une commande courte : `open "https://nodejs.org/fr/download"` (Mac), `Start-Process "https://nodejs.org/fr/download"` (Windows) ou `xdg-open "https://nodejs.org/fr/download"` (Linux). Puis affiche **exactement** ce message, sans rien ajouter (si la commande a échoué, remplace le point 1 par « Copie ce lien et colle-le dans ton navigateur habituel (Chrome, Safari, Edge…) : https://nodejs.org/fr/download ») :
 
     > Il manque un logiciel gratuit sur ton ordinateur : **Node.js**. C'est le moteur qui fait tourner l'aperçu de ton site. On l'installe une seule fois, en 5 minutes environ :
-    > 1. Clique sur ce lien : https://nodejs.org/fr/download
+    > 1. Je viens d'ouvrir la page de téléchargement dans ton navigateur (Chrome, Safari, Edge…) : va dans cette fenêtre.
     > 2. Clique sur le bouton de téléchargement de l'**installateur** pour ton ordinateur : « macOS Installer (.pkg) » sur Mac, « Windows Installer (.msi) » sur Windows.
     > 3. Ouvre le fichier téléchargé, puis clique sur **Continuer**, **Accepter**, **Installer**. L'ordinateur demande ton mot de passe : c'est normal.
     > 4. À la fin, **quitte complètement Antigravity** (Cmd + Q sur Mac ; sur Windows, ferme la fenêtre) et rouvre-le.
     > 5. Colle à nouveau la phrase du début : **« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf, puis suis ses consignes pour me guider. »** On reprendra au même endroit.
     >
-    > Ce que tu dois cliquer maintenant : le lien ci-dessus.
+    > Ce que tu dois cliquer maintenant : le bouton de téléchargement, dans la page qui vient de s'ouvrir dans ton navigateur.
 
     Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe aux deux questions ; sinon, demande-lui une capture de l'écran où elle bloque.
 - **Les deux questions, une par message :**
