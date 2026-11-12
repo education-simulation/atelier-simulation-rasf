@@ -48,6 +48,9 @@ export function BarreLaterale({ titre, menus, activeId, menuActif, naviguer }) {
             </button>
             {(replie || ouverts.has(m.id)) && (
               <div className="bl-pages">
+                <button className="bl-lien bl-page" aria-current={activeId === `menu:${m.id}` ? "page" : undefined} onClick={() => naviguer(`menu:${m.id}`)} title={replie ? `Tout le menu ${m.label}` : undefined}>
+                  <span aria-hidden="true" className="bl-icone">▦</span><span className="bl-texte">Tout le menu</span>
+                </button>
                 {m.pages.length ? m.pages.map((p) => (
                   <button key={p.id} className="bl-lien bl-page" aria-current={p.id === activeId ? "page" : undefined} onClick={() => naviguer(p.id)} title={replie ? p.titre : undefined}>
                     <span aria-hidden="true" className="bl-icone">{p.icone}</span><span className="bl-texte">{p.titre}</span>

@@ -9,6 +9,7 @@ import SITE from "../site.config.js";
 import { EnTete } from "./moteur/EnTete";
 import { BarreLaterale } from "./moteur/BarreLaterale";
 import { Accueil } from "./moteur/Accueil";
+import { PageMenu } from "./moteur/PageMenu";
 import { PiedDePage, APropos } from "./moteur/PiedDePage";
 import { Apercu, estApercu } from "./moteur/Apercu";
 import { ChoixStyle, STYLES } from "./moteur/ChoixStyle";
@@ -55,6 +56,8 @@ function Site() {
   // cette ligne de site.config.js (voir vite.config.js) : ce qu'on voit est donc ce qui sera mis en ligne.
   const style = STYLES.some(([id]) => id === SITE.style) ? SITE.style : "blocs";
   const sim = (SITE.pages || []).find((s) => s.id === activeId);
+  // Page intermédiaire d'un menu (…/?sim=menu:<id>) : des tuiles vers les pages de ce menu.
+  const menuPage = typeof activeId === "string" && activeId.startsWith("menu:") ? menus.find((m) => m.id === activeId.slice(5)) : null;
 
   useEffect(() => { document.documentElement.style.setProperty("--accent", SITE.couleur || "#0b4f94"); }, []);
   useEffect(() => {
@@ -63,9 +66,9 @@ function Site() {
     return () => window.removeEventListener("popstate", retour);
   }, []);
   useEffect(() => {
-    document.title = sim ? `${sim.titre} — ${SITE.titre}` : activeId === "a-propos" ? `À propos — ${SITE.titre}` : SITE.titre;
+    document.title = sim ? `${sim.titre} — ${SITE.titre}` : menuPage ? `${menuPage.label} — ${SITE.titre}` : activeId === "a-propos" ? `À propos — ${SITE.titre}` : SITE.titre;
     window.scrollTo(0, 0);
-  }, [activeId, sim]);
+  }, [activeId, sim, menuPage]);
 
   function naviguer(id) {
     const u = new URL(window.location.href);
@@ -73,28 +76,26 @@ function Site() {
     window.history.pushState(null, "", u.toString());
     setActiveId(id || null);
   }
-  // Fil d'Ariane : le menu de la page ramène à l'accueil, sur le bloc de ce menu.
+  // Fil d'Ariane : le menu de la page mène à la page de ce menu (ses tuiles).
   const menuDeLaPage = sim && menus.find((m) => m.id === sim.menu);
-  function allerAuMenu(id) {
-    naviguer(null);
-    setTimeout(() => document.getElementById(`menu-${id}`)?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
-  }
+  function allerAuMenu(id) { naviguer(`menu:${id}`); }
 
   const Composant = sim && composant(sim.fichier);
   let titre = null, contenu;
   if (!activeId) contenu = <Accueil site={{ ...SITE, style }} menus={menus} naviguer={naviguer} />;
+  else if (menuPage) { titre = menuPage.label; contenu = <PageMenu menu={menuPage} naviguer={naviguer} />; }
   else if (activeId === "a-propos") { titre = "À propos"; contenu = <APropos site={SITE} />; }
   else if (!sim) contenu = <p className="erreur">Page « {activeId} » introuvable. Vérifie son <code>id</code> dans site.config.js.</p>;
   else if (!Composant) { titre = sim.titre; contenu = <p className="erreur">Fichier <code>simulations/{sim.fichier}.jsx</code> introuvable. Vérifie la ligne <code>fichier</code> de cette page dans site.config.js.</p>; }
   else { titre = sim.titre; contenu = <EnChargement key={sim.id}><Composant /></EnChargement>; }
 
-  const entete = <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />;
+  const entete = <EnTete titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu || menuPage?.id} naviguer={naviguer} />;
 
   return (
     <div className={`racine racine-${style}${estApercu ? " avec-apercu" : ""}`}>
       {estApercu && <Apercu />}
       <div className="cadre">
-      {style === "lateral" && <BarreLaterale titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu} naviguer={naviguer} />}
+      {style === "lateral" && <BarreLaterale titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu || menuPage?.id} naviguer={naviguer} />}
       <main className="principal">
         {entete}
         {titre && (

@@ -102,6 +102,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 | `.vercel/` | Lien entre ce dossier et le projet Vercel (créé à la 1re mise en ligne) | Non, ne jamais le supprimer |
 
 - Le site est fait avec **React + Vite**. Navigation : `…/?sim=<id>` (un rafraîchissement reste sur la même page).
+- **Chaque menu a sa page intermédiaire** (`…/?sim=menu:<id du menu>`) : une tuile par page du menu, avec son icône, son titre et sa `description`. On y arrive par « Tout le menu … » en haut de chaque menu, et par le fil d'Ariane. Rien à créer : elle se construit toute seule à partir de `site.config.js`.
 - **6 menus** au départ : **Construire avec l'IA**, **Menu A**, **Menu B**, **Menu C**, **Outils** et **Exemples**. L'accueil montre chaque menu (bloc, carte ou liste selon le style).
   - **Construire avec l'IA** : métamérisme et titrage direct, deux exercices pour apprendre à écrire ses demandes à l'IA (une scène de départ et un guide, étape par étape).
   - **Exemples** (en dernier) : des pages toutes faites, pour voir ce qu'on peut faire et servir de modèles : masse volumique et extrait sec (parcours guidés), un jeu (défi chrono), instabilité des milieux dispersés (exemple volontairement simple, « à améliorer »).
@@ -167,13 +168,15 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
   C'est ton brouillon (localhost) : toi seul le vois. Ta page guide t'explique ses menus et ses boutons ronds.
 
-  1. Tout est bon, on le met en ligne
-  2. Je veux changer quelque chose
-  3. Je ne vois pas mon site
-  4. 😕 Je suis perdu·e
+  Veux-tu le mettre en ligne maintenant ?
+
+  1. Oui
+  2. Non, pas maintenant
+  3. 😕 Je suis perdu·e
 
   ✍️ *Écris le numéro de ta réponse dans la zone de message, en bas, puis appuie sur Entrée.*
   ```
+- **« Oui »** → étape 3 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton site tranquillement. Quand tu voudras le mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
 
 ### Étape 3 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)

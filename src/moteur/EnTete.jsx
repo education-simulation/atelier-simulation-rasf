@@ -60,7 +60,13 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
       <span>{p.titre}</span>
     </button>
   );
-  const listePages = (m) => (m.pages.length ? m.pages.map(lienPage) : <span className="et-vide">Pas encore de page ici.</span>);
+  // En tête de chaque menu : sa page intermédiaire (toutes ses pages en tuiles).
+  const lienMenu = (m) => (
+    <button key="menu" className="et-lien" onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}>
+      <span aria-hidden="true" className="et-icone">▦</span><span><b>Tout le menu {m.label}</b></span>
+    </button>
+  );
+  const listePages = (m) => [lienMenu(m), ...(m.pages.length ? m.pages.map(lienPage) : [<span key="vide" className="et-vide">Pas encore de page ici.</span>])];
 
   return (
     <header ref={ref} className="entete" style={{ height: HAUTEUR_ENTETE }}>
