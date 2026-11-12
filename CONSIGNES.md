@@ -151,8 +151,10 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 3. **Le style de ton site ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
 4. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement). **N'ajoute pas d'option « Indiquer mon établissement »** : le choix « Autre » permet déjà de l'écrire, en une seule question.
 5. **Ton nom ou ton pseudo ?** (affiché en bas du site) → « Prof de sciences » · Autre (écris ton nom ou ton pseudo).
-- **Vérification :** tu as les cinq réponses.
-- Ce que tu dois cliquer maintenant : la réponse qui te convient, puis « Submit » (ou écris le numéro).
+- **Après chaque réponse**, ajoute sa sous-étape dans `PROGRESSION.md` (outil d'écriture de fichier), exactement sous cette forme, pour que la page guide la coche devant la personne :
+  `- [x] Étape 1.1 — Nom du site`, puis `1.2 — Couleur`, `1.3 — Style`, `1.4 — Établissement`, `1.5 — Ton nom`.
+- **À la question du style**, ajoute dans le message, sur sa propre ligne : « 👉 Pour voir les 3 styles côte à côte : bouton « 🎨 Voir les 3 styles » dans ta page guide. »
+- **Vérification :** tu as les cinq réponses ; coche alors `- [x] Étape 1 — Faire connaissance`.
 
 ### Étape 2 — Voir ton site sur ton ordinateur
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
@@ -162,7 +164,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   >
   > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Construire avec l'IA** t'entraîne à écrire tes demandes à l'IA (exercice Métamérisme). Le menu **Exemples** montre ce qu'on peut faire (simulations, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant. Le menu **Outils** contient un diagramme ternaire, une calculatrice et un graphe vierge, prêts à servir.
   >
-  > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel.
+  > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon (localhost). La prochaine étape le met **en ligne** avec Vercel.
   >
   > **Les deux boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
   > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.

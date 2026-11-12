@@ -53,8 +53,9 @@ function CarteMail({ suivi }) {
 
 const ETAPES = [
   { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'agent copie le modèle et l'installe. Puis tu crées ton compte Vercel, avec la carte plus bas." },
-  { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity (réponds par le numéro) : le nom du site, sa couleur, son style, ton établissement, ton nom." },
-  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon, toi seul le vois." },
+  { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
+    sous: ["Le nom de ton site", "Sa couleur", "Son style", "Ton établissement", "Ton nom ou ton pseudo"] },
+  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois." },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
   { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
 ];
@@ -73,7 +74,9 @@ const LEXIQUE = [
 
 // Lit PROGRESSION.md : les étapes cochées « - [x] Étape N » et l'adresse du site en ligne.
 function lire(texte) {
-  const faites = new Set([...texte.matchAll(/^\s*-\s*\[x\]\s*Étape\s*(\d+)/gim)].map((m) => Number(m[1])));
+  const faites = new Set([...texte.matchAll(/^\s*-\s*\[x\]\s*Étape\s*(\d+)(?![.\d])/gim)].map((m) => Number(m[1])));
+  // Sous-étapes cochées « - [x] Étape 1.3 — … » (les questions de l'étape « Faire connaissance »).
+  const sousFaites = new Set([...texte.matchAll(/^\s*-\s*\[x\]\s*Étape\s*(\d+)\.(\d+)/gim)].map((m) => `${m[1]}.${m[2]}`));
   const adresse = texte.match(/Adresse du site\s*:\s*(https?:\/\/\S+)/i)?.[1];
   // Connexion Vercel en attente (écrite par l'agent) : « Connexion Vercel : https://vercel.com/… (code : ABCD-EFGH) »
   const m = texte.match(/Connexion Vercel\s*:\s*(https:\/\/vercel\.com\/[^\s)]+)(?:[^\n]*?code\s*:\s*([A-Z0-9-]+))?/i);
@@ -83,11 +86,11 @@ function lire(texte) {
   const morceaux = chemin.split(/[\\/]/).filter(Boolean);
   const dossier = morceaux.at(-1) || "";
   const lieu = /documents/i.test(morceaux.at(-2) || "") ? "Documents" : "Bureau";
-  return { faites, adresse, connexion, dossier, lieu };
+  return { faites, sousFaites, adresse, connexion, dossier, lieu };
 }
 
 function useProgression() {
-  const [etat, setEtat] = useState({ faites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", pret: false });
+  const [etat, setEtat] = useState({ faites: new Set(), sousFaites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", pret: false });
   useEffect(() => {
     let fini = false;
     const charger = () => fetch("./__atelier/progression", { cache: "no-store" })
@@ -184,6 +187,17 @@ const CSS = `
 @keyframes g-zone { 50% { stroke-opacity:.45; } }
 .g-parties p { margin:3px 0 0; font-size:14.5px; color:#475569; line-height:1.4; }
 .g-num-partie { flex-shrink:0; min-width:26px; padding:0 4px; height:26px; border-radius:13px; background:#f59e0b; color:#1f1300; font-weight:800; display:grid; place-items:center; font-size:14px; }
+.g-sous-etapes { list-style:none; margin:10px 0 0; padding:0; display:flex; flex-direction:column; gap:5px; }
+.g-sous-etapes li { font-size:15px; color:#64748b; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
+.g-sous-etapes li.fait { color:#166534; }
+.g-sous-etapes li.encours { color:#0f172a; font-weight:800; }
+.g-mini { border:1.5px solid #c4b5fd; background:#f5f3ff; color:#5b21b6; border-radius:99px; padding:3px 10px; font:700 13.5px 'Nunito',sans-serif; cursor:pointer; }
+.g-mini:hover { background:#ede9fe; }
+.g-styles { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
+.g-style { margin:0; background:#f8fafc; border-radius:14px; padding:10px; border:2px solid #e2e8f0; }
+.g-style svg { width:100%; height:auto; display:block; border-radius:8px; box-shadow:0 2px 8px rgba(15,23,42,.12); }
+.g-style figcaption { margin-top:8px; display:flex; flex-direction:column; gap:3px; font-size:14.5px; color:#475569; }
+.g-style figcaption b { color:#0f172a; font-size:15.5px; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -320,9 +334,71 @@ function FenetreAntigravity({ fermer }) {
   );
 }
 
+// --- Les 3 styles du site, côte à côte (même maquette que le vrai site, en miniature) ---
+const STYLES_SITE = [
+  { id: "blocs", nom: "1. Blocs de couleur", texte: "Menus en haut, accueil en grands blocs colorés. Joyeux et très visuel." },
+  { id: "lateral", nom: "2. Barre latérale", texte: "Menus dans une barre sombre à gauche, accueil sobre en cartes. Fait « application »." },
+  { id: "liste", nom: "3. Liste", texte: "Menus en haut, accueil en simple liste. Le plus rapide à lire." },
+];
+const COULEURS_MENUS = ["#2563eb", "#16a34a", "#f59e0b", "#db2777"];
+
+function MiniSite({ id }) {
+  const haut = (
+    <g><rect x="0" y="0" width="200" height="18" fill="#0b4f94" /><rect x="8" y="6" width="44" height="6" rx="3" fill="#fff" />
+      {[0, 1, 2, 3].map((k) => <rect key={k} x={92 + k * 26} y="6" width="20" height="6" rx="3" fill="#bfdbfe" />)}</g>
+  );
+  if (id === "blocs") return (
+    <svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#eef3f9" />{haut}
+      <rect x="10" y="26" width="90" height="10" rx="3" fill="#0f172a" />
+      {COULEURS_MENUS.map((c, k) => <rect key={k} x={10 + (k % 2) * 92} y={44 + Math.floor(k / 2) * 42} width="86" height="36" rx="6" fill={c} />)}
+    </svg>
+  );
+  if (id === "lateral") return (
+    <svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#f8fafc" />
+      <rect x="0" y="0" width="48" height="130" fill="#1e293b" /><rect x="8" y="8" width="32" height="6" rx="3" fill="#fff" />
+      {[0, 1, 2, 3, 4].map((k) => <rect key={k} x="8" y={24 + k * 12} width="30" height="5" rx="2.5" fill="#64748b" />)}
+      <rect x="58" y="10" width="80" height="9" rx="3" fill="#0f172a" />
+      {[0, 1, 2, 3].map((k) => <g key={k}><rect x={58 + (k % 2) * 70} y={30 + Math.floor(k / 2) * 48} width="64" height="42" rx="6" fill="#fff" stroke="#cbd5e1" />
+        <rect x={64 + (k % 2) * 70} y={36 + Math.floor(k / 2) * 48} width="14" height="14" rx="4" fill={COULEURS_MENUS[k]} /></g>)}
+    </svg>
+  );
+  return (
+    <svg viewBox="0 0 200 130" aria-hidden="true"><rect width="200" height="130" fill="#fff" />{haut}
+      <rect x="10" y="26" width="90" height="9" rx="3" fill="#0f172a" />
+      {[0, 1, 2, 3, 4, 5].map((k) => <g key={k}><circle cx="16" cy={48 + k * 13} r="3.5" fill={COULEURS_MENUS[k % 4]} /><rect x="26" y={45 + k * 13} width={120 - (k % 3) * 20} height="6" rx="3" fill="#cbd5e1" /></g>)}
+    </svg>
+  );
+}
+
+function FenetreStyles({ fermer }) {
+  useEffect(() => {
+    const touche = (e) => { if (e.key === "Escape") fermer(); };
+    window.addEventListener("keydown", touche);
+    return () => window.removeEventListener("keydown", touche);
+  }, [fermer]);
+  return (
+    <div className="g-voile" onClick={fermer}>
+      <div className="g-fenetre-aide" role="dialog" aria-modal="true" aria-labelledby="g-styles-titre" onClick={(e) => e.stopPropagation()}>
+        <div className="g-aide-tete">
+          <h2 id="g-styles-titre"><span aria-hidden="true">🎨</span> Les 3 styles de ton site</h2>
+          <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>
+        </div>
+        <p className="g-aide-astuce">Les pages et les menus restent les mêmes : seul l'habillage change. Tu pourras en changer à tout moment, en le demandant à l'agent.</p>
+        <div className="g-styles">
+          {STYLES_SITE.map((st) => (
+            <figure key={st.id} className="g-style"><MiniSite id={st.id} /><figcaption><b>{st.nom}</b><span>{st.texte}</span></figcaption></figure>
+          ))}
+        </div>
+        <p className="g-aide-astuce" style={{ marginTop: 14 }}>✍️ Dans Antigravity, écris le <b>numéro</b> du style qui te plaît, puis Entrée.</p>
+      </div>
+    </div>
+  );
+}
+
 export function Guide() {
   const suivi = useProgression();
-  const { faites, adresse, connexion } = suivi;
+  const { faites, sousFaites, adresse, connexion } = suivi;
+  const [styles, setStyles] = useState(false);
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
@@ -346,6 +422,7 @@ export function Guide() {
           <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
         </section>
         {aide && <FenetreAntigravity fermer={() => setAide(false)} />}
+        {styles && <FenetreStyles fermer={() => setStyles(false)} />}
 
         {connexion && !faites.has(3) && (
           <section className="g-carte g-vercel g-connexion" aria-labelledby="g-connexion">
@@ -381,6 +458,20 @@ export function Guide() {
                       {etat === "faite" && <span className="g-badge ok">Fait</span>}
                     </h3>
                     <p>{e.texte}</p>
+                    {e.sous && etat !== "avenir" && (
+                      <ol className="g-sous-etapes">
+                        {e.sous.map((titre, j) => {
+                          const fait = etat === "faite" || sousFaites.has(`${i}.${j + 1}`);
+                          const enCours = !fait && e.sous.findIndex((_, k) => !sousFaites.has(`${i}.${k + 1}`)) === j;
+                          return (
+                            <li key={j} className={fait ? "fait" : enCours ? "encours" : ""}>
+                              <span aria-hidden="true">{fait ? "✅" : enCours ? "➡️" : "⬜"}</span> {i + 1}.{j + 1} {titre}
+                              {titre === "Son style" && <button type="button" className="g-mini" onClick={() => setStyles(true)}>🎨 Voir les 3 styles</button>}
+                            </li>
+                          );
+                        })}
+                      </ol>
+                    )}
                   </div>
                 </li>
               );
@@ -428,7 +519,7 @@ export function Guide() {
         <section className="g-carte" aria-labelledby="g-liens">
           <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>
           <div className="g-boutons">
-            <a className="g-bouton bleu" href="./" target="_blank" rel="noreferrer">👀 Voir mon site (brouillon)</a>
+            <a className="g-bouton bleu" href="./" target="_blank" rel="noreferrer">👀 Voir mon site (brouillon, localhost)</a>
             {adresse && <a className="g-bouton vert" href={adresse} target="_blank" rel="noreferrer">🌍 Mon site en ligne</a>}
           </div>
         </section>
