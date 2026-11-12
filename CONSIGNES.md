@@ -6,7 +6,7 @@ Ce fichier vient **après `AGENTS.md`** : l'installation (étape 0, jusqu'à la 
 - lis `PROGRESSION.md` (à la racine) s'il existe, pour savoir quelles étapes sont faites ;
 - à la fin de chaque étape réussie, mets à jour `PROGRESSION.md` (`- [x] Étape N — titre`, **sans date**, exactement sous cette forme : la **page guide** de l'aperçu la relit toutes les 2 secondes pour cocher l'étape devant la personne).
 - **Numéros affichés à la personne** : les étapes 0 à 4 de ce fichier s'appellent pour elle **1 à 5** (« Étape 1 sur 5 » = étape 0 ici), comme sur la page guide.
-- **Coche une étape dès qu'elle est faite, même hors du parcours ou dans le désordre** (la personne fait souvent autre chose entre-temps) : après **toute** mise en ligne réussie, coche l'étape 3 et note `Adresse du site : https://….vercel.app` ; dès qu'elle a changé ou ajouté quelque chose à son site (page, menu, style, texte), coche l'étape 4. Le panneau des étapes (bouton escalier) de l'aperçu se règle sur ce fichier.
+- **Coche une étape dès qu'elle est faite, même hors du parcours ou dans le désordre** (la personne fait souvent autre chose entre-temps) : après **toute** mise en ligne réussie, coche l'étape 3 et note `Adresse du site : https://….vercel.app` ; dès qu'elle a changé ou ajouté quelque chose à son site (page, menu, style, texte), coche l'étape 4. La page guide se règle sur ce fichier.
 
 ### Les demandes d'autorisation (très important)
 Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait apparaître **une petite fenêtre** sous la conversation, que la personne doit valider. Un débutant ne sait pas qu'elle existe ni quoi cliquer. Donc :
@@ -114,7 +114,8 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
 - **Trois styles**, choisis par `style` dans `site.config.js` : `"blocs"` (menus en haut, accueil en blocs de couleur), `"lateral"` (barre sombre à gauche, accueil en cartes ; sur téléphone, menu en haut), `"liste"` (menus en haut, accueil en liste). Changer de style = changer ce seul mot. Les pages, les menus et le fil d'Ariane restent les mêmes. Le champ facultatif `description` d'une page s'affiche sur l'accueil des styles `lateral` et `liste` : écris-en une courte pour chaque nouvelle page.
 
-### Les deux boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
+### Les trois boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
+- **🗺️ guide** (vert) : ramène à la page guide. Dans la page guide, le bouton « 👀 Aller sur mon site (localhost) » fait l'inverse.
 - **👆 Sélectionner un élément à modifier** (orange) : la personne clique dessus ; chaque grande zone de la page s'entoure de pointillés avec un numéro ; elle clique sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur page « instabilite », section n°3 · Titre de la page, élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus). **Un tel retour est prioritaire sur le parcours** : même au milieu d'une étape ou d'une question, fais d'abord ce changement, montre-le (le lien de l'aperçu, puis Cmd + R / Ctrl + R), et seulement ensuite reprends où vous en étiez. Ne réponds jamais à un retour par autre chose. Sur l'accueil, la couleur d'un bloc de menu vient de `fond` (le fond du bloc) et de `texte` (ses écritures) dans `menus` de `site.config.js`. Si le souhait est ambigu (« mets en rouge » : le fond du bloc, ou la lettre ?), pose une question à choix avant de changer.
 - **🎨 Style** (violet) : un clic sur un des trois styles l'**enregistre** dans `site.config.js` (le serveur d'aperçu réécrit la ligne `style`), et l'aperçu se met à jour. Le site en ligne prend ce style **à la prochaine mise en ligne** : si la personne a changé de style, propose de remettre le site en ligne.
 
@@ -166,7 +167,8 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   >
   > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon (localhost). La prochaine étape le met **en ligne** avec Vercel.
   >
-  > **Les deux boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
+  > **Les boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
+> - 🗺️ **guide** : te ramène à ta page guide.
   > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
   > - 🎨 **Style** : change le style de ton site d'un clic (blocs de couleur, barre latérale ou liste). Il sera en ligne à la prochaine mise en ligne.
 

@@ -427,7 +427,10 @@ export function Guide() {
         <section className="g-carte g-repondre" aria-label="Comment répondre à l'agent">
           <p>✍️ <b>Pour répondre à l'agent</b> : écris le <b>numéro</b> de ta réponse dans la <b>zone de message</b> d'Antigravity, tout en bas, puis appuie sur <b>Entrée</b>.</p>
           <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'agent t'aide pas à pas.</p>
-          <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
+          <div className="g-boutons">
+            <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
+            {faites.has(0) && <a className="g-bouton vert" href="./">👀 Aller sur mon site (localhost)</a>}
+          </div>
         </section>
         {aide && <FenetreAntigravity fermer={() => setAide(false)} />}
         {styles && <FenetreStyles fermer={() => setStyles(false)} />}
