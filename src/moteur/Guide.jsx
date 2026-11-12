@@ -220,6 +220,19 @@ const CSS = `
 .g-chevron { flex-shrink:0; border:2px solid #2563eb; color:#2563eb; background:#eff6ff; border-radius:99px; padding:5px 14px; font:800 14.5px 'Nunito',sans-serif; white-space:nowrap; }
 .g-pliable summary:hover .g-chevron { background:#2563eb; color:#fff; }
 .g-phrase { background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; padding:12px 14px; font-family:Menlo,Consolas,monospace; font-size:14.5px; color:#0f172a; }
+.g-paysage { width:min(1280px, 96vw); max-height:94vh; padding:16px 18px 18px; }
+.g-paysage .g-aide-tete { margin-bottom:10px; }
+.g-aide-corps { display:grid; grid-template-columns:minmax(0, 1fr) 290px; gap:16px; align-items:start; }
+.g-aide-schema { min-width:0; }
+.g-aide-cote { display:flex; flex-direction:column; gap:10px; }
+.g-liste-parties { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:3px; }
+.g-liste-parties button { all:unset; box-sizing:border-box; width:100%; display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:9px; font-size:14px; font-weight:700; color:#334155; cursor:pointer; border:2px solid transparent; }
+.g-liste-parties button:hover, .g-liste-parties button.actif { background:#fffbeb; border-color:#f59e0b; color:#0f172a; }
+.g-liste-parties .g-num-partie { min-width:24px; height:22px; font-size:12px; }
+.g-fiche { background:#f8fafc; border:2px solid #fde68a; border-radius:12px; padding:10px 12px; }
+.g-fiche b { display:flex; align-items:center; gap:8px; font-size:15px; }
+.g-fiche p { margin:6px 0 0; font-size:14px; line-height:1.45; color:#334155; }
+@media (max-width:760px) { .g-aide-corps { grid-template-columns:1fr; } }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -238,6 +251,7 @@ const PARTIES = [
   { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page guide." },
   { id: "7a", titre: "Fermer le volet de droite", texte: "Le bouton en forme de rectangle, tout en haut à droite : un clic ferme le volet de droite, un 2e clic le rouvre." },
   { id: "7b", titre: "Agrandir le volet de droite", texte: "Le bouton ⤢, tout en haut à droite : le volet prend toute la fenêtre. Un 2e clic le remet à côté de la conversation." },
+  { id: "8", titre: "Settings : se déconnecter", texte: "En bas à gauche, clique sur « Settings », puis sur ton nom dans la fenêtre qui s'ouvre, puis sur « Sign Out ». Pour simplement fermer Antigravity : Cmd + Q (Mac) ou la croix de la fenêtre (Windows)." },
 ];
 
 // Zone encadrée pour chaque numéro (coordonnées du schéma) et position de sa pastille.
@@ -246,12 +260,13 @@ const ZONES = {
   "1b": { x: 2, y: 34, w: 146, h: 394, px: 128, py: 82 },
   "2": { x: 158, y: 40, w: 312, h: 290, px: 400, py: 140 },
   "3": { x: 158, y: 338, w: 304, h: 78, px: 474, py: 352 },
-  "4": { x: 168, y: 386, w: 116, h: 22, px: 206, py: 424 },
+  "4": { x: 168, y: 386, w: 116, h: 22, px: 206, py: 417 },
   "5": { x: 168, y: 386, w: 116, h: 22, px: 300, py: 398 },
   "6a": { x: 476, y: 32, w: 284, h: 398, px: 722, py: 110 },
   "6b": { x: 644, y: 35, w: 20, h: 20, px: 654, py: 76 },
   "7a": { x: 702, y: 3, w: 26, h: 26, px: 680, py: 16 },
   "7b": { x: 731, y: 3, w: 24, h: 26, px: 744, py: 44 },
+  "8": { x: 8, y: 401, w: 80, h: 20, px: 104, py: 411 },
 };
 
 function Pastille({ id, actif, setActif }) {
@@ -329,28 +344,44 @@ function SchemaAntigravity({ actif, setActif }) {
 }
 
 function FenetreAntigravity({ fermer }) {
-  const [actif, setActif] = useState(null);
+  const [actif, setActif] = useState(null);     // partie survolée
+  const [choisi, setChoisi] = useState("3");    // partie cliquée (reste affichée)
   useEffect(() => {
     const touche = (e) => { if (e.key === "Escape") fermer(); };
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, [fermer]);
+  const montre = actif || choisi;
+  const fiche = PARTIES.find((p) => p.id === montre);
+  const survol = (id) => { setActif(id); if (id) setChoisi(id); };
   return (
     <div className="g-voile" onClick={fermer}>
-      <div className="g-fenetre-aide" role="dialog" aria-modal="true" aria-labelledby="g-aide-titre" onClick={(e) => e.stopPropagation()}>
+      <div className="g-fenetre-aide g-paysage" role="dialog" aria-modal="true" aria-labelledby="g-aide-titre" onClick={(e) => e.stopPropagation()}>
         <div className="g-aide-tete">
           <h2 id="g-aide-titre"><span aria-hidden="true">🧭</span> Antigravity en un coup d'œil</h2>
+          <span className="g-aide-astuce" style={{ margin: 0, flex: 1 }}>Survole un numéro : la partie s'entoure en orange et son explication s'affiche à droite.</span>
           <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>
         </div>
-        <p className="g-aide-astuce">Passe la souris sur un numéro (ou sur une fiche) : la partie correspondante s'entoure en orange.</p>
-        <SchemaAntigravity actif={actif} setActif={setActif} />
-        <ol className="g-parties">
-          {PARTIES.map((p) => (
-            <li key={p.id} className={actif === p.id ? "actif" : ""} onMouseEnter={() => setActif(p.id)} onMouseLeave={() => setActif(null)}>
-              <span className="g-num-partie" aria-hidden="true">{p.id}</span><div><b>{p.titre}</b><p>{p.texte}</p></div>
-            </li>
-          ))}
-        </ol>
+        <div className="g-aide-corps">
+          <div className="g-aide-schema"><SchemaAntigravity actif={montre} setActif={survol} /></div>
+          <aside className="g-aide-cote">
+            <ol className="g-liste-parties">
+              {PARTIES.map((p) => (
+                <li key={p.id}>
+                  <button type="button" className={montre === p.id ? "actif" : ""} onMouseEnter={() => survol(p.id)} onMouseLeave={() => setActif(null)} onFocus={() => survol(p.id)} onClick={() => setChoisi(p.id)}>
+                    <span className="g-num-partie" aria-hidden="true">{p.id}</span>{p.titre}
+                  </button>
+                </li>
+              ))}
+            </ol>
+            {fiche && (
+              <div className="g-fiche" aria-live="polite">
+                <b><span className="g-num-partie" aria-hidden="true">{fiche.id}</span> {fiche.titre}</b>
+                <p>{fiche.texte}</p>
+              </div>
+            )}
+          </aside>
+        </div>
       </div>
     </div>
   );
