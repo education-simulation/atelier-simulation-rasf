@@ -54,7 +54,13 @@ function CarteMail({ suivi }) {
 const ETAPES = [
   { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'agent copie le modèle et l'installe. Puis tu crées ton compte Vercel, avec la carte plus bas." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
-    sous: ["Le nom de ton site", "Sa couleur", "Son style", "Ton établissement", "Ton nom ou ton pseudo"] },
+    sous: [
+      ["Le nom de ton site", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
+      ["Sa couleur", "Écris le numéro de la couleur qui te plaît (ou son nom, par exemple « rouge »)."],
+      ["Son style", "Regarde les 3 styles, puis écris 1, 2 ou 3."],
+      ["Ton établissement", "Écris son nom tel qu'il doit s'afficher, ou le numéro de « Je le dirai plus tard »."],
+      ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s'affiche en bas de ton site."],
+    ] },
   { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois." },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
   { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
@@ -191,6 +197,8 @@ const CSS = `
 .g-sous-etapes li { font-size:15px; color:#64748b; display:flex; align-items:center; flex-wrap:wrap; gap:6px; }
 .g-sous-etapes li.fait { color:#166534; }
 .g-sous-etapes li.encours { color:#0f172a; font-weight:800; }
+.g-aide-sous { flex-basis:100%; margin:0 0 2px 26px; font-size:14px; font-weight:600; color:#92400e; }
+.g-sous-etapes li:not(.encours) .g-aide-sous { color:#94a3b8; font-weight:400; }
 .g-mini { border:1.5px solid #c4b5fd; background:#f5f3ff; color:#5b21b6; border-radius:99px; padding:3px 10px; font:700 13.5px 'Nunito',sans-serif; cursor:pointer; }
 .g-mini:hover { background:#ede9fe; }
 .g-styles { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
@@ -460,13 +468,14 @@ export function Guide() {
                     <p>{e.texte}</p>
                     {e.sous && etat !== "avenir" && (
                       <ol className="g-sous-etapes">
-                        {e.sous.map((titre, j) => {
+                        {e.sous.map(([titre, aide], j) => {
                           const fait = etat === "faite" || sousFaites.has(`${i}.${j + 1}`);
                           const enCours = !fait && e.sous.findIndex((_, k) => !sousFaites.has(`${i}.${k + 1}`)) === j;
                           return (
                             <li key={j} className={fait ? "fait" : enCours ? "encours" : ""}>
                               <span aria-hidden="true">{fait ? "✅" : enCours ? "➡️" : "⬜"}</span> {i + 1}.{j + 1} {titre}
                               {titre === "Son style" && <button type="button" className="g-mini" onClick={() => setStyles(true)}>🎨 Voir les 3 styles</button>}
+                              {!fait && <small className="g-aide-sous">✍️ {aide}</small>}
                             </li>
                           );
                         })}
