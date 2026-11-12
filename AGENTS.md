@@ -137,11 +137,11 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
 ### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
-**L'ordre exact, sans rien intercaler** : présentation (question « C'est parti ! ») → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
+**L'ordre exact, sans rien intercaler** : présentation (question « C'est parti ! · Je suis perdu·e ») → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
 
 - **D'abord, la présentation, sous forme de question à choix** (sinon elle s'affiche après tes actions, ou pas du tout) : dès que tu as lu ce fichier, **avant `node -v` et avant toute autre action**, pose une question à choix dont le texte est exactement :
   « Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ : je le copie sur ton ordinateur, puis je t'ouvre une page guide en français. 👉 Des petites fenêtres en anglais vont s'afficher : clique toujours sur « Yes, and always allow » (le 3e choix), c'est sans danger. »
-  avec **un seul choix** : **C'est parti !**
+  avec **exactement deux choix** (l'outil de question en exige au moins deux) : **C'est parti !** · **😕 Je suis perdu·e**
 
 - **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (la règle des petites fenêtres est déjà donnée : 3e choix).
   - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
