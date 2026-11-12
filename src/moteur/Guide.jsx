@@ -249,6 +249,7 @@ const PARTIES = [
   { id: "5", titre: "Ton usage", texte: "Dans ce même menu des modèles : « View Usage » montre ce qu'il te reste (limite des 5 heures et de la semaine). Si Antigravity affiche « Model quota reached », choisis un autre modèle." },
   { id: "6a", titre: "Le navigateur d'Antigravity", texte: "Le volet de droite est un navigateur intégré à Antigravity, avec des onglets, comme Chrome : ta page guide, ton site (localhost)… Clique sur un onglet pour passer de l'un à l'autre ; le × d'un onglet le ferme ; ↗ ouvre l'onglet dans ton navigateur habituel." },
   { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page guide." },
+  { id: "6c", titre: "Régler la largeur", texte: "La fine barre verticale entre la conversation (2) et le volet de droite (6) se déplace : pose la souris dessus (le curseur devient ↔), garde le bouton appuyé et glisse à gauche ou à droite pour donner plus de place à l'un ou à l'autre." },
   { id: "7a", titre: "Fermer le volet de droite", texte: "Le bouton en forme de rectangle, tout en haut à droite : un clic ferme le volet de droite, un 2e clic le rouvre." },
   { id: "7b", titre: "Agrandir le volet de droite", texte: "Le bouton ⤢, tout en haut à droite : le volet prend toute la fenêtre. Un 2e clic le remet à côté de la conversation." },
   { id: "8", titre: "Settings : se déconnecter", texte: "En bas à gauche, clique sur « Settings », puis sur ton nom dans la fenêtre qui s'ouvre, puis sur « Sign Out ». Pour simplement fermer Antigravity : Cmd + Q (Mac) ou la croix de la fenêtre (Windows)." },
@@ -264,6 +265,7 @@ const ZONES = {
   "5": { x: 168, y: 386, w: 116, h: 22, px: 300, py: 398 },
   "6a": { x: 476, y: 32, w: 284, h: 398, px: 722, py: 110 },
   "6b": { x: 644, y: 35, w: 20, h: 20, px: 654, py: 76 },
+  "6c": { x: 470, y: 60, w: 12, h: 330, px: 476, py: 300 },
   "7a": { x: 702, y: 3, w: 26, h: 26, px: 680, py: 16 },
   "7b": { x: 731, y: 3, w: 24, h: 26, px: 744, py: 44 },
   "8": { x: 8, y: 401, w: 80, h: 20, px: 104, py: 411 },
@@ -369,6 +371,14 @@ function SchemaAntigravity({ actif, setActif }) {
           <rect x="125" y="344" width="126" height="22" rx="6" fill="#f59e0b" />
           <text x="133" y="359" fontSize="10.5" fontWeight="800" fill="#1f1300" style={t}>Sign Out   ③ clic</text>
           <text x="24" y="384" fontSize="9.5" fontWeight="800" fill="#f59e0b" style={t}>① clic sur Settings ↓</text>
+        </g>
+      )}
+      {/* la barre qui règle la largeur entre la conversation et le volet de droite (montrée pour 6c) */}
+      {actif === "6c" && (
+        <g>
+          <rect x="473" y="60" width="6" height="330" rx="3" fill="#f59e0b" />
+          <rect x="450" y="232" width="52" height="24" rx="12" fill="#f59e0b" stroke="#fff" strokeWidth="2" />
+          <path d="M456 244 l7 -6 v4 h26 v-4 l7 6 l-7 6 v-4 h-26 v4 z" fill="#1f1300" />
         </g>
       )}
       {/* zone encadrée */}
