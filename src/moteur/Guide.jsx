@@ -61,7 +61,11 @@ const ETAPES = [
       ["Ton établissement", "Écris son nom tel qu'il doit s'afficher, ou le numéro de « Je le dirai plus tard »."],
       ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s'affiche en bas de ton site."],
     ] },
-  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois." },
+  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
+    infos: [
+      "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
+      "Les boutons ronds en bas à droite : 🗺️ revenir à ce guide · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
+    ] },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
   { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
 ];
@@ -199,6 +203,7 @@ const CSS = `
 .g-sous-etapes li.encours { color:#0f172a; font-weight:800; }
 .g-aide-sous { flex-basis:100%; margin:0 0 2px 26px; font-size:14px; font-weight:600; color:#92400e; }
 .g-sous-etapes li:not(.encours) .g-aide-sous { color:#94a3b8; font-weight:400; }
+.g-infos { margin:8px 0 0; padding-left:18px; display:flex; flex-direction:column; gap:4px; font-size:14.5px; color:#475569; }
 .g-mini { border:1.5px solid #c4b5fd; background:#f5f3ff; color:#5b21b6; border-radius:99px; padding:3px 10px; font:700 13.5px 'Nunito',sans-serif; cursor:pointer; }
 .g-mini:hover { background:#ede9fe; }
 .g-styles { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:14px; }
@@ -418,6 +423,10 @@ export function Guide() {
   const basculerFenetres = (ouvert) => { setFenetresOuvertes(ouvert); try { localStorage.setItem("atelier.fenetresPliees", ouvert ? "0" : "1"); } catch { /* rien */ } };
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
+  // La barre avance aussi pendant une étape à sous-étapes (2.1, 2.2…) : chaque sous-étape faite compte pour une part de l'étape.
+  const partEnCours = encours >= 0 && ETAPES[encours].sous
+    ? ETAPES[encours].sous.filter((_, j) => sousFaites.has(`${encours}.${j + 1}`)).length / ETAPES[encours].sous.length : 0;
+  const avancement = Math.min(ETAPES.length, nbFaites + partEnCours);
   const toutFini = encours === -1;
 
   const [aide, setAide] = useState(false);
@@ -485,8 +494,8 @@ export function Guide() {
 
         <section className="g-carte" aria-labelledby="g-parcours">
           <h2 id="g-parcours"><span aria-hidden="true">🗺️</span> Où tu en es</h2>
-          <div className="g-barre" role="progressbar" aria-valuemin={0} aria-valuemax={ETAPES.length} aria-valuenow={nbFaites}>
-            <div style={{ width: `${Math.max(4, (100 * nbFaites) / ETAPES.length)}%` }} />
+          <div className="g-barre" role="progressbar" aria-valuemin={0} aria-valuemax={ETAPES.length} aria-valuenow={Math.round(avancement * 10) / 10}>
+            <div style={{ width: `${Math.max(4, (100 * avancement) / ETAPES.length)}%` }} />
           </div>
           <span className="g-compte">{toutFini ? "Toutes les étapes sont faites 🎉" : `${nbFaites} étape${nbFaites > 1 ? "s" : ""} sur ${ETAPES.length} terminée${nbFaites > 1 ? "s" : ""}`}</span>
           <ol className="g-etapes">
@@ -502,6 +511,7 @@ export function Guide() {
                       {etat === "faite" && <span className="g-badge ok">Fait</span>}
                     </h3>
                     <p>{e.texte}</p>
+                    {e.infos && etat !== "avenir" && <ul className="g-infos">{e.infos.map((t, k) => <li key={k}>{t}</li>)}</ul>}
                     {e.sous && (
                       <ol className="g-sous-etapes">
                         {e.sous.map(([titre, aide], j) => {

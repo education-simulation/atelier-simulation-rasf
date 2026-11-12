@@ -159,20 +159,21 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
 ### Étape 2 — Voir ton site sur ton ordinateur
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
-- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message, avec le vrai lien** :
+- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message court, avec le vrai lien, et rien de plus** (les menus et les boutons ronds sont expliqués dans la page guide) :
+  ```
+  **💬 Pour toi :**
 
-  > Clique sur ce lien : http://localhost:NNNN/ — il ouvre ton site dans ton navigateur.
-  >
-  > **Ce que tu vois** : ton site, avec des pages de départ. Le menu **Construire avec l'IA** t'entraîne à écrire tes demandes à l'IA (exercice Métamérisme). Le menu **Exemples** montre ce qu'on peut faire (simulations, un jeu…) : essaie-les. Les menus **A, B et C** contiennent des pages vides : tu les renommeras et les rempliras avec tes propres simulations, simplement en me le demandant. Le menu **Outils** contient un diagramme ternaire, une calculatrice et un graphe vierge, prêts à servir.
-  >
-  > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon (localhost). La prochaine étape le met **en ligne** avec Vercel.
-  >
-  > **Les boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
-> - 🗺️ **guide** : te ramène à ta page guide.
-  > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
-  > - 🎨 **Style** : change le style de ton site d'un clic (blocs de couleur, barre latérale ou liste). Il sera en ligne à la prochaine mise en ligne.
+  👉 Ton site : http://localhost:NNNN/ (clique : il s'ouvre à droite, dans Antigravity)
 
-  Puis la question à choix, **dont le texte reprend le lien** (sinon la carte le cache) : « Ton site : http://localhost:NNNN/ — qu'en penses-tu ? » → Tout est bon, on le met en ligne · Je veux changer quelque chose · Je ne vois pas mon site.
+  C'est ton brouillon (localhost) : toi seul le vois. Ta page guide t'explique ses menus et ses boutons ronds.
+
+  1. Tout est bon, on le met en ligne
+  2. Je veux changer quelque chose
+  3. Je ne vois pas mon site
+  4. 😕 Je suis perdu·e
+
+  ✍️ *Écris le numéro de ta réponse dans la zone de message, en bas, puis appuie sur Entrée.*
+  ```
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
 
 ### Étape 3 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)
