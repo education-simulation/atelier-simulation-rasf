@@ -60,13 +60,7 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
       <span>{p.titre}</span>
     </button>
   );
-  // En tête de chaque menu : sa page intermédiaire (toutes ses pages en tuiles).
-  const lienMenu = (m) => (
-    <button key="menu" className="et-lien" onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}>
-      <span aria-hidden="true" className="et-icone">▦</span><span><b>Tout le menu {m.label}</b></span>
-    </button>
-  );
-  const listePages = (m) => [lienMenu(m), ...(m.pages.length ? m.pages.map(lienPage) : [<span key="vide" className="et-vide">Pas encore de page ici.</span>])];
+  const listePages = (m) => (m.pages.length ? m.pages.map(lienPage) : <span className="et-vide">Pas encore de page ici.</span>);
 
   return (
     <header ref={ref} className="entete" style={{ height: HAUTEUR_ENTETE }}>
@@ -80,11 +74,11 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
           <nav aria-label="Menus" className="entete-menus">
             {menus.map((m) => (
               <div key={m.id} className="et-menu">
-                <button onClick={() => setOuvert((o) => (o === m.id ? null : m.id))} aria-expanded={ouvert === m.id}
-                  className={`et-bouton${menuActif === m.id ? " actif" : ""}${ouvert === m.id ? " deroule" : ""}`}>
-                  {m.label}<span aria-hidden="true" className="et-fleche">{ouvert === m.id ? "▲" : "▼"}</span>
+                {/* Un clic sur le menu ouvre sa page : une tuile par page du menu. */}
+                <button onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}
+                  className={`et-bouton${menuActif === m.id ? " actif" : ""}`}>
+                  {m.label}
                 </button>
-                {ouvert === m.id && <div className="et-panneau" role="region" aria-label={m.label}>{listePages(m)}</div>}
               </div>
             ))}
           </nav>
@@ -103,10 +97,9 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
           <button className="et-lien" onClick={() => aller(null)}><span aria-hidden="true" className="et-icone">🏠</span>Accueil</button>
           {menus.map((m) => (
             <div key={m.id} style={{ borderTop: "1px solid var(--bord)" }}>
-              <button className="et-lien et-titre-accordeon" onClick={() => setAccordeon((a) => (a === m.id ? null : m.id))} aria-expanded={accordeon === m.id}>
-                <span style={{ flex: 1 }}>{m.label}</span><span aria-hidden="true" className="et-fleche">{accordeon === m.id ? "▲" : "▼"}</span>
+              <button className="et-lien et-titre-accordeon" onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}>
+                <span style={{ flex: 1 }}>{m.label}</span><span aria-hidden="true" className="et-fleche">›</span>
               </button>
-              {accordeon === m.id && <div style={{ paddingLeft: 10, paddingBottom: 4 }}>{listePages(m)}</div>}
             </div>
           ))}
         </div>

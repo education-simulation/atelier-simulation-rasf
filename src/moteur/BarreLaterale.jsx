@@ -42,15 +42,17 @@ export function BarreLaterale({ titre, menus, activeId, menuActif, naviguer }) {
         </button>
         {menus.map((m) => (
           <div key={m.id} className="bl-groupe">
-            <button className={`bl-lien bl-menu${menuActif === m.id ? " actif" : ""}`} aria-expanded={ouverts.has(m.id)} onClick={() => basculer(m.id)}>
-              <span style={{ flex: 1 }}>{m.label}</span>
-              <span aria-hidden="true" className="bl-fleche">{ouverts.has(m.id) ? "▾" : "▸"}</span>
-            </button>
+            {/* Un clic sur le nom du menu ouvre sa page (tuiles) ; la petite flèche déplie ou replie ses pages. */}
+            <div style={{ display: "flex", alignItems: "center" }}>
+              <button className={`bl-lien bl-menu${menuActif === m.id ? " actif" : ""}`} style={{ flex: 1 }} aria-current={activeId === `menu:${m.id}` ? "page" : undefined} onClick={() => naviguer(`menu:${m.id}`)}>
+                <span style={{ flex: 1 }}>{m.label}</span>
+              </button>
+              <button className="bl-lien" style={{ width: "auto", padding: "6px 10px" }} aria-expanded={ouverts.has(m.id)} aria-label={ouverts.has(m.id) ? `Replier ${m.label}` : `Déplier ${m.label}`} onClick={() => basculer(m.id)}>
+                <span aria-hidden="true" className="bl-fleche">{ouverts.has(m.id) ? "▾" : "▸"}</span>
+              </button>
+            </div>
             {(replie || ouverts.has(m.id)) && (
               <div className="bl-pages">
-                <button className="bl-lien bl-page" aria-current={activeId === `menu:${m.id}` ? "page" : undefined} onClick={() => naviguer(`menu:${m.id}`)} title={replie ? `Tout le menu ${m.label}` : undefined}>
-                  <span aria-hidden="true" className="bl-icone">▦</span><span className="bl-texte">Tout le menu</span>
-                </button>
                 {m.pages.length ? m.pages.map((p) => (
                   <button key={p.id} className="bl-lien bl-page" aria-current={p.id === activeId ? "page" : undefined} onClick={() => naviguer(p.id)} title={replie ? p.titre : undefined}>
                     <span aria-hidden="true" className="bl-icone">{p.icone}</span><span className="bl-texte">{p.titre}</span>
