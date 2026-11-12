@@ -52,7 +52,7 @@ function CarteMail({ suivi }) {
 }
 
 const ETAPES = [
-  { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'agent copie le modèle et l'installe. Puis tu crées ton compte Vercel, avec la carte plus bas." },
+  { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'IA Gemini copie ton site sur ton ordinateur et l'installe." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
     sous: [
       ["Le nom de ton site", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
@@ -70,7 +70,7 @@ const CHOIX_FENETRE = [
   ["Yes, allow this time", "Oui, cette fois seulement"],
   ["Yes, and always allow in this conversation", "Oui, toujours dans cette conversation"],
   ["Yes, and always allow", "Oui, toujours : c'est celui-là", true],
-  ["No (tell the agent what to do instead)", "Non (dire à l'agent quoi faire)"],
+  ["No (tell the agent what to do instead)", "Non (dire à l'IA quoi faire)"],
 ];
 
 const LEXIQUE = [
@@ -222,7 +222,7 @@ const CSS = `
 const PARTIES = [
   { id: "1a", titre: "Réduire la barre de gauche", texte: "Le petit bouton en forme de rectangle, tout en haut à gauche, à côté des trois ronds. Un clic cache la barre de gauche pour gagner de la place ; un 2e clic la rouvre." },
   { id: "1b", titre: "La barre de gauche", texte: "Tes conversations. « New Conversation » en ouvre une nouvelle ; un clic sur une conversation y revient. Tout en bas : Settings (les réglages)." },
-  { id: "2", titre: "La conversation", texte: "Ce que l'agent te dit. Ses messages pour toi commencent par 💬 Pour toi. Le reste (« Ran commands », « Explored file »…) est technique : tu peux l'ignorer." },
+  { id: "2", titre: "La conversation", texte: "Ce que l'IA Gemini te dit. Ses messages pour toi commencent par 💬 Pour toi. Le reste (« Ran commands », « Explored file »…) est technique : tu peux l'ignorer." },
   { id: "3", titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
   { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles : choisis-en un pour la suite." },
   { id: "5", titre: "Ton usage", texte: "Dans ce même menu des modèles : « View Usage » montre ce qu'il te reste (limite des 5 heures et de la semaine). Si Antigravity affiche « Model quota reached », choisis un autre modèle." },
@@ -397,7 +397,7 @@ function FenetreStyles({ fermer }) {
           <h2 id="g-styles-titre"><span aria-hidden="true">🎨</span> Les 3 styles de ton site</h2>
           <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>
         </div>
-        <p className="g-aide-astuce">Les pages et les menus restent les mêmes : seul l'habillage change. Tu pourras en changer à tout moment, en le demandant à l'agent.</p>
+        <p className="g-aide-astuce">Les pages et les menus restent les mêmes : seul l'habillage change. Tu pourras en changer à tout moment, en le demandant à l'IA Gemini.</p>
         <div className="g-styles">
           {STYLES_SITE.map((st) => (
             <figure key={st.id} className="g-style"><MiniSite id={st.id} /><figcaption><b>{st.nom}</b><span>{st.texte}</span></figcaption></figure>
@@ -433,9 +433,9 @@ export function Guide() {
           <p className="g-sous">Garde cet onglet ouvert : il te montre où tu en es, et il se met à jour tout seul.</p>
         </header>
 
-        <section className="g-carte g-repondre" aria-label="Comment répondre à l'agent">
-          <p>✍️ <b>Pour répondre à l'agent</b> : écris le <b>numéro</b> de ta réponse dans la <b>zone de message</b> d'Antigravity, tout en bas, puis appuie sur <b>Entrée</b>.</p>
-          <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'agent t'aide pas à pas.</p>
+        <section className="g-carte g-repondre" aria-label="Comment répondre à l'IA Gemini">
+          <p>✍️ <b>Pour répondre à l'IA Gemini</b> : écris le <b>numéro</b> de ta réponse dans la <b>zone de message</b> d'Antigravity, tout en bas, puis appuie sur <b>Entrée</b>.</p>
+          <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'IA Gemini t'aide pas à pas.</p>
           <div className="g-boutons">
             <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
             {faites.has(0) && <a className="g-bouton vert" href="./">👀 Aller sur mon site (localhost)</a>}
@@ -462,7 +462,7 @@ export function Guide() {
         <details className="g-carte g-pliable" open={fenetresOuvertes} onToggle={(e) => basculerFenetres(e.currentTarget.open)}>
           <summary><h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2><span className="g-chevron" aria-hidden="true">▾</span></summary>
           <p style={{ margin: "0 0 14px", color: "#334155" }}>
-            Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'agent. <b>C'est sans danger pour ton ordinateur.</b>
+            Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
           </p>
           <div className="g-fenetre" aria-label="Exemple de petite fenêtre d'autorisation">
             <p className="g-fenetre-titre"><span aria-hidden="true">🖥️</span> Allow …?</p>
@@ -499,7 +499,7 @@ export function Guide() {
                       {etat === "faite" && <span className="g-badge ok">Fait</span>}
                     </h3>
                     <p>{e.texte}</p>
-                    {e.sous && etat !== "avenir" && (
+                    {e.sous && (
                       <ol className="g-sous-etapes">
                         {e.sous.map(([titre, aide], j) => {
                           const fait = etat === "faite" || sousFaites.has(`${i}.${j + 1}`);
@@ -522,7 +522,7 @@ export function Guide() {
           {toutFini && <p className="g-bravo">Bravo, ton site est en ligne ! 🎉</p>}
         </section>
 
-        {!faites.has(3) && (
+        {faites.has(1) && !faites.has(3) && (
           <section className="g-carte g-vercel" aria-labelledby="g-vercel">
             <h2 id="g-vercel"><span aria-hidden="true">▲</span> Ton compte Vercel</h2>
             <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras partager (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 4 ; crée ton compte maintenant, ça prend 2 minutes.</p>
