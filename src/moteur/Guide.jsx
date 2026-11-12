@@ -56,7 +56,6 @@ const ETAPES = [
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity (réponds par le numéro) : le nom du site, sa couleur, son style, ton établissement, ton nom." },
   { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon, toi seul le vois." },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
-  { emoji: "📱", titre: "Sur ton téléphone", texte: "Tu ouvres l'adresse sur ton téléphone, comme le verront tes classes." },
   { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
 ];
 
@@ -393,7 +392,7 @@ export function Guide() {
         {!faites.has(3) && (
           <section className="g-carte g-vercel" aria-labelledby="g-vercel">
             <h2 id="g-vercel"><span aria-hidden="true">▲</span> Ton compte Vercel</h2>
-            <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras donner à tes classes (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 4 ; crée ton compte maintenant, ça prend 2 minutes.</p>
+            <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras partager (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 4 ; crée ton compte maintenant, ça prend 2 minutes.</p>
             <ol>
               <li>Clique sur le bouton ci-dessous : la page de Vercel s'ouvre dans un nouvel onglet.</li>
               <li>Choisis <b>Hobby</b> (gratuit) et écris ton nom.</li>

@@ -2,7 +2,7 @@
   MAIL D'INSTRUCTIONS (envoyé depuis assistantia@rasf.fr quand la prof clique sur « M'envoyer les instructions » dans sa page guide).
   n8n relit ce fichier à chaque envoi et le remplit avec l'état de la prof :
     {{dossier}} {{lieu}} {{port}} {{adresse}} {{etape}}   → valeurs
-    {{etat:N}}                                           → ✅ (fait), ➡️ (en cours) ou ⬜ (à venir), pour N = 0 à 5
+    {{etat:N}}                                           → ✅ (fait), ➡️ (en cours) ou ⬜ (à venir) ; {{total}} = nombre d'étapes
     SI:encours:N … /SI                                   → gardé seulement si l'étape N est l'étape en cours
     SI:fini, SI:enligne … /SI                            → gardé si tout est fait / si le site est déjà en ligne
   Ce fichier est public : n'y mets jamais de vraie adresse ni de nom de personne.
@@ -11,14 +11,13 @@
 <p>Bonjour,</p>
 <p>Voici le point sur <b>ton site de simulations</b>, au moment où tu as cliqué. Garde ce mail : il t'explique comment tout fonctionne et comment reprendre un autre jour.</p>
 
-<p style="font-size:17px;margin:24px 0 8px"><b>📍 Où tu en es (étape {{etape}} sur 6)</b></p>
+<p style="font-size:17px;margin:24px 0 8px"><b>📍 Où tu en es (étape {{etape}} sur {{total}})</b></p>
 <table style="border-collapse:collapse;font-size:15px">
 <tr><td style="padding:3px 10px 3px 0">{{etat:0}}</td><td>1. Ton site arrive sur ton ordinateur</td></tr>
 <tr><td style="padding:3px 10px 3px 0">{{etat:1}}</td><td>2. Faire connaissance (nom, couleur, style du site)</td></tr>
 <tr><td style="padding:3px 10px 3px 0">{{etat:2}}</td><td>3. Voir ton site sur ton ordinateur</td></tr>
 <tr><td style="padding:3px 10px 3px 0">{{etat:3}}</td><td>4. Le mettre en ligne avec Vercel</td></tr>
-<tr><td style="padding:3px 10px 3px 0">{{etat:4}}</td><td>5. L'ouvrir sur ton téléphone</td></tr>
-<tr><td style="padding:3px 10px 3px 0">{{etat:5}}</td><td>6. La suite : tes premières simulations</td></tr>
+<tr><td style="padding:3px 10px 3px 0">{{etat:4}}</td><td>5. La suite : tes premières simulations</td></tr>
 </table>
 
 <p style="font-size:17px;margin:24px 0 8px"><b>➡️ Ta prochaine étape</b></p>
@@ -26,12 +25,11 @@
 <!--SI:encours:1--><p style="margin:0">L'IA te pose cinq questions : le <b>nom</b> de ton site, sa <b>couleur</b>, son <b>style</b>, ton établissement et ton nom. Réponds en écrivant le <b>numéro</b> de ton choix dans la zone de message, puis Entrée. Profites-en pour créer ton compte gratuit <b>Vercel</b> avec le bouton de ta page guide.</p><!--/SI-->
 <!--SI:encours:2--><p style="margin:0">L'IA te donne le lien de ton site sur ton ordinateur (<b>http://localhost:{{port}}/</b>). Clique dessus : il s'ouvre dans Antigravity. Regarde les menus, essaie les exemples, et dis à l'IA ce que tu veux changer.</p><!--/SI-->
 <!--SI:encours:3--><p style="margin:0">On met ton site <b>en ligne</b> avec Vercel. Si ce n'est pas fait, crée d'abord ton compte gratuit avec le bouton « Créer mon compte Vercel » de ta page guide (Hobby, puis Continue with Google). Ensuite la page guide affiche un bouton « Connecter mon compte Vercel » : clique dessus et confirme.</p><!--/SI-->
-<!--SI:encours:4--><p style="margin:0">Ouvre l'adresse de ton site sur ton <b>téléphone</b> : c'est ce que verront tes classes.</p><!--/SI-->
-<!--SI:encours:5--><p style="margin:0">Choisis la suite parmi les idées de l'IA : t'entraîner sur un exemple, créer une simulation de ton cours, renommer les menus… Après chaque changement, l'IA remet ton site en ligne.</p><!--/SI-->
+<!--SI:encours:4--><p style="margin:0">Choisis la suite parmi les idées de l'IA : t'entraîner sur un exemple, créer une simulation de ton cours, renommer les menus… Après chaque changement, l'IA remet ton site en ligne.</p><!--/SI-->
 <!--SI:fini--><p style="margin:0">Toutes les étapes sont faites 🎉. Continue avec l'IA : nouvelles pages, nouvelles simulations, chaque fois remises en ligne.</p><!--/SI-->
 
 <!--SI:enligne--><p style="font-size:17px;margin:24px 0 8px"><b>🌍 Ton site en ligne</b></p>
-<p style="margin:0"><a href="{{adresse}}">{{adresse}}</a> : c'est l'adresse à donner à tes classes.</p><!--/SI-->
+<p style="margin:0"><a href="{{adresse}}">{{adresse}}</a> : c'est l'adresse à partager.</p><!--/SI-->
 
 <p style="font-size:17px;margin:24px 0 8px"><b>🧩 Comment tout s'articule</b></p>
 <ul style="margin:0;padding-left:20px">
