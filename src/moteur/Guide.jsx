@@ -65,7 +65,7 @@ const ETAPES = [
     infos: [
       "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
       "Les boutons ronds en bas à droite : 🗺️ revenir à ce guide · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
-    ] },
+    ], boutonSite: true },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
   { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
 ];
@@ -203,6 +203,7 @@ const CSS = `
 .g-sous-etapes li.encours { color:#0f172a; font-weight:800; }
 .g-aide-sous { flex-basis:100%; margin:0 0 2px 26px; font-size:14px; font-weight:600; color:#92400e; }
 .g-sous-etapes li:not(.encours) .g-aide-sous { color:#94a3b8; font-weight:400; }
+.g-bouton-etape { margin-top:10px; font-size:15px; padding:10px 16px; }
 .g-infos { margin:8px 0 0; padding-left:18px; display:flex; flex-direction:column; gap:4px; font-size:14.5px; color:#475569; }
 .g-mini { border:1.5px solid #c4b5fd; background:#f5f3ff; color:#5b21b6; border-radius:99px; padding:3px 10px; font:700 13.5px 'Nunito',sans-serif; cursor:pointer; }
 .g-mini:hover { background:#ede9fe; }
@@ -512,6 +513,9 @@ export function Guide() {
                     </h3>
                     <p>{e.texte}</p>
                     {e.infos && etat !== "avenir" && <ul className="g-infos">{e.infos.map((t, k) => <li key={k}>{t}</li>)}</ul>}
+                    {e.boutonSite && etat !== "avenir" && (
+                      <a className="g-bouton vert g-bouton-etape" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>
+                    )}
                     {e.sous && (
                       <ol className="g-sous-etapes">
                         {e.sous.map(([titre, aide], j) => {
