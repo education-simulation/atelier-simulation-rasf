@@ -419,9 +419,9 @@ export function Guide() {
   const suivi = useProgression();
   const { faites, sousFaites, adresse, connexion } = suivi;
   const [styles, setStyles] = useState(false);
-  // Carte « Les petites fenêtres en anglais » : ouverte par défaut, son état est retenu (rafraîchir la page ne la rouvre pas).
-  const [fenetresOuvertes, setFenetresOuvertes] = useState(() => { try { return localStorage.getItem("atelier.fenetresPliees") !== "1"; } catch { return true; } });
-  const basculerFenetres = (ouvert) => { setFenetresOuvertes(ouvert); try { localStorage.setItem("atelier.fenetresPliees", ouvert ? "0" : "1"); } catch { /* rien */ } };
+  // Carte « Les autorisations à accepter » : fermée par défaut, son état est retenu (un rafraîchissement le garde).
+  const [fenetresOuvertes, setFenetresOuvertes] = useState(() => { try { return localStorage.getItem("atelier.autorisationsOuvertes") === "1"; } catch { return false; } });
+  const basculerFenetres = (ouvert) => { setFenetresOuvertes(ouvert); try { localStorage.setItem("atelier.autorisationsOuvertes", ouvert ? "1" : "0"); } catch { /* rien */ } };
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   // La barre avance aussi pendant une étape à sous-étapes (2.1, 2.2…) : chaque sous-étape faite compte pour une part de l'étape.
@@ -473,7 +473,7 @@ export function Guide() {
         <CarteMail suivi={suivi} />
 
         <details className="g-carte g-pliable" open={fenetresOuvertes} onToggle={(e) => basculerFenetres(e.currentTarget.open)}>
-          <summary><h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2><span className="g-chevron" aria-hidden="true">{fenetresOuvertes ? "Réduire ▴" : "Afficher ▾"}</span></summary>
+          <summary><h2 id="g-fenetres"><span aria-hidden="true">🔐</span> Les autorisations à accepter (en anglais)</h2><span className="g-chevron" aria-hidden="true">{fenetresOuvertes ? "Réduire ▴" : "Afficher ▾"}</span></summary>
           <p style={{ margin: "0 0 14px", color: "#334155" }}>
             Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
           </p>

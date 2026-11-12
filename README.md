@@ -22,7 +22,7 @@ Pas besoin de compte GitHub. Il te faut seulement **Antigravity**, installé sur
 2. Ouvre une nouvelle conversation et colle cette phrase :
 
    ```text
-   Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf : lis d'abord son fichier AGENTS.md, puis suis-le pour me guider.
+   Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf : clone-le avec git, lis son fichier AGENTS.md, puis suis-le pour me guider.
    ```
 
 3. Quand une petite fenêtre « Allow… ? » s'affiche, clique toujours sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
