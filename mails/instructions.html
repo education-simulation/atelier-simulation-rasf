@@ -1,0 +1,62 @@
+<!--
+  MAIL D'INSTRUCTIONS (envoyé depuis assistantia@rasf.fr quand la prof clique sur « M'envoyer les instructions » dans sa page guide).
+  n8n relit ce fichier à chaque envoi et le remplit avec l'état de la prof :
+    {{dossier}} {{lieu}} {{port}} {{adresse}} {{etape}}   → valeurs
+    {{etat:N}}                                           → ✅ (fait), ➡️ (en cours) ou ⬜ (à venir), pour N = 0 à 5
+    SI:encours:N … /SI                                   → gardé seulement si l'étape N est l'étape en cours
+    SI:fini, SI:enligne … /SI                            → gardé si tout est fait / si le site est déjà en ligne
+  Ce fichier est public : n'y mets jamais de vraie adresse ni de nom de personne.
+-->
+<div style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:1.55;color:#0f172a;max-width:640px">
+<p>Bonjour,</p>
+<p>Voici le point sur <b>ton site de simulations</b>, au moment où tu as cliqué. Garde ce mail : il t'explique comment tout fonctionne et comment reprendre un autre jour.</p>
+
+<p style="font-size:17px;margin:24px 0 8px"><b>📍 Où tu en es (étape {{etape}} sur 6)</b></p>
+<table style="border-collapse:collapse;font-size:15px">
+<tr><td style="padding:3px 10px 3px 0">{{etat:0}}</td><td>1. Ton site arrive sur ton ordinateur</td></tr>
+<tr><td style="padding:3px 10px 3px 0">{{etat:1}}</td><td>2. Faire connaissance (nom, couleur, style du site)</td></tr>
+<tr><td style="padding:3px 10px 3px 0">{{etat:2}}</td><td>3. Voir ton site sur ton ordinateur</td></tr>
+<tr><td style="padding:3px 10px 3px 0">{{etat:3}}</td><td>4. Le mettre en ligne avec Vercel</td></tr>
+<tr><td style="padding:3px 10px 3px 0">{{etat:4}}</td><td>5. L'ouvrir sur ton téléphone</td></tr>
+<tr><td style="padding:3px 10px 3px 0">{{etat:5}}</td><td>6. La suite : tes premières simulations</td></tr>
+</table>
+
+<p style="font-size:17px;margin:24px 0 8px"><b>➡️ Ta prochaine étape</b></p>
+<!--SI:encours:0--><p style="margin:0">L'IA copie ton site sur ton ordinateur et l'installe, puis t'ouvre ta <b>page guide</b>. Tu n'as qu'à répondre à ses questions.</p><!--/SI-->
+<!--SI:encours:1--><p style="margin:0">L'IA te pose cinq questions : le <b>nom</b> de ton site, sa <b>couleur</b>, son <b>style</b>, ton établissement et ton nom. Réponds en écrivant le <b>numéro</b> de ton choix dans la zone de message, puis Entrée. Profites-en pour créer ton compte gratuit <b>Vercel</b> avec le bouton de ta page guide.</p><!--/SI-->
+<!--SI:encours:2--><p style="margin:0">L'IA te donne le lien de ton site sur ton ordinateur (<b>http://localhost:{{port}}/</b>). Clique dessus : il s'ouvre dans Antigravity. Regarde les menus, essaie les exemples, et dis à l'IA ce que tu veux changer.</p><!--/SI-->
+<!--SI:encours:3--><p style="margin:0">On met ton site <b>en ligne</b> avec Vercel. Si ce n'est pas fait, crée d'abord ton compte gratuit avec le bouton « Créer mon compte Vercel » de ta page guide (Hobby, puis Continue with Google). Ensuite la page guide affiche un bouton « Connecter mon compte Vercel » : clique dessus et confirme.</p><!--/SI-->
+<!--SI:encours:4--><p style="margin:0">Ouvre l'adresse de ton site sur ton <b>téléphone</b> : c'est ce que verront tes classes.</p><!--/SI-->
+<!--SI:encours:5--><p style="margin:0">Choisis la suite parmi les idées de l'IA : t'entraîner sur un exemple, créer une simulation de ton cours, renommer les menus… Après chaque changement, l'IA remet ton site en ligne.</p><!--/SI-->
+<!--SI:fini--><p style="margin:0">Toutes les étapes sont faites 🎉. Continue avec l'IA : nouvelles pages, nouvelles simulations, chaque fois remises en ligne.</p><!--/SI-->
+
+<!--SI:enligne--><p style="font-size:17px;margin:24px 0 8px"><b>🌍 Ton site en ligne</b></p>
+<p style="margin:0"><a href="{{adresse}}">{{adresse}}</a> : c'est l'adresse à donner à tes classes.</p><!--/SI-->
+
+<p style="font-size:17px;margin:24px 0 8px"><b>🧩 Comment tout s'articule</b></p>
+<ul style="margin:0;padding-left:20px">
+<li style="margin-bottom:6px"><b>Antigravity</b> : l'application de Google où tu parles à l'IA. C'est là que tout se passe.</li>
+<li style="margin-bottom:6px"><b>Gemini</b> : le modèle d'IA, le « cerveau » qui te répond et modifie ton site. Tu le choisis sous la zone de message ; « View Usage », dans ce même menu, montre ce qu'il te reste à utiliser.</li>
+<li style="margin-bottom:6px"><b>Ton dossier « {{dossier}} », sur ton {{lieu}}</b> : ce sont les fichiers de ton site, sur ton ordinateur. C'est lui que l'IA modifie quand tu lui demandes un changement. Ne le déplace pas et ne le renomme pas.</li>
+<li style="margin-bottom:6px"><b>Ton site sur ton ordinateur</b> (adresse <b>localhost</b>, « en local ») : ton brouillon. Toi seul le vois ; il s'ouvre dans Antigravity, à droite de la conversation.</li>
+<li style="margin-bottom:6px"><b>Vercel</b> : un service gratuit qui met ton site <b>en ligne</b>, à une adresse en .vercel.app que tout le monde peut ouvrir. À chaque « mise en ligne », l'IA y envoie une copie de ton dossier : tant que tu ne remets pas en ligne, tes changements restent seulement sur ton ordinateur.</li>
+</ul>
+
+<p style="font-size:17px;margin:24px 0 8px"><b>🗺️ Suivre tes étapes</b></p>
+<p style="margin:0">Ta <b>page guide</b> (http://localhost:{{port}}/?guide, à droite dans Antigravity) te montre où tu en es et se met à jour toute seule. Son bouton « 🧭 Antigravity en un coup d'œil » montre où se trouvent la zone de message, le choix du modèle et les volets. Elle ne marche que lorsque ton site tourne sur ton ordinateur : si elle ne s'ouvre plus, reprends ton site (voir plus bas).</p>
+
+<p style="font-size:17px;margin:24px 0 8px"><b>🆘 Demander de l'aide</b></p>
+<ul style="margin:0;padding-left:20px">
+<li style="margin-bottom:6px">Pour répondre à l'IA : écris le <b>numéro</b> de ton choix dans la zone de message, tout en bas, puis Entrée.</li>
+<li style="margin-bottom:6px">Perdu·e ? Écris simplement <b>« je suis perdu »</b> : l'IA t'explique pas à pas.</li>
+<li style="margin-bottom:6px">Une petite fenêtre en anglais « Allow…? » : clique sur <b>« Yes, and always allow »</b> (le 3<sup>e</sup> choix). C'est sans danger.</li>
+<li style="margin-bottom:6px">Toujours bloqué·e ? Fais une capture de ton écran (<b>Cmd + Maj + 4</b> sur Mac, <b>Windows + Maj + S</b> sur PC) et colle-la dans la conversation.</li>
+</ul>
+
+<p style="font-size:17px;margin:24px 0 8px"><b>🔁 Reprendre un autre jour</b></p>
+<p style="margin:0">Ouvre Antigravity, ouvre une <b>nouvelle conversation</b> et écris :</p>
+<p style="margin:8px 0 0;background:#f1f5f9;border:1px solid #cbd5e1;border-radius:8px;padding:12px 14px;font-family:Consolas,Menlo,monospace;font-size:14px">Reprends mon site, dossier {{dossier}} sur le {{lieu}}</p>
+<p style="margin:8px 0 0">L'IA relance ton site, te redonne le lien de ta page guide et reprend là où tu t'étais arrêté·e.</p>
+
+<p style="margin:24px 0 0">Bonne création !<br>L'assistant IA du RASF</p>
+</div>

@@ -11,7 +11,7 @@ const ADRESSE_ENVOI = "https://n8n.srv757556.hstgr.cloud/webhook/atelier-accueil
 const CLE_MAIL = "atelier.mailInstructions";
 const lireMail = () => { try { return localStorage.getItem(CLE_MAIL) || ""; } catch { return ""; } };
 
-function CarteMail() {
+function CarteMail({ suivi }) {
   const [envoyeA, setEnvoyeA] = useState(lireMail);
   const [adresse, setAdresse] = useState("");
   const [etat, setEtat] = useState("");
@@ -22,7 +22,9 @@ function CarteMail() {
     if (!valable) { setEtat("erreur"); return; }
     setEtat("envoi");
     try {
-      await fetch(`${ADRESSE_ENVOI}?a=${encodeURIComponent(adresse.trim())}`, { mode: "no-cors" });
+      // Le mail s'adapte à l'endroit où en est la personne : étapes faites, dossier, adresse en ligne.
+      const p = new URLSearchParams({ a: adresse.trim(), faites: [...suivi.faites].join(","), dossier: suivi.dossier || "", lieu: suivi.lieu || "", adresse: suivi.adresse || "" });
+      await fetch(`${ADRESSE_ENVOI}?${p}`, { mode: "no-cors" });
       try { localStorage.setItem(CLE_MAIL, adresse.trim()); } catch { /* rien */ }
       setEnvoyeA(adresse.trim()); setEtat("");
     } catch { setEtat("panne"); }
@@ -35,7 +37,7 @@ function CarteMail() {
         <p className="g-ok">✅ C'est envoyé à <b>{envoyeA}</b>. Regarde ta boîte mail dans une minute (et les courriers indésirables s'il n'arrive pas). <button type="button" className="g-lien" onClick={() => { setEnvoyeA(""); setAdresse(envoyeA); }}>Renvoyer</button></p>
       ) : (
         <>
-          <p>Un mail qui récapitule les étapes et explique comment reprendre ton site un autre jour. Facultatif.</p>
+          <p>Un mail qui fait le point sur <b>là où tu en es</b>, explique comment tout fonctionne (Antigravity, Gemini, ton dossier, Vercel) et comment reprendre un autre jour. Tu peux le redemander à chaque étape.</p>
           <form className="g-form" onSubmit={envoyer}>
             <input type="email" inputMode="email" autoComplete="email" placeholder="prenom.nom@rasf.fr" value={adresse}
               onChange={(e) => { setAdresse(e.target.value); if (etat === "erreur") setEtat(""); }} aria-label="Ton adresse mail RASF" />
@@ -77,11 +79,16 @@ function lire(texte) {
   // Connexion Vercel en attente (écrite par l'agent) : « Connexion Vercel : https://vercel.com/… (code : ABCD-EFGH) »
   const m = texte.match(/Connexion Vercel\s*:\s*(https:\/\/vercel\.com\/[^\s)]+)(?:[^\n]*?code\s*:\s*([A-Z0-9-]+))?/i);
   const connexion = m ? { lien: m[1], code: m[2] || "" } : null;
-  return { faites, adresse, connexion };
+  // Dossier du site, d'après la ligne « (Dossier du site : …/Desktop/mon-site) » : son nom et son endroit.
+  const chemin = texte.match(/Dossier du site\s*:\s*([^)\n]+)/i)?.[1]?.trim() || "";
+  const morceaux = chemin.split(/[\\/]/).filter(Boolean);
+  const dossier = morceaux.at(-1) || "";
+  const lieu = /documents/i.test(morceaux.at(-2) || "") ? "Documents" : "Bureau";
+  return { faites, adresse, connexion, dossier, lieu };
 }
 
 function useProgression() {
-  const [etat, setEtat] = useState({ faites: new Set(), adresse: null, connexion: null, pret: false });
+  const [etat, setEtat] = useState({ faites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", pret: false });
   useEffect(() => {
     let fini = false;
     const charger = () => fetch("./__atelier/progression", { cache: "no-store" })
@@ -264,7 +271,8 @@ function FenetreAntigravity({ fermer }) {
 }
 
 export function Guide() {
-  const { faites, adresse, connexion } = useProgression();
+  const suivi = useProgression();
+  const { faites, adresse, connexion } = suivi;
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
@@ -302,7 +310,7 @@ export function Guide() {
           </section>
         )}
 
-        <CarteMail />
+        <CarteMail suivi={suivi} />
 
         <section className="g-carte" aria-labelledby="g-parcours">
           <h2 id="g-parcours"><span aria-hidden="true">🗺️</span> Où tu en es</h2>
