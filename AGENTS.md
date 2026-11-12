@@ -24,7 +24,7 @@ Tu es l'agent d'Antigravity. Tu aides une **prof débutante** à installer son s
 
   Pas de « (Recommended) » ni de « recommandé » dans les choix (sauf « Bureau (recommandé) ») ; le choix le plus courant en premier. La personne répond « 1 », « 2 »… ou écrit autre chose avec ses mots : comprends-la. Si elle écrit « je suis perdu·e » à n'importe quel moment, aide-la (voir « Je suis perdu·e »).
   Dans ce fichier, « question à choix » veut dire **ce message numéroté**. Ne mets jamais de nom de fichier ni de commande dans un message.
-- **Le plus vite possible** : aucune commande de vérification (`ls`, `pwd`, `which`, `cat`), aucune lecture de fichier (ni `package.json`, ni `PROGRESSION.md`), aucune question en plus. **Seule exception** : lister le Bureau (ou Documents) avec ton outil de dossier, juste avant la copie, pour choisir un nom libre.
+- **Le plus vite possible** : aucune commande de vérification (`ls`, `pwd`, `which`, `cat`), aucune lecture de fichier (ni `package.json`, ni `PROGRESSION.md`), aucune question en plus.
 - **Une commande = une seule action courte**, chemin écrit en clair, sans `;`, sans variables, sans script.
 - **Hors du bac à sable dès le premier essai** (option « BypassSandbox » de ton outil de commande) : `git clone`, `mv`, `npm install`, `npm run dev`. Dans le bac à sable, elles échouent ou restent bloquées.
 - **N'ouvre aucune page toi-même** (ni `open`, ni `Start-Process`, ni outil de navigateur) : tu donnes les liens dans une question, la personne clique.
@@ -53,11 +53,13 @@ Choix : 1. **C'est parti !** · 2. **😕 Je suis perdu·e**
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »
 Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. Rien d'autre. **Pas de question sur le nom** : le dossier s'appelle `mon-site`.
 - Bureau : `Desktop` sur Mac ; sur Windows, souvent `C:\Users\<nom>\OneDrive\Bureau` (prends le vrai chemin).
-- **Ne touche JAMAIS à un dossier qui existe déjà** : la personne peut avoir déjà un site (créé dans une autre conversation), qu'il ne faut ni écraser, ni remplir, ni supprimer. **Avant de copier**, regarde le contenu du Bureau (ou de Documents) **avec ton outil qui liste un dossier** (seule vérification permise), puis prends le **premier nom libre** : `mon-site`, sinon `mon-site-2`, `mon-site-3`, `mon-site-4`, `mon-site-5`… Sans rien demander. Garde ce nom pour tout le reste (copie, installation, aperçu, page guide, `PROGRESSION.md`, phrase de reprise).
+- **Ne touche JAMAIS à un dossier qui existe déjà** : la personne peut déjà avoir un site (créé dans une autre conversation), qu'il ne faut ni écraser, ni remplir, ni supprimer. **Ne cherche pas à vérifier toi-même** si le dossier existe (dans le bac à sable, le Bureau paraît vide : un `ls` y répond « rien » même quand le dossier est là). C'est la **copie** qui vérifie, à l'étape 4.
 
-**4. La copie** — une commande, hors du bac à sable :
-- si le modèle est déjà dans `.gemini/antigravity/scratch` : Mac/Linux `mv <chemin du scratch> <dossier>/mon-site` ; Windows `Move-Item "<chemin du scratch>" "<dossier>\mon-site"` ;
-- sinon : `git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <dossier>/mon-site`.
+**4. La copie** — **toujours avec `git clone`, jamais avec `mv`** (même si le modèle est déjà dans `.gemini/antigravity/scratch`), hors du bac à sable :
+`git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <dossier>/mon-site`
+- Si git répond « **already exists and is not an empty directory** » : ce dossier est un autre site, **n'y touche pas**. Recommence aussitôt avec `mon-site-2`, puis `mon-site-3`… jusqu'à ce que la copie réussisse. Sans rien demander.
+- Garde le nom qui a réussi pour tout le reste (installation, aperçu, page guide, `PROGRESSION.md`, phrase de reprise).
+- `git clone` ne remplit jamais un dossier existant : c'est ce qui protège les autres sites. `mv`, lui, rangerait la copie **dans** l'autre site : interdit.
 
 **5. L'installation** — `npm install`, avec le dossier du site comme dossier de travail, hors du bac à sable, **au premier plan** : attends qu'il ait fini.
 
