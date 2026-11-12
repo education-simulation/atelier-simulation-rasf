@@ -24,7 +24,7 @@ Tu es l'agent d'Antigravity. Tu aides une **prof débutante** à installer son s
 
   Pas de « (Recommended) » ni de « recommandé » dans les choix (sauf « Bureau (recommandé) ») ; le choix le plus courant en premier. La personne répond « 1 », « 2 »… ou écrit autre chose avec ses mots : comprends-la. Si elle écrit « je suis perdu·e » à n'importe quel moment, aide-la (voir « Je suis perdu·e »).
   Dans ce fichier, « question à choix » veut dire **ce message numéroté**. Ne mets jamais de nom de fichier ni de commande dans un message.
-- **Le plus vite possible** : aucune commande de vérification (`ls`, `pwd`, `which`, `cat`), aucune lecture de fichier (ni `package.json`, ni `PROGRESSION.md`), aucune question en plus.
+- **Le plus vite possible** : aucune commande de vérification (`ls`, `pwd`, `which`, `cat`), aucune lecture de fichier (ni `package.json`, ni `PROGRESSION.md`), aucune question en plus. **Seule exception** : lister le Bureau (ou Documents) avec ton outil de dossier, juste avant la copie, pour choisir un nom libre.
 - **Une commande = une seule action courte**, chemin écrit en clair, sans `;`, sans variables, sans script.
 - **Hors du bac à sable dès le premier essai** (option « BypassSandbox » de ton outil de commande) : `git clone`, `mv`, `npm install`, `npm run dev`. Dans le bac à sable, elles échouent ou restent bloquées.
 - **N'ouvre aucune page toi-même** (ni `open`, ni `Start-Process`, ni outil de navigateur) : tu donnes les liens dans une question, la personne clique.
@@ -53,7 +53,7 @@ Choix : 1. **C'est parti !** · 2. **😕 Je suis perdu·e**
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »
 Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. Rien d'autre. **Pas de question sur le nom** : le dossier s'appelle `mon-site`.
 - Bureau : `Desktop` sur Mac ; sur Windows, souvent `C:\Users\<nom>\OneDrive\Bureau` (prends le vrai chemin).
-- Si `mon-site` existe déjà à cet endroit, prends `mon-site-2` (puis `mon-site-3`), sans rien demander. Ne copie jamais par-dessus un dossier existant.
+- **Ne touche JAMAIS à un dossier qui existe déjà** : la personne peut avoir déjà un site (créé dans une autre conversation), qu'il ne faut ni écraser, ni remplir, ni supprimer. **Avant de copier**, regarde le contenu du Bureau (ou de Documents) **avec ton outil qui liste un dossier** (seule vérification permise), puis prends le **premier nom libre** : `mon-site`, sinon `mon-site-2`, `mon-site-3`, `mon-site-4`, `mon-site-5`… Sans rien demander. Garde ce nom pour tout le reste (copie, installation, aperçu, page guide, `PROGRESSION.md`, phrase de reprise).
 
 **4. La copie** — une commande, hors du bac à sable :
 - si le modèle est déjà dans `.gemini/antigravity/scratch` : Mac/Linux `mv <chemin du scratch> <dossier>/mon-site` ; Windows `Move-Item "<chemin du scratch>" "<dossier>\mon-site"` ;
@@ -74,14 +74,14 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 Garde cet onglet ouvert : il te montre où tu en es et traduit les petites fenêtres en anglais.
 ```
 Choix : 1. **J'ai ouvert ma page guide** · 2. **😕 Je suis perdu·e**
-- Adresse : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `http://localhost:5484/?guide` ; `mon-site-3` → `http://localhost:5485/?guide`. (Seulement si la page ne s'ouvre pas : lis la ligne « Local: » de l'aperçu et redonne ce lien.)
+- Adresse, selon le nom du dossier : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Pour un autre nom, lis la ligne « Local: » de l'aperçu. (Seulement si la page ne s'ouvre pas : lis la ligne « Local: » de l'aperçu et redonne ce lien.)
 - « Je suis perdu·e » : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis repose la question.
 
 **8. La suite** — seulement maintenant :
 1. écris `PROGRESSION.md` à la racine du site, avec ton **outil d'écriture de fichier** :
    ```
    # Progression
-   Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier mon-site sur le Bureau ». (Dossier du site : <chemin complet>)
+   Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom du dossier> sur le <Bureau ou Documents> ». (Dossier du site : <chemin complet>)
 
    - [x] Étape 0 — Copier le modèle
    ```
