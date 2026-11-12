@@ -61,7 +61,7 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 
 **5. L'installation** — `npm install`, avec le dossier du site comme dossier de travail, hors du bac à sable, **au premier plan** : attends qu'il ait fini.
 
-**6. L'aperçu** — `npm run dev`, avec le dossier du site comme dossier de travail, hors du bac à sable, **en arrière-plan** (il doit continuer à tourner). **N'attends pas sa sortie** : l'adresse est connue d'avance.
+**6. L'aperçu** — `npm run dev`, avec le dossier du site comme dossier de travail, hors du bac à sable, **en arrière-plan** (il doit continuer à tourner). **Puis lis sa sortie** (quelques secondes suffisent) : la ligne « Local: » donne l'adresse **réelle**. Si le numéro prévu est déjà pris (un autre site, ou le même site déjà ouvert dans une autre conversation), Vite en choisit un autre tout seul : **utilise toujours le numéro de la ligne « Local: »**, jamais un numéro supposé.
 
 **7. La page guide** — question à choix, aérée exactement ainsi :
 ```
@@ -74,7 +74,7 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 Garde cet onglet ouvert : il te montre où tu en es et traduit les petites fenêtres en anglais.
 ```
 Choix : 1. **J'ai ouvert ma page guide** · 2. **😕 Je suis perdu·e**
-- Adresse, selon le nom du dossier : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Pour un autre nom, lis la ligne « Local: » de l'aperçu. (Seulement si la page ne s'ouvre pas : lis la ligne « Local: » de l'aperçu et redonne ce lien.)
+- Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien. 
 - « Je suis perdu·e » : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis repose la question.
 
 **8. La suite** — seulement maintenant :
