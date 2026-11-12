@@ -245,7 +245,7 @@ const PARTIES = [
   { id: "1b", titre: "La barre de gauche", texte: "Tes conversations. « New Conversation » en ouvre une nouvelle ; un clic sur une conversation y revient. Tout en bas : Settings (les réglages)." },
   { id: "2", titre: "La conversation", texte: "Ce que l'IA Gemini te dit. Ses messages pour toi commencent par 💬 Pour toi. Le reste (« Ran commands », « Explored file »…) est technique : tu peux l'ignorer." },
   { id: "3", titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
-  { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles : choisis-en un pour la suite." },
+  { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles. Passe la souris sur un modèle Gemini : 3 niveaux s'affichent, Low (faible : le plus rapide, consomme le moins), Medium (moyen) et High (élevé : plus réfléchi, consomme plus). Low ou Medium suffisent pour ton site." },
   { id: "5", titre: "Ton usage", texte: "Dans ce même menu des modèles : « View Usage » montre ce qu'il te reste (limite des 5 heures et de la semaine). Si Antigravity affiche « Model quota reached », choisis un autre modèle." },
   { id: "6a", titre: "Le navigateur d'Antigravity", texte: "Le volet de droite est un navigateur intégré à Antigravity, avec des onglets, comme Chrome : ta page guide, ton site (localhost)… Clique sur un onglet pour passer de l'un à l'autre ; le × d'un onglet le ferme ; ↗ ouvre l'onglet dans ton navigateur habituel." },
   { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page guide." },
@@ -324,14 +324,33 @@ function SchemaAntigravity({ actif, setActif }) {
       <rect x="496" y="118" width="244" height="40" rx="8" fill="#fff" /><rect x="496" y="168" width="244" height="80" rx="8" fill="#fff" />
       <rect x="506" y="182" width="224" height="18" rx="5" fill="#dcfce7" /><rect x="506" y="206" width="224" height="18" rx="5" fill="#fef3c7" stroke="#f59e0b" />
       {/* menu des modèles, montré pour 4 et 5 */}
+      {/* le menu des modèles (comme dans Antigravity), montré pour 4 et 5 */}
       {(actif === "4" || actif === "5") && (
         <g>
-          <rect x="168" y="270" width="190" height="112" rx="10" fill="#26262e" stroke="#52525b" />
-          <text x="182" y="292" fontSize="10.5" fill="#e4e4e7" style={t}>✓ Gemini 3.8 Flash</text>
-          <text x="182" y="314" fontSize="10.5" fill="#d4d4d8" style={t}>Gemini 3.8 Pro</text>
-          <text x="182" y="336" fontSize="10.5" fill="#d4d4d8" style={t}>Claude…   GPT-OSS…</text>
-          <rect x="174" y="348" width="178" height="24" rx="6" fill={actif === "5" ? "#f59e0b" : "#33333c"} />
-          <text x="182" y="364" fontSize="10.5" fontWeight="700" fill={actif === "5" ? "#1f1300" : "#e4e4e7"} style={t}>View Usage</text>
+          <rect x="164" y="196" width="230" height="186" rx="10" fill="#1c1c22" stroke="#52525b" />
+          <text x="176" y="214" fontSize="9.5" fill="#a1a1aa" style={t}>Model</text>
+          <rect x="170" y="221" width="218" height="22" rx="6" fill={actif === "4" ? "#f59e0b" : "#2e2e36"} />
+          <text x="178" y="236" fontSize="10.5" fontWeight="800" fill={actif === "4" ? "#1f1300" : "#fff"} style={t}>Gemini 3.8 Flash  Medium</text>
+          <text x="380" y="236" fontSize="11" fill={actif === "4" ? "#1f1300" : "#a1a1aa"} textAnchor="end" style={t}>›</text>
+          <text x="178" y="260" fontSize="10" fill="#d4d4d8" style={t}>Claude Sonnet 4.6 (Thinking)</text>
+          <text x="178" y="280" fontSize="10" fill="#d4d4d8" style={t}>Claude Opus 4.6 (Thinking)</text>
+          <text x="178" y="300" fontSize="10" fill="#d4d4d8" style={t}>GPT-OSS 120B (Medium)</text>
+          <text x="178" y="320" fontSize="10" fill="#71717a" style={t}>Gemini 4 …  Unavailable</text>
+          <line x1="170" y1="332" x2="388" y2="332" stroke="#3f3f46" />
+          <rect x="170" y="340" width="218" height="24" rx="6" fill={actif === "5" ? "#f59e0b" : "transparent"} />
+          <text x="178" y="356" fontSize="10.5" fontWeight="700" fill={actif === "5" ? "#1f1300" : "#e4e4e7"} style={t}>⏱ View Usage</text>
+          <text x="380" y="356" fontSize="11" fill={actif === "5" ? "#1f1300" : "#a1a1aa"} textAnchor="end" style={t}>›</text>
+        </g>
+      )}
+      {/* les 3 niveaux de Gemini : ils s'ouvrent quand la souris passe sur le modèle */}
+      {actif === "4" && (
+        <g>
+          <rect x="398" y="214" width="138" height="86" rx="10" fill="#1c1c22" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x="410" y="236" fontSize="10.5" fill="#e4e4e7" style={t}>Low <tspan fill="#a1a1aa">· faible</tspan></text>
+          <rect x="404" y="244" width="126" height="22" rx="6" fill="#3f3f46" />
+          <text x="410" y="259" fontSize="10.5" fontWeight="800" fill="#fff" style={t}>Medium <tspan fill="#d4d4d8" fontWeight="400">· moyen</tspan></text>
+          <text x="522" y="259" fontSize="10.5" fill="#fff" textAnchor="end" style={t}>✓</text>
+          <text x="410" y="288" fontSize="10.5" fill="#e4e4e7" style={t}>High <tspan fill="#a1a1aa">· élevé</tspan></text>
         </g>
       )}
       {/* zone encadrée */}
