@@ -565,7 +565,7 @@ export function Guide() {
         </header>
 
         <section className="g-carte g-repondre" aria-label="Comment répondre à l'IA Gemini">
-          <p>✍️ <b>Pour répondre à l'IA Gemini</b> : écris le <b>numéro</b> de ta réponse dans la <b>zone de message</b> d'Antigravity, tout en bas, puis appuie sur <b>Entrée</b>.</p>
+          <p>✍️ <b>Pour répondre à l'IA Gemini</b> : écris le <b>numéro</b> de ta réponse, <b>ou ta réponse avec tes mots</b>, dans la <b>zone de message</b> d'Antigravity, tout en bas, puis appuie sur <b>Entrée</b>.</p>
           <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'IA Gemini t'aide pas à pas.</p>
           <div className="g-boutons">
             <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
