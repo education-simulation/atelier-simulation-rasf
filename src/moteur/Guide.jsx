@@ -206,6 +206,12 @@ const CSS = `
 .g-style svg { width:100%; height:auto; display:block; border-radius:8px; box-shadow:0 2px 8px rgba(15,23,42,.12); }
 .g-style figcaption { margin-top:8px; display:flex; flex-direction:column; gap:3px; font-size:14.5px; color:#475569; }
 .g-style figcaption b { color:#0f172a; font-size:15.5px; }
+.g-pliable summary { list-style:none; cursor:pointer; display:flex; align-items:center; justify-content:space-between; gap:10px; }
+.g-pliable summary::-webkit-details-marker { display:none; }
+.g-pliable summary h2 { margin:0; }
+.g-pliable[open] summary { margin-bottom:14px; }
+.g-chevron { font-size:20px; color:#64748b; transition:transform .2s; }
+.g-pliable:not([open]) .g-chevron { transform:rotate(-90deg); }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -407,6 +413,9 @@ export function Guide() {
   const suivi = useProgression();
   const { faites, sousFaites, adresse, connexion } = suivi;
   const [styles, setStyles] = useState(false);
+  // Carte « Les petites fenêtres en anglais » : ouverte par défaut, son état est retenu (rafraîchir la page ne la rouvre pas).
+  const [fenetresOuvertes, setFenetresOuvertes] = useState(() => { try { return localStorage.getItem("atelier.fenetresPliees") !== "1"; } catch { return true; } });
+  const basculerFenetres = (ouvert) => { setFenetresOuvertes(ouvert); try { localStorage.setItem("atelier.fenetresPliees", ouvert ? "0" : "1"); } catch { /* rien */ } };
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
@@ -449,6 +458,27 @@ export function Guide() {
         )}
 
         <CarteMail suivi={suivi} />
+
+        <details className="g-carte g-pliable" open={fenetresOuvertes} onToggle={(e) => basculerFenetres(e.currentTarget.open)}>
+          <summary><h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2><span className="g-chevron" aria-hidden="true">▾</span></summary>
+          <p style={{ margin: "0 0 14px", color: "#334155" }}>
+            Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'agent. <b>C'est sans danger pour ton ordinateur.</b>
+          </p>
+          <div className="g-fenetre" aria-label="Exemple de petite fenêtre d'autorisation">
+            <p className="g-fenetre-titre"><span aria-hidden="true">🖥️</span> Allow …?</p>
+            {CHOIX_FENETRE.map(([en, fr, bon], i) => (
+              <div key={i} className={`g-choix${bon ? " bon" : ""}`}>
+                <span className="n">{i + 1}</span>
+                <span>{en}<small>{fr}</small></span>
+                {bon && <span className="g-fleche" aria-hidden="true">👈</span>}
+              </div>
+            ))}
+          </div>
+          <p className="g-regle">👉 <b>Clique toujours sur le 3e choix, « Yes, and always allow »</b>, puis sur <b>Submit</b>. La même demande ne reviendra plus.</p>
+          <div className="g-lexique">
+            {LEXIQUE.map(([en, fr]) => <div key={en} className="g-mot"><b>{en}</b> = {fr}</div>)}
+          </div>
+        </details>
 
         <section className="g-carte" aria-labelledby="g-parcours">
           <h2 id="g-parcours"><span aria-hidden="true">🗺️</span> Où tu en es</h2>
@@ -506,27 +536,6 @@ export function Guide() {
             <p className="g-note" style={{ color: "#94a3b8", margin: "12px 0 0" }}>Tu as déjà un compte Vercel ? Alors ne fais rien.</p>
           </section>
         )}
-
-        <section className="g-carte" aria-labelledby="g-fenetres">
-          <h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2>
-          <p style={{ margin: "0 0 14px", color: "#334155" }}>
-            Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'agent. <b>C'est sans danger pour ton ordinateur.</b>
-          </p>
-          <div className="g-fenetre" aria-label="Exemple de petite fenêtre d'autorisation">
-            <p className="g-fenetre-titre"><span aria-hidden="true">🖥️</span> Allow …?</p>
-            {CHOIX_FENETRE.map(([en, fr, bon], i) => (
-              <div key={i} className={`g-choix${bon ? " bon" : ""}`}>
-                <span className="n">{i + 1}</span>
-                <span>{en}<small>{fr}</small></span>
-                {bon && <span className="g-fleche" aria-hidden="true">👈</span>}
-              </div>
-            ))}
-          </div>
-          <p className="g-regle">👉 <b>Clique toujours sur le 3e choix, « Yes, and always allow »</b>, puis sur <b>Submit</b>. La même demande ne reviendra plus.</p>
-          <div className="g-lexique">
-            {LEXIQUE.map(([en, fr]) => <div key={en} className="g-mot"><b>{en}</b> = {fr}</div>)}
-          </div>
-        </section>
 
         <section className="g-carte" aria-labelledby="g-liens">
           <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>
