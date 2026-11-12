@@ -14,7 +14,7 @@ Si tu es une personne : dans Antigravity, écris à l'agent « bonjour ».
 La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit** (« bonjour », « hello », « aide-moi », un mot au hasard), **veut dire : « Suis ces consignes et guide-moi. »**
 
 **Ta toute première réponse est du texte, rien d'autre.** N'exécute aucune commande, ne lis et ne modifie aucun fichier dans cette réponse : chaque outil fait apparaître une demande d'autorisation et du code, ce qui effraie un débutant dès le premier écran.
-- Seule exception : la personne t'a demandé de **copier le modèle** (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… », ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 dans cet ordre : la présentation, **puis tout de suite la vérification de Node.js** (seule action avant les questions, précédée du message en gras sur la petite fenêtre), puis les deux questions à choix (dossier, puis nom), puis la copie. Puis enchaîne sur la première question de l'étape 1.
+- Seule exception : la personne t'a demandé de **copier le modèle** (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… », ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 dans cet ordre : la présentation, **puis tout de suite la vérification de Node.js** (seule action avant les questions, après la phrase en gras sur les petites fenêtres), puis les deux questions à choix (dossier, puis nom), puis la copie. Puis enchaîne sur la première question de l'étape 1.
 - Si la personne revient pour continuer (« Reprends mon site », « Reprends mon site qui est dans … », « on reprend »), lis `PROGRESSION.md` dans le dossier du projet (ou celui qu'elle donne) et propose de reprendre à la première étape non cochée.
 
 **Ensuite seulement**, au début de l'étape 2 :
@@ -25,14 +25,13 @@ La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit**
 ### Les demandes d'autorisation (très important)
 Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait apparaître **une petite fenêtre** sous la conversation, que la personne doit valider. Un débutant ne sait pas qu'elle existe ni quoi cliquer. Donc :
 
-1. **La première fois** que tu fais une sorte d'action dans la conversation (lire un fichier, écrire un fichier, lancer une commande), écris juste avant une phrase seule, en gras :
-   - pour **lire** un fichier : **« 👉 Une petite fenêtre s'affiche sous notre conversation : clique sur le 3e choix, « Yes, and always allow ». »** (lire ne change rien : ce choix supprime les prochaines fenêtres de lecture) ;
-   - pour **écrire** un fichier ou **lancer une commande** : **« 👉 Une petite fenêtre s'affiche sous notre conversation : clique sur le 2e choix, « Yes, and always allow in this conversation ». »**
-   **Ensuite, ne répète pas ce message** : une fois que la personne a choisi « always allow », la fenêtre n'apparaît plus, et le message la trompe (elle cherche une fenêtre qui n'existe pas). Seule exception : Antigravity peut redemander pour **un nouveau fichier** qu'on écrit pour la première fois. Dans ce cas, ajoute seulement, en fin de phrase et entre parenthèses : « (si une petite fenêtre s'affiche, 2e choix) ». Si la personne dit qu'une fenêtre attend, redonne le message complet.
+1. **Une seule règle pour toutes les petites fenêtres : le 3e choix, « Yes, and always allow »** (celui qui ne dit pas « in this conversation »). Toutes les actions de ce parcours sont sans danger pour l'ordinateur. Dis-le **une fois**, dans ta toute première réponse, avant ta première action, en une phrase seule en gras :
+   **« 👉 Tout au long du parcours, des petites fenêtres vont s'afficher sous notre conversation : clique à chaque fois sur « Yes, and always allow » (le 3e choix). C'est sans danger pour ton ordinateur, et chaque sorte d'action ne sera demandée qu'une fois. »**
+   **Ensuite, ne le répète pas** à chaque action : une fois « always allow » choisi, cette sorte de fenêtre ne revient plus, et un rappel inutile trompe la personne (elle cherche une fenêtre qui n'existe pas). Si la personne dit qu'une fenêtre attend, redis seulement : « 👉 Clique sur « Yes, and always allow » (le 3e choix). »
 2. **Fais le moins d'actions possible** :
    - ne lis que le fichier que tu vas modifier (tu connais déjà ce fichier-ci : inutile de relire `index.html`, `src/` ou `package.json`) ;
    - **aucune commande de vérification** (`curl`, `grep`, `ls`, `cat`, `date`, `git status`…) : c'est la personne qui vérifie, à l'écran, avec le lien de son site ;
-   - pour mettre le site en ligne, **une seule commande, exactement** : `npm run en-ligne` (elle construit le site puis l'envoie sur Vercel). Lance-la **dans le dossier du site en le donnant comme dossier de travail de ton outil de commande**, jamais avec `cd` ou `Set-Location` devant, jamais `npm.cmd` / `npx.cmd`, jamais la commande Vercel écrite en entier : la petite fenêtre doit afficher seulement `npm run en-ligne`. La première fois, dis : **« 👉 Une petite fenêtre s'affiche : clique sur le 3e choix, « Yes, and always allow ». Les prochaines mises en ligne se feront sans fenêtre. »**
+   - pour mettre le site en ligne, **une seule commande, exactement** : `npm run en-ligne` (elle construit le site puis l'envoie sur Vercel). Lance-la **dans le dossier du site en le donnant comme dossier de travail de ton outil de commande**, jamais avec `cd` ou `Set-Location` devant, jamais `npm.cmd` / `npx.cmd`, jamais la commande Vercel écrite en entier : la petite fenêtre doit afficher seulement `npm run en-ligne`. Les prochaines mises en ligne se feront sans fenêtre.
      (elle vérifie d'abord que le site se construit : s'il échoue, rien n'est envoyé et le site en ligne reste comme avant).
    - **Aucune commande Git** (`git add`, `commit`, `push`) : ce site n'utilise pas GitHub.
    - **Chaque commande est courte et lisible par une débutante : UNE seule action.** Jamais de script dans une commande : pas de variables (`$desktop`, `$target`…), pas de `if`, pas de `[Environment]::…` ni de `[System.IO.File]::…`, pas de plusieurs commandes enchaînées par `;`. Une commande longue affiche une grande fenêtre incompréhensible (« the auto-run safety check did not reach a decision ») qui fait peur et bloque la personne. Écris le vrai chemin en clair dans la commande. **Pour écrire un fichier (`PROGRESSION.md`, une page…), utilise ton outil d'écriture de fichier, jamais une commande.**
@@ -139,9 +138,9 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
   > 5. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
   > 6. Je te propose des idées pour la suite.
   >
-  > ⚠️ **Important : tu vas devoir accepter beaucoup de petites fenêtres** (souvent une vingtaine, surtout au début). Elles apparaissent sous notre conversation avant chacune de mes actions : lire un fichier, en écrire un, lancer une commande. **C'est normal et sans danger** : je ne touche qu'au dossier de ton site. À chaque fois, je te dis sur quel choix cliquer ; choisis **« … always allow »** quand je te le dis, il y en aura moins ensuite.
+  > ⚠️ **Important : tu vas devoir accepter beaucoup de petites fenêtres** (souvent une vingtaine, surtout au début). Elles apparaissent sous notre conversation avant chacune de mes actions : lire un fichier, en écrire un, lancer une commande. **C'est normal et sans danger** : je ne touche qu'au dossier de ton site. À chaque fois, clique toujours sur **« Yes, and always allow »** (le 3e choix) : chaque sorte d'action ne sera demandée qu'une fois.
 
-- **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (précédée du message en gras sur la petite fenêtre, 2e choix).
+- **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (la règle des petites fenêtres est déjà donnée : 3e choix).
   - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
   - Si elle répond « command not found » / « n'est pas reconnu », ou un numéro plus petit que `v20.19` : **arrête-toi là** (ne pose aucune question, ne copie rien) et affiche **exactement** ce message, sans rien ajouter :
 
@@ -196,7 +195,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
   Puis arrête-toi : la suite se fait dans la nouvelle conversation.
 - Pas besoin de compte GitHub : le modèle est public.
-- Ce que tu dois cliquer maintenant : le 2e choix de la petite fenêtre.
+- Ce que tu dois cliquer maintenant : « Yes, and always allow » (le 3e choix) dans la petite fenêtre.
 
 ### Étape 1 — Faire connaissance (questions à cliquer, une par une)
 Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur les classes, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
