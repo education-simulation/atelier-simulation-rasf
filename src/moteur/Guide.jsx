@@ -421,6 +421,7 @@ export function Guide() {
   const toutFini = encours === -1;
 
   const [aide, setAide] = useState(false);
+  // « Aller sur mon site » n'apparaît qu'au début de l'étape 3 (« Voir ton site »), une fois « Faire connaissance » cochée.
   // Onglets nommés : le bouton 🗺️ du site revient sur CET onglet, et « Aller sur mon site » sur celui du site, au lieu d'en ouvrir d'autres.
   useEffect(() => { document.title = "Ton site, étape par étape"; window.name = "atelier-guide"; }, []);
 
@@ -439,7 +440,7 @@ export function Guide() {
           <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'IA Gemini t'aide pas à pas.</p>
           <div className="g-boutons">
             <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
-            {faites.has(0) && <a className="g-bouton vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
+            {faites.has(1) && <a className="g-bouton vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
             {adresse && <a className="g-bouton noir" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon site en ligne</a>}
           </div>
         </section>
@@ -542,7 +543,7 @@ export function Guide() {
         <section className="g-carte" aria-labelledby="g-liens">
           <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>
           <div className="g-boutons">
-            <a className="g-bouton bleu" href="./" target="atelier-site">👀 Voir mon site (brouillon, localhost)</a>
+            {faites.has(1) && <a className="g-bouton bleu" href="./" target="atelier-site">👀 Voir mon site (brouillon, localhost)</a>}
             {adresse && <a className="g-bouton vert" href={adresse} target="atelier-en-ligne">🌍 Mon site en ligne</a>}
           </div>
         </section>
