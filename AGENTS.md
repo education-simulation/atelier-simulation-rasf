@@ -83,7 +83,7 @@ Choix : 1. **J'ai ouvert ma page guide** · 2. **😕 Je suis perdu·e**
    # Progression
    Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom du dossier> sur le <Bureau ou Documents> ». (Dossier du site : <chemin complet>)
 
-   - [x] Étape 0 — Copier le modèle
+   - [x] Étape 0 — Installer la page guide
    ```
 2. **lis `CONSIGNES.md` en entier** (il est long : lis-le jusqu'au bout, en plusieurs fois s'il le faut) ;
 3. enchaîne sur son **étape 1** (questions à choix : le nom du site, sa couleur…).

@@ -5,8 +5,8 @@ Ce fichier vient **après `AGENTS.md`** : l'installation (étape 0, jusqu'à la 
 **Le fichier `PROGRESSION.md`** (à la racine du site) :
 - lis `PROGRESSION.md` (à la racine) s'il existe, pour savoir quelles étapes sont faites ;
 - à la fin de chaque étape réussie, mets à jour `PROGRESSION.md` (`- [x] Étape N — titre`, **sans date**, exactement sous cette forme : la **page guide** de l'aperçu la relit toutes les 2 secondes pour cocher l'étape devant la personne).
-- **Numéros affichés à la personne** : les étapes 0 à 4 de ce fichier s'appellent pour elle **1 à 5** (« Étape 1 sur 5 » = étape 0 ici), comme sur la page guide.
-- **Coche une étape dès qu'elle est faite, même hors du parcours ou dans le désordre** (la personne fait souvent autre chose entre-temps) : après **toute** mise en ligne réussie, coche l'étape 3 et note `Adresse du site : https://….vercel.app` ; dès qu'elle a changé ou ajouté quelque chose à son site (page, menu, style, texte), coche l'étape 4. La page guide se règle sur ce fichier.
+- **Numéros affichés à la personne** : les étapes 0 à 5 de ce fichier s'appellent pour elle **1 à 6** (« Étape 1 sur 6 » = étape 0 ici), comme sur la page guide.
+- **Coche une étape dès qu'elle est faite, même hors du parcours ou dans le désordre** (la personne fait souvent autre chose entre-temps) : après **toute** mise en ligne réussie, coche l'étape 4 et note `Adresse du site : https://….vercel.app` ; dès qu'elle a changé ou ajouté quelque chose à son site (page, menu, style, texte), coche l'étape 5. La page guide se règle sur ce fichier.
 
 ### Les demandes d'autorisation (très important)
 Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait apparaître **une petite fenêtre** sous la conversation, que la personne doit valider. Un débutant ne sait pas qu'elle existe ni quoi cliquer. Donc :
@@ -57,7 +57,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 
   ```
   ---
-  🏁 **Étape N sur 5 terminée : <titre de l'étape>**
+  🏁 **Étape N sur 6 terminée : <titre de l'étape>**
   Une phrase de bilan.
 
   ➡️ **Étape N+1 : <titre>**
@@ -67,7 +67,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - **Une seule action à la fois.** Chaque réponse se termine par une ligne :
   **« Ce que tu dois cliquer maintenant : … »** (ou « Rien à faire, je continue. »).
 - **« 😕 Je suis perdu·e »** : ce choix figure dans **toutes** les questions à cliquer, et la personne peut aussi l'écrire à tout moment (« je suis perdu », « je ne comprends pas », « je ne sais pas quoi faire »). Quand elle le choisit, **n'enchaîne pas** et ne fais aucune action. Réponds en trois lignes courtes, sans jargon :
-  1. 📍 **Où on en est** : « On est à l'étape N sur 5 : <titre de l'étape> » (d'après `PROGRESSION.md`) ;
+  1. 📍 **Où on en est** : « On est à l'étape N sur 6 : <titre de l'étape> » (d'après `PROGRESSION.md`) ;
   2. 💡 **Ce qui vient de se passer**, en une phrase ;
   3. 👉 **La seule chose à faire maintenant**, en une phrase, avec le lien complet s'il y en a un.
   Puis repose la question, avec les mêmes choix (dont « 😕 Je suis perdu·e »). Si elle choisit encore « Je suis perdu·e », demande-lui une **capture de son écran** (Cmd + Maj + 4 sur Mac, Windows + Maj + S sur Windows) à glisser dans la conversation, et explique à partir de ce que tu y vois.
@@ -129,7 +129,7 @@ L'aperçu tourne **sur l'ordinateur de la personne**. Il est lancé **dès la fi
 - Les fois suivantes, l'aperçu n'est plus lancé : relance `npm run dev` en arrière-plan dès ta première action, puis rouvre la page guide.
 
 ### La page guide (`<lien de l'aperçu>?guide`)
-Une page de l'aperçu, **en français**, que la personne garde ouverte **dans le navigateur d'Antigravity** : les 5 étapes (faite ✅ / « On en est là » / à venir), une copie des petites fenêtres anglaises avec la flèche sur « Yes, and always allow » et un petit lexique (Allow, Submit, Skip…), et des boutons « Créer mon compte Vercel », « Voir mon site » et, quand `PROGRESSION.md` contient « Adresse du site : … », « Mon site en ligne ». Elle n'existe **que sur l'ordinateur**, jamais sur le site en ligne.
+Une page de l'aperçu, **en français**, que la personne garde ouverte **dans le navigateur d'Antigravity** : les 6 étapes (faite ✅ / « On en est là » / à venir), une copie des petites fenêtres anglaises avec la flèche sur « Yes, and always allow » et un petit lexique (Allow, Submit, Skip…), et des boutons « Créer mon compte Vercel », « Voir mon site » et, quand `PROGRESSION.md` contient « Adresse du site : … », « Mon site en ligne ». Elle n'existe **que sur l'ordinateur**, jamais sur le site en ligne.
 - **Tu ne l'ouvres pas toi-même** (ni `open`, ni `Start-Process`, ni outil de navigateur) : tu écris son lien complet, `http://localhost:NNNN/?guide` (vrai numéro lu après « Local: »), et **la personne clique dessus** dans la conversation ; Antigravity l'ouvre dans son navigateur.
 - Elle se met à jour toute seule quand tu coches une étape dans `PROGRESSION.md` : **ne la fais jamais recharger**, et ne décris pas son contenu dans la conversation.
 - Si la personne est perdue dans les étapes ou devant une fenêtre en anglais, rappelle-lui simplement : « Regarde ta page guide, dans l'onglet du navigateur d'Antigravity. »
@@ -143,7 +143,7 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
-### Étape 0 — Installation (décrite dans `AGENTS.md`, déjà faite)
+### Étape 0 — Installer ta page guide (décrite dans `AGENTS.md`, déjà faite)
 Présentation, Node.js, dossier, copie, installation, page guide : tout est dans `AGENTS.md`. Si la personne revient sans que l'étape 0 soit cochée, refais `AGENTS.md`.
 
 ### Étape 1 — Faire connaissance (questions à cliquer, une par une)
@@ -158,8 +158,11 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 - **À la question du style**, ajoute dans le message, sur sa propre ligne : « 👉 Pour voir les 3 styles côte à côte : bouton « 🎨 Voir les 3 styles » dans ta page guide. »
 - **Vérification :** tu as les cinq réponses ; coche alors `- [x] Étape 1 — Faire connaissance`.
 
-### Étape 2 — Voir ton site sur ton ordinateur
+### Étape 2 — Installer ton site (tes choix dans ton site)
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
+- Puis coche `- [x] Étape 2 — Installer ton site` et enchaîne **aussitôt** sur l'étape 3, sans question.
+
+### Étape 3 — Voir ton site sur ton ordinateur
 - L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message court, avec le vrai lien, et rien de plus** (les menus et les boutons ronds sont expliqués dans la page guide) :
   ```
   **💬 Pour toi :**
@@ -176,10 +179,10 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
   ✍️ *Écris le numéro de ta réponse dans la zone de message, en bas, puis appuie sur Entrée.*
   ```
-- **« Oui »** → étape 3 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton site tranquillement. Quand tu voudras le mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
+- **« Oui »** → étape 4 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton site tranquillement. Quand tu voudras le mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
 
-### Étape 3 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)
+### Étape 4 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)
 - **Tu n'ouvres JAMAIS une page Vercel toi-même** (ni `open`, ni `Start-Process`, ni ton outil de navigateur) : une page inconnue qui surgit toute seule perd la personne. **Chaque page Vercel s'ouvre par un bouton de la page guide, sur lequel la personne clique elle-même** (dans son navigateur habituel, hors d'Antigravity) : « Créer mon compte Vercel » et « Connecter mon compte Vercel ».
 - Explique en deux phrases : « Vercel est un service gratuit qui met ton site sur Internet. C'est Vercel qui choisit l'adresse, à partir du nom de ton dossier : par exemple `https://mon-site.vercel.app` (si ce nom est déjà pris, Vercel ajoute quelques lettres). Plus tard, si tu veux, tu pourras acheter un nom de domaine à toi (par exemple `mon-labo.fr`, environ 10 € par an) et le relier à ton site. »
 - **Vercel est-il déjà connecté sur cet ordinateur ?** Vérifie d'abord avec `npx --yes vercel@latest whoami` : s'il affiche un nom de compte, **ne demande aucune connexion** et passe directement à la mise en ligne.
@@ -194,14 +197,14 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 - **Vérification :** « Ton site est en ligne : <adresse courte>. » puis question à choix : Je le vois · Je ne le vois pas.
 - Ce que tu dois cliquer maintenant : le bouton « Connecter mon compte Vercel » de ta page guide, puis « Confirm » (seulement si la connexion était nécessaire), sinon rien.
 
-### Étape 4 — Choisir la suite (des idées à cliquer)
+### Étape 5 — Choisir la suite (des idées à cliquer)
 Beaucoup de profs ne savent pas par où commencer ; d'autres savent déjà. **Ne pose pas de question ouverte** (« que veux-tu faire manipuler ? ») : propose des idées, en une question à choix :
 « Et maintenant, que veux-tu faire ? »
 → **M'entraîner sur l'exemple Instabilité** · **Créer une simulation de mon cours (dans la page A1)** · **Renommer les menus A, B et C** · **J'ai déjà mon idée** (écris-la).
 - **M'entraîner sur l'exemple Instabilité** : propose 3 améliorations à cliquer (« ajouter la coalescence des gouttes », « ajouter une question à résoudre », « ajouter un graphique vitesse / rayon »), fais-en une, montre-la.
 - **Créer une simulation de mon cours** ou **J'ai déjà mon idée** : construis d'abord le prompt avec la personne (section « Construire le prompt ensemble » ci-dessous), puis écris la page et renomme-la dans `site.config.js`.
 - **Renommer les menus** : une question par menu (3 idées + Autre + « Garder ce nom »).
-- Après chaque changement : le lien de l'aperçu, puis question à choix « Ça marche, on le met en ligne » · « Je veux le modifier ». Puis remise en ligne (commande de l'étape 3, sans la connexion), et coche l'étape 4.
+- Après chaque changement : le lien de l'aperçu, puis question à choix « Ça marche, on le met en ligne » · « Je veux le modifier ». Puis remise en ligne (commande de l'étape 4, sans la connexion), et coche l'étape 5.
 - Ce que tu dois cliquer maintenant : l'idée qui te tente.
 
 ### Ensuite
@@ -274,7 +277,7 @@ Pour les couleurs (mode `true`), utilise `src/outils/colorimetrie.js` (`ILLUMINA
 | Encadré rouge « Cette simulation n'a pas pu s'afficher » | Erreur dans le fichier de la page | Lire le message affiché, corriger `simulations/<Nom>.jsx` |
 | « Page … introuvable » ou « Fichier … introuvable » | `id` ou `fichier` faux | Vérifier la ligne dans `pages` de `site.config.js` |
 | `npm run en-ligne` échoue avant l'envoi (erreur de construction) | Erreur dans un fichier `.jsx` ou dans `site.config.js` | Corriger, puis relancer la même commande |
-| Vercel répond « login required » ou « not authorized » | Pas encore connecté sur cet ordinateur | Refaire la connexion de l'étape 3 |
+| Vercel répond « login required » ou « not authorized » | Pas encore connecté sur cet ordinateur | Refaire la connexion de l'étape 4 |
 | Le lien de connexion Vercel a expiré | La personne a attendu trop longtemps | Relancer la connexion, et faire les clics d'une traite |
 | L'adresse du site demande de se connecter à Vercel | C'est une adresse de prévisualisation (longue, avec des lettres au hasard) | Donner l'adresse courte `https://<nom>.vercel.app` |
 | Beaucoup de petites fenêtres d'autorisation | Antigravity demande une fenêtre par sorte d'action, parfois par fichier | Normal : rappeler quel choix cliquer seulement si une fenêtre attend vraiment ; lire le moins de fichiers possible |

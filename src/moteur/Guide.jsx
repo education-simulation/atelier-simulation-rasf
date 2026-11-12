@@ -52,7 +52,7 @@ function CarteMail({ suivi }) {
 }
 
 const ETAPES = [
-  { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'IA Gemini copie ton site sur ton ordinateur et l'installe." },
+  { emoji: "🗺️", titre: "Installer ta page guide", texte: "L'IA Gemini copie le modèle sur ton ordinateur et t'ouvre ce guide." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
     sous: [
       ["Le nom de ton site", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
@@ -61,6 +61,7 @@ const ETAPES = [
       ["Ton établissement", "Écris son nom tel qu'il doit s'afficher, ou le numéro de « Je le dirai plus tard »."],
       ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s'affiche en bas de ton site."],
     ] },
+  { emoji: "🛠️", titre: "Installer ton site", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton site." },
   { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
     infos: [
       "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
@@ -450,14 +451,14 @@ export function Guide() {
           <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'IA Gemini t'aide pas à pas.</p>
           <div className="g-boutons">
             <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
-            {faites.has(1) && <a className="g-bouton vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
+            {faites.has(2) && <a className="g-bouton vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
             {adresse && <a className="g-bouton noir" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon site en ligne</a>}
           </div>
         </section>
         {aide && <FenetreAntigravity fermer={() => setAide(false)} />}
         {styles && <FenetreStyles fermer={() => setStyles(false)} />}
 
-        {connexion && !faites.has(3) && (
+        {connexion && !faites.has(4) && (
           <section className="g-carte g-vercel g-connexion" aria-labelledby="g-connexion">
             <h2 id="g-connexion"><span aria-hidden="true">🔑</span> Connecte ton compte Vercel</h2>
             <ol>
@@ -539,10 +540,10 @@ export function Guide() {
           {toutFini && <p className="g-bravo">Bravo, ton site est en ligne ! 🎉</p>}
         </section>
 
-        {faites.has(1) && !faites.has(3) && (
+        {faites.has(1) && !faites.has(4) && (
           <section className="g-carte g-vercel" aria-labelledby="g-vercel">
             <h2 id="g-vercel"><span aria-hidden="true">▲</span> Ton compte Vercel</h2>
-            <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras partager (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 4 ; crée ton compte maintenant, ça prend 2 minutes.</p>
+            <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras partager (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 5 ; crée ton compte maintenant, ça prend 2 minutes.</p>
             <ol>
               <li>Clique sur le bouton ci-dessous : la page de Vercel s'ouvre dans un nouvel onglet.</li>
               <li>Choisis <b>Hobby</b> (gratuit) et écris ton nom.</li>
@@ -557,7 +558,7 @@ export function Guide() {
         <section className="g-carte" aria-labelledby="g-liens">
           <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>
           <div className="g-boutons">
-            {faites.has(1) && <a className="g-bouton bleu" href="./" target="atelier-site">👀 Voir mon site (brouillon, localhost)</a>}
+            {faites.has(2) && <a className="g-bouton bleu" href="./" target="atelier-site">👀 Voir mon site (brouillon, localhost)</a>}
             {adresse && <a className="g-bouton vert" href={adresse} target="atelier-en-ligne">🌍 Mon site en ligne</a>}
           </div>
         </section>
