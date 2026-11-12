@@ -45,6 +45,23 @@ function enregistrerStyle() {
   }
 }
 
+// Page « Guide » de l'aperçu (…/?guide) : elle relit PROGRESSION.md par cette adresse, toutes les 2 secondes.
+//   GET /__atelier/progression → { texte } (texte vide si le fichier n'existe pas encore). Lecture seule, aperçu seulement.
+function progression() {
+  return {
+    name: 'atelier-progression',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/__atelier/progression', (req, res) => {
+        const fichier = join(dossier, 'PROGRESSION.md')
+        const texte = existsSync(fichier) ? readFileSync(fichier, 'utf8').slice(0, 20000) : ''
+        res.setHeader('Content-Type', 'application/json'); res.setHeader('Cache-Control', 'no-store')
+        res.end(JSON.stringify({ texte }))
+      })
+    },
+  }
+}
+
 // Sauvegardes d'une page (exercice Métamérisme…) : copies de simulations/<Page>.jsx dans versions/<Page>/, sur l'ordinateur.
 //   GET  /__atelier/versions?page=P      → liste des sauvegardes
 //   POST /__atelier/versions/sauver      { page, nom }      → copie la page actuelle
@@ -137,7 +154,7 @@ function versionsDesPages() {
 // Le chemin du dossier du site, affiché dans le bandeau de l'aperçu (sur l'ordinateur seulement).
 // Il n'est JAMAIS mis dans le site en ligne : à la construction (npm run build), il reste vide.
 export default defineConfig(({ command }) => ({
-  plugins: [react(), tailwindcss(), enregistrerStyle(), versionsDesPages()],
+  plugins: [react(), tailwindcss(), enregistrerStyle(), versionsDesPages(), progression()],
   base: './',
   server: { port },
   define: { __DOSSIER_DU_SITE__: JSON.stringify(command === 'serve' ? dossier : '') },

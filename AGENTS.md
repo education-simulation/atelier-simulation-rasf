@@ -15,11 +15,12 @@ La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit**
 
 **Ta toute première réponse est du texte, rien d'autre.** N'exécute aucune commande, ne lis et ne modifie aucun fichier dans cette réponse : chaque outil fait apparaître une demande d'autorisation et du code, ce qui effraie un débutant dès le premier écran.
 - Seule exception : la personne t'a demandé de **copier le modèle** (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… », ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 dans cet ordre : la présentation, **puis tout de suite la vérification de Node.js** (seule action avant les questions, après la phrase en gras sur les petites fenêtres), puis les deux questions à choix (dossier, puis nom), puis la copie. Puis enchaîne sur la première question de l'étape 1.
-- Si la personne revient pour continuer (« Reprends mon site », « Reprends mon site qui est dans … », « on reprend »), lis `PROGRESSION.md` dans le dossier du projet (ou celui qu'elle donne) et propose de reprendre à la première étape non cochée.
+- Si la personne revient pour continuer (« Reprends mon site », « Reprends mon site qui est dans … », « on reprend »), lis `PROGRESSION.md` dans le dossier du projet (ou celui qu'elle donne), **relance l'aperçu et rouvre la page guide** (voir « La page guide », section 3), puis propose de reprendre à la première étape non cochée.
 
 **Ensuite seulement**, au début de l'étape 2 :
 - lis `PROGRESSION.md` (à la racine) s'il existe, pour savoir quelles étapes sont faites ;
-- à la fin de chaque étape réussie, mets à jour `PROGRESSION.md` (`- [x] Étape N — titre`, **sans date**).
+- à la fin de chaque étape réussie, mets à jour `PROGRESSION.md` (`- [x] Étape N — titre`, **sans date**, exactement sous cette forme : la **page guide** de l'aperçu la relit toutes les 2 secondes pour cocher l'étape devant la personne).
+- **Numéros affichés à la personne** : les étapes 0 à 5 de ce fichier s'appellent pour elle **1 à 6** (« Étape 1 sur 6 » = étape 0 ici), comme sur la page guide.
 - **Coche une étape dès qu'elle est faite, même hors du parcours ou dans le désordre** (la personne fait souvent autre chose entre-temps) : après **toute** mise en ligne réussie, coche l'étape 3 et note `Adresse du site : https://….vercel.app` ; dès que la personne a ouvert le site en ligne, coche l'étape 4 ; dès qu'elle a changé ou ajouté quelque chose à son site (page, menu, style, texte), coche l'étape 5. Le panneau des étapes (bouton escalier) de l'aperçu se règle sur ce fichier.
 
 ### Les demandes d'autorisation (très important)
@@ -113,10 +114,17 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 
 ### L'aperçu du site, et son lien
 
-L'aperçu tourne **sur l'ordinateur de la personne**. À ta première vraie action de l'étape 2, lance-le toi-même, **en arrière-plan** (il doit continuer à tourner) :
-`npm install && npm run dev`
+L'aperçu tourne **sur l'ordinateur de la personne**. Il est lancé **dès la fin de l'étape 0**, juste après la copie, pour ouvrir la page guide. Deux commandes **séparées**, chacune lancée dans le dossier du site (donné comme dossier de travail de ton outil) :
+1. `npm install` (environ une minute, attends la fin) ;
+2. `npm run dev`, **en arrière-plan** (il doit continuer à tourner).
 - Le lien est **celui que Vite affiche après « Local: »** (par exemple `http://localhost:5537/`). Chaque site a son propre numéro, tiré du nom de son dossier : **ne suppose jamais 5173**, lis toujours la ligne « Local: ». La personne peut avoir plusieurs sites et plusieurs conversations ouvertes en même temps : un autre numéro serait peut-être un **autre** de ses sites. Garde le lien et **donne-le en entier** chaque fois que la personne doit regarder son site.
-- Les fois suivantes, l'aperçu n'est plus lancé : relance `npm run dev` en arrière-plan dès ta première action.
+- Les fois suivantes, l'aperçu n'est plus lancé : relance `npm run dev` en arrière-plan dès ta première action, puis rouvre la page guide.
+
+### La page guide (`<lien de l'aperçu>?guide`)
+Une page de l'aperçu, **en français**, que la personne garde ouverte à côté d'Antigravity : les 6 étapes (faite ✅ / « On en est là » / à venir), une copie des petites fenêtres anglaises avec la flèche sur « Yes, and always allow » et un petit lexique (Allow, Submit, Skip…), et des boutons « Créer mon compte Vercel », « Voir mon site » et, quand `PROGRESSION.md` contient « Adresse du site : … », « Mon site en ligne ». Elle n'existe **que sur l'ordinateur**, jamais sur le site en ligne.
+- **Ouvre-la dans son navigateur habituel**, jamais dans celui d'Antigravity, avec une commande courte : `open "http://localhost:NNNN/?guide"` (Mac), `Start-Process "http://localhost:NNNN/?guide"` (Windows), `xdg-open "…"` (Linux), avec le vrai numéro lu après « Local: ».
+- Elle se met à jour toute seule quand tu coches une étape dans `PROGRESSION.md` : **ne la fais jamais recharger**, et ne décris pas son contenu dans la conversation.
+- Si la personne est perdue dans les étapes ou devant une fenêtre en anglais, rappelle-lui simplement : « Regarde ta page guide, dans ton navigateur. »
 - **Si la commande répond que `npm` est introuvable** : Node.js n'est pas installé (la vérification de l'étape 0 a été sautée). Affiche le message Node.js de l'étape 0, tel quel. Tu ne peux pas l'installer toi-même.
 - **Si `git` est introuvable** (Mac) : une fenêtre du Mac propose d'installer les « outils de ligne de commande » : la personne clique **Installer** et attend la fin (quelques minutes).
 
@@ -132,7 +140,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
   > Bonjour ! Ensemble, on va créer ton site de simulations, en 15 minutes environ. Voici ce qui va se passer :
   > 1. Je vérifie qu'un logiciel gratuit, Node.js, est installé sur ton ordinateur (s'il manque, je te guide pour l'installer).
-  > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom) ; pendant ce temps, tu crées ton compte gratuit Vercel, pour la mise en ligne.
+  > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom) ; pendant ce temps, tu crées ton compte gratuit Vercel, pour la mise en ligne. Puis je t'ouvre une **page guide** en français dans ton navigateur, qui te suivra jusqu'au bout.
   > 3. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
   > 4. Tu vois ton site, sur ton ordinateur seulement.
   > 5. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
@@ -173,6 +181,9 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
   - si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : sur Mac et Linux `mv <chemin actuel> <chemin complet du nouveau dossier>` ; sur Windows `Move-Item "<chemin actuel>" "<chemin complet du nouveau dossier>"` (par exemple `Move-Item "C:\Users\anne\.gemini\antigravity\scratch\atelier-simulation-rasf" "C:\Users\anne\Desktop\mon-site"`).
   Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin. **Avant de copier, vérifie que ce dossier n'existe pas encore avec ton outil qui liste le contenu d'un dossier** (pas avec une commande) : s'il existe, dis-le et propose un autre nom (`mv` le rangerait dedans au lieu de le créer).
 - Puis écris `PROGRESSION.md` **avec ton outil d'écriture de fichier** (pas avec une commande).
+- **Puis ouvre la page guide** : `npm install`, puis `npm run dev` en arrière-plan, puis ouvre `http://localhost:NNNN/?guide` dans son navigateur habituel (voir « L'aperçu du site » et « La page guide », section 3). Écris alors :
+
+  > **💬 Pour toi :** je viens d'ouvrir dans ton navigateur ta **page guide**, en français. Garde-la à côté d'Antigravity : elle te montre où tu en es, et elle traduit les petites fenêtres en anglais.
 - **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
   - Mac : `/Users/<nom>/Desktop/mon-site`
   - Windows : `C:\Users\<nom>\Desktop\mon-site`
@@ -209,7 +220,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 
 ### Étape 2 — Voir ton site sur ton ordinateur
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
-- Lance l'aperçu (section 3), puis écris **ce message, avec le vrai lien** :
+- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message, avec le vrai lien** :
 
   > Clique sur ce lien : http://localhost:NNNN/ — il ouvre ton site dans ton navigateur.
   >

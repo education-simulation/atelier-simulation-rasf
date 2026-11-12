@@ -15,6 +15,8 @@ import { ChoixStyle, STYLES } from "./moteur/ChoixStyle";
 import { fermerCalculatrice, useCalculatriceOuverte } from "./outils/calculatriceFlottante.js";
 
 // La calculatrice flottante, commune à tout le site : chargée seulement quand on l'ouvre.
+// La page « Guide » (…/?guide) : seulement dans l'aperçu, chargée seulement quand on l'ouvre.
+const Guide = lazy(() => import("./moteur/Guide.jsx").then((m) => ({ default: m.Guide })));
 const CalculatriceFlottante = lazy(() => import("./outils/CalculatriceScientifique.jsx").then((m) => ({ default: m.CalculatriceScientifique })));
 import { EnChargement } from "./moteur/chargement";
 import { InspecteurLocal } from "./moteur/InspecteurLocal";
@@ -39,6 +41,11 @@ function construireMenus(site) {
 const lireId = () => new URLSearchParams(window.location.search).get("sim");
 
 export default function App() {
+  if (estApercu && new URLSearchParams(window.location.search).has("guide")) return <Suspense fallback={null}><Guide /></Suspense>;
+  return <Site />;
+}
+
+function Site() {
   const menus = useMemo(() => construireMenus(SITE), []);
   const [activeId, setActiveId] = useState(lireId);
   const calculatriceOuverte = useCalculatriceOuverte();
