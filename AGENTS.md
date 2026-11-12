@@ -44,6 +44,19 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - Parle **en français**, en phrases courtes, sans jargon. Si un mot technique est inévitable, explique-le en une demi-phrase.
 - **Jamais de consigne vague.** Ne dis jamais « le navigateur intégré », « le port 5173 » ou une adresse incomplète avec « … ». Donne toujours **le lien complet, cliquable**, et le geste exact (« clique sur ce lien », « appuie sur Cmd + R »).
 - **Des questions à cliquer, une à la fois.** Quand tu demandes quelque chose, pose **une seule question**, avec des **choix tout prêts** et toujours, à la fin, **« Autre (écris ta réponse) »** puis **« 😕 Je suis perdu·e »**. Si ton outil sait poser une question à choix (carte avec options et bouton « Submit »), utilise-le ; sinon, écris une liste numérotée et dis « réponds juste par le numéro ». **Ne marque aucune option comme recommandée** (pas de « Recommended », pas de « recommandé ») : mets simplement le choix le plus courant en premier. N'écris jamais une liste de plusieurs questions d'un coup. **Un lien ou une consigne importante ne doit jamais se trouver seulement au-dessus d'une carte à choix** : la carte peut le cacher, et la personne ne le voit pas. Écris-le aussi **dans le texte de la question** de la carte.
+- **Le message pour la personne se reconnaît d'un coup d'œil** : il commence **toujours** par la ligne **« 💬 Pour toi : »** (en gras, seule sur sa ligne). Tout le reste est technique et ne lui est pas destiné. Donc **travaille en silence** : n'écris **rien** entre tes actions (pas de « Je vais maintenant modifier… », « J'ai vérifié que… », « Let me… »), et ne parle **jamais en anglais**. Un seul message par réponse, à la fin, qui commence par 💬. Si une note technique est vraiment utile (une erreur, par exemple), mets-la **après** le message 💬, sur une seule ligne commençant par « 🔧 Détail technique (tu peux l'ignorer) : ».
+- **5 lignes au maximum par message**, question à cliquer comprise (seules exceptions : la présentation de l'étape 0 et les messages à afficher « exactement » écrits dans ce fichier). Une débutante qui voit 50 lignes ne lit rien et ne sait plus où elle en est.
+- **Ce que tu as fait : UNE ligne**, « ✅ C'est fait : … » (le résultat visible, pas la méthode). **Jamais** la liste des fichiers touchés, des changements, des commandes lancées ni de tes vérifications. Ajoute plutôt aux choix de la question « 🔍 Qu'est-ce que tu as changé ? » ; seulement si elle le choisit, détaille (toujours court).
+- **Fin d'une étape du parcours : un bloc à part, toujours le même**, pour qu'on voie qu'une étape est franchie (et rien d'autre ne ressemble à ce bloc) :
+
+  ```
+  ---
+  🏁 **Étape N sur 6 terminée : <titre de l'étape>**
+  Une phrase de bilan.
+
+  ➡️ **Étape N+1 : <titre>**
+  ```
+  puis la première question de l'étape suivante. Pendant une étape, n'utilise jamais 🏁 ni la ligne `---`.
 - **Des messages courts.** Pour faire vérifier quelque chose, pose une question à choix **dont le texte contient le lien** (ex. « Tout est bon » · « Je veux changer quelque chose » · « Je ne vois pas mon site ») : ne décris pas en détail ce qu'il faut regarder.
 - **Une seule action à la fois.** Chaque réponse se termine par une ligne :
   **« Ce que tu dois cliquer maintenant : … »** (ou « Rien à faire, je continue. »).
@@ -95,12 +108,8 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - Si un menu devient vide, retire-le de `menus` ; si la personne veut un 5e menu, ajoute-le avec sa couleur.
 - **Trois styles**, choisis par `style` dans `site.config.js` : `"blocs"` (menus en haut, accueil en blocs de couleur), `"lateral"` (barre sombre à gauche, accueil en cartes ; sur téléphone, menu en haut), `"liste"` (menus en haut, accueil en liste). Changer de style = changer ce seul mot. Les pages, les menus et le fil d'Ariane restent les mêmes. Le champ facultatif `description` d'une page s'affiche sur l'accueil des styles `lateral` et `liste` : écris-en une courte pour chaque nouvelle page.
 
-### Le bandeau bleu de l'aperçu
-En haut de l'aperçu (jamais en ligne), il rappelle que la page affiche **le code du dossier du site**, avec son chemin complet. Si la personne demande où est son site, montre-lui ce bandeau.
-
-### Les trois boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
+### Les deux boutons ronds de l'aperçu (en bas à droite, seulement sur l'ordinateur)
 - **👆 Sélectionner un élément à modifier** (orange) : la personne clique dessus ; chaque grande zone de la page s'entoure de pointillés avec un numéro ; elle clique sur un endroit de la page (un titre, un bouton, un texte), écrit ce qu'elle veut changer et clique **« Copier pour l'assistant »**, puis colle dans la conversation. Tu reçois un message de la forme `[Retour sur page « instabilite », section n°3 · Titre de la page, élément <h2> : "…"] Commentaire : …` : c'est une demande de changement sur cet élément-là ; retrouve-le dans le fichier de la page ouverte (ou dans `site.config.js` pour les titres et menus). **Un tel retour est prioritaire sur le parcours** : même au milieu d'une étape ou d'une question, fais d'abord ce changement, montre-le (le lien de l'aperçu, puis Cmd + R / Ctrl + R), et seulement ensuite reprends où vous en étiez. Ne réponds jamais à un retour par autre chose. Sur l'accueil, la couleur d'un bloc de menu vient de `fond` (le fond du bloc) et de `texte` (ses écritures) dans `menus` de `site.config.js`. Si le souhait est ambigu (« mets en rouge » : le fond du bloc, ou la lettre ?), pose une question à choix avant de changer.
-- **Les étapes** (bouton bleu, icône escalier) : la liste des étapes du parcours, cochées d'après `PROGRESSION.md`. Il disparaît quand tout est fait.
 - **🎨 Style** (violet) : un clic sur un des trois styles l'**enregistre** dans `site.config.js` (le serveur d'aperçu réécrit la ligne `style`), et l'aperçu se met à jour. Le site en ligne prend ce style **à la prochaine mise en ligne** : si la personne a changé de style, propose de remettre le site en ligne.
 
 ### L'aperçu du site, et son lien
@@ -209,9 +218,8 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   >
   > **« localhost »** veut dire que ce site tourne **sur ton ordinateur** : toi seul le vois, c'est ton brouillon. La prochaine étape le met **en ligne** avec Vercel.
   >
-  > **Les trois boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
+  > **Les deux boutons ronds, en bas à droite** (visibles seulement sur ton ordinateur) :
   > - 👆 **Sélectionner un élément à modifier** : clique dessus (les zones de la page s'entourent de pointillés numérotés), puis sur l'endroit à changer, écris ce que tu veux changer, clique « Copier pour l'assistant » et colle-le ici. Je saurai exactement de quoi tu parles.
-  > - **L'escalier (les étapes)** : où on en est dans la création de ton site.
   > - 🎨 **Style** : change le style de ton site d'un clic (blocs de couleur, barre latérale ou liste). Il sera en ligne à la prochaine mise en ligne.
 
   Puis la question à choix, **dont le texte reprend le lien** (sinon la carte le cache) : « Ton site : http://localhost:NNNN/ — qu'en penses-tu ? » → Tout est bon, on le met en ligne · Je veux changer quelque chose · Je ne vois pas mon site.
@@ -231,7 +239,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 - Ce que tu dois cliquer maintenant : le lien de connexion puis « Confirm » (seulement si la connexion était nécessaire), sinon rien.
 
 ### Étape 4 — Ouvrir le site sur le téléphone
-- Propose de l'ouvrir aussi sur son téléphone (en tapant l'adresse courte) pour voir le site comme tout le monde le verra. Rappelle que les boutons ronds et le bandeau bleu n'apparaissent pas en ligne.
+- Propose de l'ouvrir aussi sur son téléphone (en tapant l'adresse courte) pour voir le site comme tout le monde le verra. Rappelle que les boutons ronds n'apparaissent pas en ligne.
 - Ce que tu dois cliquer maintenant : rien, ouvre l'adresse sur ton téléphone si tu veux.
 
 ### Étape 5 — Choisir la suite (des idées à cliquer)
