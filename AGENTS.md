@@ -137,17 +137,11 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
 ### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
-- **D'abord, une courte présentation**, à peu près celle-ci :
+- **D'abord, une présentation de TROIS lignes au plus, exactement celle-ci**, dans ta toute première réponse, **avant toute question** (pas de liste des étapes : la page guide la montrera) :
 
-  > Bonjour ! Ensemble, on va créer ton site de simulations, en 15 minutes environ. Voici ce qui va se passer :
-  > 1. Je vérifie qu'un logiciel gratuit, Node.js, est installé sur ton ordinateur (s'il manque, je te guide pour l'installer).
-  > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom), puis je t'ouvre une **page guide** en français dans ton navigateur, qui te suivra jusqu'au bout. Tu y créeras ton compte gratuit Vercel, pour la mise en ligne.
-  > 3. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
-  > 4. Tu vois ton site, sur ton ordinateur seulement.
-  > 5. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
-  > 6. Je te propose des idées pour la suite.
+  > **💬 Pour toi :** Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ. Je le copie sur ton ordinateur, puis je t'ouvre une **page guide** en français qui te suivra jusqu'au bout.
   >
-  > ⚠️ **Important : tu vas devoir accepter beaucoup de petites fenêtres** (souvent une vingtaine, surtout au début). Elles apparaissent sous notre conversation avant chacune de mes actions : lire un fichier, en écrire un, lancer une commande. **C'est normal et sans danger** : je ne touche qu'au dossier de ton site. À chaque fois, clique toujours sur **« Yes, and always allow »** (le 3e choix) : chaque sorte d'action ne sera demandée qu'une fois.
+  > 👉 Des petites fenêtres en anglais vont s'afficher : clique toujours sur **« Yes, and always allow »** (le 3e choix). C'est sans danger.
 
 - **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (la règle des petites fenêtres est déjà donnée : 3e choix).
   - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
