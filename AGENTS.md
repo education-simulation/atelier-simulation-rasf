@@ -137,6 +137,8 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
 ### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
+**L'ordre exact, sans rien intercaler** : présentation (3 lignes) → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
+
 - **D'abord, une présentation de TROIS lignes au plus, exactement celle-ci**, dans ta toute première réponse, **avant toute question** (pas de liste des étapes : la page guide la montrera) :
 
   > **💬 Pour toi :** Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ. Je le copie sur ton ordinateur, puis je t'ouvre une **page guide** en français qui te suivra jusqu'au bout.
