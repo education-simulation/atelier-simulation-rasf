@@ -152,14 +152,14 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
   2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne). **Si ce dossier existe déjà**, dis-le et propose un autre nom : ne copie jamais par-dessus un dossier existant.
 - **Juste avant de copier, dans le même message, fais-lui créer son compte Vercel pendant que tu copies** (la copie prend un moment ; elle ne reste pas à attendre, et la mise en ligne de l'étape 3 sera ensuite immédiate). Affiche exactement :
 
-  > Pendant que je copie ton site, crée ton compte **Vercel** (gratuit : c'est lui qui mettra ton site en ligne) :
-  > 1. Ouvre ce lien dans ton navigateur : https://vercel.com/signup
+  > Pendant que je copie ton site, crée ton compte **Vercel** dans ton navigateur habituel (Chrome, Edge, Safari…) (gratuit : c'est lui qui mettra ton site en ligne) :
+  > 1. Je t'ouvre la page dans ton navigateur habituel : https://vercel.com/signup (si elle ne s'ouvre pas, sélectionne ce lien, copie-le avec Cmd + C / Ctrl + C et colle-le dans la barre d'adresse de ton navigateur ; pas dans celui d'Antigravity).
   > 2. Choisis **Hobby** (gratuit), écris ton nom, puis clique **Continue with Google** et choisis ton compte d'établissement.
   > 3. Si Vercel te propose de relier GitHub ou de créer un projet, **ne fais rien** : ferme simplement l'onglet.
   >
   > Si tu as déjà un compte Vercel, ne fais rien. Reviens ici quand c'est fait.
 
-  Puis, **sans attendre sa réponse**, lance la copie (la petite fenêtre s'affiche en même temps : précède-la du message en gras, 2e choix). Après la copie, enchaîne sur la première question de l'étape 1 : elle y répondra en revenant.
+  Ouvre ce lien dans son navigateur habituel avec une commande courte (`open "https://vercel.com/signup"` sur Mac, `Start-Process "https://vercel.com/signup"` sur Windows ; jamais ton outil de navigateur). Puis, **sans attendre sa réponse**, lance la copie (la petite fenêtre s'affiche en même temps : précède-la du message en gras, 2e choix). Après la copie, enchaîne sur la première question de l'étape 1 : elle y répondra en revenant.
 - Copie avec **une seule commande courte, chemins écrits en clair** (jamais de variables ni de script, voir « Les demandes d'autorisation », point 2) :
   - en général : `git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <chemin complet du nouveau dossier>` ;
   - si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : sur Mac et Linux `mv <chemin actuel> <chemin complet du nouveau dossier>` ; sur Windows `Move-Item "<chemin actuel>" "<chemin complet du nouveau dossier>"` (par exemple `Move-Item "C:\Users\anne\.gemini\antigravity\scratch\atelier-simulation-rasf" "C:\Users\anne\Desktop\mon-site"`).
@@ -218,10 +218,11 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
 
 ### Étape 3 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)
+- **Les liens Vercel s'ouvrent dans le navigateur habituel de la personne, jamais dans celui d'Antigravity** (elle y est déjà connectée à Google, et elle retrouve son compte ensuite). Ouvre-le toi-même avec **une seule commande courte** : sur Mac `open "<lien>"`, sur Windows `Start-Process "<lien>"`, sur Linux `xdg-open "<lien>"`. N'utilise pas ton outil de navigateur. Si la commande échoue, dis-lui : « Sélectionne ce lien, copie-le (Cmd + C / Ctrl + C) et colle-le dans la barre d'adresse de ton navigateur habituel (Chrome, Edge, Safari…). »
 - Explique en deux phrases : « Vercel est un service gratuit qui met ton site sur Internet. C'est Vercel qui choisit l'adresse, à partir du nom de ton dossier : par exemple `https://mon-site.vercel.app` (si ce nom est déjà pris, Vercel ajoute quelques lettres). Plus tard, si tu veux, tu pourras acheter un nom de domaine à toi (par exemple `mon-labo.fr`, environ 10 € par an) et le relier à ton site. »
 - **Vercel est-il déjà connecté sur cet ordinateur ?** Vérifie d'abord avec `npx --yes vercel@latest whoami` : s'il affiche un nom de compte, **ne demande aucune connexion** et passe directement à la mise en ligne.
-- **Connexion (seulement si `whoami` répond qu'on n'est pas connecté)** : lance `npx --yes vercel@latest login` **en arrière-plan** et lis ce qu'il affiche : une adresse `https://vercel.com/…` et un code. Donne à la personne l'adresse complète et le code, puis :
-  « Clique sur ce lien. Clique **Continue with Google** et choisis le compte avec lequel tu as créé ton compte Vercel au début (s'il n'existe pas encore : offre gratuite « Hobby »). Vérifie que le code affiché est le même que celui-ci, puis clique **Confirm** (ou « Allow »). Reviens ensuite ici et choisis « C'est fait ». »
+- **Connexion (seulement si `whoami` répond qu'on n'est pas connecté)** : lance `npx --yes vercel@latest login` **en arrière-plan** et lis ce qu'il affiche : une adresse `https://vercel.com/…` et un code. Ouvre l'adresse dans son navigateur habituel (commande ci-dessus), donne-lui aussi l'adresse complète et le code, puis :
+  « La page Vercel s'est ouverte dans ton navigateur (sinon, copie le lien ci-dessus dans ton navigateur habituel). Clique **Continue with Google** et choisis le compte avec lequel tu as créé ton compte Vercel au début (s'il n'existe pas encore : offre gratuite « Hobby »). Vérifie que le code affiché est le même que celui-ci, puis clique **Confirm** (ou « Allow »). Reviens ensuite ici et choisis « C'est fait ». »
   Pose la question à choix : C'est fait · Je suis bloqué·e. Tu ne crées pas le compte à sa place et tu ne demandes aucun mot de passe.
 - **Mise en ligne** : `npm run build && npx --yes vercel@latest deploy --prod --yes`
   À la fin, Vercel affiche l'adresse du site, de la forme `https://<nom-du-dossier>.vercel.app` (ligne « Production » ou « Aliased »). Garde **cette adresse courte** : c'est celle du site en ligne. Ajoute-la dans `PROGRESSION.md` (« Adresse du site : … »).
