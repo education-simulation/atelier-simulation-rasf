@@ -353,6 +353,24 @@ function SchemaAntigravity({ actif, setActif }) {
           <text x="410" y="288" fontSize="10.5" fill="#e4e4e7" style={t}>High <tspan fill="#a1a1aa">· élevé</tspan></text>
         </g>
       )}
+      {/* Settings : la fenêtre qui s'ouvre, ton nom, puis « Sign Out » (montré pour 8) */}
+      {actif === "8" && (
+        <g>
+          <rect x="12" y="232" width="250" height="160" rx="10" fill="#1c1c22" stroke="#52525b" />
+          <text x="24" y="252" fontSize="10.5" fontWeight="800" fill="#fff" style={t}>Settings</text>
+          <text x="24" y="270" fontSize="9" fill="#a1a1aa" style={t}>General · Models · Account…</text>
+          <rect x="18" y="280" width="238" height="30" rx="7" fill="#f59e0b" />
+          <circle cx="34" cy="295" r="9" fill="#2563eb" /><text x="34" y="299" fontSize="10" fill="#fff" textAnchor="middle" style={t}>P</text>
+          <text x="50" y="292" fontSize="10.5" fontWeight="800" fill="#1f1300" style={t}>Ton nom</text>
+          <text x="50" y="304" fontSize="8.5" fill="#3a2500" style={t}>prenom.nom@rasf.fr</text>
+          <text x="214" y="298" fontSize="9.5" fontWeight="800" fill="#1f1300" style={t}>② clic</text>
+          <rect x="120" y="318" width="136" height="54" rx="8" fill="#26262e" stroke="#f59e0b" strokeWidth="1.5" />
+          <text x="130" y="336" fontSize="9.5" fill="#a1a1aa" style={t}>Manage account</text>
+          <rect x="125" y="344" width="126" height="22" rx="6" fill="#f59e0b" />
+          <text x="133" y="359" fontSize="10.5" fontWeight="800" fill="#1f1300" style={t}>Sign Out   ③ clic</text>
+          <text x="24" y="384" fontSize="9.5" fontWeight="800" fill="#f59e0b" style={t}>① clic sur Settings ↓</text>
+        </g>
+      )}
       {/* zone encadrée */}
       {z && (
         <rect className="g-zone" x={z.x} y={z.y} width={z.w} height={z.h} rx="8" fill="rgba(245,158,11,.16)" stroke="#f59e0b" strokeWidth="3" pointerEvents="none" />
