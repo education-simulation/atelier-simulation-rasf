@@ -18,28 +18,19 @@ Pas besoin de compte GitHub. Il te faut seulement **Antigravity**, installé sur
 
 ### Pour commencer
 
-1. Ouvre **Antigravity**.
-2. **Deux réglages, à faire une seule fois** (ils réduisent beaucoup les petites fenêtres d'autorisation) :
-   - **Le mode Auto** : ouvre les réglages (**Settings**), puis **General** → **Global Permissions** → **Permission Preset** → choisis **Auto**. Si ce choix n'apparaît pas, mets à jour Antigravity (sur Windows, version 2.26 ou plus récente) ; s'il n'apparaît toujours pas, ton compte ne le permet pas : garde le réglage proposé.
-   - **Le modèle d'IA** : en bas de la conversation, clique sur le nom du modèle et choisis **Gemini 3.8 Flash**, puis **Low**. C'est rapide et suffisant pour ton site. Vérifie ce choix au début de chaque nouvelle conversation.
-3. **Crée le projet de ton site** (une seule fois) : c'est ce qui évite une petite fenêtre d'autorisation pour chaque fichier.
-   - Dans la barre de gauche d'Antigravity, clique sur l'icône **dossier avec un +** (nouveau projet), puis **Add Folder**.
-   - Dans la fenêtre qui s'ouvre, va sur ton **Bureau**, clique **Nouveau dossier**, appelle-le **mon-site** (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne), sélectionne-le, puis clique **Create**.
-4. **Avant de commencer, retiens une seule chose** : pendant tout le parcours, des petites fenêtres « Allow… ? » vont s'afficher sous la conversation. **Clique à chaque fois sur « Yes, and always allow »** (le 3e choix). Toutes ces actions sont sans danger pour ton ordinateur, et chacune ne sera demandée qu'une fois.
-5. Dans ce projet, colle cette phrase dans la conversation avec l'agent. Pour la prendre, clique sur le petit bouton **⧉** à droite du cadre gris (ou sélectionne-la, puis **Cmd + C** sur Mac, **Ctrl + C** sur Windows). Pour la coller : **Cmd + V** ou **Ctrl + V**.
+1. Installe **Antigravity** et connecte-toi avec ton compte d'établissement.
+2. Ouvre une nouvelle conversation et colle cette phrase :
 
    ```text
-   Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf, puis suis ses consignes pour me guider.
+   Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf : lis d'abord son fichier AGENTS.md, puis suis-le pour me guider.
    ```
 
-6. L'agent te présente ce qui va se passer, copie le modèle dans ton dossier, puis t'ouvre une **page guide** en français dans ton navigateur. C'est là que tu crées ton compte gratuit Vercel (le service qui mettra ton site en ligne), en cliquant sur son bouton.
-
-L'agent te guide ensuite pas à pas, avec des questions à cliquer : le nom et la couleur de ton site, le voir sur ton ordinateur, le mettre en ligne avec Vercel, puis des idées pour la suite.
-Au départ, il vérifie que **Node.js** est installé (le moteur gratuit qui fait tourner l'aperçu de ton site). S'il manque, il te guide pour l'installer en 5 minutes depuis nodejs.org.
+3. Quand une petite fenêtre « Allow… ? » s'affiche, clique toujours sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
+4. L'agent copie le site sur ton ordinateur, puis t'ouvre une **page guide** en français dans ton navigateur : garde-la ouverte, elle te suit jusqu'au bout (compte Vercel, mise en ligne, idées pour la suite).
 
 ### Les fois suivantes
 
-Ouvre Antigravity, clique sur le projet de ton site dans la barre de gauche, puis écris à l'agent : **« Reprends mon site »**.
+Ouvre Antigravity, ouvre une nouvelle conversation et écris à l'agent : **« Reprends mon site, dossier mon-site sur le Bureau »** (avec le nom et l'endroit de ton dossier).
 
 ---
 

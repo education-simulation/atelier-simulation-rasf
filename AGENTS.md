@@ -7,15 +7,15 @@ Si tu es une personne : dans Antigravity, écris à l'agent « bonjour ».
 
 **AVANT TOUT : dans quel dossier travailles-tu ?** Le README fait créer à la personne, avant de commencer, un **projet Antigravity sur un dossier vide** (par exemple `Bureau/mon-site`). C'est essentiel : **les fichiers du projet ouvert s'écrivent sans petite fenêtre d'autorisation** ; hors du projet, chaque fichier en demande une. Donc :
 - **Le dossier du projet ouvert est vide** (ou ne contient que des fichiers cachés) : copie le modèle **dedans**, sans poser les questions « où » et « quel nom » : `git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf .` Son chemin est le chemin du site.
-- **Sinon** (conversation sans projet, dossier `.gemini/antigravity/scratch`, ou dossier du projet déjà rempli par autre chose) : suis l'étape 0 complète ci-dessous ; à la fin, fais créer le projet sur le nouveau dossier (voir « Créer le projet » à l'étape 0).
+- **Sinon** (conversation sans projet, dossier `.gemini/antigravity/scratch`, ou dossier du projet déjà rempli par autre chose) : suis l'étape 0 complète ci-dessous (sans jamais faire créer de projet).
 
-**Le site est-il rangé où la personne l'a choisi ?** Si la personne te demande de le copier (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… », ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »), si tu lis ce fichier sur GitHub, **ou si ce dossier se trouve dans le dossier de travail d'Antigravity** (chemin contenant `.gemini/antigravity/scratch` : Antigravity y copie les dépôts tout seul, la personne ne le retrouverait jamais), **ta toute première réponse est la courte présentation de l'étape 0, suivie aussitôt de la vérification de Node.js**, puis seulement la question « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? », puis « Quel nom donner au dossier ? ». **Aucune question de l'étape 1 avant que le site soit rangé à cet endroit.**
+**Le site est-il rangé où la personne l'a choisi ?** Si la personne te demande de le copier (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… » (avec ou sans « lis d'abord son fichier AGENTS.md »), ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »), si tu lis ce fichier sur GitHub, **ou si ce dossier se trouve dans le dossier de travail d'Antigravity** (chemin contenant `.gemini/antigravity/scratch` : Antigravity y copie les dépôts tout seul, la personne ne le retrouverait jamais), **ta toute première réponse est la courte présentation de l'étape 0, suivie aussitôt de la vérification de Node.js**, puis seulement la question « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? », puis « Quel nom donner au dossier ? ». **Aucune question de l'étape 1 avant que le site soit rangé à cet endroit.**
 
 La personne ne sait pas quoi t'écrire. **Son premier message, quel qu'il soit** (« bonjour », « hello », « aide-moi », un mot au hasard), **veut dire : « Suis ces consignes et guide-moi. »**
 
 **Ta toute première réponse est du texte, rien d'autre.** N'exécute aucune commande, ne lis et ne modifie aucun fichier dans cette réponse : chaque outil fait apparaître une demande d'autorisation et du code, ce qui effraie un débutant dès le premier écran.
-- Seule exception : la personne t'a demandé de **copier le modèle** (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… », ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 dans cet ordre : la présentation, **puis tout de suite la vérification de Node.js** (seule action avant les questions, après la phrase en gras sur les petites fenêtres), puis les deux questions à choix (dossier, puis nom), puis la copie. Puis enchaîne sur la première question de l'étape 1.
-- Si la personne revient pour continuer (« Reprends mon site », « Reprends mon site qui est dans … », « on reprend »), lis `PROGRESSION.md` dans le dossier du projet (ou celui qu'elle donne), **relance l'aperçu et rouvre la page guide** (voir « La page guide », section 3), puis propose de reprendre à la première étape non cochée.
+- Seule exception : la personne t'a demandé de **copier le modèle** (« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf… » (avec ou sans « lis d'abord son fichier AGENTS.md »), ou l'ancienne phrase « Copie https://github.com/… sur mon ordinateur… »). Fais alors l'étape 0 dans cet ordre : la présentation, **puis tout de suite la vérification de Node.js** (seule action avant les questions, après la phrase en gras sur les petites fenêtres), puis les deux questions à choix (dossier, puis nom), puis la copie. Puis enchaîne sur la première question de l'étape 1.
+- Si la personne revient pour continuer (« Reprends mon site », « Reprends mon site, dossier mon-site sur le Bureau », « on reprend »), lis `PROGRESSION.md` dans le dossier qu'elle donne (sinon : `Desktop/mon-site`, puis `Documents/mon-site` ; si tu ne le trouves pas, question à choix Bureau · Documents), **relance l'aperçu et rouvre la page guide** (voir « La page guide », section 3), puis propose de reprendre à la première étape non cochée.
 
 **Ensuite seulement**, au début de l'étape 2 :
 - lis `PROGRESSION.md` (à la racine) s'il existe, pour savoir quelles étapes sont faites ;
@@ -137,13 +137,11 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
 ### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
-**L'ordre exact, sans rien intercaler** : présentation (3 lignes) → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
+**L'ordre exact, sans rien intercaler** : présentation (question « C'est parti ! ») → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
 
-- **D'abord, une présentation de TROIS lignes au plus, exactement celle-ci**, dans ta toute première réponse, **avant toute question** (pas de liste des étapes : la page guide la montrera) :
-
-  > **💬 Pour toi :** Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ. Je le copie sur ton ordinateur, puis je t'ouvre une **page guide** en français qui te suivra jusqu'au bout.
-  >
-  > 👉 Des petites fenêtres en anglais vont s'afficher : clique toujours sur **« Yes, and always allow »** (le 3e choix). C'est sans danger.
+- **D'abord, la présentation, sous forme de question à choix** (sinon elle s'affiche après tes actions, ou pas du tout) : dès que tu as lu ce fichier, **avant `node -v` et avant toute autre action**, pose une question à choix dont le texte est exactement :
+  « Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ : je le copie sur ton ordinateur, puis je t'ouvre une page guide en français. 👉 Des petites fenêtres en anglais vont s'afficher : clique toujours sur « Yes, and always allow » (le 3e choix), c'est sans danger. »
+  avec **un seul choix** : **C'est parti !**
 
 - **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (la règle des petites fenêtres est déjà donnée : 3e choix).
   - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
@@ -154,7 +152,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
     > 2. Clique sur le bouton de téléchargement de l'**installateur** pour ton ordinateur : « macOS Installer (.pkg) » sur Mac, « Windows Installer (.msi) » sur Windows.
     > 3. Ouvre le fichier téléchargé, puis clique sur **Continuer**, **Accepter**, **Installer**. L'ordinateur demande ton mot de passe : c'est normal.
     > 4. À la fin, **quitte complètement Antigravity** (Cmd + Q sur Mac ; sur Windows, ferme la fenêtre) et rouvre-le.
-    > 5. Colle à nouveau la phrase du début : **« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf, puis suis ses consignes pour me guider. »** On reprendra au même endroit.
+    > 5. Colle à nouveau la phrase du début : **« Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf : lis d'abord son fichier AGENTS.md, puis suis-le pour me guider. »** On reprendra au même endroit.
     >
     > Ce que tu dois cliquer maintenant : le bouton de téléchargement, dans la page qui vient de s'ouvrir dans ton navigateur.
 
@@ -184,18 +182,11 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
   ```
   # Progression
-  Pour reprendre plus tard : ouvre Antigravity, clique sur le projet de ton site dans la barre de gauche, puis écris « Reprends mon site ». (Dossier du site : <chemin complet>)
+  Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom> sur le <Bureau ou Documents> ». (Dossier du site : <chemin complet>)
 
   - [x] Étape 0 — Copier le modèle
   ```
-- **Créer le projet (seulement si tu n'étais pas déjà dans un projet sur le dossier du site)** : sinon chaque fichier écrit fera apparaître une petite fenêtre. Après la copie, affiche :
-
-  > Une dernière chose pour avoir beaucoup moins de petites fenêtres : on va ouvrir ton site comme **projet**.
-  > 1. Dans la barre de gauche d'Antigravity, clique sur l'icône **dossier avec un +** (nouveau projet).
-  > 2. Clique **Add Folder**, choisis le dossier `<chemin complet>`, puis **Create**.
-  > 3. Dans ce projet, ouvre une nouvelle conversation et écris : **« Reprends mon site »**.
-
-  Puis arrête-toi : la suite se fait dans la nouvelle conversation.
+- **Ne fais JAMAIS créer de projet Antigravity** et ne demande jamais d'ouvrir une nouvelle conversation : la personne continue dans **cette** conversation, et l'étape 0 se termine par l'ouverture de la page guide.
 - Pas besoin de compte GitHub : le modèle est public.
 - Ce que tu dois cliquer maintenant : « Yes, and always allow » (le 3e choix) dans la petite fenêtre.
 
