@@ -210,8 +210,8 @@ const CSS = `
 .g-pliable summary::-webkit-details-marker { display:none; }
 .g-pliable summary h2 { margin:0; }
 .g-pliable[open] summary { margin-bottom:14px; }
-.g-chevron { font-size:20px; color:#64748b; transition:transform .2s; }
-.g-pliable:not([open]) .g-chevron { transform:rotate(-90deg); }
+.g-chevron { flex-shrink:0; border:2px solid #2563eb; color:#2563eb; background:#eff6ff; border-radius:99px; padding:5px 14px; font:800 14.5px 'Nunito',sans-serif; white-space:nowrap; }
+.g-pliable summary:hover .g-chevron { background:#2563eb; color:#fff; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -460,7 +460,7 @@ export function Guide() {
         <CarteMail suivi={suivi} />
 
         <details className="g-carte g-pliable" open={fenetresOuvertes} onToggle={(e) => basculerFenetres(e.currentTarget.open)}>
-          <summary><h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2><span className="g-chevron" aria-hidden="true">▾</span></summary>
+          <summary><h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2><span className="g-chevron" aria-hidden="true">{fenetresOuvertes ? "Réduire ▴" : "Afficher ▾"}</span></summary>
           <p style={{ margin: "0 0 14px", color: "#334155" }}>
             Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
           </p>
