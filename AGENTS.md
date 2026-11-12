@@ -67,7 +67,7 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 ```
 **💬 Pour toi :**
 
-✅ Ton site est installé ! Ta page guide est prête, en français.
+✅ Ton guide pour créer ton site est prêt, en français.
 
 👉 Clique sur ce lien : http://localhost:5799/?guide
 
