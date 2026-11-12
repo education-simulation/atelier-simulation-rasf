@@ -32,11 +32,20 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 - **Une question à la fois.** Quand tu demandes quelque chose, pose **une seule question**, avec des **choix tout prêts**, puis **« Autre (écris ta réponse) »** et **« 😕 Je suis perdu·e »**. N'écris jamais une liste de plusieurs questions d'un coup.
 - **Comment poser une question (partout, toujours)** : **n'utilise JAMAIS ton outil de question** (pas de carte avec « Submit »). Écris un **message texte**, qui **termine ton tour** (tu attends la réponse), sous cette forme exacte :
 
-  **💬 Pour toi :** <la question, en une ou deux phrases ; un lien éventuel en entier>
+  ```
+  **💬 Pour toi :**
+
+  <la question, en une phrase courte>
+
+  👉 <un lien éventuel, en entier, seul sur sa ligne>
+
   1. <premier choix>
   2. <deuxième choix>
   3. 😕 Je suis perdu·e
+
   ✍️ *Écris le numéro de ta réponse dans la zone de message, en bas, puis appuie sur Entrée.*
+  ```
+  **Aère** : une **ligne vide** entre chaque bloc (titre, question, lien, liste, consigne ✍️), sinon tout se colle en un pavé. Une idée par ligne, phrases courtes. Le lien et la consigne ✍️ ne sont **jamais** collés à une autre phrase.
 
   Pas de « (Recommended) » ni de « recommandé » dans les choix (sauf « Bureau (recommandé) ») ; le choix le plus courant en premier. La personne répond « 1 », « 2 »… ou écrit autre chose avec ses mots : comprends-la. Si elle écrit « je suis perdu·e » à n'importe quel moment, aide-la (voir « Je suis perdu·e »).
 - **Partout dans ce fichier, « question à choix » veut dire ce message numéroté**, jamais l'outil de question.
