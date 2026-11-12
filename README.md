@@ -17,12 +17,15 @@ Pas besoin de compte GitHub. Il te faut seulement **Antigravity**, installé sur
 ### Pour commencer
 
 1. Ouvre **Antigravity**.
-2. Copie cette phrase (sélectionne-la, puis **Cmd + C** sur Mac ou **Ctrl + C** sur Windows) et colle-la dans la conversation avec l'agent (**Cmd + V** ou **Ctrl + V**) :
+2. **Deux réglages, à faire une seule fois** (ils réduisent beaucoup les petites fenêtres d'autorisation) :
+   - **Le mode Auto** : ouvre les réglages (**Settings**), puis **General** → **Global Permissions** → **Permission Preset** → choisis **Auto**. Si ce choix n'apparaît pas, mets à jour Antigravity (sur Windows, version 2.26 ou plus récente) ; s'il n'apparaît toujours pas, ton compte ne le permet pas : garde le réglage proposé.
+   - **Le modèle d'IA** : en bas de la conversation, clique sur le nom du modèle et choisis **Gemini 3.8 Flash**, puis **Low**. C'est rapide et suffisant pour ton site. Vérifie ce choix au début de chaque nouvelle conversation.
+3. Copie cette phrase (sélectionne-la, puis **Cmd + C** sur Mac ou **Ctrl + C** sur Windows) et colle-la dans la conversation avec l'agent (**Cmd + V** ou **Ctrl + V**) :
 
    > **Copie https://github.com/education-simulation/atelier-simulation-rasf sur mon ordinateur, puis lis AGENTS.md et guide-moi.**
 
-3. L'agent te présente ce qui va se passer, puis te demande dans quel dossier ranger ton site et quel nom lui donner : clique sur ta réponse.
-4. **Attends-toi à accepter beaucoup de petites fenêtres** (souvent une vingtaine) : elles demandent la permission avant chaque action de l'agent. C'est normal et sans danger ; l'agent te dit à chaque fois sur quel choix cliquer.
+4. L'agent te présente ce qui va se passer, puis te demande dans quel dossier ranger ton site et quel nom lui donner : clique sur ta réponse.
+5. **Attends-toi à accepter des petites fenêtres** (une vingtaine si tu n'as pas pu choisir le mode Auto) : elles demandent la permission avant chaque action de l'agent. C'est normal et sans danger ; l'agent te dit à chaque fois sur quel choix cliquer.
 
 L'agent te guide ensuite pas à pas, avec des questions à cliquer : le nom et la couleur de ton site, le voir sur ton ordinateur, le mettre en ligne avec Vercel (la première fois : « Continue with Google »), puis des idées pour la suite.
 Au départ, il vérifie que **Node.js** est installé (le moteur gratuit qui fait tourner l'aperçu de ton site). S'il manque, il te guide pour l'installer en 5 minutes depuis nodejs.org.
