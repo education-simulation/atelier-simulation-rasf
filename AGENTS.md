@@ -116,7 +116,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 ### L'aperçu du site, et son lien
 
 L'aperçu tourne **sur l'ordinateur de la personne**. Il est lancé **dès la fin de l'étape 0**, juste après la copie, pour ouvrir la page guide. Deux commandes **séparées**, chacune lancée dans le dossier du site (donné comme dossier de travail de ton outil) :
-1. `npm install` (environ une minute, attends la fin) ;
+1. `npm install` (environ une minute) : **au premier plan, jamais en arrière-plan, et attends qu'il ait fini** avant de faire autre chose. Il a besoin d'Internet : lance-le **hors du bac à sable** (option « BypassSandbox » de ton outil de commande) dès le premier essai, sinon il reste bloqué sans rien dire ;
 2. `npm run dev`, **en arrière-plan** (il doit continuer à tourner).
 - Le lien est **celui que Vite affiche après « Local: »** (par exemple `http://localhost:5537/`). Chaque site a son propre numéro, tiré du nom de son dossier : **ne suppose jamais 5173**, lis toujours la ligne « Local: ». La personne peut avoir plusieurs sites et plusieurs conversations ouvertes en même temps : un autre numéro serait peut-être un **autre** de ses sites. Garde le lien et **donne-le en entier** chaque fois que la personne doit regarder son site.
 - Les fois suivantes, l'aperçu n'est plus lancé : relance `npm run dev` en arrière-plan dès ta première action, puis rouvre la page guide.
@@ -137,6 +137,7 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
 ### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
+**Ne termine JAMAIS ton tour avant que la page guide soit ouverte** : n'écris pas « je continue » ou « rien à faire » pour t'arrêter ensuite ; enchaîne les actions jusqu'à l'ouverture de la page guide. **Les commandes qui utilisent Internet** (`git clone`, `npm install`) se lancent **hors du bac à sable** (option « BypassSandbox ») dès le premier essai : dans le bac à sable, elles échouent ou restent bloquées.
 **L'ordre exact, sans rien intercaler** : présentation (question « C'est parti ! · Je suis perdu·e ») → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
 
 - **D'abord, la présentation, sous forme de question à choix** (sinon elle s'affiche après tes actions, ou pas du tout) : dès que tu as lu ce fichier, **avant `node -v` et avant toute autre action**, pose une question à choix dont le texte est exactement :
