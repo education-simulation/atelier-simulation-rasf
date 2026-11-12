@@ -144,7 +144,7 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
 ### Supprimer le site (quand la personne le demande)
-La page guide donne la phrase : « Supprime mon site, dossier <nom> sur le <Bureau ou Documents>, et tout ce que tu as créé pour lui. »
+La page guide donne la phrase : « Supprime mon site, dossier <nom> <sur le Bureau ou dans Documents> : lis d'abord la section « Supprimer le site » de son fichier CONSIGNES.md et suis-la. »
 - **Demande d'abord confirmation**, en message à choix : « Je vais mettre à la Corbeille ton dossier <nom> (ton site sur ton ordinateur). Tu es sûr·e ? » → 1. Oui, supprime · 2. Non, je le garde.
 - Si « Oui » : arrête l'aperçu de ce site (la tâche `npm run dev` en arrière-plan), puis **mets le dossier à la Corbeille, jamais de suppression définitive** : Mac `mv "<chemin complet du dossier>" ~/.Trash/` ; Windows : ouvre le dossier parent avec `Start-Process explorer.exe "<dossier parent>"` et dis à la personne de faire glisser le dossier dans la Corbeille. Ne touche à **aucun autre** dossier (`mon-site-2`, etc.).
 - Puis : « ✅ C'est fait : ton site <nom> est dans la Corbeille. » Si le site avait été mis en ligne, ajoute : « Ta version en ligne existe toujours sur Vercel ; tu peux la supprimer sur vercel.com (Settings → Delete Project) si tu veux. » Tu ne supprimes **jamais** toi-même un projet Vercel.

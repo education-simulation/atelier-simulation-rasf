@@ -83,7 +83,7 @@ Choix : 1. **J'ai ouvert ma page guide** · 2. **😕 Je suis perdu·e**
 1. écris `PROGRESSION.md` à la racine du site, avec ton **outil d'écriture de fichier** :
    ```
    # Progression
-   Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom du dossier> sur le <Bureau ou Documents> ». (Dossier du site : <chemin complet>)
+   Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom du dossier> <sur le Bureau ou dans Documents> : lis d'abord son fichier AGENTS.md ». (Dossier du site : <chemin complet>)
 
    - [x] Étape 0 — Installer la page guide
    ```

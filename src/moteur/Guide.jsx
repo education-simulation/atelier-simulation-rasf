@@ -154,6 +154,7 @@ const CSS = `
 .g-fleche { margin-left:auto; font-size:22px; animation:g-pointe 1.2s ease-in-out infinite; }
 @keyframes g-pointe { 50% { transform:translateX(-6px); } }
 .g-regle { font-size:17px; margin:14px 0 0; }
+.g-danger { background:#fef2f2; border:1px solid #fecaca; border-radius:12px; padding:10px 14px; color:#7f1d1d; }
 .g-lexique { display:grid; grid-template-columns:repeat(auto-fill,minmax(230px,1fr)); gap:8px; margin-top:14px; }
 .g-mot { background:#f1f5f9; border-radius:12px; padding:8px 12px; font-size:15px; }
 .g-mot b { font-family:system-ui,sans-serif; }
@@ -521,12 +522,14 @@ function FenetreStyles({ fermer }) {
 function CarteSupprimer({ dossier, lieu }) {
   const [ouvert, setOuvert] = useState(false);
   const [copie, setCopie] = useState(false);
-  const phrase = `Supprime mon site, dossier ${dossier} sur le ${lieu}, et tout ce que tu as créé pour lui.`;
+  const ou = lieu === "Documents" ? "dans Documents" : "sur le Bureau";
+  // La phrase renvoie à CONSIGNES.md : dans une conversation neuve, l'IA ne connaît pas la règle (confirmation, Corbeille).
+  const phrase = `Supprime mon site, dossier ${dossier} ${ou} : lis d'abord la section « Supprimer le site » de son fichier CONSIGNES.md et suis-la.`;
   const copier = () => { navigator.clipboard?.writeText(phrase).then(() => { setCopie(true); setTimeout(() => setCopie(false), 2500); }).catch(() => {}); };
   return (
     <details className="g-carte g-pliable" open={ouvert} onToggle={(e) => setOuvert(e.currentTarget.open)}>
       <summary><h2><span aria-hidden="true">🗑️</span> Tout supprimer et recommencer</h2><span className="g-chevron" aria-hidden="true">{ouvert ? "Réduire ▴" : "Afficher ▾"}</span></summary>
-      <p style={{ margin: "0 0 10px", color: "#334155" }}>Pour mettre ce site à la Corbeille (le dossier <b>{dossier}</b> sur ton {lieu}), copie cette phrase et colle-la dans la zone de message d'Antigravity. L'IA Gemini te demandera de confirmer avant de supprimer quoi que ce soit.</p>
+      <p style={{ margin: "0 0 10px", color: "#334155" }}>Pour mettre ce site à la Corbeille (le dossier <b>{dossier}</b> {ou}), copie cette phrase et colle-la dans la zone de message d'Antigravity. L'IA Gemini te demandera de confirmer avant de supprimer quoi que ce soit.</p>
       <div className="g-phrase">{phrase}</div>
       <button type="button" className="g-mini" style={{ marginTop: 10 }} onClick={copier}>{copie ? "✅ Copiée : colle-la avec Cmd + V ou Ctrl + V" : "📋 Copier la phrase"}</button>
       <p className="g-note">Tes autres sites (mon-site-2…) ne sont pas touchés. Ton site en ligne, s'il existe, reste sur Vercel.</p>
@@ -607,6 +610,7 @@ export function Guide() {
             ))}
           </div>
           <p className="g-regle">👉 <b>Clique toujours sur le 3e choix, « Yes, and always allow »</b>, puis sur <b>Submit</b>. La même demande ne reviendra plus.</p>
+          <p className="g-regle g-danger">⛔ <b>Sauf si la fenêtre parle de supprimer</b> (« delete », « rm », « Permanently deletes ») : choisis <b>4 · No</b>, écris « Non, mets-le à la Corbeille », puis <b>Submit</b>. Rien ne doit être supprimé pour de bon.</p>
           <div className="g-lexique">
             {LEXIQUE.map(([en, fr]) => <div key={en} className="g-mot"><b>{en}</b> = {fr}</div>)}
           </div>
