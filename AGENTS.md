@@ -313,7 +313,7 @@ Pour les couleurs (mode `true`), utilise `src/outils/colorimetrie.js` (`ILLUMINA
 | `node` ou `npm` introuvable | Node.js pas installé | Message Node.js de l'étape 0, tel quel |
 | Encadré rouge « Cette simulation n'a pas pu s'afficher » | Erreur dans le fichier de la page | Lire le message affiché, corriger `simulations/<Nom>.jsx` |
 | « Page … introuvable » ou « Fichier … introuvable » | `id` ou `fichier` faux | Vérifier la ligne dans `pages` de `site.config.js` |
-| `npm run build` échoue avant la mise en ligne | Erreur dans un fichier `.jsx` ou dans `site.config.js` | Corriger, puis relancer la même commande |
+| `npm run en-ligne` échoue avant l'envoi (erreur de construction) | Erreur dans un fichier `.jsx` ou dans `site.config.js` | Corriger, puis relancer la même commande |
 | Vercel répond « login required » ou « not authorized » | Pas encore connecté sur cet ordinateur | Refaire la connexion de l'étape 3 |
 | Le lien de connexion Vercel a expiré | La personne a attendu trop longtemps | Relancer la connexion, et faire les clics d'une traite |
 | L'adresse du site demande de se connecter à Vercel | C'est une adresse de prévisualisation (longue, avec des lettres au hasard) | Donner l'adresse courte `https://<nom>.vercel.app` |
