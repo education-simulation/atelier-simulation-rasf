@@ -155,7 +155,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
     Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe aux deux questions ; sinon, demande-lui une capture de l'écran où elle bloque.
 - **Les deux questions, une par message :**
-  1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → Bureau · Documents · Autre (écris le nom du dossier).
+  1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → **Bureau (recommandé)** · Documents · 😕 Je suis perdu·e. **Rien d'autre** : pas de choix « Autre », pas de fenêtre pour choisir un dossier (trop risqué pour une débutante). Si la personne écrit quand même un autre dossier, réponds qu'on range le site sur le Bureau ou dans Documents, et repose la question.
   *(Ces deux questions seulement si tu n'es pas déjà dans un projet sur un dossier vide : voir le début de ce fichier.)*
   2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne). **Si ce dossier existe déjà**, dis-le et propose un autre nom : ne copie jamais par-dessus un dossier existant.
 - **Juste avant de copier, dans le même message, fais-lui créer son compte Vercel pendant que tu copies** (la copie prend un moment ; elle ne reste pas à attendre, et la mise en ligne de l'étape 3 sera ensuite immédiate). Affiche exactement :
