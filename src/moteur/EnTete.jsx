@@ -74,11 +74,15 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
           <nav aria-label="Menus" className="entete-menus">
             {menus.map((m) => (
               <div key={m.id} className="et-menu">
-                {/* Un clic sur le menu ouvre sa page : une tuile par page du menu. */}
-                <button onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}
-                  className={`et-bouton${menuActif === m.id ? " actif" : ""}`}>
-                  {m.label}
-                </button>
+                {/* Le nom du menu ouvre sa page (une tuile par page) ; le chevron ▼ déroule la liste de ses pages. */}
+                <span className={`et-bouton et-double${menuActif === m.id ? " actif" : ""}${ouvert === m.id ? " deroule" : ""}`}>
+                  <button type="button" className="et-nom" onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}>{m.label}</button>
+                  <button type="button" className="et-chevron" onClick={() => setOuvert((o) => (o === m.id ? null : m.id))} aria-expanded={ouvert === m.id}
+                    aria-label={ouvert === m.id ? `Replier les pages de ${m.label}` : `Voir les pages de ${m.label}`}>
+                    <span aria-hidden="true" className="et-fleche">{ouvert === m.id ? "▲" : "▼"}</span>
+                  </button>
+                </span>
+                {ouvert === m.id && <div className="et-panneau" role="region" aria-label={m.label}>{listePages(m)}</div>}
               </div>
             ))}
           </nav>
@@ -97,9 +101,16 @@ export function EnTete({ titre, menus, activeId, menuActif, naviguer }) {
           <button className="et-lien" onClick={() => aller(null)}><span aria-hidden="true" className="et-icone">🏠</span>Accueil</button>
           {menus.map((m) => (
             <div key={m.id} style={{ borderTop: "1px solid var(--bord)" }}>
-              <button className="et-lien et-titre-accordeon" onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}>
-                <span style={{ flex: 1 }}>{m.label}</span><span aria-hidden="true" className="et-fleche">›</span>
-              </button>
+              <div style={{ display: "flex", alignItems: "center" }}>
+                <button className="et-lien et-titre-accordeon" style={{ flex: 1 }} onClick={() => aller(`menu:${m.id}`)} aria-current={activeId === `menu:${m.id}` ? "page" : undefined}>
+                  <span style={{ flex: 1 }}>{m.label}</span>
+                </button>
+                <button className="et-lien" style={{ width: "auto", padding: "8px 14px" }} onClick={() => setAccordeon((a) => (a === m.id ? null : m.id))} aria-expanded={accordeon === m.id}
+                  aria-label={accordeon === m.id ? `Replier les pages de ${m.label}` : `Voir les pages de ${m.label}`}>
+                  <span aria-hidden="true" className="et-fleche">{accordeon === m.id ? "▲" : "▼"}</span>
+                </button>
+              </div>
+              {accordeon === m.id && <div style={{ paddingLeft: 10, paddingBottom: 4 }}>{listePages(m)}</div>}
             </div>
           ))}
         </div>

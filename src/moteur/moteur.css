@@ -185,4 +185,12 @@ button { font-family: inherit; }
 .li-auteur { color: #64748b; font-size: 14px; text-align: center; }
 .al-carte strong > span[aria-hidden] { margin-right: 6px; }
 
+
+/* Menu de l'en-tête en deux parties : le nom (page du menu) et le chevron (liste des pages). */
+.et-double { display:inline-flex; align-items:stretch; padding:0 !important; gap:0; }
+.et-double > button { all:unset; cursor:pointer; display:inline-flex; align-items:center; font:inherit; color:inherit; }
+.et-double .et-nom { padding:6px 4px 6px 12px; }
+.et-double .et-chevron { padding:6px 10px 6px 6px; border-radius:0 999px 999px 0; }
+.et-double .et-chevron:hover { background:rgba(0,0,0,.08); }
+.et-double > button:focus-visible { outline:3px solid var(--accent); outline-offset:2px; border-radius:8px; }
 }
