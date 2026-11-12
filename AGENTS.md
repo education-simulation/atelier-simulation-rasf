@@ -117,15 +117,15 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 
 L'aperçu tourne **sur l'ordinateur de la personne**. Il est lancé **dès la fin de l'étape 0**, juste après la copie, pour ouvrir la page guide. Deux commandes **séparées**, chacune lancée dans le dossier du site (donné comme dossier de travail de ton outil) :
 1. `npm install` (environ une minute) : **au premier plan, jamais en arrière-plan, et attends qu'il ait fini** avant de faire autre chose. Il a besoin d'Internet : lance-le **hors du bac à sable** (option « BypassSandbox » de ton outil de commande) dès le premier essai, sinon il reste bloqué sans rien dire ;
-2. `npm run dev`, **en arrière-plan** (il doit continuer à tourner).
+2. `npm run dev`, **en arrière-plan** (il doit continuer à tourner), **hors du bac à sable** dès le premier essai.
 - Le lien est **celui que Vite affiche après « Local: »** (par exemple `http://localhost:5537/`). Chaque site a son propre numéro, tiré du nom de son dossier : **ne suppose jamais 5173**, lis toujours la ligne « Local: ». La personne peut avoir plusieurs sites et plusieurs conversations ouvertes en même temps : un autre numéro serait peut-être un **autre** de ses sites. Garde le lien et **donne-le en entier** chaque fois que la personne doit regarder son site.
 - Les fois suivantes, l'aperçu n'est plus lancé : relance `npm run dev` en arrière-plan dès ta première action, puis rouvre la page guide.
 
 ### La page guide (`<lien de l'aperçu>?guide`)
-Une page de l'aperçu, **en français**, que la personne garde ouverte à côté d'Antigravity : les 6 étapes (faite ✅ / « On en est là » / à venir), une copie des petites fenêtres anglaises avec la flèche sur « Yes, and always allow » et un petit lexique (Allow, Submit, Skip…), et des boutons « Créer mon compte Vercel », « Voir mon site » et, quand `PROGRESSION.md` contient « Adresse du site : … », « Mon site en ligne ». Elle n'existe **que sur l'ordinateur**, jamais sur le site en ligne.
-- **Ouvre-la dans son navigateur habituel**, jamais dans celui d'Antigravity, avec une commande courte : `open "http://localhost:NNNN/?guide"` (Mac), `Start-Process "http://localhost:NNNN/?guide"` (Windows), `xdg-open "…"` (Linux), avec le vrai numéro lu après « Local: ».
+Une page de l'aperçu, **en français**, que la personne garde ouverte **dans le navigateur d'Antigravity** : les 6 étapes (faite ✅ / « On en est là » / à venir), une copie des petites fenêtres anglaises avec la flèche sur « Yes, and always allow » et un petit lexique (Allow, Submit, Skip…), et des boutons « Créer mon compte Vercel », « Voir mon site » et, quand `PROGRESSION.md` contient « Adresse du site : … », « Mon site en ligne ». Elle n'existe **que sur l'ordinateur**, jamais sur le site en ligne.
+- **Ouvre-la dans le navigateur d'Antigravity, avec ton outil de navigateur** (jamais avec `open` ni `Start-Process`), à l'adresse `http://localhost:NNNN/?guide`, avec le vrai numéro lu après « Local: ».
 - Elle se met à jour toute seule quand tu coches une étape dans `PROGRESSION.md` : **ne la fais jamais recharger**, et ne décris pas son contenu dans la conversation.
-- Si la personne est perdue dans les étapes ou devant une fenêtre en anglais, rappelle-lui simplement : « Regarde ta page guide, dans ton navigateur. »
+- Si la personne est perdue dans les étapes ou devant une fenêtre en anglais, rappelle-lui simplement : « Regarde ta page guide, dans l'onglet du navigateur d'Antigravity. »
 - **Si la commande répond que `npm` est introuvable** : Node.js n'est pas installé (la vérification de l'étape 0 a été sautée). Affiche le message Node.js de l'étape 0, tel quel. Tu ne peux pas l'installer toi-même.
 - **Si `git` est introuvable** (Mac) : une fenêtre du Mac propose d'installer les « outils de ligne de commande » : la personne clique **Installer** et attend la fin (quelques minutes).
 
@@ -138,14 +138,14 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
 ### Étape 0 — Présenter, vérifier Node.js, puis copier le modèle (une seule fois)
 **Ne termine JAMAIS ton tour avant que la page guide soit ouverte** : n'écris pas « je continue » ou « rien à faire » pour t'arrêter ensuite ; enchaîne les actions jusqu'à l'ouverture de la page guide. **Les commandes qui utilisent Internet** (`git clone`, `npm install`) se lancent **hors du bac à sable** (option « BypassSandbox ») dès le premier essai : dans le bac à sable, elles échouent ou restent bloquées.
-**L'ordre exact, sans rien intercaler** : présentation (question « C'est parti ! · Je suis perdu·e ») → `node -v` → question du dossier → question du nom → copie → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide** (`open "http://localhost:NNNN/?guide"`). **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
+**L'ordre exact, sans rien intercaler** : présentation (question « C'est parti ! · Je suis perdu·e ») → `node -v` → question du dossier → copie dans `<dossier>/mon-site` → `npm install` → `npm run dev` (arrière-plan) → **ouverture de la page guide dans le navigateur d'Antigravity** → message « page guide » → seulement ensuite `PROGRESSION.md`. **Le plus vite possible** : pas de question sur le nom du dossier, aucune lecture de fichier inutile, aucune vérification. **Rien d'autre avant que la page guide soit ouverte** : pas un mot sur Vercel (ni page, ni lien, ni question, ni `whoami`), pas de mail, pas de question de l'étape 1, pas de `PROGRESSION.md` avant la copie. Vercel n'arrive qu'**après**, et seulement par le bouton de la page guide.
 
 - **D'abord, la présentation, sous forme de question à choix** (sinon elle s'affiche après tes actions, ou pas du tout) : dès que tu as lu ce fichier, **avant `node -v` et avant toute autre action**, pose une question à choix dont le texte est exactement :
   « Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ : je le copie sur ton ordinateur, puis je t'ouvre une page guide en français. 👉 Des petites fenêtres en anglais vont s'afficher : clique toujours sur « Yes, and always allow » (le 3e choix), c'est sans danger. »
   avec **exactement deux choix** (l'outil de question en exige au moins deux) : **C'est parti !** · **😕 Je suis perdu·e**
 
 - **Tout de suite après, avant toute question, vérifie que Node.js est installé** (le moteur de l'aperçu), avec une seule commande : `node -v` (la règle des petites fenêtres est déjà donnée : 3e choix).
-  - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe aux deux questions ci-dessous.
+  - Si elle affiche un numéro (`v20…`, `v22…`, `v24…` ou plus) : ne dis rien de technique, passe à la question du dossier ci-dessous.
   - Si elle répond « command not found » / « n'est pas reconnu », ou un numéro plus petit que `v20.19` : **arrête-toi là** (ne pose aucune question, ne copie rien). **Ouvre d'abord la page de téléchargement dans son navigateur habituel**, jamais dans le navigateur d'Antigravity, avec une commande courte : `open "https://nodejs.org/fr/download"` (Mac), `Start-Process "https://nodejs.org/fr/download"` (Windows) ou `xdg-open "https://nodejs.org/fr/download"` (Linux). Puis affiche **exactement** ce message, sans rien ajouter (si la commande a échoué, remplace le point 1 par « Copie ce lien et colle-le dans ton navigateur habituel (Chrome, Safari, Edge…) : https://nodejs.org/fr/download ») :
 
     > Il manque un logiciel gratuit sur ton ordinateur : **Node.js**. C'est le moteur qui fait tourner l'aperçu de ton site. On l'installe une seule fois, en 5 minutes environ :
@@ -157,23 +157,21 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
     >
     > Ce que tu dois cliquer maintenant : le bouton de téléchargement, dans la page qui vient de s'ouvrir dans ton navigateur.
 
-    Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe aux deux questions ; sinon, demande-lui une capture de l'écran où elle bloque.
-- **Les deux questions, une par message :**
-  1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → **Bureau (recommandé)** · Documents · 😕 Je suis perdu·e. **Rien d'autre** : pas de choix « Autre », pas de fenêtre pour choisir un dossier (trop risqué pour une débutante). Si la personne écrit quand même un autre dossier, réponds qu'on range le site sur le Bureau ou dans Documents, et repose la question.
-  *(Ces deux questions seulement si tu n'es pas déjà dans un projet sur un dossier vide : voir le début de ce fichier.)*
-  2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne). **Si ce dossier existe déjà**, dis-le et propose un autre nom : ne copie jamais par-dessus un dossier existant.
+    Puis pose la question à choix : C'est installé · Je suis bloqué·e. Si la personne répond dans cette même conversation, relance `node -v` : si c'est bon, passe à la question du dossier ; sinon, demande-lui une capture de l'écran où elle bloque.
+- **Une seule question** : « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → **Bureau (recommandé)** · Documents · 😕 Je suis perdu·e. **Rien d'autre** : pas de choix « Autre », pas de fenêtre pour choisir un dossier (trop risqué pour une débutante). Si la personne écrit quand même un autre dossier, réponds qu'on range le site sur le Bureau ou dans Documents, et repose la question.
+  *(Cette question seulement si tu n'es pas déjà dans un dossier de projet vide : voir le début de ce fichier.)*
+  **Pas de question sur le nom** : le dossier s'appelle **`mon-site`** (c'est aussi le début de l'adresse en ligne). S'il existe déjà, prends `mon-site-2` (puis `-3`…) sans rien demander ; ne copie jamais par-dessus un dossier existant.
 - **N'ouvre JAMAIS la page de Vercel toi-même** (ni `open`, ni `Start-Process`, ni ton outil de navigateur) : une page inconnue qui surgit toute seule fait perdre le fil à la personne. Le compte Vercel se crée **depuis la page guide**, qui explique ce qu'est Vercel et porte le bouton « Créer mon compte Vercel » : c'est la personne qui clique.
 - Copie avec **une seule commande courte, chemins écrits en clair** (jamais de variables ni de script, voir « Les demandes d'autorisation », point 2) :
   - en général : `git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <chemin complet du nouveau dossier>` ;
   - si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : sur Mac et Linux `mv <chemin actuel> <chemin complet du nouveau dossier>` ; sur Windows `Move-Item "<chemin actuel>" "<chemin complet du nouveau dossier>"` (par exemple `Move-Item "C:\Users\anne\.gemini\antigravity\scratch\atelier-simulation-rasf" "C:\Users\anne\Desktop\mon-site"`).
-  Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin. **Avant de copier, vérifie que ce dossier n'existe pas encore avec ton outil qui liste le contenu d'un dossier** (pas avec une commande) : s'il existe, dis-le et propose un autre nom (`mv` le rangerait dedans au lieu de le créer).
-- Puis écris `PROGRESSION.md` **avec ton outil d'écriture de fichier** (pas avec une commande).
-- **Puis ouvre la page guide** : `npm install`, puis `npm run dev` en arrière-plan, puis ouvre `http://localhost:NNNN/?guide` dans son navigateur habituel (voir « L'aperçu du site » et « La page guide », section 3). Écris alors :
+  Le dossier « Bureau » s'appelle `Desktop` sur Mac ; sur Windows, il peut être dans OneDrive (`C:\Users\<nom>\OneDrive\Bureau`) : utilise le vrai chemin. **Avant de copier, vérifie que ce dossier n'existe pas encore avec ton outil qui liste le contenu d'un dossier** (pas avec une commande) : s'il existe, prends `mon-site-2` (`mv` le rangerait dedans au lieu de le créer).
+- **Puis ouvre la page guide, tout de suite** : `npm install`, puis `npm run dev` en arrière-plan (les deux **hors du bac à sable**), puis ouvre `http://localhost:NNNN/?guide` **dans le navigateur d'Antigravity, avec ton outil de navigateur** (voir « La page guide », section 3). Écris alors :
 
-  > **💬 Pour toi :** je viens d'ouvrir dans ton navigateur ta **page guide**, en français. Garde-la à côté d'Antigravity : elle te montre où tu en es, et elle traduit les petites fenêtres en anglais.
+  > **💬 Pour toi :** je viens d'ouvrir ta **page guide**, en français, dans le navigateur d'Antigravity. Garde cet onglet ouvert : elle te montre où tu en es, et elle traduit les petites fenêtres en anglais.
   > 👉 Dans cette page, tu peux recevoir les instructions sur ton mail RASF (carte du haut), puis crée ton compte Vercel avec le bouton de la carte **« Ton compte Vercel »** (2 minutes). Puis reviens ici.
 
-  Puis, sans attendre, enchaîne sur la première question de l'étape 1 : elle y répondra en revenant.
+  Puis écris `PROGRESSION.md` **avec ton outil d'écriture de fichier** (pas avec une commande), et enchaîne sur la première question de l'étape 1.
 - **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
   - Mac : `/Users/<nom>/Desktop/mon-site`
   - Windows : `C:\Users\<nom>\Desktop\mon-site`

@@ -181,7 +181,7 @@ export function Guide() {
         <header className="g-hero">
           <span className="g-main" aria-hidden="true">👋</span>
           <h1>Ton site, étape par étape</h1>
-          <p className="g-sous">Garde cette page ouverte à côté d'Antigravity : elle te montre où tu en es, et elle se met à jour toute seule.</p>
+          <p className="g-sous">Garde cet onglet ouvert : il te montre où tu en es, et il se met à jour tout seul.</p>
         </header>
 
         {connexion && !faites.has(3) && (
