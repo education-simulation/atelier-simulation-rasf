@@ -140,7 +140,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 
   > Bonjour ! Ensemble, on va créer ton site de simulations, en 15 minutes environ. Voici ce qui va se passer :
   > 1. Je vérifie qu'un logiciel gratuit, Node.js, est installé sur ton ordinateur (s'il manque, je te guide pour l'installer).
-  > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom) ; pendant ce temps, tu crées ton compte gratuit Vercel, pour la mise en ligne. Puis je t'ouvre une **page guide** en français dans ton navigateur, qui te suivra jusqu'au bout.
+  > 2. Je copie le modèle de site dans un dossier de ton ordinateur (deux questions : où, et sous quel nom), puis je t'ouvre une **page guide** en français dans ton navigateur, qui te suivra jusqu'au bout. Tu y créeras ton compte gratuit Vercel, pour la mise en ligne.
   > 3. Quelques questions à cliquer : le nom du site, sa couleur, son style, ton établissement, ton nom.
   > 4. Tu vois ton site, sur ton ordinateur seulement.
   > 5. On le met en ligne, gratuitement, à une adresse que tu pourras partager.
@@ -166,16 +166,7 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
   1. « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? » → **Bureau (recommandé)** · Documents · 😕 Je suis perdu·e. **Rien d'autre** : pas de choix « Autre », pas de fenêtre pour choisir un dossier (trop risqué pour une débutante). Si la personne écrit quand même un autre dossier, réponds qu'on range le site sur le Bureau ou dans Documents, et repose la question.
   *(Ces deux questions seulement si tu n'es pas déjà dans un projet sur un dossier vide : voir le début de ce fichier.)*
   2. « Quel nom donner au dossier de ton site ? » → mon-site · atelier-simulation · Autre (lettres minuscules et tirets, sans espace ni accent : c'est aussi le début de l'adresse de ton site en ligne). **Si ce dossier existe déjà**, dis-le et propose un autre nom : ne copie jamais par-dessus un dossier existant.
-- **Juste avant de copier, dans le même message, fais-lui créer son compte Vercel pendant que tu copies** (la copie prend un moment ; elle ne reste pas à attendre, et la mise en ligne de l'étape 3 sera ensuite immédiate). Affiche exactement :
-
-  > Pendant que je copie ton site, crée ton compte **Vercel** dans ton navigateur habituel (Chrome, Edge, Safari…) (gratuit : c'est lui qui mettra ton site en ligne) :
-  > 1. Je t'ouvre la page dans ton navigateur habituel : https://vercel.com/signup (si elle ne s'ouvre pas, sélectionne ce lien, copie-le avec Cmd + C / Ctrl + C et colle-le dans la barre d'adresse de ton navigateur ; pas dans celui d'Antigravity).
-  > 2. Choisis **Hobby** (gratuit), écris ton nom, puis clique **Continue with Google** et choisis ton compte d'établissement.
-  > 3. Si Vercel te propose de relier GitHub ou de créer un projet, **ne fais rien** : ferme simplement l'onglet.
-  >
-  > Si tu as déjà un compte Vercel, ne fais rien. Reviens ici quand c'est fait.
-
-  Ouvre exactement ce lien, la page d'**inscription** (jamais `vercel.com/login` ni la page d'accueil), dans son navigateur habituel avec une commande courte (`open "https://vercel.com/signup"` sur Mac, `Start-Process "https://vercel.com/signup"` sur Windows ; jamais ton outil de navigateur). Puis, **sans attendre sa réponse**, lance la copie (la petite fenêtre s'affiche en même temps : précède-la du message en gras, 2e choix). Après la copie, enchaîne sur la première question de l'étape 1 : elle y répondra en revenant.
+- **N'ouvre JAMAIS la page de Vercel toi-même** (ni `open`, ni `Start-Process`, ni ton outil de navigateur) : une page inconnue qui surgit toute seule fait perdre le fil à la personne. Le compte Vercel se crée **depuis la page guide**, qui explique ce qu'est Vercel et porte le bouton « Créer mon compte Vercel » : c'est la personne qui clique.
 - Copie avec **une seule commande courte, chemins écrits en clair** (jamais de variables ni de script, voir « Les demandes d'autorisation », point 2) :
   - en général : `git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <chemin complet du nouveau dossier>` ;
   - si Antigravity l'a déjà copié dans `.gemini/antigravity/scratch`, **déplace** ce dossier : sur Mac et Linux `mv <chemin actuel> <chemin complet du nouveau dossier>` ; sur Windows `Move-Item "<chemin actuel>" "<chemin complet du nouveau dossier>"` (par exemple `Move-Item "C:\Users\anne\.gemini\antigravity\scratch\atelier-simulation-rasf" "C:\Users\anne\Desktop\mon-site"`).
@@ -184,6 +175,9 @@ Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérifi
 - **Puis ouvre la page guide** : `npm install`, puis `npm run dev` en arrière-plan, puis ouvre `http://localhost:NNNN/?guide` dans son navigateur habituel (voir « L'aperçu du site » et « La page guide », section 3). Écris alors :
 
   > **💬 Pour toi :** je viens d'ouvrir dans ton navigateur ta **page guide**, en français. Garde-la à côté d'Antigravity : elle te montre où tu en es, et elle traduit les petites fenêtres en anglais.
+  > 👉 Dans cette page, lis la carte **« Ton compte Vercel »** et clique sur son bouton pour créer ton compte (2 minutes). Puis reviens ici.
+
+  Puis, sans attendre, enchaîne sur la première question de l'étape 1 : elle y répondra en revenant.
 - **Ne demande pas d'ouvrir le dossier dans Antigravity.** Donne simplement, en une ligne, **le chemin complet** du site, écrit comme sur son ordinateur :
   - Mac : `/Users/<nom>/Desktop/mon-site`
   - Windows : `C:\Users\<nom>\Desktop\mon-site`
@@ -239,7 +233,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
 - **Les liens Vercel s'ouvrent dans le navigateur habituel de la personne, jamais dans celui d'Antigravity** (elle y est déjà connectée à Google, et elle retrouve son compte ensuite). Ouvre-le toi-même avec **une seule commande courte** : sur Mac `open "<lien>"`, sur Windows `Start-Process "<lien>"`, sur Linux `xdg-open "<lien>"`. N'utilise pas ton outil de navigateur. Si la commande échoue, dis-lui : « Sélectionne ce lien, copie-le (Cmd + C / Ctrl + C) et colle-le dans la barre d'adresse de ton navigateur habituel (Chrome, Edge, Safari…). »
 - Explique en deux phrases : « Vercel est un service gratuit qui met ton site sur Internet. C'est Vercel qui choisit l'adresse, à partir du nom de ton dossier : par exemple `https://mon-site.vercel.app` (si ce nom est déjà pris, Vercel ajoute quelques lettres). Plus tard, si tu veux, tu pourras acheter un nom de domaine à toi (par exemple `mon-labo.fr`, environ 10 € par an) et le relier à ton site. »
 - **Vercel est-il déjà connecté sur cet ordinateur ?** Vérifie d'abord avec `npx --yes vercel@latest whoami` : s'il affiche un nom de compte, **ne demande aucune connexion** et passe directement à la mise en ligne.
-- **Compte Vercel d'abord (seulement si `whoami` répond qu'on n'est pas connecté)** : la page de connexion de Vercel perd les profs qui n'ont pas encore de compte. Pose d'abord la question à choix « As-tu déjà créé ton compte Vercel ? » → Oui · Non · Je ne sais pas. Si ce n'est pas « Oui », ouvre **https://vercel.com/signup** (la page d'inscription, jamais la page de connexion) dans son navigateur habituel (commande ci-dessus), avec les consignes de l'étape 0 (Hobby, nom, **Continue with Google**, ne rien relier ni créer), puis question à choix : C'est fait · Je suis bloqué·e. Seulement ensuite, la connexion.
+- **Compte Vercel d'abord (seulement si `whoami` répond qu'on n'est pas connecté)** : la page de connexion de Vercel perd les profs qui n'ont pas encore de compte. Pose d'abord la question à choix « As-tu déjà créé ton compte Vercel ? » → Oui · Non · Je ne sais pas. Si ce n'est pas « Oui », **n'ouvre pas la page toi-même** : dis « 👉 Dans ta page guide, clique sur **Créer mon compte Vercel** et suis les 4 gestes de la carte. » (si la page guide n'est pas ouverte, rouvre-la d'abord), puis question à choix : C'est fait · Je suis bloqué·e. Seulement ensuite, la connexion.
 - **Connexion (seulement si `whoami` répond qu'on n'est pas connecté)** : lance `npx --yes vercel@latest login` **en arrière-plan** et lis ce qu'il affiche : une adresse `https://vercel.com/…` et un code. Ouvre l'adresse dans son navigateur habituel (commande ci-dessus), donne-lui aussi l'adresse complète et le code, puis :
   « La page Vercel s'est ouverte dans ton navigateur (sinon, copie le lien ci-dessus dans ton navigateur habituel). Clique **Continue with Google** et choisis le compte avec lequel tu as créé ton compte Vercel au début (s'il n'existe pas encore : offre gratuite « Hobby »). Vérifie que le code affiché est le même que celui-ci, puis clique **Confirm** (ou « Allow »). Reviens ensuite ici et choisis « C'est fait ». »
   Pose la question à choix : C'est fait · Je suis bloqué·e. Tu ne crées pas le compte à sa place et tu ne demandes aucun mot de passe.

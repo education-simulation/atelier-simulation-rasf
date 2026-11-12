@@ -7,7 +7,7 @@
 import { useEffect, useState } from "react";
 
 const ETAPES = [
-  { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'agent copie le modèle et l'installe. Pendant ce temps, crée ton compte Vercel (bouton plus bas)." },
+  { emoji: "📦", titre: "Ton site arrive sur ton ordinateur", texte: "L'agent copie le modèle et l'installe. Puis tu crées ton compte Vercel, avec la carte plus bas." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions à cliquer dans Antigravity : le nom du site, sa couleur, son style, ton établissement, ton nom." },
   { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon, toi seul le vois." },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
@@ -97,6 +97,12 @@ const CSS = `
 .g-bouton.noir { background:#0f172a; color:#fff; }
 .g-bouton.bleu { background:var(--g-bleu); color:#fff; }
 .g-bouton.vert { background:var(--g-vert); color:#fff; }
+.g-vercel { background:linear-gradient(135deg,#0f172a,#1e293b); color:#e2e8f0; }
+.g-vercel h2 { color:#fff; }
+.g-vercel p { margin:0 0 12px; font-size:16.5px; line-height:1.5; }
+.g-vercel ol { margin:0 0 16px; padding-left:22px; display:flex; flex-direction:column; gap:6px; font-size:16px; }
+.g-vercel b { color:#fff; }
+.g-vercel .g-bouton { background:#fff; color:#0f172a; font-size:17px; padding:14px 24px; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -148,6 +154,21 @@ export function Guide() {
           {toutFini && <p className="g-bravo">Bravo, ton site est en ligne ! 🎉</p>}
         </section>
 
+        {!faites.has(3) && (
+          <section className="g-carte g-vercel" aria-labelledby="g-vercel">
+            <h2 id="g-vercel"><span aria-hidden="true">▲</span> Ton compte Vercel</h2>
+            <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras donner à tes classes (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 4 ; crée ton compte maintenant, ça prend 2 minutes.</p>
+            <ol>
+              <li>Clique sur le bouton ci-dessous : la page de Vercel s'ouvre dans un nouvel onglet.</li>
+              <li>Choisis <b>Hobby</b> (gratuit) et écris ton nom.</li>
+              <li>Clique <b>Continue with Google</b> et choisis ton compte d'établissement.</li>
+              <li>Si Vercel te propose de relier GitHub ou de créer un projet : <b>ne fais rien</b>, ferme l'onglet et reviens dans Antigravity.</li>
+            </ol>
+            <a className="g-bouton" href="https://vercel.com/signup" target="_blank" rel="noreferrer">▲ Créer mon compte Vercel</a>
+            <p className="g-note" style={{ color: "#94a3b8", margin: "12px 0 0" }}>Tu as déjà un compte Vercel ? Alors ne fais rien.</p>
+          </section>
+        )}
+
         <section className="g-carte" aria-labelledby="g-fenetres">
           <h2 id="g-fenetres"><span aria-hidden="true">🪟</span> Les petites fenêtres en anglais</h2>
           <p style={{ margin: "0 0 14px", color: "#334155" }}>
@@ -172,11 +193,9 @@ export function Guide() {
         <section className="g-carte" aria-labelledby="g-liens">
           <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>
           <div className="g-boutons">
-            <a className="g-bouton noir" href="https://vercel.com/signup" target="_blank" rel="noreferrer">▲ Créer mon compte Vercel</a>
             <a className="g-bouton bleu" href="./" target="_blank" rel="noreferrer">👀 Voir mon site (brouillon)</a>
             {adresse && <a className="g-bouton vert" href={adresse} target="_blank" rel="noreferrer">🌍 Mon site en ligne</a>}
           </div>
-          <p className="g-note">Pour Vercel : choisis <b>Hobby</b> (gratuit), écris ton nom, puis <b>Continue with Google</b>. Si on te propose de relier GitHub ou de créer un projet, ne fais rien. Tu as déjà un compte ? Alors ne fais rien.</p>
         </section>
       </div>
     </div>

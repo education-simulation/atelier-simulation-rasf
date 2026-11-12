@@ -30,7 +30,7 @@ Pas besoin de compte GitHub. Il te faut seulement **Antigravity**, installé sur
    Crée mon site avec le modèle GitHub education-simulation/atelier-simulation-rasf, puis suis ses consignes pour me guider.
    ```
 
-6. L'agent te présente ce qui va se passer et copie le modèle dans ton dossier. **Pendant qu'il copie, il te fait créer ton compte gratuit Vercel** (il t'ouvre la bonne page ; choisis « Continue with Google ») : c'est lui qui mettra ton site en ligne.
+6. L'agent te présente ce qui va se passer, copie le modèle dans ton dossier, puis t'ouvre une **page guide** en français dans ton navigateur. C'est là que tu crées ton compte gratuit Vercel (le service qui mettra ton site en ligne), en cliquant sur son bouton.
 
 L'agent te guide ensuite pas à pas, avec des questions à cliquer : le nom et la couleur de ton site, le voir sur ton ordinateur, le mettre en ligne avec Vercel, puis des idées pour la suite.
 Au départ, il vérifie que **Node.js** est installé (le moteur gratuit qui fait tourner l'aperçu de ton site). S'il manque, il te guide pour l'installer en 5 minutes depuis nodejs.org.
