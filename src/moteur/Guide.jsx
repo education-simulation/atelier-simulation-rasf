@@ -74,11 +74,14 @@ const LEXIQUE = [
 function lire(texte) {
   const faites = new Set([...texte.matchAll(/^\s*-\s*\[x\]\s*Étape\s*(\d+)/gim)].map((m) => Number(m[1])));
   const adresse = texte.match(/Adresse du site\s*:\s*(https?:\/\/\S+)/i)?.[1];
-  return { faites, adresse };
+  // Connexion Vercel en attente (écrite par l'agent) : « Connexion Vercel : https://vercel.com/… (code : ABCD-EFGH) »
+  const m = texte.match(/Connexion Vercel\s*:\s*(https:\/\/vercel\.com\/[^\s)]+)(?:[^\n]*?code\s*:\s*([A-Z0-9-]+))?/i);
+  const connexion = m ? { lien: m[1], code: m[2] || "" } : null;
+  return { faites, adresse, connexion };
 }
 
 function useProgression() {
-  const [etat, setEtat] = useState({ faites: new Set(), adresse: null, pret: false });
+  const [etat, setEtat] = useState({ faites: new Set(), adresse: null, connexion: null, pret: false });
   useEffect(() => {
     let fini = false;
     const charger = () => fetch("./__atelier/progression", { cache: "no-store" })
@@ -155,6 +158,8 @@ const CSS = `
 .g-mail .g-alerte { color:#b91c1c; font-weight:700; margin:10px 0 0 !important; }
 .g-mail .g-ok { color:#166534 !important; font-size:16.5px; margin:0 !important; }
 .g-lien { background:none; border:0; padding:0; color:var(--g-bleu); font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; margin-left:6px; }
+.g-connexion { box-shadow:0 0 0 5px rgba(245,158,11,.35); }
+.g-code { font-family:Menlo,Consolas,monospace; background:#fde68a; color:#3a2500 !important; padding:1px 8px; border-radius:6px; letter-spacing:.06em; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -162,7 +167,7 @@ const CSS = `
 `;
 
 export function Guide() {
-  const { faites, adresse } = useProgression();
+  const { faites, adresse, connexion } = useProgression();
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
@@ -178,6 +183,19 @@ export function Guide() {
           <h1>Ton site, étape par étape</h1>
           <p className="g-sous">Garde cette page ouverte à côté d'Antigravity : elle te montre où tu en es, et elle se met à jour toute seule.</p>
         </header>
+
+        {connexion && !faites.has(3) && (
+          <section className="g-carte g-vercel g-connexion" aria-labelledby="g-connexion">
+            <h2 id="g-connexion"><span aria-hidden="true">🔑</span> Connecte ton compte Vercel</h2>
+            <ol>
+              <li>Clique sur le bouton ci-dessous : la page de Vercel s'ouvre dans un nouvel onglet.</li>
+              <li>Clique <b>Continue with Google</b> et choisis le compte de ton compte Vercel.</li>
+              {connexion.code && <li>Vérifie que le code affiché est bien <b className="g-code">{connexion.code}</b></li>}
+              <li>Clique <b>Confirm</b> (ou <b>Allow</b>), puis reviens dans Antigravity et choisis « C'est fait ».</li>
+            </ol>
+            <a className="g-bouton" href={connexion.lien} target="_blank" rel="noreferrer">🔑 Connecter mon compte Vercel</a>
+          </section>
+        )}
 
         <CarteMail />
 
