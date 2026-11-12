@@ -1,5 +1,5 @@
 // ============================================================
-//  GUIDE (moteur, ne pas modifier) — la page « Ton site, étape par étape », à l'adresse  …/?guide
+//  GUIDE (moteur, ne pas modifier) — la page « Ton guide », à l'adresse  …/?guide
 //  Seulement sur l'ordinateur (aperçu) : elle n'existe pas sur le site en ligne.
 //  Elle relit PROGRESSION.md toutes les 2 secondes (via le serveur d'aperçu, voir vite.config.js) :
 //  quand l'agent coche une étape, la page se met à jour toute seule.
@@ -219,6 +219,7 @@ const CSS = `
 .g-pliable[open] summary { margin-bottom:14px; }
 .g-chevron { flex-shrink:0; border:2px solid #2563eb; color:#2563eb; background:#eff6ff; border-radius:99px; padding:5px 14px; font:800 14.5px 'Nunito',sans-serif; white-space:nowrap; }
 .g-pliable summary:hover .g-chevron { background:#2563eb; color:#fff; }
+.g-phrase { background:#f1f5f9; border:1px solid #cbd5e1; border-radius:10px; padding:12px 14px; font-family:Menlo,Consolas,monospace; font-size:14.5px; color:#0f172a; }
 .g-note { font-size:14.5px; color:#64748b; margin:10px 0 0; }
 .g-bravo { text-align:center; font:800 22px 'Outfit',sans-serif; color:#166534; }
 @media (max-width:560px) { .g-carte { padding:18px 16px; } .g-etape { padding:12px; } }
@@ -416,6 +417,23 @@ function FenetreStyles({ fermer }) {
   );
 }
 
+// --- Tout supprimer : la phrase à écrire à l'IA pour mettre ce site à la Corbeille ---
+function CarteSupprimer({ dossier, lieu }) {
+  const [ouvert, setOuvert] = useState(false);
+  const [copie, setCopie] = useState(false);
+  const phrase = `Supprime mon site, dossier ${dossier} sur le ${lieu}, et tout ce que tu as créé pour lui.`;
+  const copier = () => { navigator.clipboard?.writeText(phrase).then(() => { setCopie(true); setTimeout(() => setCopie(false), 2500); }).catch(() => {}); };
+  return (
+    <details className="g-carte g-pliable" open={ouvert} onToggle={(e) => setOuvert(e.currentTarget.open)}>
+      <summary><h2><span aria-hidden="true">🗑️</span> Tout supprimer et recommencer</h2><span className="g-chevron" aria-hidden="true">{ouvert ? "Réduire ▴" : "Afficher ▾"}</span></summary>
+      <p style={{ margin: "0 0 10px", color: "#334155" }}>Pour mettre ce site à la Corbeille (le dossier <b>{dossier}</b> sur ton {lieu}), copie cette phrase et colle-la dans la zone de message d'Antigravity. L'IA Gemini te demandera de confirmer avant de supprimer quoi que ce soit.</p>
+      <div className="g-phrase">{phrase}</div>
+      <button type="button" className="g-mini" style={{ marginTop: 10 }} onClick={copier}>{copie ? "✅ Copiée : colle-la avec Cmd + V ou Ctrl + V" : "📋 Copier la phrase"}</button>
+      <p className="g-note">Tes autres sites (mon-site-2…) ne sont pas touchés. Ton site en ligne, s'il existe, reste sur Vercel.</p>
+    </details>
+  );
+}
+
 export function Guide() {
   const suivi = useProgression();
   const { faites, sousFaites, adresse, connexion } = suivi;
@@ -434,7 +452,7 @@ export function Guide() {
   const [aide, setAide] = useState(false);
   // « Aller sur mon site » n'apparaît qu'au début de l'étape 3 (« Voir ton site »), une fois « Faire connaissance » cochée.
   // Onglets nommés : le bouton 🗺️ du site revient sur CET onglet, et « Aller sur mon site » sur celui du site, au lieu d'en ouvrir d'autres.
-  useEffect(() => { document.title = "Ton site, étape par étape"; window.name = "atelier-guide"; }, []);
+  useEffect(() => { document.title = "Ton guide"; window.name = "atelier-guide"; }, []);
 
   return (
     <div className="g">
@@ -442,7 +460,7 @@ export function Guide() {
       <div className="g-col">
         <header className="g-hero">
           <span className="g-main" aria-hidden="true">👋</span>
-          <h1>Ton site, étape par étape</h1>
+          <h1>Ton guide</h1>
           <p className="g-sous">Garde cet onglet ouvert : il te montre où tu en es, et il se met à jour tout seul.</p>
         </header>
 
@@ -554,6 +572,8 @@ export function Guide() {
             <p className="g-note" style={{ color: "#94a3b8", margin: "12px 0 0" }}>Tu as déjà un compte Vercel ? Alors ne fais rien.</p>
           </section>
         )}
+
+        <CarteSupprimer dossier={suivi.dossier || "mon-site"} lieu={suivi.lieu || "Bureau"} />
 
         <section className="g-carte" aria-labelledby="g-liens">
           <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>

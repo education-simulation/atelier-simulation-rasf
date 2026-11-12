@@ -43,7 +43,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
   2. <deuxième choix>
   3. 😕 Je suis perdu·e
 
-  ✍️ *Écris le numéro de ta réponse dans la zone de message, en bas, puis appuie sur Entrée.*
+  ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Perdu·e ? Écris simplement « je suis perdu ».*
   ```
   Les trois accents graves ``` ne servent qu'à te montrer la forme : **ne les écris jamais** (sinon le message s'affiche comme du code et le lien n'est plus cliquable).
   **Aère** : une **ligne vide** entre chaque bloc (titre, question, lien, liste, consigne ✍️), sinon tout se colle en un pavé. Une idée par ligne, phrases courtes. Le lien et la consigne ✍️ ne sont **jamais** collés à une autre phrase.
@@ -143,6 +143,12 @@ Pour montrer un changement, la consigne est toujours de cette forme :
 
 Avance **dans l'ordre**. Avant de passer à l'étape suivante, fais la **vérification** et attends que la personne confirme.
 
+### Supprimer le site (quand la personne le demande)
+La page guide donne la phrase : « Supprime mon site, dossier <nom> sur le <Bureau ou Documents>, et tout ce que tu as créé pour lui. »
+- **Demande d'abord confirmation**, en message à choix : « Je vais mettre à la Corbeille ton dossier <nom> (ton site sur ton ordinateur). Tu es sûr·e ? » → 1. Oui, supprime · 2. Non, je le garde.
+- Si « Oui » : arrête l'aperçu de ce site (la tâche `npm run dev` en arrière-plan), puis **mets le dossier à la Corbeille, jamais de suppression définitive** : Mac `mv "<chemin complet du dossier>" ~/.Trash/` ; Windows : ouvre le dossier parent avec `Start-Process explorer.exe "<dossier parent>"` et dis à la personne de faire glisser le dossier dans la Corbeille. Ne touche à **aucun autre** dossier (`mon-site-2`, etc.).
+- Puis : « ✅ C'est fait : ton site <nom> est dans la Corbeille. » Si le site avait été mis en ligne, ajoute : « Ta version en ligne existe toujours sur Vercel ; tu peux la supprimer sur vercel.com (Settings → Delete Project) si tu veux. » Tu ne supprimes **jamais** toi-même un projet Vercel.
+
 ### Étape 0 — Installer ta page guide (décrite dans `AGENTS.md`, déjà faite)
 Présentation, Node.js, dossier, copie, installation, page guide : tout est dans `AGENTS.md`. Si la personne revient sans que l'étape 0 soit cochée, refais `AGENTS.md`.
 
@@ -177,7 +183,7 @@ Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix e
   2. Non, pas maintenant
   3. 😕 Je suis perdu·e
 
-  ✍️ *Écris le numéro de ta réponse dans la zone de message, en bas, puis appuie sur Entrée.*
+  ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Perdu·e ? Écris simplement « je suis perdu ».*
   ```
 - **« Oui »** → étape 4 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton site tranquillement. Quand tu voudras le mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
