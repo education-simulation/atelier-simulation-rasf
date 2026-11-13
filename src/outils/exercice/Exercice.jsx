@@ -356,7 +356,7 @@ function AideOutil({ outil, fermer }) {
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
         <style>{`
-          .ao-onglets { display:flex; gap:4px; flex-wrap:wrap; margin:12px 0 4px; border-bottom:2px solid #e2e8f0; }
+          .ao-onglets { display:flex; gap:4px; flex-wrap:wrap; margin:12px 0 4px; border-bottom:2px solid #e2e8f0; position:sticky; top:-18px; z-index:3; background:#fff; padding-top:6px; }
           .ao-onglets button { border:none; background:none; font:inherit; font-weight:800; font-size:14.5px; color:#64748b; padding:8px 12px; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; }
           .ao-onglets button[aria-selected="true"] { color:#0f172a; border-bottom-color:var(--accent, #2563eb); }
           .ao-sous { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 0; }
