@@ -257,7 +257,7 @@ document.addEventListener("click", (ev) => {
   if (!b) return;
   const v = document.createElement("div");
   v.className = "voile";
-  v.innerHTML = `<div class="popup" role="dialog" aria-modal="true"><button type="button" class="fermer">✕ Fermer</button><iframe src="${b.dataset.popup}" title="Découvrir Antigravity"></iframe></div>`;
+  v.innerHTML = `<div class="popup" role="dialog" aria-modal="true"><iframe src="${b.dataset.popup}" title="Découvrir Antigravity"></iframe></div>`;
   v.addEventListener("click", (e) => { if (e.target === v || e.target.closest(".fermer")) v.remove(); });
   document.body.appendChild(v);
 });
