@@ -322,6 +322,15 @@ export const CSS = `
 .pf-intro b { color:#fff; }
 .ga .g-regle { color:#fde68a; background:#1f1a10; border:2px solid #f59e0b; border-radius:14px; padding:12px 16px; font-size:17px; }
 .ga .g-regle b { color:#fff; }
+.ga { padding-bottom:110px !important; }
+.ga-repondre { position:fixed; left:12px; bottom:12px; z-index:40; display:flex; align-items:center; gap:12px; max-width:min(760px, calc(100vw - 24px)); background:#f59e0b; color:#1f1300; border-radius:16px; padding:10px 14px; box-shadow:0 10px 30px rgba(15,23,42,.35); font-size:16px; line-height:1.35; }
+.ga-fleche { font-size:34px; font-weight:800; line-height:1; animation:ga-fleche 1s ease-in-out infinite; }
+@keyframes ga-fleche { 0%,100% { transform:translateX(0); } 50% { transform:translateX(-12px); } }
+.ga-repondre-texte { flex:1; }
+.ga-repondre-texte b { font-size:18px; }
+.ga-decouvrir { flex-shrink:0; text-decoration:none; background:#0b0b0f; color:#fff; border-radius:12px; padding:10px 14px; font-weight:800; font-size:15px; }
+.ga-decouvrir:hover { background:#27272a; }
+@media (max-width:600px) { .ga-repondre { flex-wrap:wrap; } }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
@@ -1001,6 +1010,12 @@ export function Guide() {
   return (
     <div className="ga">
       <style>{CSS}</style>
+      {/* En bas à gauche : une flèche animée vers la zone de message d'Antigravity (à gauche de ce navigateur) */}
+      <div className="ga-repondre" role="note">
+        <span className="ga-fleche" aria-hidden="true">⬅</span>
+        <span className="ga-repondre-texte"><b>Réponds à l'IA</b> dans la zone de message, en bas à gauche : écris le numéro de ta réponse, puis Entrée.</span>
+        <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>
+      </div>
       <div className="ga-fenetre">
         <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Progression de l'installation</b><em>ce n'est pas ton interface</em></div>
         <div className="ga-corps">
@@ -1070,9 +1085,6 @@ export function Guide() {
           )}
           {adresse && <a className="ga-action vert" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon interface en ligne</a>}
 
-          <div className="ga-outils">
-            <p>✍️ Pour répondre à l'IA : écris le <b>numéro</b> (ou ta réponse avec tes mots) dans la zone de message d'Antigravity, puis Entrée. Perdu·e ? Écris <b>« je suis perdu »</b>.</p>
-          </div>
 
           {mail && (
             <div className="g-voile" onClick={() => setMail(false)}>
