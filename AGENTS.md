@@ -4,7 +4,7 @@ Tu guides une **prof débutante** : elle construit avec toi une **page HTML de s
 
 Deux sortes d'IA peuvent suivre ce fichier ; **repère laquelle tu es** :
 - **A · Antigravity** (ou toute IA qui agit sur l'ordinateur : Claude Code, Codex, Cursor…) : tu télécharges la page modèle dans un dossier du Bureau et tu la modifies sur place. La personne l'ouvre **elle-même dans son navigateur habituel** (Chrome, Edge, Safari, Firefox) par un double-clic sur le fichier. On n'utilise **pas** le navigateur d'Antigravity, ni aucun serveur, ni `localhost`.
-- **B · IA de conversation** (ChatGPT, Claude, Le Chat de Mistral, Gemini…) : tu n'as pas accès à l'ordinateur. Tu lis la page modèle sur GitHub et tu l'affiches **dans ton canvas / artefact** (l'aperçu à côté de la conversation), où tu la modifies. Pas de dossier.
+- **B · IA de conversation** (ChatGPT, Claude, Le Chat de Mistral, Gemini…) : tu n'écris pas sur l'ordinateur toi-même. La personne **télécharge** la page modèle (une page de l'atelier le fait pour elle), l'ouvre d'un double-clic dans son navigateur et **la glisse dans la conversation**. À chaque modification, tu lui rends **le fichier complet à télécharger** (avec ton outil de fichiers / d'analyse de code), qu'elle ouvre à son tour. **Pas de canvas, pas d'artefact** : la simulation vit dans le navigateur de la personne.
 
 Pour l'instant, une seule simulation : **le métamérisme** (`ateliers/metamerisme.html`).
 
@@ -77,7 +77,17 @@ Choix : 1. **Une simulation sur le métamérisme**. (D'autres simulations viendr
     `cd ~/Desktop 2>/dev/null || cd ~; n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && curl -fsSL -o metamerisme.html "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html" && echo "NOM=$PWD"`
   - Windows (PowerShell) :
     `$b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; curl.exe -fsSL -o (Join-Path $d 'metamerisme.html') "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html"; "NOM=$d"`
-- **B · IA de conversation** : lis la page modèle, **en entier**, à cette adresse : `https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html`, puis **affiche-la telle quelle** (sans rien changer) dans ton canvas / artefact HTML, pour que la personne la voie. Si tu ne peux pas lire une adresse web, demande-lui d'ouvrir ce lien, de tout copier (Cmd + A puis Cmd + C) et de le coller dans la conversation.
+- **B · IA de conversation** : rien à lancer. Ton message (court, sans question) :
+```
+**💬 Pour toi :**
+
+👉 Clique sur ce lien pour télécharger ta simulation : https://education-simulation.github.io/atelier-simulation-rasf/telecharger.html?s=metamerisme
+
+La page te montre quoi faire : télécharger le fichier, l'ouvrir d'un double-clic, puis le glisser ici.
+
+✍️ Quand c'est fait, écris « c'est fait » dans la zone de message, en bas, puis Entrée. Besoin d'aide ? Écris « aide ».
+```
+  Quand le fichier arrive dans la conversation : lis-le **en entier** (c'est ta référence, tu ne le réécris pas de mémoire), puis le message de l'étape 3. S'il n'arrive pas (« c'est fait » sans fichier) : redis seulement « 👉 **Glisse le fichier metamerisme.html** (dans ton dossier Téléchargements) dans cette conversation. »
 
 **3. Le message** — court, sans question :
 ```
@@ -91,10 +101,10 @@ Choix : 1. **Une simulation sur le métamérisme**. (D'autres simulations viendr
 
 La page te guide : en haut, ses étapes ; en dessous, la simulation. Fais les étapes 1 et 2 sur la page, puis écris-moi ta demande pour l'étape 3.
 ```
-(Antigravity : le vrai nom du dossier, celui de la ligne `NOM=` — `simulation-html-2`… s'il le faut. Ne donne aucun lien. IA de conversation : remplace la ligne 👉 par « 👉 Elle est affichée à côté de la conversation. » et la ligne 💡 par « 💡 Pour la garder : copie le code dans un fichier .html et ouvre-le d'un double-clic. »)
+(Antigravity : le vrai nom du dossier, celui de la ligne `NOM=` — `simulation-html-2`… s'il le faut. Ne donne aucun lien. IA de conversation : la page est déjà ouverte ; remplace les lignes 👉 et 💡 par « 💡 À chaque modification, je te donne le nouveau fichier : **télécharge-le et ouvre-le d'un double-clic** (le plus récent de tes Téléchargements). »)
 
 ## Si la personne revient (« Reprends mon atelier, dossier simulation-html… »)
-Antigravity : ne télécharge rien ; donne le message de l'étape 3 avec ce dossier. IA de conversation : demande-lui de recoller sa page (ou reprends la dernière version du canvas).
+Antigravity : ne télécharge rien ; donne le message de l'étape 3 avec ce dossier. IA de conversation : demande-lui de **glisser dans la conversation son dernier fichier** (le plus récent de ses Téléchargements), puis le message de l'étape 3.
 
 ## L'atelier Métamérisme
 La page (`metamerisme.html`) contient tout : **en haut, l'atelier** (les étapes, qui s'affichent une par une ; la personne y clique), **en dessous, la simulation**. Au départ : une table à la lumière du jour avec **deux cartes de contraste vierges**, et une **cabine de lumière** dont les boutons A, D65 et F11 **ne fonctionnent pas**.
@@ -112,10 +122,10 @@ Pour chaque étape 3 à 7, l'objectif (`consigne`) et les critères (`indices`) 
 **Ce que tu peux modifier : seulement la « ZONE DE L'IA »** de `metamerisme.html`, entre `ZONE DE L'IA : début` et `ZONE DE L'IA : fin` (les styles de la simulation, en haut, aussi). Le **cadre de l'atelier** (tout ce qui suit `ZONE DE L'IA : fin`) ne se modifie **jamais**, même si on te le demande : la personne perdrait les étapes et les modèles. Ne crée aucun autre fichier. **Aucune bibliothèque ni lien externe** (pas de CDN) : la page doit marcher sans Internet.
 
 **À chaque message de la personne pendant l'atelier :**
-0. **Relis d'abord la zone de l'IA** dans le fichier (Antigravity) ou dans la dernière version du canvas (IA de conversation) : ne te fie jamais à ta mémoire, la personne a pu recommencer.
+0. **Relis d'abord la zone de l'IA** dans le fichier (Antigravity) ou dans la dernière version du fichier (IA de conversation : le dernier que tu as rendu, ou celui que la personne a glissé) : ne te fie jamais à ta mémoire, la personne a pu recommencer.
 1. **Repère l'étape** en comparant la demande aux `consigne`.
    - **Elle correspond à une étape** : **ne code pas tout de suite. Analyse d'abord le prompt** avec les `indices` de cette étape, en quelques lignes : ✅ ce qui est réussi (**un prompt court est un bon prompt** ; ce qui existe déjà dans la page n'a pas à être redécrit) ; ⚠️ ce qui manque ou reste ambigu, formulé comme une question, **sans donner la réponse** ; une appréciation : « complet », « presque complet » ou « à compléter ». Puis la question à choix : **Exécute-le tel quel** · **Je corrige mon prompt** (« Exécute-le » en premier si le prompt est complet).
-   - « Exécute-le tel quel » : fais **exactement ce que dit son prompt**, rien de plus, puis : 👀 ce qui a changé (Antigravity : « **Recharge la page** : Cmd + R sur Mac, Ctrl + R sur Windows » ; IA de conversation : la page à jour est dans le canvas) ; ✅ ce qui correspond à l'objectif ; ⚠️ ce qui manque encore **et pourquoi** (« ton prompt ne précisait pas … ») ; 💡 une astuce d'écriture. Choix : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat**.
+   - « Exécute-le tel quel » : fais **exactement ce que dit son prompt**, rien de plus, puis : 👀 ce qui a changé (Antigravity : « **Recharge la page** : Cmd + R sur Mac, Ctrl + R sur Windows » ; IA de conversation : le **fichier complet à télécharger**, toujours nommé `metamerisme.html`, avec « 📥 **Télécharge ce fichier et ouvre-le d'un double-clic** » ; si tu ne peux pas créer de fichier, donne le code complet à copier dans un fichier .html) ; ✅ ce qui correspond à l'objectif ; ⚠️ ce qui manque encore **et pourquoi** (« ton prompt ne précisait pas … ») ; 💡 une astuce d'écriture. Choix : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat**.
    - **Valider l'étape** : quand le résultat atteint l'objectif (vérifie-le dans le code) et que la personne choisit « Je continue », ajoute le **numéro de l'écran** à `ETAPES_VALIDEES` (ex. `[3]`, puis `[3, 4]`). Dans la simulation, l'étape passe « ✅ validée par l'IA » et la suivante s'ouvre. Dis-le en une ligne.
    - **C'est une autre idée** : fais-la directement (et seulement ça), puis 👀 ce qui a changé et 💡 une astuce pour la prochaine demande.
 2. **Tiens à jour `ETAT_ACTUEL`** après chaque changement : 2 à 4 lignes **très courtes**, avec un émoji en tête, qui disent ce que fait la simulation maintenant (ce qui marche, ce qui ne marche pas encore). Des faits, pas des conseils.
@@ -124,4 +134,4 @@ Pour chaque étape 3 à 7, l'objectif (`consigne`) et les critères (`indices`) 
    - **La carte 2** : `paireMetamere(R1)` (sans autre argument) : chaque essai est vérifié et refusé s'il ne respecte pas les règles.
    - **Règle n° 1, à vérifier absolument** : sur la table, à la lumière du jour (D65), les deux cartes ont **exactement** la même couleur (ΔE*ab < 0,5). Dès que les cartes ont une réflectance, appelle `Atelier.publierCartes(R1, R2)` : l'étape 1 de la page affiche alors ✅ ou ❌. Ne déclare jamais une étape réussie tant que c'est ❌. Une paire métamère valable : courbes qui se croisent **au moins 3 fois**, plus grand écart **dans le rouge** (600 à 700 nm), différence **nette** sous A.
    - Les choix de la personne (lumière, couleur, position des cartes) se retiennent au rechargement avec `localStorage` (clés qui commencent par `simulation.metamerisme.`).
-4. **Recommencer** : Antigravity : refais l'étape 2 du démarrage (un **nouveau** dossier `simulation-html-N` : l'ancien reste tel quel), puis le message de l'étape 3. IA de conversation : réaffiche la page modèle telle quelle.
+4. **Recommencer** : Antigravity : refais l'étape 2 du démarrage (un **nouveau** dossier `simulation-html-N` : l'ancien reste tel quel), puis le message de l'étape 3. IA de conversation : redonne le lien de téléchargement de l'étape 2.

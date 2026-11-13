@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Télécharger ta simulation</title>
+<style>
+html { background:#e9ecf2; }
+body { margin:0; padding:22px 14px 60px; font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif; color:#e4e4e7; display:flex; justify-content:center; }
+.fen { width:min(760px,100%); background:#0b0b0f; border-radius:16px; overflow:hidden; box-shadow:0 18px 50px rgba(15,23,42,.35); }
+.barre { display:flex; align-items:center; gap:8px; padding:10px 16px; background:#18181b; border-bottom:1px solid #27272a; }
+.barre i { width:11px; height:11px; border-radius:50%; background:#3f3f46; }
+.barre b { margin-left:8px; color:#fff; font-size:14px; }
+.corps { padding:20px 22px 24px; display:grid; gap:14px; font-size:17px; line-height:1.5; }
+h1 { margin:0; font:800 clamp(22px,3.4vw,28px)/1.2 'Outfit',system-ui,sans-serif; color:#fff; }
+ol { margin:0; padding-left:24px; display:grid; gap:10px; }
+b.cle { color:#fde68a; }
+.btn { all:unset; cursor:pointer; display:inline-flex; align-items:center; gap:8px; background:#f59e0b; color:#1f1300; font-weight:800; font-size:18px; border-radius:12px; padding:12px 20px; }
+.btn:hover { background:#fbbf24; }
+.btn[disabled] { opacity:.6; cursor:wait; }
+.etat { font-size:15px; color:#a1a1aa; margin-left:10px; }
+.etat.ok { color:#86efac; } .etat.ko { color:#fca5a5; }
+.continue { margin:0; background:#1f1a10; border:2px dashed #f59e0b; border-radius:10px; padding:10px 12px; color:#fde68a; font-weight:800; }
+</style>
+</head>
+<body>
+<div class="fen">
+  <div class="barre"><i></i><i></i><i></i><b>Atelier · Télécharger ta simulation</b></div>
+  <div class="corps">
+    <h1>📥 Ta simulation <span id="nom">du métamérisme</span></h1>
+    <ol>
+      <li><button type="button" class="btn" id="tele">⬇️ Télécharger le fichier</button><span class="etat" id="etat"></span><br>Il arrive dans ton dossier <b class="cle">Téléchargements</b>.</li>
+      <li><b class="cle">Double-clique</b> sur le fichier <b class="cle" id="fic">metamerisme.html</b> : il s'ouvre dans ton navigateur. Garde cet onglet ouvert.</li>
+      <li><b class="cle">Glisse ce même fichier</b> dans la conversation avec ton IA (ou clique sur le <b class="cle">+</b> de la zone de message pour l'ajouter).</li>
+    </ol>
+    <p class="continue">✍️ Puis écris <b class="cle">c'est fait</b> dans la conversation, et Entrée.</p>
+  </div>
+</div>
+<script>
+// La page modèle est prise sur GitHub (adresse brute, autorisée depuis n'importe quel site), puis téléchargée sous son nom.
+const SIMULATIONS = { metamerisme: "du métamérisme" };
+const s = new URLSearchParams(location.search).get("s");
+const id = s && SIMULATIONS[s] ? s : "metamerisme";
+const fichier = id + ".html";
+document.getElementById("nom").textContent = SIMULATIONS[id];
+document.getElementById("fic").textContent = fichier;
+const etat = document.getElementById("etat");
+const bouton = document.getElementById("tele");
+bouton.addEventListener("click", async () => {
+  bouton.disabled = true; etat.className = "etat"; etat.textContent = "…";
+  try {
+    const r = await fetch("https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/" + fichier, { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    const blob = new Blob([await r.text()], { type: "text/html" });
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob); a.download = fichier;
+    document.body.appendChild(a); a.click(); a.remove();
+    etat.className = "etat ok"; etat.textContent = "✅ Téléchargé";
+  } catch {
+    etat.className = "etat ko"; etat.textContent = "⚠️ Échec : réessaie dans un instant.";
+  } finally { bouton.disabled = false; }
+});
+</script>
+</body>
+</html>
