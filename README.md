@@ -12,14 +12,14 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
 2. Ouvre une nouvelle conversation et colle cette phrase :
 
    ```text
-   Lis le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf (https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/AGENTS.md), puis suis-le pour me guider.
+   Lis le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf, puis suis-le pour me guider.
    ```
 
 3. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
 
 ### Les fois suivantes
 
-Ouvre Antigravity, ouvre une nouvelle conversation et écris : **« Reprends mon atelier simulation : lis d'abord https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/AGENTS.md »**.
+Ouvre Antigravity, ouvre une nouvelle conversation et écris : **« Reprends mon atelier simulation : lis d'abord le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf »**.
 
 ---
 
