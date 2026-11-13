@@ -23,7 +23,7 @@ h1 { margin:0; font:800 clamp(22px,3.4vw,30px)/1.2 'Outfit',system-ui,sans-serif
 .st .ici .rond { background:#f59e0b; color:#1f1300; border-color:#fde68a; box-shadow:0 0 0 5px rgba(245,158,11,.25); }
 .st .ici { color:#fde68a; font-weight:800; }
 .etape { display:none; border:2px solid #f59e0b; background:#1f1a10; border-radius:14px; padding:14px 16px; font-size:17px; line-height:1.5; }
-.etape.ici { display:block; }
+.etape.ici { display:flex; flex-direction:column; }
 .etape { min-height:525px; box-sizing:border-box; }
 .etape h2 { margin:0 0 6px; font:800 20px 'Outfit',system-ui,sans-serif; color:#fff; }
 b.cle { color:#fde68a; }
@@ -35,7 +35,7 @@ b.cle { color:#fde68a; }
 .fini { text-align:center; font:800 22px 'Outfit',system-ui,sans-serif; color:#86efac; margin:6px 0; }
 /* étape 1 : les petites fenêtres à fermer (8 s, en boucle) */
 .absent { color:#a1a1aa; font-size:15px; }
-.vers-suivant { margin:12px 0 0; text-align:right; font-weight:800; }
+.vers-suivant { margin:auto 0 0; padding-top:12px; text-align:right; font-weight:800; }
 .fermer-onglet { margin:10px 0; font-weight:800; display:flex; align-items:center; gap:10px; }
 .fermer-onglet .num { flex:none; width:28px; height:28px; border-radius:50%; background:#f59e0b; color:#1f1300; display:grid; place-items:center; font-size:15px; }
 .fleche-haut { display:inline-block; font-size:30px; color:#f59e0b; vertical-align:middle; animation:f-haut 1.1s ease-in-out infinite; }
@@ -146,7 +146,12 @@ b.cle { color:#fde68a; }
 @keyframes a-avant { 0%, 65% { opacity:1; } 67%, 100% { opacity:0; } }
 @keyframes a-apres { 0%, 65% { opacity:0; } 67%, 100% { opacity:1; } }
 /* étape 4 : la démo dans une fenêtre par-dessus la page */
-.rangee-dec { margin-top:14px; display:flex; gap:12px; flex-wrap:wrap; }
+.rangee-dec { margin-top:16px; display:flex; gap:12px; flex-wrap:wrap; justify-content:center; }
+.dec-carte { margin-top:12px; background:#fff; color:#334155; border-radius:18px; padding:22px 20px; text-align:center; box-shadow:0 10px 30px rgba(0,0,0,.35); }
+.dec-carte p { margin:0 auto; max-width:560px; font-size:16.5px; line-height:1.5; }
+.dec-carte b { color:#0f172a; }
+.dec-ic { font-size:44px; line-height:1; }
+.dec-titre { font:800 clamp(24px,3.6vw,32px)/1.15 'Outfit',system-ui,sans-serif !important; color:#0f172a; margin:8px auto 10px !important; }
 .btn-dec.orange { background:#f59e0b; color:#1f1300; }
 .btn-dec.orange:hover { background:#fbbf24; }
 .btn-dec { all:unset; cursor:pointer; background:#2563eb; color:#fff; font-weight:800; font-size:16px; border-radius:10px; padding:10px 16px; }
@@ -231,8 +236,12 @@ b.cle { color:#fde68a; }
 
     <section class="etape">
       <h2>4. Découvrir Antigravity</h2>
-      Si tu veux, découvre l'écran d'Antigravity : la <b class="cle">démo</b>, une présentation animée d'environ 1 minute, ou <b class="cle">explorer</b> l'écran toi-même, partie par partie. Tu peux aussi passer cette étape.
-      <div class="rangee-dec"><button type="button" class="btn-dec" data-popup="antigravity.html?mode=demo">▶ Démo</button><button type="button" class="btn-dec orange" data-popup="antigravity.html?mode=explorer">🔢 Explorer</button></div>
+      <div class="dec-carte">
+        <span class="dec-ic" aria-hidden="true">🧭</span>
+        <p class="dec-titre">Découvre Antigravity</p>
+        <p>Deux façons de le découvrir : la <b>démo</b>, une présentation animée d'environ 1 minute, ou <b>explorer</b> l'écran toi-même, partie par partie, avec les numéros. Tu peux aussi passer cette étape.</p>
+        <div class="rangee-dec"><button type="button" class="btn-dec" data-popup="antigravity.html?mode=demo">▶ Démo</button><button type="button" class="btn-dec orange" data-popup="antigravity.html?mode=explorer">🔢 Explorer</button></div>
+      </div>
       <p class="vers-suivant">Quand c'est fait, clique sur <b class="cle">« Suivant »</b> <span class="fleche-bas" aria-hidden="true">↘</span></p>
     </section>
 
