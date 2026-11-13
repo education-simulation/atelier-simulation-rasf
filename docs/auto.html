@@ -283,12 +283,18 @@ function montrer() {
   etapes.forEach((e, i) => e.classList.toggle("ici", i === n));
   ronds.forEach((r, i) => { r.className = i < n ? "fait" : i === n ? "ici" : ""; });
   document.getElementById("prec").hidden = n === 0;
-  document.getElementById("suiv").hidden = n === etapes.length - 1;
+  document.getElementById("suiv").textContent = n === etapes.length - 1 ? "Suivant : fermer cet onglet ›" : "Suivant ›";
   document.getElementById("bande").hidden = n !== etapes.length - 1;
   // chaque animation repart du début quand on arrive sur son étape
   etapes[n].querySelectorAll("*").forEach((el) => el.getAnimations().forEach((a) => { a.currentTime = 0; }));
 }
-document.getElementById("suiv").addEventListener("click", () => { n = Math.min(etapes.length - 1, n + 1); montrer(); });
+document.getElementById("suiv").addEventListener("click", (ev) => {
+  if (n < etapes.length - 1) { n++; montrer(); return; }
+  // Dernière étape : on ferme l'onglet. Le navigateur d'Antigravity peut le refuser : on dit alors où cliquer.
+  const b = ev.currentTarget;
+  window.close();
+  setTimeout(() => { if (!window.closed) b.textContent = "👆 Clique sur le × de cet onglet, tout en haut"; }, 300);
+});
 document.getElementById("prec").addEventListener("click", () => { n = Math.max(0, n - 1); montrer(); });
 montrer();
 document.addEventListener("click", (ev) => {
