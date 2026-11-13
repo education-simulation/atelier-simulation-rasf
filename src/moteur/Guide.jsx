@@ -62,7 +62,7 @@ function CarteMail({ suivi }) {
 
 const ETAPES = [
   { emoji: "📦", titre: "Installation de la progression", texte: "L'IA Gemini copie ton interface simulations sur ton ordinateur, l'installe et t'ouvre ta page de progression." },
-  { emoji: "🎨", titre: "Personnalise ton interface", texte: "Son nom, sa couleur, son style… ou garde les réglages par défaut (« Mes simulations »).",
+  { emoji: "🎨", titre: "Personnalise ton interface (optionnel)", texte: "Son nom, sa couleur, son style… ou garde les réglages par défaut (« Mes simulations »).",
     sous: [
       ["Le nom de ton interface", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
       ["Sa couleur", "Écris le numéro de la couleur qui te plaît (ou son nom, par exemple « rouge »)."],

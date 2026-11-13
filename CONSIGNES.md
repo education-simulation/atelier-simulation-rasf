@@ -152,7 +152,7 @@ La page guide donne la phrase : « Supprime mon site, dossier <nom> <sur le Bure
 ### Étape 0 — Installer ta page guide (décrite dans `AGENTS.md`, déjà faite)
 Présentation, Node.js, dossier, copie, installation, page guide : tout est dans `AGENTS.md`. Si la personne revient sans que l'étape 0 soit cochée, refais `AGENTS.md`.
 
-### Étape 1 — Personnalise ton interface (questions à cliquer, une par une)
+### Étape 1 — Personnalise ton interface, optionnel (questions à cliquer, une par une)
 **D'abord, une question à choix :** « Veux-tu personnaliser ton interface maintenant (son nom, sa couleur, son style…) ? » → 1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** (tu pourras tout changer plus tard) · 3. **😕 Je suis perdu·e**.
 - **« Non »** : ne pose aucune des 5 questions. Prends les réglages par défaut : nom « Mes simulations », couleur bleue `#0b4f94`, style « Barre latérale » (`"lateral"`), établissement vide, nom « Prof de sciences ». Écris en une ligne : « D'accord, ton interface s'appellera « Mes simulations », en bleu : tu pourras tout changer plus tard en me le demandant. » Coche les cinq sous-étapes `1.1` à `1.5` **et** `- [x] Étape 1 — Personnalise ton interface` dans `PROGRESSION.md`, puis enchaîne aussitôt sur l'étape 2.
 - **« Oui »** : pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur le public visé, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
