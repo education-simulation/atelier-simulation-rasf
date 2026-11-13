@@ -4,6 +4,8 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite' // seulement pour les outils de src/outils/reula/
 import { basename, dirname, join } from 'node:path'
+import { homedir } from 'node:os'
+import { statSync, openSync, readSync, closeSync } from 'node:fs'
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, copyFileSync, unlinkSync } from 'node:fs'
 import { fileURLToPath } from 'node:url'
 
@@ -57,6 +59,56 @@ function progression() {
         const texte = existsSync(fichier) ? readFileSync(fichier, 'utf8').slice(0, 20000) : ''
         res.setHeader('Content-Type', 'application/json'); res.setHeader('Cache-Control', 'no-store')
         res.end(JSON.stringify({ texte }))
+      })
+    },
+  }
+}
+
+// Une petite fenêtre d'autorisation d'Antigravity attend-elle un clic ? (pour la bande de la page de progression)
+// Antigravity écrit un journal par conversation : ~/.gemini/antigravity/brain/<id>/.system_generated/logs/transcript.jsonl.
+// Quand l'IA lance une action (lire/écrire un fichier, une commande), une ligne « action » s'ajoute ; son résultat ne
+// s'écrit qu'APRÈS l'action. Une fenêtre d'autorisation bloque l'action : la dernière ligne reste une action sans résultat.
+// C'est une déduction (pas une vraie détection) : une commande longue (copie, installation) y ressemble, d'où un délai plus long.
+//   GET /__atelier/attente → { attente: true|false, outil }. Lecture seule, aperçu seulement. En cas de doute : false.
+function attenteAutorisation() {
+  const dossierBrain = join(homedir(), '.gemini', 'antigravity', 'brain')
+  const derniereLigne = (fichier) => {
+    const taille = statSync(fichier).size, n = Math.min(taille, 65536), b = Buffer.alloc(n)
+    const fd = openSync(fichier, 'r'); readSync(fd, b, 0, n, taille - n); closeSync(fd)
+    const lignes = b.toString('utf8').split('\n').filter((l) => l.trim())
+    return lignes.length ? lignes[lignes.length - 1] : ''
+  }
+  const etat = () => {
+    if (!existsSync(dossierBrain)) return { attente: false }
+    let recent = null
+    for (const id of readdirSync(dossierBrain)) {
+      const f = join(dossierBrain, id, '.system_generated', 'logs', 'transcript.jsonl')
+      if (!existsSync(f)) continue
+      const t = statSync(f).mtimeMs
+      if (!recent || t > recent.t) recent = { f, t }
+    }
+    if (!recent || Date.now() - recent.t > 30 * 60 * 1000) return { attente: false }
+    const d = JSON.parse(derniereLigne(recent.f) || '{}')
+    const appel = d.type === 'PLANNER_RESPONSE' && Array.isArray(d.tool_calls) && d.tool_calls[0]
+    if (!appel) return { attente: false }
+    const outil = String(appel.name || '')
+    const commande = JSON.stringify(appel.args || {})
+    const depuis = Date.now() - Date.parse(d.created_at || '')
+    if (!Number.isFinite(depuis)) return { attente: false }
+    // Commandes longues connues (copie, installation, aperçu) : on attend plus longtemps avant de conclure.
+    const longue = outil === 'run_command' && /git clone|npm install|npm i\b|npm run dev|IsDaemon/.test(commande)
+    const seuil = longue ? 45000 : outil === 'run_command' ? 12000 : 3500
+    return { attente: depuis > seuil, outil }
+  }
+  return {
+    name: 'atelier-attente-autorisation',
+    apply: 'serve',
+    configureServer(server) {
+      server.middlewares.use('/__atelier/attente', (req, res) => {
+        let r = { attente: false }
+        try { r = etat() } catch { /* format inconnu : on ne dit rien */ }
+        res.setHeader('Content-Type', 'application/json'); res.setHeader('Cache-Control', 'no-store')
+        res.end(JSON.stringify(r))
       })
     },
   }
@@ -154,7 +206,7 @@ function versionsDesPages() {
 // Le chemin du dossier du site, affiché dans le bandeau de l'aperçu (sur l'ordinateur seulement).
 // Il n'est JAMAIS mis dans le site en ligne : à la construction (npm run build), il reste vide.
 export default defineConfig(({ command }) => ({
-  plugins: [react(), tailwindcss(), enregistrerStyle(), versionsDesPages(), progression()],
+  plugins: [react(), tailwindcss(), enregistrerStyle(), versionsDesPages(), progression(), attenteAutorisation()],
   base: './',
   server: { port },
   define: { __DOSSIER_DU_SITE__: JSON.stringify(command === 'serve' ? dossier : '') },

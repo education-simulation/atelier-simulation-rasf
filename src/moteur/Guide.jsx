@@ -328,6 +328,8 @@ export const CSS = `
 .ga .g-regle b { color:#fff; }
 .ga { padding-bottom:110px !important; }
 .ga-repondre { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
+.ga-repondre.alerte { background:#dc2626; color:#fff; animation:ga-alerte 1.2s ease-in-out infinite; }
+@keyframes ga-alerte { 0%,100% { background:#dc2626; } 50% { background:#991b1b; } }
 .ga-fleche { font-size:34px; font-weight:800; line-height:1; animation:ga-fleche 1s ease-in-out infinite; }
 @keyframes ga-fleche { 0%,100% { transform:translateX(0); } 50% { transform:translateX(-12px); } }
 .ga-repondre-texte { flex:1; }
@@ -1015,6 +1017,16 @@ export function Guide() {
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, [mail, poubelle]);
+  // Une petite fenêtre d'autorisation attend-elle un clic ? Le serveur d'aperçu le déduit du journal d'Antigravity (vite.config.js).
+  const [attente, setAttente] = useState(false);
+  useEffect(() => {
+    let fini = false;
+    const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
+      .then((r) => { if (!fini) setAttente(!!r.attente); }).catch(() => {});
+    voir();
+    const id = setInterval(voir, 2000);
+    return () => { fini = true; clearInterval(id); };
+  }, []);
   // Ce qu'il faut répondre maintenant, en très court (bande orange en bas à gauche).
   const sousEnCours = encours >= 0 && ETAPES[encours].sous ? ETAPES[encours].sous.findIndex((_, k) => !sousFaites.has(`${encours}.${k + 1}`)) : -1;
   const quoi = [
@@ -1031,9 +1043,13 @@ export function Guide() {
     <div className="ga">
       <style>{CSS}</style>
       {/* En bas à gauche : une flèche animée vers la zone de message d'Antigravity (à gauche de ce navigateur) */}
-      <div className="ga-repondre" role="note">
+      <div className={`ga-repondre${attente ? " alerte" : ""}`} role={attente ? "alert" : "note"}>
         <span className="ga-fleche" aria-hidden="true">⬅</span>
-        <span className="ga-repondre-texte"><b>Réponds à l'IA</b> <em>dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 {quoi}</span></span>
+        {attente ? (
+          <span className="ga-repondre-texte"><b>🔐 Une petite fenêtre t'attend</b> <em>au-dessus de la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Clique sur 3 « Yes, and always allow », puis sur Submit.</span></span>
+        ) : (
+          <span className="ga-repondre-texte"><b>Réponds à l'IA</b> <em>dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 {quoi}</span></span>
+        )}
         <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>
       </div>
       <div className="ga-fenetre">
