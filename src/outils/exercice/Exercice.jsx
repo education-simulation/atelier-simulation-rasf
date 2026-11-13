@@ -143,8 +143,16 @@ function comparerCourbes(g, X) {
     });
     return best;
   };
-  const tresDiff = plusGrande((e) => e > 0.2), proches = plusGrande((e) => e < 0.02);
-  return { croisements, zones: [...(tresDiff ? [{ type: "differentes", ...tresDiff }] : []), ...(proches ? [{ type: "proches", ...proches }] : [])] };
+  const tresDiff = plusGrande((e) => e > 0.2);
+  // Quasi identiques : autour de chaque intersection, tant que l'écart reste petit (< 0,04).
+  const proches = croisements.map((c) => {
+    let i = xs.findIndex((l) => l >= c.l); if (i < 0) i = xs.length - 1;
+    let de = i, a2 = i;
+    while (de > 0 && Math.abs(d[de - 1]) < 0.04) de--;
+    while (a2 < d.length - 1 && Math.abs(d[a2 + 1]) < 0.04) a2++;
+    return { type: "proches", de: Math.max(Math.min(xs[de], c.l - 3), c.l - 12), a: Math.min(Math.max(xs[a2], c.l + 3), c.l + 12) };
+  });
+  return { croisements, zones: [...(tresDiff ? [{ type: "differentes", ...tresDiff }] : []), ...proches] };
 }
 
 function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
@@ -175,10 +183,10 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
         <line x1={mg.g} x2={L - mg.d} y1={y(0)} y2={y(0)} stroke="#475569" />
         <text x={(mg.g + L - mg.d) / 2} y={H - 3} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{ax.titre}</text>
         <text transform={`translate(13 ${(mg.h + H - mg.b) / 2}) rotate(-90)`} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{g.unite.charAt(0).toUpperCase() + g.unite.slice(1)}</text>
-        {comp && comp.zones.map((z) => (
-          <g key={z.type}>
+        {comp && comp.zones.map((z, k) => (
+          <g key={k}>
             <rect x={x(z.de)} y={mg.h} width={x(z.a) - x(z.de)} height={H - mg.b - mg.h} fill={z.type === "differentes" ? "rgba(220,38,38,.12)" : "rgba(22,163,74,.13)"} />
-            <text x={(x(z.de) + x(z.a)) / 2} y={mg.h + 11} fontSize="10" fontWeight="800" textAnchor="middle" fill={z.type === "differentes" ? "#b91c1c" : "#15803d"}>{z.type === "differentes" ? "très différentes" : "quasi identiques"}</text>
+            <text x={(x(z.de) + x(z.a)) / 2} y={mg.h + 11} fontSize="10" fontWeight="800" textAnchor="middle" fill={z.type === "differentes" ? "#b91c1c" : "#15803d"}>{z.type === "differentes" ? "très différentes" : "≈"}</text>
           </g>
         ))}
         {g.series.map((s) => (
@@ -200,7 +208,8 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
         {comp && (
           <span style={{ display: "flex", gap: 14, flexWrap: "wrap", margin: "2px 0 4px", fontWeight: 700 }}>
             <span><span style={{ color: "#f59e0b" }}>●</span> {comp.croisements.length} intersection{comp.croisements.length > 1 ? "s" : ""} (vers {comp.croisements.map((c) => Math.round(c.l)).join(", ")} nm)</span>
-            {comp.zones.map((z) => <span key={z.type}><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: z.type === "differentes" ? "rgba(220,38,38,.35)" : "rgba(22,163,74,.35)" }} />{z.type === "differentes" ? "Très différentes" : "Quasi identiques"} : {Math.round(z.de)} à {Math.round(z.a)} nm</span>)}
+            {comp.zones.filter((z) => z.type === "differentes").map((z) => <span key="d"><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: "rgba(220,38,38,.35)" }} />Très différentes : {Math.round(z.de)} à {Math.round(z.a)} nm</span>)}
+            {comp.zones.some((z) => z.type === "proches") && <span><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: "rgba(22,163,74,.35)" }} />Quasi identiques : autour des intersections</span>}
           </span>
         )}
         {g.explication}
