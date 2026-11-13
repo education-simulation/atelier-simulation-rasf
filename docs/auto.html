@@ -36,9 +36,35 @@ body { padding-bottom:150px; }
 .bande { position:fixed; left:0; right:0; bottom:40px; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
 .bande .fleche { font-size:34px; font-weight:800; animation:fleche 1.1s ease-in-out infinite; }
 @keyframes fleche { 50% { transform:translateX(-8px); } }
+.bande > span:last-child { flex:1; }
 .bande b { font-size:19px; }
 .bande em { font-style:normal; font-size:15px; }
 .bande .quoi { display:block; margin-top:3px; font-size:17px; font-weight:800; }
+/* Animation (8 s, en boucle) : la souris va sur « Default », le menu s'ouvre, elle choisit « Auto », le bouton affiche « Auto ». */
+.menu { animation:a-menu 8s infinite; }
+.menu p.auto { background:transparent; color:#a1a1aa; animation:a-auto 8s infinite; }
+.menu p.auto b { color:#fff; animation:a-autob 8s infinite; }
+.default { position:relative; animation:a-bouton 8s infinite; }
+.lib-auto { display:none; }
+.default .lib-default { animation:a-libd 8s infinite; }
+.default .lib-auto { display:inline; position:absolute; left:8px; top:2px; opacity:0; animation:a-liba 8s infinite; }
+.souris { position:absolute; z-index:5; right:320px; bottom:150px; filter:drop-shadow(0 2px 3px rgba(0,0,0,.6)); animation:a-souris 8s infinite; }
+@keyframes a-souris {
+  0% { right:320px; bottom:150px; transform:scale(1); }
+  22% { right:125px; bottom:18px; transform:scale(1); }
+  26% { right:125px; bottom:18px; transform:scale(.8); }
+  30% { right:125px; bottom:18px; transform:scale(1); }
+  50% { right:205px; bottom:150px; transform:scale(1); }
+  54% { right:205px; bottom:150px; transform:scale(.8); }
+  58%, 100% { right:205px; bottom:150px; transform:scale(1); }
+}
+@keyframes a-menu { 0%, 27% { opacity:0; } 29%, 64% { opacity:1; } 67%, 100% { opacity:0; } }
+@keyframes a-auto { 0%, 53% { background:transparent; color:#a1a1aa; } 55%, 100% { background:#f59e0b; color:#1f1300; } }
+@keyframes a-autob { 0%, 53% { color:#fff; } 55%, 100% { color:#1f1300; } }
+@keyframes a-bouton { 0%, 20% { box-shadow:0 0 0 0 rgba(245,158,11,0); } 24%, 30% { box-shadow:0 0 0 8px rgba(245,158,11,.45); } 34%, 100% { box-shadow:0 0 0 5px rgba(245,158,11,.25); } }
+@keyframes a-libd { 0%, 65% { opacity:1; } 67%, 100% { opacity:0; } }
+@keyframes a-liba { 0%, 65% { opacity:0; } 67%, 100% { opacity:1; } }
+@media (prefers-reduced-motion:reduce) { .menu, .menu p.auto, .menu p.auto b, .default, .default span, .souris { animation:none !important; } .souris { display:none; } }
 </style>
 </head>
 <body>
@@ -53,11 +79,12 @@ body { padding-bottom:150px; }
           <div class="menu">
             <p><b>Request Review</b>Every command requires approval.</p>
             <p><b>Default</b>Ask before sensitive operations.</p>
-            <p class="auto"><b>Auto 👈</b>Automatically decide if commands run.</p>
+            <p class="auto"><b>Auto</b>Automatically decide if commands run.</p>
             <p><b>Turbo</b>Run all commands without restrictions.</p>
           </div>
+          <svg class="souris" viewBox="0 0 14 21" width="22" height="33" aria-hidden="true"><path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#000" stroke-width="1.3"/></svg>
           <div class="saisie">Ask anything, @ to mention, / for actions
-            <div class="bas"><span>+</span><span>Gemini 3.8 Flash</span><span class="esp"></span><span class="default">🔒 Default ⌃</span><span>🎤</span><span>⬆</span></div>
+            <div class="bas"><span>+</span><span>Gemini 3.8 Flash</span><span class="esp"></span><span class="default"><span class="lib-default">🔒 Default ⌃</span><span class="lib-auto">🛡 Auto ⌃</span></span><span>🎤</span><span>⬆</span></div>
           </div>
         </div>
       
