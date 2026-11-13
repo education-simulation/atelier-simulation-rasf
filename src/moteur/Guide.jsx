@@ -52,7 +52,7 @@ function CarteMail({ suivi }) {
 }
 
 const ETAPES = [
-  { emoji: "🗺️", titre: "Installer ta page guide", texte: "L'IA Gemini copie le modèle sur ton ordinateur et t'ouvre ce guide." },
+  { emoji: "🗺️", titre: "Installer ta page « J'en suis où »", texte: "L'IA Gemini copie le modèle sur ton ordinateur et t'ouvre ta page « J'en suis où de l'installation »." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
     sous: [
       ["Le nom de ton site", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
@@ -62,10 +62,10 @@ const ETAPES = [
       ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s'affiche en bas de ton site."],
     ] },
   { emoji: "🛠️", titre: "Installer ton site", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton site." },
-  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche ici, sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
+  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
     infos: [
       "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
-      "Les boutons ronds en bas à droite : 🗺️ revenir à ce guide · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
+      "Les boutons ronds en bas à droite : 🗺️ revenir à ta page « J'en suis où » · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
     ], boutonSite: true },
   { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
   { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
@@ -259,6 +259,62 @@ export const CSS = `
 .v-point:hover::after, .v-point:focus-visible::after { opacity:1; transform:translateX(-50%); }
 .v-point.vu { background:#fde68a; color:#92400e; } .v-point.ici { background:#f59e0b; color:#1f1300; transform:scale(1.15); }
 .v-fini { margin:0; background:#dcfce7; border:2px solid #16a34a; border-radius:14px; padding:12px 16px; font-size:17px; color:#14532d; animation:v-entre .45s; }
+.pe { gap:18px; padding-bottom:30px; }
+.pe-points { display:flex; gap:6px; justify-content:center; padding-top:18px; }
+.pe-points .v-point { text-decoration:none; }
+.pe-num { font-weight:800; color:#b45309 !important; margin:0 0 4px !important; font-size:16px !important; }
+.pe-deux { display:grid; grid-template-columns:repeat(auto-fit,minmax(280px,1fr)); gap:16px; }
+.pe-bloc { background:#fff; border-radius:18px; padding:18px 22px; box-shadow:0 1px 2px rgba(15,23,42,.06),0 8px 24px rgba(15,23,42,.07); }
+.pe-bloc.toi { border:3px solid #f59e0b; }
+.pe-bloc h2 { margin:0 0 10px; font:800 20px/1.2 'Outfit',sans-serif; }
+.pe-bloc ul { margin:0; padding-left:20px; display:flex; flex-direction:column; gap:8px; font-size:17px; line-height:1.5; color:#1e293b; }
+.pe-questions { margin:0; padding-left:22px; display:flex; flex-direction:column; gap:10px; font-size:17px; }
+.pe-questions span { display:block; color:#475569; font-size:15px; }
+.aide-retour { text-align:center; color:#334155; font-size:17px; margin:6px 0 0; }
+.ga { min-height:100vh; background:#e9ecf2; padding:22px 14px 50px; font-family:'Nunito',system-ui,sans-serif; }
+.ga-fenetre { max-width:820px; margin:0 auto; border-radius:16px; overflow:hidden; background:#0b0b0f; box-shadow:0 24px 60px rgba(15,23,42,.35); border:1px solid #27272a; }
+.ga-barre-titre { display:flex; align-items:center; gap:7px; padding:10px 14px; background:#1c1c22; color:#d4d4d8; font-size:14px; }
+.ga-barre-titre span { width:11px; height:11px; border-radius:50%; background:#52525b; }
+.ga-barre-titre b { margin-left:10px; flex:1; font-weight:700; }
+.ga-barre-titre em { font-style:normal; font-size:12px; color:#a1a1aa; border:1px solid #3f3f46; border-radius:99px; padding:2px 10px; }
+.ga-corps { padding:20px 22px 24px; display:flex; flex-direction:column; gap:16px; color:#e4e4e7; }
+.ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
+.ga-progres-tete h1 { margin:0; font:800 28px/1.1 'Outfit',sans-serif; color:#fff; }
+.ga-progres-tete span { color:#a1a1aa; font-weight:700; }
+.ga .g-barre { background:#27272a; }
+.ga-etapes { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
+.ga-etapes > li { border:1px solid #3f3f46; border-radius:14px; padding:12px 14px; background:#16161b; animation:g-fondu .4s; display:flex; flex-direction:column; }
+.ga-etapes > li.encours { border:2px solid #f59e0b; background:#1f1a10; }
+.ga-ligne { display:flex; align-items:center; gap:12px; }
+.ga-icone { font-size:24px; }
+.ga-texte { flex:1; min-width:0; }
+.ga-texte h2 { margin:0; font:800 18px/1.25 'Outfit',sans-serif; color:#fff; display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.ga-texte p { margin:4px 0 0; color:#d4d4d8; font-size:15px; }
+.ga-badge { font:800 12px 'Nunito',sans-serif; background:#f59e0b; color:#1f1300; border-radius:99px; padding:2px 10px; }
+.ga-voir { flex-shrink:0; text-decoration:none; color:#fde68a; border:1px solid #a16207; border-radius:10px; padding:8px 12px; font-weight:800; font-size:14px; }
+.ga-voir:hover { background:#3a2a08; }
+.ga-sous { list-style:none; margin:10px 0 0 36px; padding:0; display:flex; flex-direction:column; gap:5px; font-size:15px; color:#a1a1aa; }
+.ga-sous li.fait { color:#d4d4d8; }
+.ga-sous li.ici { color:#fde68a; font-weight:800; }
+.ga-sous small { display:block; margin-left:24px; font-weight:400; color:#fcd34d; }
+.ga-action { align-self:flex-start; display:inline-flex; margin-top:10px; text-decoration:none; background:#2563eb; color:#fff; border-radius:12px; padding:11px 16px; font-weight:800; }
+.ga-action.vert { background:#16a34a; }
+.ga-carte { border:1px solid #3f3f46; border-radius:14px; padding:14px 16px; background:#16161b; display:flex; flex-direction:column; }
+.ga-carte h2 { margin:0 0 8px; font:800 18px 'Outfit',sans-serif; color:#fff; }
+.ga-carte ol { margin:0; padding-left:20px; color:#d4d4d8; display:flex; flex-direction:column; gap:4px; }
+.ga-outils { border-top:1px solid #27272a; padding-top:14px; color:#a1a1aa; font-size:14.5px; }
+.ga-outils p { margin:0 0 10px; }
+.ga-outils b { color:#e4e4e7; }
+.ga-liens { display:flex; gap:10px; flex-wrap:wrap; }
+.ga-liens a { color:#bfdbfe; text-decoration:none; border:1px solid #1e3a8a; border-radius:10px; padding:7px 12px; font-weight:700; }
+.ga-liens a:hover { background:#172554; }
+.ga-clair { display:flex; flex-direction:column; gap:12px; }
+.ga-clair .g-carte { padding:14px 18px; background:#16161b; border:1px solid #3f3f46; box-shadow:none; color:#e4e4e7; }
+.ga-clair .g-carte p, .ga-clair .g-carte li, .ga-clair .g-note { color:#d4d4d8 !important; }
+.ga-clair .g-carte h2 { color:#fff; }
+.ga-clair .g-phrase { background:#26262e; color:#fde68a; }
+.ga-clair .g-carte h2 { font-size:17px; }
+@media (max-width:600px) { .ga-ligne { flex-wrap:wrap; } .ga-voir { width:100%; text-align:center; } }
 .v-explorer { width:100%; max-height:none; overflow:visible; }
 .v-accueil { text-align:center; background:#fff; border-radius:22px; padding:34px 24px; box-shadow:0 8px 28px rgba(15,23,42,.1); animation:v-entre .5s; }
 .v-accueil .g-main { font-size:60px; }
@@ -808,138 +864,148 @@ export function ContenuFenetres() {
   );
 }
 
+// Les pages d'aide en ligne (GitHub Pages) : la démo d'Antigravity, les fenêtres, et une page par étape (etape.html?n=1…6).
+export const AIDE_EN_LIGNE = "https://education-simulation.github.io/atelier-simulation-rasf/";
+
+// Ce que chaque page d'étape explique en plus du texte court (ETAPES).
+const DETAILS = [
+  { quoi: ["L'IA Gemini copie le modèle de ton site dans un dossier de ton ordinateur (le Bureau ou Documents).", "Elle installe ce qu'il faut pour le faire marcher, puis lance son aperçu (localhost).", "Elle t'ouvre ta page « J'en suis où de l'installation » : garde-la ouverte, elle se met à jour toute seule."],
+    toi: ["Réponds aux questions de l'IA dans la zone de message d'Antigravity.", "Accepte les petites fenêtres en anglais : « Yes, and always allow », puis Submit."],
+    liens: [["🧭 Découvrir Antigravity", "antigravity.html"], ["🔐 Les petites fenêtres en anglais", "fenetres.html"]] },
+  { quoi: ["L'IA Gemini te pose 5 questions, une par une, pour personnaliser ton site."], toi: ["Écris le numéro de ta réponse, ou ta réponse avec tes mots, puis Entrée."], styles: true },
+  { quoi: ["L'IA Gemini range tes réponses dans ton site : son nom, sa couleur, son style, ton établissement et ton nom."], toi: ["Rien : attends quelques secondes."] },
+  { quoi: ["Ton site s'ouvre dans le navigateur d'Antigravity, à droite. C'est ton brouillon : il n'est que sur ton ordinateur."], toi: ["Promène-toi dans les menus.", "Dis à l'IA si tu veux le mettre en ligne maintenant ou plus tard."] },
+  { quoi: ["Vercel est un service gratuit qui met ton site sur Internet, à une adresse que tu pourras partager (par exemple mon-site.vercel.app)."],
+    toi: ["Crée ton compte Vercel : choisis Hobby (gratuit), écris ton nom, puis « Continue with Google » avec ton compte d'établissement.", "Si Vercel te propose de relier GitHub ou de créer un projet : ne fais rien, reviens dans Antigravity.", "Pour la connexion, ta page « J'en suis où » t'affiche un bouton et un code à vérifier."],
+    liens: [["▲ Créer mon compte Vercel", "https://vercel.com/signup"]] },
+  { quoi: ["Ton site est prêt. Tu peux maintenant le remplir : ta première simulation, renommer les menus, changer les textes…"], toi: ["Demande à l'IA ce que tu veux, avec tes mots. Le bouton 👆 de ton site lui montre exactement ce que tu veux changer."] },
+];
+
+// Une page d'étape (en ligne) : présentation de l'étape, dans le style de la page Antigravity.
+export function PageEtape({ n }) {
+  const i = Math.min(ETAPES.length, Math.max(1, n || 1)) - 1;
+  const e = ETAPES[i], d = DETAILS[i];
+  const lien = (url) => (url.startsWith("http") ? url : AIDE_EN_LIGNE + url);
+  useEffect(() => { document.title = `Étape ${i + 1} · ${e.titre}`; }, [i, e.titre]);
+  return (
+    <div className="v pe">
+      <div className="pe-points">
+        {ETAPES.map((x, k) => (
+          <a key={k} href={`?n=${k + 1}`} className={`v-point${k === i ? " ici" : k < i ? " vu" : ""}`} data-titre={x.titre} aria-label={`Étape ${k + 1} : ${x.titre}`}>{k + 1}</a>
+        ))}
+      </div>
+      <div className="v-accueil pe-carte">
+        <span className="g-main" aria-hidden="true">{e.emoji}</span>
+        <p className="pe-num">Étape {i + 1} sur {ETAPES.length}</p>
+        <h1>{e.titre}</h1>
+        <p>{e.texte}</p>
+      </div>
+      <div className="pe-deux">
+        <section className="pe-bloc"><h2>⚙️ Ce qui se passe</h2><ul>{d.quoi.map((t, k) => <li key={k}>{t}</li>)}</ul></section>
+        <section className="pe-bloc toi"><h2>✍️ Ce que tu fais</h2><ul>{d.toi.map((t, k) => <li key={k}>{t}</li>)}</ul></section>
+      </div>
+      {e.sous && (
+        <section className="pe-bloc"><h2>Les 5 questions</h2>
+          <ol className="pe-questions">{e.sous.map(([t, a], k) => <li key={k}><b>{t}</b><span>{a}</span></li>)}</ol>
+        </section>
+      )}
+      {e.infos && <section className="pe-bloc"><h2>À savoir</h2><ul>{e.infos.map((t, k) => <li key={k}>{t}</li>)}</ul></section>}
+      {d.styles && (
+        <section className="pe-bloc"><h2>🎨 Les 3 styles de ton site</h2>
+          <div className="g-styles">{STYLES_SITE.map((st) => <figure key={st.id} className="g-style"><MiniSite id={st.id} /><figcaption><b>{st.nom}</b><span>{st.texte}</span></figcaption></figure>)}</div>
+        </section>
+      )}
+      {d.liens && <div className="v-commandes" style={{ justifyContent: "center" }}>{d.liens.map(([t, u]) => <a key={u} className="v-bouton bleu" href={lien(u)} target="_blank" rel="noreferrer">{t}</a>)}</div>}
+      <p className="aide-retour">✅ Quand tu as fini de lire, reviens dans Antigravity.</p>
+    </div>
+  );
+}
+
+// La page « J'en suis où de l'installation » (sur l'ordinateur) : une fenêtre d'application, pour ne pas la confondre avec son site.
+// Elle ne montre que les étapes faites et l'étape en cours ; chaque étape ouvre sa page d'explication en ligne.
 export function Guide() {
   const suivi = useProgression();
   const { faites, sousFaites, adresse, connexion } = suivi;
-  const [styles, setStyles] = useState(false);
-  // Carte « Les autorisations à accepter » : fermée par défaut, son état est retenu (un rafraîchissement le garde).
-  const [fenetresOuvertes, setFenetresOuvertes] = useState(() => { try { return localStorage.getItem("atelier.autorisationsOuvertes") === "1"; } catch { return false; } });
-  const basculerFenetres = (ouvert) => { setFenetresOuvertes(ouvert); try { localStorage.setItem("atelier.autorisationsOuvertes", ouvert ? "1" : "0"); } catch { /* rien */ } };
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
-  // La barre avance aussi pendant une étape à sous-étapes (2.1, 2.2…) : chaque sous-étape faite compte pour une part de l'étape.
   const partEnCours = encours >= 0 && ETAPES[encours].sous
     ? ETAPES[encours].sous.filter((_, j) => sousFaites.has(`${encours}.${j + 1}`)).length / ETAPES[encours].sous.length : 0;
   const avancement = Math.min(ETAPES.length, nbFaites + partEnCours);
   const toutFini = encours === -1;
-
-  const [aide, setAide] = useState(false);
-  // « Aller sur mon site » n'apparaît qu'au début de l'étape 3 (« Voir ton site »), une fois « Faire connaissance » cochée.
-  // Onglets nommés : le bouton 🗺️ du site revient sur CET onglet, et « Aller sur mon site » sur celui du site, au lieu d'en ouvrir d'autres.
+  const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => faites.has(i) || i === encours);
   useEffect(() => { document.title = "J'en suis où de l'installation"; window.name = "atelier-guide"; }, []);
 
   return (
-    <div className="g">
+    <div className="ga">
       <style>{CSS}</style>
-      <div className="g-col">
-        <header className="g-hero">
-          <span className="g-main" aria-hidden="true">👋</span>
-          <h1>J'en suis où de l'installation</h1>
-          <p className="g-sous">Garde cet onglet ouvert : il te montre où tu en es, et il se met à jour tout seul.</p>
-        </header>
-
-        <section className="g-carte g-repondre" aria-label="Comment répondre à l'IA Gemini">
-          <p>✍️ <b>Pour répondre à l'IA Gemini</b> : écris le <b>numéro</b> de ta réponse, <b>ou ta réponse avec tes mots</b>, dans la <b>zone de message</b> d'Antigravity, tout en bas, puis appuie sur <b>Entrée</b>.</p>
-          <p>😕 <b>Perdu·e ?</b> Écris simplement <b>« je suis perdu »</b> dans cette même zone : l'IA Gemini t'aide pas à pas.</p>
-          <div className="g-boutons">
-            <button type="button" className="g-bouton bleu" onClick={() => setAide(true)}>🧭 Antigravity en un coup d'œil</button>
-            {faites.has(2) && <a className="g-bouton vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
-            {adresse && <a className="g-bouton noir" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon site en ligne</a>}
-          </div>
-        </section>
-        {aide && <FenetreAntigravity fermer={() => setAide(false)} />}
-        {styles && <FenetreStyles fermer={() => setStyles(false)} />}
-
-        {connexion && !faites.has(4) && (
-          <section className="g-carte g-vercel g-connexion" aria-labelledby="g-connexion">
-            <h2 id="g-connexion"><span aria-hidden="true">🔑</span> Connecte ton compte Vercel</h2>
-            <ol>
-              <li>Clique sur le bouton ci-dessous : la page de Vercel s'ouvre dans un nouvel onglet.</li>
-              <li>Clique <b>Continue with Google</b> et choisis le compte de ton compte Vercel.</li>
-              {connexion.code && <li>Vérifie que le code affiché est bien <b className="g-code">{connexion.code}</b></li>}
-              <li>Clique <b>Confirm</b> (ou <b>Allow</b>), puis reviens dans Antigravity et choisis « C'est fait ».</li>
-            </ol>
-            <a className="g-bouton" href={connexion.lien} target="_blank" rel="noreferrer">🔑 Connecter mon compte Vercel</a>
+      <div className="ga-fenetre">
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · J'en suis où de l'installation</b><em>ce n'est pas ton site</em></div>
+        <div className="ga-corps">
+          <section className="ga-progres" aria-label="Où tu en es">
+            <div className="ga-progres-tete">
+              <h1>J'en suis où</h1>
+              <span>{toutFini ? "Tout est fait 🎉" : `${nbFaites} étape${nbFaites > 1 ? "s" : ""} sur ${ETAPES.length}`}</span>
+            </div>
+            <div className="g-barre" role="progressbar" aria-valuemin={0} aria-valuemax={ETAPES.length} aria-valuenow={Math.round(avancement * 10) / 10}>
+              <div style={{ width: `${Math.max(4, (100 * avancement) / ETAPES.length)}%` }} />
+            </div>
           </section>
-        )}
 
-        <CarteMail suivi={suivi} />
-
-        <details className="g-carte g-pliable" open={fenetresOuvertes} onToggle={(e) => basculerFenetres(e.currentTarget.open)}>
-          <summary><h2 id="g-fenetres"><span aria-hidden="true">🔐</span> Les autorisations à accepter (en anglais)</h2><span className="g-chevron" aria-hidden="true">{fenetresOuvertes ? "Réduire ▴" : "Afficher ▾"}</span></summary>
-          <ContenuFenetres />
-        </details>
-
-        <section className="g-carte" aria-labelledby="g-parcours">
-          <h2 id="g-parcours"><span aria-hidden="true">🗺️</span> Où tu en es</h2>
-          <div className="g-barre" role="progressbar" aria-valuemin={0} aria-valuemax={ETAPES.length} aria-valuenow={Math.round(avancement * 10) / 10}>
-            <div style={{ width: `${Math.max(4, (100 * avancement) / ETAPES.length)}%` }} />
-          </div>
-          <span className="g-compte">{toutFini ? "Toutes les étapes sont faites 🎉" : `${nbFaites} étape${nbFaites > 1 ? "s" : ""} sur ${ETAPES.length} terminée${nbFaites > 1 ? "s" : ""}`}</span>
-          <ol className="g-etapes">
-            {ETAPES.map((e, i) => {
-              const etat = faites.has(i) ? "faite" : i === encours ? "encours" : "avenir";
+          <ol className="ga-etapes">
+            {visibles.map(({ e, i }) => {
+              const fait = faites.has(i);
               return (
-                <li key={i} className={`g-etape ${etat}`} aria-current={etat === "encours" ? "step" : undefined}>
-                  <span className="g-pastille" aria-hidden="true">{etat === "faite" ? "✅" : e.emoji}</span>
-                  <div>
-                    <h3>
-                      <span className="g-num">{i + 1}.</span> {e.titre}
-                      {etat === "encours" && <span className="g-badge">On en est là</span>}
-                      {etat === "faite" && <span className="g-badge ok">Fait</span>}
-                    </h3>
-                    <p>{e.texte}</p>
-                    {e.infos && etat !== "avenir" && <ul className="g-infos">{e.infos.map((t, k) => <li key={k}>{t}</li>)}</ul>}
-                    {e.boutonSite && etat !== "avenir" && (
-                      <a className="g-bouton vert g-bouton-etape" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>
-                    )}
-                    {e.sous && (
-                      <ol className="g-sous-etapes">
-                        {e.sous.map(([titre, aide], j) => {
-                          const fait = etat === "faite" || sousFaites.has(`${i}.${j + 1}`);
-                          const enCours = !fait && e.sous.findIndex((_, k) => !sousFaites.has(`${i}.${k + 1}`)) === j;
-                          return (
-                            <li key={j} className={fait ? "fait" : enCours ? "encours" : ""}>
-                              <span aria-hidden="true">{fait ? "✅" : enCours ? "➡️" : "⬜"}</span> {i + 1}.{j + 1} {titre}
-                              {titre === "Son style" && <button type="button" className="g-mini" onClick={() => setStyles(true)}>🎨 Voir les 3 styles</button>}
-                              {!fait && <small className="g-aide-sous">✍️ {aide}</small>}
-                            </li>
-                          );
-                        })}
-                      </ol>
-                    )}
+                <li key={i} className={fait ? "fait" : "encours"} aria-current={fait ? undefined : "step"}>
+                  <div className="ga-ligne">
+                    <span className="ga-icone" aria-hidden="true">{fait ? "✅" : e.emoji}</span>
+                    <div className="ga-texte">
+                      <h2>{i + 1}. {e.titre} {!fait && <span className="ga-badge">en cours</span>}</h2>
+                      {!fait && <p>{e.texte}</p>}
+                    </div>
+                    <a className="ga-voir" href={`${AIDE_EN_LIGNE}etape.html?n=${i + 1}`} target="atelier-etape" rel="noreferrer">📖 Voir l'étape</a>
                   </div>
+                  {e.sous && !fait && (
+                    <ol className="ga-sous">
+                      {e.sous.map(([titre, aide], j) => {
+                        const ok = sousFaites.has(`${i}.${j + 1}`);
+                        const ici = !ok && e.sous.findIndex((_, k) => !sousFaites.has(`${i}.${k + 1}`)) === j;
+                        return <li key={j} className={ok ? "fait" : ici ? "ici" : ""}><span aria-hidden="true">{ok ? "✅" : ici ? "➡️" : "⬜"}</span> {titre}{ici && <small>✍️ {aide}</small>}</li>;
+                      })}
+                    </ol>
+                  )}
+                  {e.boutonSite && <a className="ga-action vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
                 </li>
               );
             })}
           </ol>
-          {toutFini && <p className="g-bravo">Bravo, ton site est en ligne ! 🎉</p>}
-        </section>
 
-        {faites.has(1) && !faites.has(4) && (
-          <section className="g-carte g-vercel" aria-labelledby="g-vercel">
-            <h2 id="g-vercel"><span aria-hidden="true">▲</span> Ton compte Vercel</h2>
-            <p><b>Vercel, c'est quoi ?</b> Un service <b>gratuit</b> qui mettra ton site sur Internet, à une adresse que tu pourras partager (par exemple <b>mon-site.vercel.app</b>). On s'en sert à l'étape 5 ; crée ton compte maintenant, ça prend 2 minutes.</p>
-            <ol>
-              <li>Clique sur le bouton ci-dessous : la page de Vercel s'ouvre dans un nouvel onglet.</li>
-              <li>Choisis <b>Hobby</b> (gratuit) et écris ton nom.</li>
-              <li>Clique <b>Continue with Google</b> et choisis ton compte d'établissement.</li>
-              <li>Si Vercel te propose de relier GitHub ou de créer un projet : <b>ne fais rien</b>, ferme l'onglet et reviens dans Antigravity.</li>
-            </ol>
-            <a className="g-bouton" href="https://vercel.com/signup" target="_blank" rel="noreferrer">▲ Créer mon compte Vercel</a>
-            <p className="g-note" style={{ color: "#94a3b8", margin: "12px 0 0" }}>Tu as déjà un compte Vercel ? Alors ne fais rien.</p>
-          </section>
-        )}
+          {connexion && !faites.has(4) && (
+            <section className="ga-carte" aria-labelledby="g-connexion">
+              <h2 id="g-connexion">🔑 Connecte ton compte Vercel</h2>
+              <ol>
+                <li>Clique sur le bouton : la page de Vercel s'ouvre dans un nouvel onglet.</li>
+                <li>Clique <b>Continue with Google</b> et choisis le compte de ton compte Vercel.</li>
+                {connexion.code && <li>Vérifie que le code affiché est bien <b className="g-code">{connexion.code}</b></li>}
+                <li>Clique <b>Confirm</b> (ou <b>Allow</b>), puis reviens dans Antigravity et choisis « C'est fait ».</li>
+              </ol>
+              <a className="ga-action" href={connexion.lien} target="_blank" rel="noreferrer">🔑 Connecter mon compte Vercel</a>
+            </section>
+          )}
+          {adresse && <a className="ga-action vert" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon site en ligne</a>}
 
-        <CarteSupprimer dossier={suivi.dossier || "mon-site"} lieu={suivi.lieu || "Bureau"} />
-
-        <section className="g-carte" aria-labelledby="g-liens">
-          <h2 id="g-liens"><span aria-hidden="true">🔗</span> Tes raccourcis</h2>
-          <div className="g-boutons">
-            {faites.has(2) && <a className="g-bouton bleu" href="./" target="atelier-site">👀 Voir mon site (brouillon, localhost)</a>}
-            {adresse && <a className="g-bouton vert" href={adresse} target="atelier-en-ligne">🌍 Mon site en ligne</a>}
+          <div className="ga-outils">
+            <p>✍️ Pour répondre à l'IA : écris le <b>numéro</b> (ou ta réponse avec tes mots) dans la zone de message d'Antigravity, puis Entrée. Perdu·e ? Écris <b>« je suis perdu »</b>.</p>
+            <div className="ga-liens">
+              <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="atelier-etape" rel="noreferrer">🧭 Découvrir Antigravity</a>
+              <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="atelier-etape" rel="noreferrer">🔐 Les fenêtres en anglais</a>
+            </div>
           </div>
-        </section>
+
+          <div className="ga-clair">
+            <CarteMail suivi={suivi} />
+            <CarteSupprimer dossier={suivi.dossier || "mon-site"} lieu={suivi.lieu || "Bureau"} />
+          </div>
+        </div>
       </div>
     </div>
   );

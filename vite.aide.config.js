@@ -10,6 +10,6 @@ export default defineConfig({
   build: {
     outDir: '../docs',
     emptyOutDir: true,
-    rollupOptions: { input: { fenetres: resolve('aide/fenetres.html'), antigravity: resolve('aide/antigravity.html') } },
+    rollupOptions: { input: { fenetres: resolve('aide/fenetres.html'), antigravity: resolve('aide/antigravity.html'), etape: resolve('aide/etape.html') } },
   },
 })

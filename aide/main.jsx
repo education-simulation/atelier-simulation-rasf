@@ -6,11 +6,10 @@ import '@fontsource/outfit/latin-600.css'
 import '@fontsource/outfit/latin-800.css'
 import '@fontsource/nunito/latin-400.css'
 import '@fontsource/nunito/latin-700.css'
-import { CSS, ContenuFenetres, VisiteAntigravity } from '../src/moteur/Guide.jsx'
+import { CSS, ContenuFenetres, VisiteAntigravity, PageEtape } from '../src/moteur/Guide.jsx'
 
 const PLUS = `
 body { margin:0; font-family:'Nunito',system-ui,sans-serif; }
-.aide-retour { text-align:center; color:#334155; font-size:17px; margin:18px 0 0; }
 `
 const page = document.body.dataset.page
 
@@ -32,6 +31,6 @@ function Fenetres() {
 createRoot(document.getElementById('root')).render(
   <>
     <style>{CSS + PLUS}</style>
-    {page === 'antigravity' ? <div className="g"><VisiteAntigravity /></div> : <Fenetres />}
+    {page === 'antigravity' ? <div className="g"><VisiteAntigravity /></div> : page === 'etape' ? <div className="g"><PageEtape n={Number(new URLSearchParams(location.search).get('n')) || 1} /></div> : <Fenetres />}
   </>,
 )
