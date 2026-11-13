@@ -1037,7 +1037,6 @@ export function Guide() {
                       <h2>{i + 1}. {e.titre} {!fait && <span className="ga-badge">en cours</span>}</h2>
                       {!fait && <p>{e.texte}</p>}
                     </div>
-                    <a className="ga-voir" href={pageEtape(i)} target="_blank" rel="noopener noreferrer" title="Ce qui se passe à cette étape et ce que tu fais">ℹ️ Infos</a>
                   </div>
                   {e.sous && !fait && (
                     <ol className="ga-sous">
