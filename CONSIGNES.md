@@ -158,12 +158,12 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
 - **« Oui »** : pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur le public visé, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
 1. **Le nom de ton interface ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse virtuelle », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mes simulations » ; **dis-le-lui en une ligne** au début du message suivant : « D'accord, ton interface s'appellera « Mes simulations » pour l'instant : tu pourras le changer plus tard. »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
-3. **Le style de ton site ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
+3. **Le style de ton interface ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire) · **Peu importe** (→ on garde « Barre latérale », le style par défaut ; dis-le en une ligne). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
 4. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement). **N'ajoute pas d'option « Indiquer mon établissement »** : le choix « Autre » permet déjà de l'écrire, en une seule question.
 5. **Ton nom ou ton pseudo ?** (affiché en bas du site) → « Prof de sciences » · Autre (écris ton nom ou ton pseudo).
 - **Après chaque réponse**, ajoute sa sous-étape dans `PROGRESSION.md` (outil d'écriture de fichier), exactement sous cette forme, pour que la page guide la coche devant la personne :
   `- [x] Étape 1.1 — Nom de l'interface`, puis `1.2 — Couleur`, `1.3 — Style`, `1.4 — Établissement`, `1.5 — Ton nom`.
-- **À la question du style**, ajoute dans le message, sur sa propre ligne : « 👉 Pour voir les 3 styles côte à côte : https://education-simulation.github.io/atelier-simulation-rasf/etape.html?n=2 »
+- **À la question du style**, ajoute dans le message, sur sa propre ligne : « 👉 Les 3 styles s'affichent côte à côte dans ta page de progression (bouton « 🎨 Voir les 3 styles »). »
 - **Vérification :** tu as les cinq réponses ; coche alors `- [x] Étape 1 — Personnalise ton interface`.
 
 ### Étape 2 — Appliquer tes choix (dans ton interface)

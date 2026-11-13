@@ -317,7 +317,8 @@ export const CSS = `
 .pe2-styles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
 .pe2-styles figure { margin:0; background:#16161b; border:1px solid #3f3f46; border-radius:12px; padding:8px; }
 .pe2-styles svg { width:100%; height:auto; display:block; border-radius:8px; }
-.pe2-styles figcaption { color:#d4d4d8; font-weight:800; font-size:14px; text-align:center; margin-top:6px; }
+.pe2-styles figcaption { color:#fff; font-weight:800; font-size:16px; text-align:center; margin-top:8px; }
+.pe2-styles figcaption small { display:block; color:#a1a1aa; font-weight:400; font-size:14px; margin-top:4px; }
 .pe2-toi { margin:0; text-align:center; font-size:19px; font-weight:800; color:#fde68a; background:#1f1a10; border:2px solid #f59e0b; border-radius:14px; padding:14px 16px; }
 .pe2-liens { justify-content:center; }
 .pe2-retour { margin:0; text-align:center; color:#a1a1aa; font-size:15px; }
@@ -971,6 +972,20 @@ export function PageEtape({ n }) {
   const e = ETAPES[i], d = DETAILS[i];
   const lien = (url) => (url.startsWith("http") ? url : AIDE_EN_LIGNE + url);
   useEffect(() => { document.title = `Étape ${i + 1} · ${e.titre}`; }, [i, e.titre]);
+  // Étape 2 : seulement les 3 styles, côte à côte.
+  if (d.styles) return (
+    <div className="ga">
+      <div className="ga-fenetre">
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Les 3 styles de ton interface</b><em>infos</em></div>
+        <div className="ga-corps pe2">
+          <div className="pe2-titre"><span aria-hidden="true">🎨</span><h1>Les 3 styles de ton interface</h1></div>
+          <div className="pe2-styles">
+            {STYLES_SITE.map((st) => <figure key={st.id}><MiniSite id={st.id} /><figcaption>{st.nom}<small>{st.texte}</small></figcaption></figure>)}
+          </div>
+        </div>
+      </div>
+    </div>
+  );
   return (
     <div className="ga">
       <div className="ga-fenetre">
@@ -1056,6 +1071,7 @@ export function Guide() {
   const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => i === encours || (faites.has(i) && ouvertes.has(i))).reverse();
   const [mail, setMail] = useState(false);   // la fenêtre « Recevoir les instructions sur ton mail RASF »
   const [poubelle, setPoubelle] = useState(false);   // la fenêtre « Tout supprimer et recommencer »
+  const [styles, setStyles] = useState(false);   // la fenêtre des 3 styles
   useEffect(() => {
     if (!mail && !poubelle) return;
     const touche = (e) => { if (e.key === "Escape") { setMail(false); setPoubelle(false); } };
@@ -1074,6 +1090,10 @@ export function Guide() {
     const id = setInterval(voir, 2000);
     return () => { fini = true; clearInterval(id); };
   }, []);
+  // Quand l'IA pose la question du style, la fenêtre des 3 styles s'ouvre une fois toute seule.
+  const questionStyle = /style/i.test(message) && /barre lat|blocs|liste/i.test(message);
+  const [stylesVus, setStylesVus] = useState(false);
+  useEffect(() => { if (questionStyle && !stylesVus) { setStyles(true); setStylesVus(true); } }, [questionStyle, stylesVus]);
   // Ce qu'il faut répondre maintenant, en très court (bande orange en bas à gauche).
   const sousEnCours = encours >= 0 && ETAPES[encours].sous ? ETAPES[encours].sous.findIndex((_, k) => !sousFaites.has(`${encours}.${k + 1}`)) : -1;
   const quoi = [
@@ -1145,6 +1165,7 @@ export function Guide() {
                     </div>
                   )}
                   {!fait && message && !(reflexion && !attente) && <MessageIA texte={message} />}
+                  {!fait && questionStyle && !(reflexion && !attente) && <button type="button" className="ga-action" onClick={() => setStyles(true)}>🎨 Voir les 3 styles</button>}
                   {e.sous && !fait && !message && (
                     <ol className="ga-sous">
                       {e.sous.map(([titre, aide], j) => {
@@ -1191,6 +1212,7 @@ export function Guide() {
             </div>
           )}
 
+          {styles && <FenetreStyles fermer={() => setStyles(false)} />}
           {poubelle && (
             <div className="g-voile" onClick={() => setPoubelle(false)}>
               <div className="ga-popup" role="dialog" aria-modal="true" aria-label="Tout supprimer et recommencer" onClick={(e) => e.stopPropagation()}>
