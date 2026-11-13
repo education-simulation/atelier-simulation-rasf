@@ -1,0 +1,64 @@
+name: test-systemes
+on:
+  push:
+    branches: [test-systemes]
+jobs:
+  unix:
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Commande de l'agent (dossier + téléchargement), deux fois
+        shell: bash
+        run: |
+          for k in 1 2; do
+            cd ~/Desktop 2>/dev/null || cd ~; n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && for f in progression.html progression.js metamerisme.html serveur.pl; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" || exit 1; done && echo "NOM=$PWD"
+          done
+          ls -d ~/Desktop/simulation-html* ~/simulation-html* 2>/dev/null
+      - name: Mini-serveur, deux à la fois, puis progression.js réécrit
+        shell: bash
+        run: |
+          perl -v | sed -n 2p
+          D=$( (ls -d ~/Desktop/simulation-html 2>/dev/null || ls -d ~/simulation-html) | head -1 )
+          D2="${D}-2"
+          cd "$D" && (perl serveur.pl > srv.log 2>&1 &)
+          cd "$D2" && (perl serveur.pl > srv.log 2>&1 &)
+          sleep 3; cat "$D/srv.log" "$D2/srv.log"
+          grep -q "URL=http://localhost:5500/progression.html" "$D/srv.log"
+          grep -q "URL=http://localhost:5501/progression.html" "$D2/srv.log"
+          for u in "" progression.html "progression.js?t=1" metamerisme.html; do curl -fsS -o /dev/null -w "[$u] %{http_code} %{content_type}\n" "http://localhost:5500/$u"; done
+          code=$(curl -s --path-as-is -o /dev/null -w "%{http_code}" "http://localhost:5500/../../etc/passwd"); echo "traversal $code"; test "$code" = 404
+          cd "$D"; printf '%s\n' 'window.progression({ etape: 3, quoi: "Écris ton prompt pour l’étape « 3 », puis Entrée.", alerte: true });' > "$D/progression.js"
+          curl -fsS "http://localhost:5500/progression.js?t=2" | tee /dev/stderr | grep -q "etape: 3, quoi: \"Écris ton prompt pour l’étape « 3 »"
+          echo OK-UNIX
+  windows:
+    runs-on: windows-latest
+    defaults:
+      run:
+        shell: powershell
+    steps:
+      - name: Commande de l'agent (dossier + téléchargement), deux fois
+        run: |
+          $PSVersionTable.PSVersion
+          foreach ($k in 1,2) {
+          $b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; foreach ($f in 'progression.html','progression.js','metamerisme.html','serveur.ps1') { curl.exe -fsSL -o (Join-Path $d $f) "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" }; "NOM=$d"
+          }
+          Get-ChildItem ([Environment]::GetFolderPath('Desktop'))
+      - name: Mini-serveur, deux à la fois, puis progression.js réécrit
+        run: |
+          $b = [Environment]::GetFolderPath('Desktop'); $d = Join-Path $b 'simulation-html'; $d2 = Join-Path $b 'simulation-html-2'
+          Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','serveur.ps1' -WorkingDirectory $d -RedirectStandardOutput (Join-Path $d 'srv.log') -WindowStyle Hidden
+          Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','serveur.ps1' -WorkingDirectory $d2 -RedirectStandardOutput (Join-Path $d2 'srv.log') -WindowStyle Hidden
+          Start-Sleep 6
+          Get-Content (Join-Path $d 'srv.log'); Get-Content (Join-Path $d2 'srv.log')
+          if (-not (Select-String -Path (Join-Path $d 'srv.log') -Pattern 'URL=http://localhost:5500/progression.html' -Quiet)) { throw 'serveur 1' }
+          if (-not (Select-String -Path (Join-Path $d2 'srv.log') -Pattern 'URL=http://localhost:5501/progression.html' -Quiet)) { throw 'serveur 2' }
+          foreach ($u in '', 'progression.html', 'progression.js?t=1', 'metamerisme.html') { curl.exe -fsS -o NUL -w "[$u] %{http_code} %{content_type}`n" "http://localhost:5500/$u"; if ($LASTEXITCODE) { throw "echec $u" } }
+          $c = curl.exe -s --path-as-is -o NUL -w "%{http_code}" "http://localhost:5500/../../Windows/win.ini"; "traversal $c"; if ($c -ne '404') { throw 'traversal' }
+          Set-Content -Encoding utf8 -Path "$d\progression.js" -Value 'window.progression({ etape: 3, quoi: "Écris ton prompt pour l’étape « 3 », puis Entrée.", alerte: true });'
+          $js = [System.Text.Encoding]::UTF8.GetString((Invoke-WebRequest "http://localhost:5500/progression.js?t=2" -UseBasicParsing).RawContentStream.ToArray())
+          $js
+          if ($js -notmatch 'etape: 3, quoi: "Écris ton prompt pour l’étape « 3 »') { throw 'progression.js' }
+          'OK-WINDOWS'
