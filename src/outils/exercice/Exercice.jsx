@@ -542,6 +542,135 @@ function ToutRecommencer({ page, fermer, remiseAZero, modele }) {
 }
 
 // --- Le cadre complet ---
+
+// --- Vue « atelier » (page …/?atelier=<id>) : d'abord le choix du mode, puis une page de progression de l'atelier ---
+// Même principe que la page de progression de l'installation : une barre d'étapes, seule l'étape en cours est affichée,
+// un clic sur un rond vert réaffiche une étape passée. Étapes : 1. l'état actuel de la page, 2. les modèles de la
+// simulation, puis les étapes de construction de l'exercice (celles du parcours guidé).
+function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, cocher, etapeProps, ouvertes, basculer, scene, motsCles, outils, sans, idees, etapes, recommencer }) {
+  const [choisi, setChoisi] = useState(() => lire(`${page}.atelierModeChoisi`, false) === true);
+  const [intro, setIntro] = useState(() => lire(`${page}.atelierIntro`, []));
+  const [revues, setRevues] = useState(() => new Set());
+  const choisir = (m) => { choisirMode(m); setChoisi(true); ecrire(`${page}.atelierModeChoisi`, true); };
+  const changerDeMode = () => { setChoisi(false); ecrire(`${page}.atelierModeChoisi`, false); };
+  const finirIntro = (id) => { const m = [...new Set([...intro, id])]; setIntro(m); ecrire(`${page}.atelierIntro`, m); };
+  const nomModele = outils?.[0]?.nomModele || "modèles";
+
+  if (!choisi) return (
+    <div className="va">
+      <h2 className="va-question">Comment veux-tu construire la simulation du <b>{sujet}</b> ?</h2>
+      <div className="va-choix">
+        <button type="button" className="va-tuile premier" onClick={() => choisir("guide")}>
+          <span className="va-ic" aria-hidden="true">🧭</span><b>Parcours guidé</b><span>Étape par étape : à chaque étape, tu écris ta demande à l'IA, elle la vérifie et l'exécute.</span><em>conseillé pour commencer</em>
+        </button>
+        <button type="button" className="va-tuile" onClick={() => choisir("libre")}>
+          <span className="va-ic" aria-hidden="true">🧪</span><b>Exploration libre</b><span>Pas d'étapes : tu demandes à l'IA ce que tu veux ajouter ou changer.</span>
+        </button>
+      </div>
+    </div>
+  );
+
+  if (mode === "libre") return (
+    <div className="va">
+      <div className="va-tete"><b>🧪 Exploration libre</b><button type="button" className="va-lien" onClick={changerDeMode}>Changer de mode</button></div>
+      {scene}
+      <div className="va-carte-claire"><ExplorationLibre idees={idees} /></div>
+      {motsCles}
+    </div>
+  );
+
+  // Parcours guidé : les étapes de l'atelier
+  const toutes = [
+    { id: "etat", titre: "L'état actuel de la page", fait: intro.includes("etat") },
+    { id: "modeles", titre: "Les modèles de la simulation", fait: intro.includes("modeles") },
+    ...liste.map(({ num, etape }) => ({ id: `e${num}`, num, etape, titre: etape.titre, fait: faites.includes(num) })),
+  ];
+  const ici = toutes.findIndex((e) => !e.fait);
+  const basculerRevue = (id) => setRevues((r) => { const n = new Set(r); if (n.has(id)) n.delete(id); else n.add(id); return n; });
+  const visibles = toutes.map((e, i) => ({ e, i })).filter(({ e, i }) => i === ici || (e.fait && revues.has(e.id))).reverse();
+
+  const contenu = (e) => {
+    if (e.id === "etat") return (
+      <>
+        <p className="va-texte">Avant de demander quoi que ce soit à l'IA, <b>regarde ce que fait la page maintenant</b> : c'est ton point de départ.</p>
+        <div className="va-carte-claire"><EtatActuel etat={etat} /></div>
+        {scene}
+        {!e.fait && <button type="button" className="va-suivant" onClick={() => finirIntro("etat")}>J'ai regardé, étape suivante ›</button>}
+      </>
+    );
+    if (e.id === "modeles") return (
+      <>
+        <p className="va-texte">Pour <b>toute</b> simulation, il faut d'abord trouver les <b>modèles</b> : les lois, les formules et les données qui décrivent le phénomène. Puis il faut <b>les donner à l'IA</b> : sans modèle, elle invente, et la simulation est fausse.</p>
+        <p className="va-texte">Ici, les {nomModele} sont <b>fournis</b> (par défaut). Tu peux aussi choisir de <b>les construire toi-même</b> avec l'IA.</p>
+        <div className="va-carte-claire"><BoiteOutils page={page} avec={!sans} outils={outils} choix={estApercu && !!etapes.etapeOutils} /></div>
+        {!e.fait && <button type="button" className="va-suivant" onClick={() => finirIntro("modeles")}>J'ai compris, étape suivante ›</button>}
+      </>
+    );
+    return (
+      <>
+        <div className="va-carte-claire"><Etape {...etapeProps(e.num)} ouverte={true} basculer={() => {}} /></div>
+        {scene}
+        {motsCles}
+      </>
+    );
+  };
+
+  return (
+    <div className="va">
+      <div className="va-tete"><b>🧭 Parcours guidé</b><button type="button" className="va-lien" onClick={changerDeMode}>Changer de mode</button>{recommencer}</div>
+      <ol className="st va-st" aria-label="Les étapes de l'atelier" style={{ gridTemplateColumns: `repeat(${toutes.length}, minmax(0,1fr))` }}>
+        {toutes.map((e, i) => {
+          const etatRond = e.fait ? "fait" : i === ici ? "ici" : "avenir";
+          const rond = <span className="st-rond" aria-hidden="true">{e.fait ? "✓" : i + 1}</span>;
+          return (
+            <li key={e.id} className={`st-etape ${etatRond}`}>
+              {e.fait ? <button type="button" className={`st-bouton${revues.has(e.id) ? " ouvert" : ""}`} onClick={() => basculerRevue(e.id)} title={revues.has(e.id) ? "Masquer cette étape" : "Revoir cette étape"}>{rond}</button> : rond}
+              <span className="st-nom">{e.titre}</span>
+            </li>
+          );
+        })}
+      </ol>
+      {ici === -1 && <p className="va-bravo">🎉 Tu as fini l'atelier !</p>}
+      <ol className="ga-etapes">
+        {visibles.map(({ e, i }) => (
+          <li key={e.id} className={e.fait ? "fait" : "encours"}>
+            <div className="ga-ligne">
+              <span className="ga-icone" aria-hidden="true">{e.fait ? "✅" : "👉"}</span>
+              <div className="ga-texte"><h2>{i + 1}. {e.titre} {!e.fait && <span className="ga-badge">en cours</span>}</h2></div>
+            </div>
+            <div className="va-corps">{contenu(e)}</div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+const STYLE_VUE_ATELIER = `
+.va { display:grid; gap:16px; color:#e4e4e7; }
+.va-question { margin:6px 0 4px; text-align:center; font:800 clamp(20px,3vw,28px)/1.25 'Outfit',sans-serif; color:#fff; }
+.va-question b { color:#fde68a; }
+.va-choix { display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:16px; }
+.va-tuile { all:unset; cursor:pointer; display:flex; flex-direction:column; gap:10px; background:#16161b; border:1px solid #3f3f46; border-radius:18px; padding:22px; transition:transform .15s, border-color .15s; }
+.va-tuile:hover, .va-tuile:focus-visible { transform:translateY(-3px); border-color:#f59e0b; }
+.va-tuile.premier { border:2px solid #f59e0b; background:#1f1a10; }
+.va-tuile b { font:800 22px 'Outfit',sans-serif; color:#fff; }
+.va-tuile span { color:#d4d4d8; font-size:16px; line-height:1.45; }
+.va-tuile em { align-self:flex-start; font-style:normal; font-weight:800; font-size:12px; background:#f59e0b; color:#1f1300; border-radius:99px; padding:2px 10px; }
+.va-tuile .va-ic { font-size:44px; line-height:1; }
+.va-tete { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.va-tete b { font:800 20px 'Outfit',sans-serif; color:#fff; flex:1; }
+.va-lien { all:unset; cursor:pointer; color:#fde68a; border:1px solid #a16207; border-radius:8px; padding:4px 10px; font-weight:800; font-size:13px; }
+.va-lien.danger { color:#fecaca; border-color:#7f1d1d; }
+.va-corps { display:grid; gap:12px; margin-top:12px; }
+.va-texte { margin:0; font-size:17px; line-height:1.5; color:#e4e4e7; }
+.va-texte b { color:#fff; }
+.va-carte-claire { color:#0f172a; }
+.va-suivant { all:unset; cursor:pointer; justify-self:start; background:#f59e0b; color:#1f1300; font-weight:800; border-radius:12px; padding:10px 16px; }
+.va-suivant:hover { background:#fbbf24; }
+.va-bravo { margin:0; text-align:center; font-weight:800; font-size:20px; color:#86efac; }
+`;
+
 export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat = [], validees = [], avecOutils = true, children }) {
   // Sans la boîte à outils fournie : une étape 0 pour la construire, et les textes renvoient au fichier construit.
   const sans = avecOutils === false && etapes.etapeOutils;
@@ -616,6 +745,22 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
     ecrire(`${page}.ouvertesN`, [0, 1]); ecrire(`${page}.faitesN`, []); ecrire(`${page}.valideesVuesN`, []);
     [0, ...etapes.map((_, i) => i + 1)].forEach((n) => ecrire(`${page}.indices.${n}`, 0));
   };
+  // Page d'atelier (…/?atelier=<id>, sur l'ordinateur) : la vue « progression de l'atelier ».
+  if (estApercu && new URLSearchParams(window.location.search).has("atelier")) {
+    const etapeProps = (num) => ({ page, numero: num, etape: parNum[num], faite: faites.includes(num), parIA: parIA.includes(num), verrouillee: false,
+      cocher: () => cocher(num), precedente: undefined, outil: outils[0], controle: num === 0 && sans ? controle : null, bloquee: bloqueeParControle(num) });
+    const motsBloc = groupesMots.length > 0 ? <div className="va-carte-claire"><MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} /></div> : null;
+    return (
+      <div className="ex-conteneur">
+        <style>{STYLE_VUE_ATELIER}</style>
+        <VueAtelier page={page} sujet={sujet} mode={mode} choisirMode={choisirMode} etat={etat} liste={liste} faites={faites} cocher={cocher}
+          etapeProps={etapeProps} ouvertes={ouvertes} basculer={basculer} scene={children} motsCles={motsBloc} outils={outils} sans={sans}
+          idees={sans && etapes.ideeOutils ? [etapes.ideeOutils, ...idees] : idees} etapes={etapes}
+          recommencer={<button type="button" className="va-lien danger" onClick={() => setRecommencer(true)}>↺ Tout recommencer</button>} />
+        {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} modele={etapes.outilsSans?.[0]?.chemin} />}
+      </div>
+    );
+  }
   return (
     <div className="ex-conteneur">
     <div className={`ex-cadre${motsCles.length && !guideMasque ? " avec-colonne" : ""}`}>
