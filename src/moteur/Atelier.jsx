@@ -7,7 +7,7 @@
 import { lazy, Suspense, useEffect } from "react";
 import SITE from "../../site.config.js";
 import { EnChargement } from "./chargement";
-import { CSS } from "./Guide.jsx";
+import { CSS, BandeIA, useProgression } from "./Guide.jsx";
 
 const TUILES = [
   { icone: "🎨", titre: "Atelier 1 : Métamérisme", texte: "Construis une simulation avec l'IA, une étape à la fois, à partir d'une cabine de lumière et de deux cartes.", lien: "./?atelier=metamerisme" },
@@ -22,6 +22,8 @@ const PLUS = `
 a.at-tuile:hover { transform:translateY(-3px); border-color:#f59e0b; }
 .at-tuile.premier { border:2px solid #f59e0b; background:#1f1a10; }
 .at-tuile.bientot { opacity:.5; cursor:default; }
+.at-tuile.fermee { opacity:.55; cursor:not-allowed; filter:grayscale(.4); }
+.ga { padding-bottom:110px !important; }
 .at-tuile.site { border-color:#166534; }
 .at-icone { font-size:36px; line-height:1; }
 .at-titre { font:800 19px/1.25 'Outfit',sans-serif; color:#fff; }
@@ -53,6 +55,7 @@ function PageAtelier({ id }) {
           {Composant ? <EnChargement key={id}><Composant /></EnChargement> : <p className="erreur">Atelier « {id} » introuvable.</p>}
         </div>
       </div>
+      <BandeIA quoi="Écris ta demande pour l'étape en cours (ton prompt), puis Entrée." />
     </div>
   );
 }
@@ -60,6 +63,14 @@ function PageAtelier({ id }) {
 export function Atelier() {
   const id = new URLSearchParams(window.location.search).get("atelier");
   if (id) return <Suspense fallback={null}><PageAtelier id={id} /></Suspense>;
+  return <Tuiles />;
+}
+
+// La page des tuiles : les tuiles ne s'ouvrent qu'une fois que la prof a répondu à l'IA (« J'ai ouvert l'atelier » :
+// l'étape 3 est cochée dans PROGRESSION.md). Avant, la bande jaune lui dit quoi répondre.
+function Tuiles() {
+  const { faites, pret } = useProgression();
+  const ouvert = faites.has(3);
   useEffect(() => { document.title = "Atelier : créer une simulation avec l'IA"; }, []);
   return (
     <div className="ga">
@@ -77,13 +88,16 @@ export function Atelier() {
                 <span className="at-texte">{t.texte}</span>
               </>;
               const cls = `at-tuile${k === 0 ? " premier" : ""}${t.bientot ? " bientot" : ""}${t.site ? " site" : ""}`;
-              return t.bientot
-                ? <div key={k} className={cls} aria-disabled="true">{contenu}</div>
+              return t.bientot || !ouvert
+                ? <div key={k} className={`${cls}${!t.bientot ? " fermee" : ""}`} aria-disabled="true" title={!t.bientot ? "Réponds d'abord à l'IA, dans Antigravity" : undefined}>{contenu}</div>
                 : <a key={k} className={cls} href={t.lien} target="atelier-site">{contenu}</a>;
             })}
           </div>
         </div>
       </div>
+      {pret && (ouvert
+        ? <BandeIA titre="À toi" ou="dans cette page" quoi="Clique sur « Atelier 1 : Métamérisme »." />
+        : <BandeIA quoi="Écris 1 (J'ai ouvert l'atelier), puis Entrée : les tuiles s'ouvriront." />)}
     </div>
   );
 }

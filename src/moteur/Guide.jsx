@@ -101,7 +101,7 @@ function lire(texte) {
   return { faites, sousFaites, adresse, connexion, dossier, lieu };
 }
 
-function useProgression() {
+export function useProgression() {
   const [etat, setEtat] = useState({ faites: new Set(), sousFaites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", pret: false });
   useEffect(() => {
     let fini = false;
@@ -1030,6 +1030,48 @@ export function PageEtape({ n, fermer = null }) {   // fermer : le bouton « ✕
           <p className="pe2-retour">✅ Reviens dans Antigravity quand tu as vu.</p>
         </div>
       </div>
+    </div>
+  );
+}
+
+// La bande du bas, réutilisée par les pages de l'atelier : jaune « Réponds à l'IA » (titre, quoi),
+// rouge avec la mini fenêtre animée quand une autorisation attend, masquée pendant que l'IA réfléchit.
+export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de message, en bas à gauche", quoi }) {
+  const [etat, setEtat] = useState({ attente: false, reflexion: false });
+  useEffect(() => {
+    let fini = false;
+    const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
+      .then((r) => { if (!fini) setEtat({ attente: !!r.attente, reflexion: !!r.reflexion }); }).catch(() => {});
+    voir();
+    const id = setInterval(voir, 2000);
+    return () => { fini = true; clearInterval(id); };
+  }, []);
+  if (etat.reflexion && !etat.attente) return null;
+  if (etat.attente) return (
+    <div className="ga-repondre alerte" role="alert">
+      <span className="ga-fleche" aria-hidden="true">⬅</span>
+      <MiniFenetre />
+      <span className="ga-repondre-texte"><b>🔐 Une petite fenêtre t'attend</b> <em>au-dessus de la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Clique sur 3 « Yes, and always allow », puis sur Submit.</span></span>
+    </div>
+  );
+  return (
+    <div className="ga-repondre" role="note">
+      <span className="ga-fleche" aria-hidden="true">⬅</span>
+      <span className="ga-repondre-texte"><b>{titre}</b> <em>{ou}</em><span className="ga-quoi">👉 {quoi}</span></span>
+    </div>
+  );
+}
+function MiniFenetre() {
+  return (
+    <div className="ga-mini" aria-hidden="true">
+      <p className="ga-mini-titre">📄 Allow access to this path?</p>
+      <p className="ga-mini-l">1 Yes, allow this time</p>
+      <p className="ga-mini-l">2 Yes, and always allow in this conversation</p>
+      <p className="ga-mini-l ga-mini-3">3 Yes, and always allow</p>
+      <p className="ga-mini-l ga-mini-4">4 No <span className="ga-mini-submit">Submit ↵</span></p>
+      <span className="ga-mini-souris">
+        <svg viewBox="0 0 14 21" width="14" height="21"><path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#000" strokeWidth="1.3" /></svg>
+      </span>
     </div>
   );
 }
