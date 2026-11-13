@@ -324,7 +324,7 @@ export const CSS = `
 .ga .g-regle { color:#fde68a; background:#1f1a10; border:2px solid #f59e0b; border-radius:14px; padding:12px 16px; font-size:17px; }
 .ga .g-regle b { color:#fff; }
 .ga { padding-bottom:110px !important; }
-.ga-repondre { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
+.ga-repondre { position:fixed; left:0; right:0; bottom:40px; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
 .ga-repondre.continuer { background:#16a34a; color:#fff; }
 .ga-repondre.alerte { bottom:140px; background:#dc2626; color:#fff; animation:ga-alerte 1.2s ease-in-out infinite; }
 /* Mini fenêtre animée : la souris clique sur 3 « Yes, and always allow », puis sur Submit (en boucle, 4 s). */
