@@ -1113,11 +1113,12 @@ export function Guide() {
   // Une petite fenêtre d'autorisation attend-elle un clic ? Le serveur d'aperçu le déduit du journal d'Antigravity (vite.config.js).
   const [attente, setAttente] = useState(false);
   const [message, setMessage] = useState("");   // le dernier message de l'IA dans Antigravity, affiché tel quel
+  const [recu, setRecu] = useState(false);   // 1re réponse reçue : avant, on ne sait pas encore quelle bande montrer
   const [reflexion, setReflexion] = useState(null);   // l'IA réfléchit : { reponse } (la réponse que la personne vient d'écrire)
   useEffect(() => {
     let fini = false;
     const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
-      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); setReflexion(r.reflexion ? { reponse: r.reponse || "" } : null); } }).catch(() => {});
+      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); setReflexion(r.reflexion ? { reponse: r.reponse || "" } : null); setRecu(true); } }).catch(() => setRecu(true));
     voir();
     const id = setInterval(voir, 2000);
     return () => { fini = true; clearInterval(id); };
@@ -1166,7 +1167,7 @@ export function Guide() {
       <style>{CSS}</style>
       {/* En bas à gauche : une flèche animée vers la zone de message d'Antigravity (à gauche de ce navigateur) */}
       {/* Pendant que l'IA réfléchit, rien à répondre : la bande disparaît (sauf si une fenêtre d'autorisation attend). */}
-      {(attente || !reflexion) && (
+      {recu && (attente || !reflexion) && (
         <div className={`ga-repondre${attente ? " alerte" : attendContinue ? " continuer" : ""}`} role={attente ? "alert" : "note"}>
         <span className="ga-fleche" aria-hidden="true">⬅</span>
         {attente && (
