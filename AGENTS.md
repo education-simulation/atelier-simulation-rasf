@@ -103,25 +103,22 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
    ```
 2. **lis `CONSIGNES.md` en entier** (il est long : lis-le jusqu'au bout, en plusieurs fois s'il le faut).
 
-**8. Un seul message : le lien de la page de progression, puis aussitôt la 1re question de l'étape 1 de `CONSIGNES.md`** (« Veux-tu personnaliser ton interface maintenant ? »). **Ne demande pas** si la page est ouverte : la personne clique sur le lien, puis répond directement à la question. Aéré exactement ainsi :
+**8. Un seul message, très court : le lien de la page de progression, et rien d'autre** (pas de question, pas de ligne ✍️ : c'est la page de progression qui dit à la personne, dans sa bande verte en bas, d'écrire « continue »). Aéré exactement ainsi :
 ```
 **💬 Pour toi :**
 
 ✅ Ta page de progression de l'installation est prête, en français.
 
 👉 Clique sur ce lien : http://localhost:5799/?guide
-
-Garde cet onglet ouvert : il te montre où tu en es.
-
-Veux-tu personnaliser ton interface maintenant (son nom, sa couleur, son style…) ?
 ```
-Choix : ceux de l'étape 1 de `CONSIGNES.md` (1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** · 3. **😕 Je suis perdu·e**).
+Puis attends. Quand la personne écrit « continue » (ou n'importe quoi d'autre qui veut dire qu'elle est prête), pose la 1re question de l'étape 1 de `CONSIGNES.md` (« Veux-tu personnaliser ton interface maintenant ? »), avec ses choix (1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** · 3. **😕 Je suis perdu·e**) et la ligne ✍️ habituelle.
 - Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien.
-- « Je suis perdu·e » : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis repose la question.
+- « Je suis perdu·e » (avant « continue ») : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis d'écrire « continue ».
 - Ensuite, suis `CONSIGNES.md` à partir de la réponse à cette question.
+- Le bloc 🔐 sur les petites fenêtres d'autorisation (étape 3) ne sert qu'**avant** la page de progression : une fois qu'elle est ouverte, c'est elle qui le dit (bande rouge). **Ne le répète jamais** dans un message suivant.
 
 ## Si la personne revient (« Reprends mon site… »)
-Le site existe déjà (dossier qu'elle donne ; sinon `Desktop/mon-site`, puis `Documents/mon-site`). Ne copie rien : relance l'aperçu (étape 6), lis `PROGRESSION.md` et `CONSIGNES.md`, puis **un seul message** : le lien de la page de progression (comme à l'étape 8), suivi de la question de la première étape non cochée.
+Le site existe déjà (dossier qu'elle donne ; sinon `Desktop/mon-site`, puis `Documents/mon-site`). Ne copie rien : relance l'aperçu (étape 6), lis `PROGRESSION.md` et `CONSIGNES.md`, puis **un seul message** : le lien de la page de progression (comme à l'étape 8), et rien d'autre ; quand la personne écrit « continue », pose la question de la première étape non cochée.
 
 ## Une page d'exercice te renvoie ici (« relis AGENTS.md, section … »)
 Les sections des exercices (Métamérisme, Titrage direct…) sont dans **`CONSIGNES.md`** : lis-les là.

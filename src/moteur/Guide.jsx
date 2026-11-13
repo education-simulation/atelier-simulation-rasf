@@ -325,6 +325,7 @@ export const CSS = `
 .ga .g-regle b { color:#fff; }
 .ga { padding-bottom:110px !important; }
 .ga-repondre { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
+.ga-repondre.continuer { background:#16a34a; color:#fff; }
 .ga-repondre.alerte { bottom:140px; background:#dc2626; color:#fff; animation:ga-alerte 1.2s ease-in-out infinite; }
 /* Mini fenêtre animée : la souris clique sur 3 « Yes, and always allow », puis sur Submit (en boucle, 4 s). */
 .ga-mini { position:relative; flex-shrink:0; width:250px; background:#16161b; border:1px solid #52525b; border-radius:10px; padding:7px 9px 8px; color:#d4d4d8; font-size:10.5px; line-height:1.2; }
@@ -1144,6 +1145,8 @@ export function Guide() {
   const questionStyle = /style/i.test(message) && /barre lat|blocs|liste/i.test(message);
   const [stylesVus, setStylesVus] = useState(false);
   useEffect(() => { if (questionStyle && !stylesVus) { setStyles(true); setStylesVus(true); } }, [questionStyle, stylesVus]);
+  // L'IA vient de donner le lien de cette page et attend « continue » (AGENTS.md, étape 8) : bande verte.
+  const attendContinue = /\?guide/.test(message) && !/\?\s*$|personnaliser/im.test(message.replace(/https?:\/\/\S+/g, ""));
   // Ce qu'il faut répondre maintenant, en très court (bande orange en bas à gauche).
   const sousEnCours = encours >= 0 && ETAPES[encours].sous ? ETAPES[encours].sous.findIndex((_, k) => !sousFaites.has(`${encours}.${k + 1}`)) : -1;
   const quoi = [
@@ -1162,7 +1165,7 @@ export function Guide() {
       {/* En bas à gauche : une flèche animée vers la zone de message d'Antigravity (à gauche de ce navigateur) */}
       {/* Pendant que l'IA réfléchit, rien à répondre : la bande disparaît (sauf si une fenêtre d'autorisation attend). */}
       {(attente || !reflexion) && (
-        <div className={`ga-repondre${attente ? " alerte" : ""}`} role={attente ? "alert" : "note"}>
+        <div className={`ga-repondre${attente ? " alerte" : attendContinue ? " continuer" : ""}`} role={attente ? "alert" : "note"}>
         <span className="ga-fleche" aria-hidden="true">⬅</span>
         {attente && (
           <div className="ga-mini" aria-hidden="true">
@@ -1178,6 +1181,8 @@ export function Guide() {
         )}
         {attente ? (
           <span className="ga-repondre-texte"><b>🔐 Une petite fenêtre t'attend</b> <em>au-dessus de la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Clique sur 3 « Yes, and always allow », puis sur Submit.</span></span>
+        ) : attendContinue ? (
+          <span className="ga-repondre-texte"><b>✅ Ta page de progression est ouverte</b> <em>reviens dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Écris « continue », puis Entrée.</span></span>
         ) : (
           <span className="ga-repondre-texte"><b>Réponds à l'IA</b> <em>dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 {quoi}</span></span>
         )}
@@ -1226,7 +1231,7 @@ export function Guide() {
                       <span className="ga-points" aria-hidden="true"><i /><i /><i /></span>
                     </div>
                   )}
-                  {!fait && message && !(reflexion && !attente) && <MessageIA texte={message} />}
+                  {!fait && message && !attendContinue && !(reflexion && !attente) && <MessageIA texte={message} />}
                   {!fait && questionStyle && !(reflexion && !attente) && <button type="button" className="ga-action" onClick={() => setStyles(true)}>🎨 Voir les 3 styles</button>}
                   {e.sous && !fait && !message && (
                     <ol className="ga-sous">
