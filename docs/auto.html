@@ -64,6 +64,13 @@ body { padding-bottom:150px; }
 @keyframes a-bouton { 0%, 20% { box-shadow:0 0 0 0 rgba(245,158,11,0); } 24%, 30% { box-shadow:0 0 0 8px rgba(245,158,11,.45); } 34%, 100% { box-shadow:0 0 0 5px rgba(245,158,11,.25); } }
 @keyframes a-libd { 0%, 65% { opacity:1; } 67%, 100% { opacity:0; } }
 @keyframes a-liba { 0%, 65% { opacity:0; } 67%, 100% { opacity:1; } }
+.cartes { margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
+.carte-ag { background:#1c1c22; border:1px solid #3f3f46; border-radius:12px; padding:10px 12px; display:grid; gap:6px; font-size:13.5px; color:#a1a1aa; }
+.carte-ag b { color:#fff; font-size:14.5px; }
+.carte-ag .boutons { display:flex; gap:8px; }
+.carte-ag i { font-style:normal; border-radius:8px; padding:4px 10px; background:#2e2e36; color:#d4d4d8; font-weight:700; }
+.carte-ag i.bleu { background:#2563eb; color:#fff; opacity:.5; }
+.carte-ag i.dismiss { outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25); color:#fff; }
 </style>
 </head>
 <body>
@@ -72,8 +79,13 @@ body { padding-bottom:150px; }
   <div class="corps">
     <h1>Pour que l'IA travaille sans te demander la permission à chaque fois</h1>
     <ol class="etapes">
-      <li>En bas, à droite de la zone de message (à gauche du micro 🎤), clique sur <b class="cle">« Default »</b>.</li>
-      <li>Dans le petit menu qui s'ouvre, choisis <b class="cle">« Auto »</b>.
+      <li>Si de petites fenêtres en anglais s'affichent en bas à droite, ferme-les : clique sur <b class="cle">« Dismiss »</b>.
+        <div class="cartes" aria-hidden="true">
+          <div class="carte-ag"><b>Notification Preferences</b><span>Choose whether to be notified when the agent needs your attention or completes a task.</span><div class="boutons"><i class="bleu">Open Preferences</i><i class="dismiss">Dismiss 👈</i></div></div>
+          <div class="carte-ag"><b>Search Across Conversations</b><span>Search conversations with 🔍 in the top left.</span><div class="boutons"><i class="dismiss">Dismiss 👈</i></div></div>
+        </div>
+      </li>
+      <li>En bas, à droite de la zone de message, clique sur <b class="cle">« Default »</b>, puis choisis <b class="cle">« Auto »</b>.
         <div class="ecran" role="img" aria-label="La zone de message d'Antigravity : le menu Default ouvert, Auto à choisir">
           <div class="menu">
             <p><b>Request Review</b>Every command requires approval.</p>
