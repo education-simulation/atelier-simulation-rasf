@@ -154,7 +154,7 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
 
 ### Étape 1 — Personnalise ton interface, optionnel (questions à cliquer, une par une)
 **D'abord, une question à choix :** « Veux-tu personnaliser ton interface maintenant (son nom, sa couleur, son style…) ? » → 1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** (tu pourras tout changer plus tard) · 3. **😕 Je suis perdu·e**.
-- **« Non »** : ne pose aucune des 5 questions. Prends les réglages par défaut : nom « Mes simulations », couleur bleue `#0b4f94`, style « Barre latérale » (`"lateral"`), établissement vide, nom « Prof de sciences ». Écris en une ligne : « D'accord, ton interface s'appellera « Mes simulations », en bleu : tu pourras tout changer plus tard en me le demandant. » Coche les cinq sous-étapes `1.1` à `1.5` **et** `- [x] Étape 1 — Personnalise ton interface` dans `PROGRESSION.md`, puis enchaîne aussitôt sur l'étape 2.
+- **« Non »** : ne pose aucune des 5 questions. Prends les réglages par défaut : nom « Mes simulations », couleur bleue `#0b4f94`, style « Barre latérale » (`"lateral"`), établissement vide, nom « Prof de sciences » — écris-les dans `site.config.js` (`titre`, `couleur`, `style`, `etablissement`, `auteur`) même s'ils y sont déjà. Écris en une ligne : « D'accord, ton interface s'appellera « Mes simulations », en bleu : tu pourras tout changer plus tard en me le demandant. » Coche les cinq sous-étapes `1.1` à `1.5` **et** `- [x] Étape 1 — Personnalise ton interface` dans `PROGRESSION.md`, puis enchaîne aussitôt sur l'étape 2.
 - **« Oui »** : pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur le public visé, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
 1. **Le nom de ton interface ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse virtuelle », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mes simulations » ; **dis-le-lui en une ligne** au début du message suivant : « D'accord, ton interface s'appellera « Mes simulations » pour l'instant : tu pourras le changer plus tard. »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
@@ -170,16 +170,16 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
 - Puis coche `- [x] Étape 2 — Appliquer tes choix` et enchaîne **aussitôt** sur l'étape 3, sans question.
 
-### Étape 3 — Voir ton site sur ton ordinateur
-- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message court, avec le vrai lien, et rien de plus** (les menus et les boutons ronds sont expliqués dans la page guide) :
+### Étape 3 — Voir ton interface sur ton ordinateur
+- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message court, avec le vrai lien, et rien de plus** (les menus et les boutons ronds sont expliqués dans les pages d'étape) :
   ```
   **💬 Pour toi :**
 
-  👉 Ton site : http://localhost:NNNN/ (clique : il s'ouvre à droite, dans Antigravity)
+  👉 Ton interface : http://localhost:NNNN/ (clique : elle s'ouvre à droite, dans Antigravity)
 
-  C'est ton brouillon (localhost) : toi seul le vois. Ta page guide t'explique ses menus et ses boutons ronds.
+  C'est ton brouillon (localhost) : toi seul la vois.
 
-  Veux-tu le mettre en ligne maintenant ?
+  Veux-tu la mettre en ligne maintenant ?
 
   1. Oui
   2. Non, pas maintenant
@@ -187,7 +187,7 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
 
   ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Perdu·e ? Écris simplement « je suis perdu ».*
   ```
-- **« Oui »** → étape 4 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton site tranquillement. Quand tu voudras le mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
+- **« Oui »** → étape 4 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton interface tranquillement. Quand tu voudras la mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
 - Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
 
 ### Étape 4 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)

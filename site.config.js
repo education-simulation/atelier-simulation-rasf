@@ -19,7 +19,7 @@ export default {
   presentation: "Des simulations, support de mes cours : on change les réglages, on observe, on comprend.",
 
   // Ton nom ou ton pseudo, et ton établissement (laisse "" pour ne rien afficher).
-  auteur: "Prénom Nom",
+  auteur: "Prof de sciences",
   etablissement: "",
 
   // Couleur principale (titre, boutons, menu actif). Code couleur au format #RRGGBB.

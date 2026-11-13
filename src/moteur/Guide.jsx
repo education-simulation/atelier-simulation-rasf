@@ -323,14 +323,14 @@ export const CSS = `
 .ga .g-regle { color:#fde68a; background:#1f1a10; border:2px solid #f59e0b; border-radius:14px; padding:12px 16px; font-size:17px; }
 .ga .g-regle b { color:#fff; }
 .ga { padding-bottom:110px !important; }
-.ga-repondre { position:fixed; left:12px; bottom:12px; z-index:40; display:flex; align-items:center; gap:12px; max-width:min(760px, calc(100vw - 24px)); background:#f59e0b; color:#1f1300; border-radius:16px; padding:10px 14px; box-shadow:0 10px 30px rgba(15,23,42,.35); font-size:16px; line-height:1.35; }
+.ga-repondre { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
 .ga-fleche { font-size:34px; font-weight:800; line-height:1; animation:ga-fleche 1s ease-in-out infinite; }
 @keyframes ga-fleche { 0%,100% { transform:translateX(0); } 50% { transform:translateX(-12px); } }
 .ga-repondre-texte { flex:1; }
 .ga-repondre-texte b { font-size:19px; }
 .ga-repondre-texte em { font-style:normal; font-size:15px; }
 .ga-quoi { display:block; margin-top:3px; font-size:17px; font-weight:800; }
-.ga-decouvrir { flex-shrink:0; text-decoration:none; background:#0b0b0f; color:#fff; border-radius:12px; padding:10px 14px; font-weight:800; font-size:15px; }
+.ga-decouvrir { flex-shrink:0; text-decoration:none; background:#0b0b0f; color:#fff; border-radius:9px; padding:6px 10px; font-weight:800; font-size:13px; }
 .ga-decouvrir:hover { background:#27272a; }
 @media (max-width:600px) { .ga-repondre { flex-wrap:wrap; } }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
