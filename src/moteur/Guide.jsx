@@ -305,6 +305,23 @@ export const CSS = `
 .st-etape.fait .st-nom { color:#d4d4d8; }
 .st-etape.ici .st-nom { color:#fde68a; }
 @media (max-width:600px) { .st-nom { font-size:11px; } .st-rond { width:34px; height:34px; font-size:15px; } .st-etape::before { top:16px; } }
+.pe2 { gap:22px; }
+.pe2-titre { display:flex; align-items:center; justify-content:center; gap:14px; animation:g-fondu .4s; }
+.pe2-titre span { font-size:44px; }
+.pe2-titre h1 { margin:0; font:800 clamp(24px,4vw,34px)/1.15 'Outfit',sans-serif; color:#fff; text-align:center; }
+.pe2-flux { display:flex; justify-content:center; align-items:stretch; flex-wrap:wrap; gap:12px; }
+.pe2-case { position:relative; flex:1 1 120px; max-width:180px; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; background:#16161b; border:1px solid #3f3f46; border-radius:16px; padding:16px 10px; color:#e4e4e7; font-weight:800; font-size:15px; animation:pe2-entre .5s both; }
+.pe2-ic { font-size:40px; line-height:1; }
+.pe2-fleche { position:absolute; right:-13px; top:50%; transform:translateY(-50%); color:#f59e0b; font-size:20px; font-weight:800; z-index:1; }
+@keyframes pe2-entre { from { opacity:0; transform:translateY(10px) scale(.96); } to { opacity:1; transform:none; } }
+.pe2-styles { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.pe2-styles figure { margin:0; background:#16161b; border:1px solid #3f3f46; border-radius:12px; padding:8px; }
+.pe2-styles svg { width:100%; height:auto; display:block; border-radius:8px; }
+.pe2-styles figcaption { color:#d4d4d8; font-weight:800; font-size:14px; text-align:center; margin-top:6px; }
+.pe2-toi { margin:0; text-align:center; font-size:19px; font-weight:800; color:#fde68a; background:#1f1a10; border:2px solid #f59e0b; border-radius:14px; padding:14px 16px; }
+.pe2-liens { justify-content:center; }
+.pe2-retour { margin:0; text-align:center; color:#a1a1aa; font-size:15px; }
+@media (max-width:600px) { .pe2-styles { grid-template-columns:1fr; } .pe2-fleche { display:none; } }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
@@ -899,56 +916,66 @@ export function ContenuFenetres() {
 // Les pages d'aide en ligne (GitHub Pages) : la démo d'Antigravity, les fenêtres, et une page par étape (etape.html?n=1…6).
 export const AIDE_EN_LIGNE = "https://education-simulation.github.io/atelier-simulation-rasf/";
 
-// Ce que chaque page d'étape explique en plus du texte court (ETAPES).
+// Ce que montre la page de chaque étape : un schéma en pictogrammes (flux), une seule ligne « à toi », et des liens.
 const DETAILS = [
-  { quoi: ["L'IA Gemini copie ton interface simulations dans un dossier de ton ordinateur (le Bureau ou Documents).", "Elle installe ce qu'il faut pour la faire marcher, puis lance son aperçu (localhost).", "Elle t'ouvre ta page de progression de l'installation : garde-la ouverte, elle se met à jour toute seule."],
-    toi: ["Réponds aux questions de l'IA dans la zone de message d'Antigravity.", "Accepte les petites fenêtres en anglais : « Yes, and always allow », puis Submit."],
+  { flux: [["📦", "Copie sur ton ordinateur"], ["⚙️", "Installation"], ["📊", "Ta page de progression"]],
+    toi: "Réponds à l'IA, et accepte les petites fenêtres : « Yes, and always allow ».",
     liens: [["🧭 Découvrir Antigravity", "antigravity.html", "atelier-antigravity"], ["🔐 Donner ton autorisation (anglais)", "fenetres.html", "atelier-autorisation"]] },
-  { quoi: ["L'IA Gemini te pose 5 questions, une par une, pour personnaliser ton interface."], toi: ["Écris le numéro de ta réponse, ou ta réponse avec tes mots, puis Entrée."], styles: true },
-  { quoi: ["L'IA Gemini range tes réponses dans ton interface : son nom, sa couleur, son style, ton établissement et ton nom."], toi: ["Rien : attends quelques secondes."] },
-  { quoi: ["Ton interface s'ouvre dans le navigateur d'Antigravity, à droite. C'est ton brouillon : elle n'est que sur ton ordinateur."], toi: ["Promène-toi dans les menus.", "Dis à l'IA si tu veux le mettre en ligne maintenant ou plus tard."] },
-  { quoi: ["Vercel est un service gratuit qui met ton interface sur Internet, à une adresse que tu pourras partager (par exemple mon-site.vercel.app)."],
-    toi: ["Crée ton compte Vercel : choisis Hobby (gratuit), écris ton nom, puis « Continue with Google » avec ton compte d'établissement.", "Si Vercel te propose de relier GitHub ou de créer un projet : ne fais rien, reviens dans Antigravity.", "Pour la connexion, ta page de progression t'affiche un bouton et un code à vérifier."],
+  { flux: [["🏷️", "Le nom"], ["🎨", "La couleur"], ["🧩", "Le style"], ["🏫", "L'établissement"], ["👤", "Ton nom"]],
+    toi: "Écris le numéro de ta réponse, puis Entrée.", styles: true },
+  { flux: [["✍️", "Tes 5 réponses"], ["🛠️", "L'IA les range"], ["✨", "Ton interface personnalisée"]],
+    toi: "Rien : attends quelques secondes." },
+  { flux: [["💻", "Sur ton ordinateur"], ["👀", "Tu te promènes"], ["🔒", "Toi seul la vois"]],
+    toi: "Clique sur le lien de l'IA, puis dis-lui si tu veux la mettre en ligne." },
+  { flux: [["▲", "Ton compte Vercel"], ["🔑", "Connexion"], ["🌍", "En ligne, à partager"]],
+    toi: "Crée ton compte (Hobby, gratuit), puis « Continue with Google ».",
     liens: [["▲ Créer mon compte Vercel", "https://vercel.com/signup", "atelier-vercel"]] },
-  { quoi: ["Ton interface est prête. Tu peux maintenant la remplir : ta première simulation, renommer les menus, changer les textes…"], toi: ["Demande à l'IA ce que tu veux, avec tes mots. Le bouton 👆 de ton interface lui montre exactement ce que tu veux changer."] },
+  { flux: [["🧪", "Ta 1re simulation"], ["✏️", "Renommer les menus"], ["👆", "Montrer à l'IA"]],
+    toi: "Demande à l'IA ce que tu veux, avec tes mots." },
 ];
 
-// Une page d'étape (en ligne) : présentation de l'étape, dans le style de la page Antigravity.
+// Une page d'étape (en ligne) : même habillage que la page de progression, très visuelle, peu de texte.
 export function PageEtape({ n }) {
   const i = Math.min(ETAPES.length, Math.max(1, n || 1)) - 1;
   const e = ETAPES[i], d = DETAILS[i];
   const lien = (url) => (url.startsWith("http") ? url : AIDE_EN_LIGNE + url);
   useEffect(() => { document.title = `Étape ${i + 1} · ${e.titre}`; }, [i, e.titre]);
   return (
-    <div className="v pe">
-      <div className="pe-points">
-        {ETAPES.map((x, k) => (
-          <a key={k} href={`?n=${k + 1}`} className={`v-point${k === i ? " ici" : k < i ? " vu" : ""}`} data-titre={x.titre} aria-label={`Étape ${k + 1} : ${x.titre}`}>{k + 1}</a>
-        ))}
+    <div className="ga">
+      <div className="ga-fenetre">
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Étape {i + 1} sur {ETAPES.length}</b><em>infos</em></div>
+        <div className="ga-corps pe2">
+          <ol className="st" aria-label="Les étapes">
+            {ETAPES.map((x, k) => (
+              <li key={k} className={`st-etape ${k < i ? "fait" : k === i ? "ici" : "avenir"}`}>
+                <a href={`?n=${k + 1}`} title={x.titre}><span className="st-rond">{k < i ? "✓" : k + 1}</span></a>
+                <span className="st-nom">{x.titre}</span>
+              </li>
+            ))}
+          </ol>
+          <div className="pe2-titre" key={i}>
+            <span aria-hidden="true">{e.emoji}</span>
+            <h1>{e.titre}</h1>
+          </div>
+          <div className="pe2-flux" key={`f${i}`}>
+            {d.flux.map(([ic, t], k) => (
+              <div key={k} className="pe2-case" style={{ animationDelay: `${k * 0.15}s` }}>
+                <span className="pe2-ic" aria-hidden="true">{ic}</span>
+                <span>{t}</span>
+                {k < d.flux.length - 1 && <span className="pe2-fleche" aria-hidden="true">→</span>}
+              </div>
+            ))}
+          </div>
+          {d.styles && (
+            <div className="pe2-styles">
+              {STYLES_SITE.map((st) => <figure key={st.id}><MiniSite id={st.id} /><figcaption>{st.nom}</figcaption></figure>)}
+            </div>
+          )}
+          <p className="pe2-toi"><span aria-hidden="true">✍️</span> {d.toi}</p>
+          {d.liens && <div className="ga-liens pe2-liens">{d.liens.map(([t, u, onglet]) => <a key={u} href={lien(u)} target="_blank" rel="noopener noreferrer">{t}</a>)}</div>}
+          <p className="pe2-retour">✅ Reviens dans Antigravity quand tu as vu.</p>
+        </div>
       </div>
-      <div className="v-accueil pe-carte">
-        <span className="g-main" aria-hidden="true">{e.emoji}</span>
-        <p className="pe-num">Étape {i + 1} sur {ETAPES.length}</p>
-        <h1>{e.titre}</h1>
-        <p>{e.texte}</p>
-      </div>
-      <div className="pe-deux">
-        <section className="pe-bloc"><h2>⚙️ Ce qui se passe</h2><ul>{d.quoi.map((t, k) => <li key={k}>{t}</li>)}</ul></section>
-        <section className="pe-bloc toi"><h2>✍️ Ce que tu fais</h2><ul>{d.toi.map((t, k) => <li key={k}>{t}</li>)}</ul></section>
-      </div>
-      {e.sous && (
-        <section className="pe-bloc"><h2>Les 5 questions</h2>
-          <ol className="pe-questions">{e.sous.map(([t, a], k) => <li key={k}><b>{t}</b><span>{a}</span></li>)}</ol>
-        </section>
-      )}
-      {e.infos && <section className="pe-bloc"><h2>À savoir</h2><ul>{e.infos.map((t, k) => <li key={k}>{t}</li>)}</ul></section>}
-      {d.styles && (
-        <section className="pe-bloc"><h2>🎨 Les 3 styles de ton site</h2>
-          <div className="g-styles">{STYLES_SITE.map((st) => <figure key={st.id} className="g-style"><MiniSite id={st.id} /><figcaption><b>{st.nom}</b><span>{st.texte}</span></figcaption></figure>)}</div>
-        </section>
-      )}
-      {d.liens && <div className="v-commandes" style={{ justifyContent: "center" }}>{d.liens.map(([t, u, onglet]) => <a key={u} className="v-bouton bleu" href={lien(u)} target={onglet} rel="noreferrer">{t}</a>)}</div>}
-      <p className="aide-retour">✅ Quand tu as fini de lire, reviens dans Antigravity.</p>
     </div>
   );
 }
@@ -971,7 +998,6 @@ export function Guide() {
     return () => window.removeEventListener("keydown", touche);
   }, [mail]);
   const pageEtape = (i) => `${AIDE_EN_LIGNE}etape.html?n=${i + 1}`;
-  const ongletEtape = (i) => `atelier-etape-${i + 1}`;   // un onglet par étape : rouvert s'il existe déjà, sinon un nouvel onglet
   useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
 
   return (
@@ -991,7 +1017,7 @@ export function Guide() {
               const rond = <span className="st-rond" aria-hidden="true">{etat === "fait" ? "✓" : i + 1}</span>;
               return (
                 <li key={i} className={`st-etape ${etat}`} aria-current={etat === "ici" ? "step" : undefined}>
-                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer" title="Infos sur cette étape">{rond}</a>}
+                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target="_blank" rel="noopener noreferrer" title="Infos sur cette étape">{rond}</a>}
                   <span className="st-nom">{e.titre}</span>
                 </li>
               );
@@ -1009,7 +1035,7 @@ export function Guide() {
                       <h2>{i + 1}. {e.titre} {!fait && <span className="ga-badge">en cours</span>}</h2>
                       {!fait && <p>{e.texte}</p>}
                     </div>
-                    <a className="ga-voir" href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer" title="Ce qui se passe à cette étape et ce que tu fais">ℹ️ Infos</a>
+                    <a className="ga-voir" href={pageEtape(i)} target="_blank" rel="noopener noreferrer" title="Ce qui se passe à cette étape et ce que tu fais">ℹ️ Infos</a>
                   </div>
                   {e.sous && !fait && (
                     <ol className="ga-sous">
@@ -1043,8 +1069,8 @@ export function Guide() {
           <div className="ga-outils">
             <p>✍️ Pour répondre à l'IA : écris le <b>numéro</b> (ou ta réponse avec tes mots) dans la zone de message d'Antigravity, puis Entrée. Perdu·e ? Écris <b>« je suis perdu »</b>.</p>
             <div className="ga-liens">
-              <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="atelier-antigravity" rel="noreferrer">🧭 Découvrir Antigravity</a>
-              <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="atelier-autorisation" rel="noreferrer">🔐 Donner ton autorisation (anglais)</a>
+              <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Découvrir Antigravity</a>
+              <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="_blank" rel="noopener noreferrer">🔐 Donner ton autorisation (anglais)</a>
               <button type="button" onClick={() => setMail(true)}>📧 Recevoir les instructions sur mon mail RASF</button>
             </div>
           </div>

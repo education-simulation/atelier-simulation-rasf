@@ -31,6 +31,6 @@ function Fenetres() {
 createRoot(document.getElementById('root')).render(
   <>
     <style>{CSS + PLUS}</style>
-    {page === 'antigravity' ? <div className="g"><VisiteAntigravity /></div> : page === 'etape' ? <div className="g"><PageEtape n={Number(new URLSearchParams(location.search).get('n')) || 1} /></div> : <Fenetres />}
+    {page === 'antigravity' ? <div className="g"><VisiteAntigravity /></div> : page === 'etape' ? <div><PageEtape n={Number(new URLSearchParams(location.search).get('n')) || 1} /></div> : <Fenetres />}
   </>,
 )
