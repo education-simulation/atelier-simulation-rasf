@@ -254,6 +254,9 @@ export const CSS = `
 .v-bouton.bleu { background:#2563eb; color:#fff; } .v-bouton.orange { background:#f59e0b; color:#1f1300; }
 .v-points { display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
 .v-point { all:unset; cursor:pointer; min-width:28px; height:28px; border-radius:14px; display:grid; place-items:center; font-size:12px; font-weight:800; background:#e2e8f0; color:#475569; transition:all .2s; }
+.v-point { position:relative; }
+.v-point::after { content:attr(data-titre); position:absolute; bottom:calc(100% + 8px); left:50%; transform:translateX(-50%) translateY(4px); white-space:nowrap; background:#0f172a; color:#fff; font-size:13px; font-weight:700; padding:6px 10px; border-radius:8px; opacity:0; pointer-events:none; transition:all .15s; z-index:5; }
+.v-point:hover::after, .v-point:focus-visible::after { opacity:1; transform:translateX(-50%); }
 .v-point.vu { background:#fde68a; color:#92400e; } .v-point.ici { background:#f59e0b; color:#1f1300; transform:scale(1.15); }
 .v-fini { margin:0; background:#dcfce7; border:2px solid #16a34a; border-radius:14px; padding:12px 16px; font-size:17px; color:#14532d; animation:v-entre .45s; }
 .v-explorer { width:100%; max-height:none; overflow:visible; }
@@ -659,7 +662,7 @@ function DemoAntigravity({ explorer }) {
         <button type="button" className="v-bouton" onClick={() => { setAuto(false); aller(i - 1); }} disabled={i === 0} style={i === 0 ? { opacity: .4, cursor: "default" } : null}>‹ Précédent</button>
         <div className="v-points">
           {DEMO.map((e, n) => (
-            <button key={n} type="button" className={`v-point${n === i ? " ici" : n < i ? " vu" : ""}`} onClick={() => { setAuto(false); aller(n); }} aria-label={`Étape ${n + 1} : ${e.titre}`}>{n + 1}</button>
+            <button key={n} type="button" className={`v-point${n === i ? " ici" : n < i ? " vu" : ""}`} onClick={() => { setAuto(false); aller(n); }} aria-label={`Étape ${n + 1} : ${e.titre}`} data-titre={e.titre}>{n + 1}</button>
           ))}
         </div>
         <button type="button" className="v-bouton" onClick={() => setAuto((a) => !a)}>{auto ? "⏸ Pause" : "▶ Lecture"}</button>
