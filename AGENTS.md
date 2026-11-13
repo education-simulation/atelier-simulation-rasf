@@ -82,10 +82,10 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents**. **Sous la ligne ✍️*
 - Bureau : `Desktop` sur Mac ; sur Windows, souvent `C:\Users\<nom>\OneDrive\Bureau` (prends le vrai chemin).
 - **Ne touche JAMAIS à un dossier qui existe déjà** : la personne peut déjà avoir un site (créé dans une autre conversation), qu'il ne faut ni écraser, ni remplir, ni supprimer. **Ne cherche pas à vérifier toi-même** si le dossier existe (dans le bac à sable, le Bureau paraît vide : un `ls` y répond « rien » même quand le dossier est là). C'est la **copie** qui vérifie, à l'étape 4.
 
-**4. La copie** — **toujours avec `git clone`, jamais avec `mv`** (même si le modèle est déjà dans `.gemini/antigravity/scratch`), hors du bac à sable :
-`git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf <dossier>/mon-site`
-- Si git répond « **already exists and is not an empty directory** » : ce dossier est un autre site, **n'y touche pas**. Recommence aussitôt avec `mon-site-2`, puis `mon-site-3`… jusqu'à ce que la copie réussisse. Sans rien demander.
-- Garde le nom qui a réussi pour tout le reste (installation, aperçu, page guide, `PROGRESSION.md`, phrase de reprise).
+**4. La copie** — **toujours avec `git clone`, jamais avec `mv`** (même si le modèle est déjà dans `.gemini/antigravity/scratch`), hors du bac à sable, **en une seule commande** qui choisit elle-même le premier nom libre (`mon-site`, sinon `mon-site-2`, `mon-site-3`…) puis affiche le nom retenu :
+`cd <dossier> && n=mon-site; i=2; while [ -e "$n" ]; do n=mon-site-$i; i=$((i+1)); done; git clone --depth 1 https://github.com/education-simulation/atelier-simulation-rasf "$n" && echo "NOM=$n"`
+- **Ne tente jamais les noms un par un** (une commande par nom) : sur un ordinateur qui a déjà plusieurs sites, cela prend plusieurs minutes. Un dossier qui existe est un autre site : **n'y touche pas**.
+- Garde le nom affiché (`NOM=…`) pour tout le reste (installation, aperçu, page guide, `PROGRESSION.md`, phrase de reprise).
 - `git clone` ne remplit jamais un dossier existant : c'est ce qui protège les autres sites. `mv`, lui, rangerait la copie **dans** l'autre site : interdit.
 
 **5. L'installation** — `npm install`, avec le dossier du site comme dossier de travail, hors du bac à sable, **au premier plan** : attends qu'il ait fini.
