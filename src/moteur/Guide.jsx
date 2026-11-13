@@ -314,7 +314,7 @@ function Pastille({ id, actif, setActif }) {
   );
 }
 
-function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastilles = true, conv = 0, replie = false, ferme = false, curseur = null, etiquettes = false }) {
+function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastilles = true, conv = 0, replie = false, ferme = false, curseur = null, etiquettes = false, niveau = "Medium" }) {
   const t = { fontFamily: "Nunito, system-ui, sans-serif" };
   // zones : la démo passe ses propres rectangles (plusieurs possibles) ; sinon, la zone du numéro actif.
   const liste = zones || (actif && ZONES[actif] ? [ZONES[actif]] : []);
@@ -358,7 +358,7 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
       {/* zone de message */}
       <rect x="160" y="340" width="300" height="74" rx="14" fill="#1e1e25" stroke="#3f3f46" />
       <text x="176" y="366" fontSize="11" fill="#71717a" style={t}>Ask anything…   ← écris ici</text>
-      <text x="176" y="401" fontSize="10.5" fill="#d4d4d8" style={t}>+   Gemini 3.8 Flash ⌃</text>
+      <text x="176" y="401" fontSize="10.5" fill="#d4d4d8" style={t}>+   Gemini 3.8 Flash <tspan fill="#a1a1aa">{niveau}</tspan> ⌃</text>
       <text x="360" y="401" fontSize="10.5" fill="#d4d4d8" style={t}>Auto   🎤</text>
       <circle cx="440" cy="397" r="10" fill="#fff" /><text x="440" y="401" fontSize="11" textAnchor="middle" fill="#0b0b0f" style={t}>↑</text>
       {/* volet de droite */}
@@ -384,7 +384,7 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
           <rect x="164" y="196" width="230" height="186" rx="10" fill="#1c1c22" stroke="#52525b" />
           <text x="176" y="214" fontSize="9.5" fill="#a1a1aa" style={t}>Model</text>
           <rect x="170" y="221" width="218" height="22" rx="6" fill={actif === "4" ? "#f59e0b" : "#2e2e36"} />
-          <text x="178" y="236" fontSize="10.5" fontWeight="800" fill={actif === "4" ? "#1f1300" : "#fff"} style={t}>Gemini 3.8 Flash  Medium</text>
+          <text x="178" y="236" fontSize="10.5" fontWeight="800" fill={actif === "4" ? "#1f1300" : "#fff"} style={t}>Gemini 3.8 Flash  {niveau}</text>
           <text x="380" y="236" fontSize="11" fill={actif === "4" ? "#1f1300" : "#a1a1aa"} textAnchor="end" style={t}>›</text>
           <text x="178" y="260" fontSize="10" fill="#d4d4d8" style={t}>Claude Sonnet 4.6 (Thinking)</text>
           <text x="178" y="280" fontSize="10" fill="#d4d4d8" style={t}>Claude Opus 4.6 (Thinking)</text>
@@ -419,11 +419,13 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
       {actif === "4" && (
         <g>
           <rect x="398" y="214" width="138" height="86" rx="10" fill="#1c1c22" stroke="#f59e0b" strokeWidth="1.5" />
-          <text x="410" y="236" fontSize="10.5" fill="#e4e4e7" style={t}>Low <tspan fill="#a1a1aa">· faible</tspan></text>
-          <rect x="404" y="244" width="126" height="22" rx="6" fill="#3f3f46" />
-          <text x="410" y="259" fontSize="10.5" fontWeight="800" fill="#fff" style={t}>Medium <tspan fill="#d4d4d8" fontWeight="400">· moyen</tspan></text>
-          <text x="522" y="259" fontSize="10.5" fill="#fff" textAnchor="end" style={t}>✓</text>
-          <text x="410" y="288" fontSize="10.5" fill="#e4e4e7" style={t}>High <tspan fill="#a1a1aa">· élevé</tspan></text>
+          {[["Low", "faible", 222], ["Medium", "moyen", 246], ["High", "élevé", 270]].map(([n, fr, y]) => (
+            <g key={n}>
+              {n === niveau && <rect x="404" y={y} width="126" height="22" rx="6" fill="#3f3f46" style={{ transition: "all .3s" }} />}
+              <text x="410" y={y + 15} fontSize="10.5" fontWeight={n === niveau ? 800 : 400} fill={n === niveau ? "#fff" : "#e4e4e7"} style={t}>{n} <tspan fill="#a1a1aa" fontWeight="400">· {fr}</tspan></text>
+              {n === niveau && <text x="522" y={y + 15} fontSize="10.5" fill="#fff" textAnchor="end" style={t}>✓</text>}
+            </g>
+          ))}
         </g>
       )}
       {/* Settings : la fenêtre qui s'ouvre, ton nom, puis « Sign Out » (montré pour 8) */}
@@ -547,7 +549,7 @@ export function FenetreAntigravity({ fermer }) {
 const Z = {
   gauche: { x: 0, y: 32, w: 150, h: 398 }, milieu: { x: 152, y: 32, w: 322, h: 398 }, droite: { x: 476, y: 32, w: 284, h: 398 },
   reduire: { x: 59, y: 3, w: 28, h: 26 }, historique: { x: 158, y: 40, w: 312, h: 200 }, prompt: { x: 160, y: 340, w: 300, h: 40 },
-  reglages: { x: 164, y: 386, w: 268, h: 24 }, modele: { x: 164, y: 386, w: 122, h: 24 }, auto: { x: 352, y: 386, w: 56, h: 24 },
+  reglages: { x: 164, y: 386, w: 268, h: 24 }, modele: { x: 164, y: 386, w: 158, h: 24 }, auto: { x: 352, y: 386, w: 56, h: 24 },
   menuModeles: { x: 164, y: 196, w: 230, h: 186 }, niveaux: { x: 398, y: 214, w: 138, h: 86 }, usage: { x: 398, y: 262, w: 210, h: 112 }, conversations: { x: 6, y: 96, w: 138, h: 52 },
   onglets: { x: 478, y: 34, w: 236, h: 22 }, adresse: { x: 480, y: 60, w: 276, h: 20 }, fermer: { x: 702, y: 3, w: 26, h: 26 },
   barre: { x: 468, y: 60, w: 16, h: 330 }, settings: { x: 6, y: 400, w: 84, h: 22 }, fenetreSettings: { x: 12, y: 232, w: 250, h: 160 },
@@ -559,7 +561,7 @@ const DEMO = [
   { titre: "② Au milieu : Antigravity", texte: "C'est ici que tu parles avec l'IA Gemini : elle t'écrit, tu lui réponds.", zones: [Z.milieu] },
   { titre: "L'historique", texte: "Les messages de la conversation, du plus ancien au plus récent. Ceux qui sont pour toi commencent par 💬 Pour toi. Le reste (« Ran commands »…) est technique : tu peux l'ignorer.", zones: [Z.historique] },
   { titre: "La zone de prompt", texte: "Tout en bas, « Ask anything… » : écris ici ta réponse ou ta demande (ton « prompt »), puis appuie sur Entrée. Le micro 🎤 permet de dicter.", zones: [Z.prompt] },
-  { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, 3 niveaux : Low (rapide), Medium, High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], bulle: { x: 452, y: 308 }, images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }] },
+  { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, choisis un niveau : Low (rapide), Medium ou High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], bulle: { x: 452, y: 308 }, images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 440, y: 232 } }, { actif: "4", niveau: "Low", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 440, y: 232 } }, { niveau: "Low", curseur: { x: 230, y: 398 } }], boucle: false },
   { titre: "Ton usage", texte: "Dans ce même menu, « View Usage » montre ce qu'il te reste pour la semaine, pour chaque famille de modèles.", zones: [Z.modele, Z.menuModeles, Z.usage], images: [{ actif: "5", curseur: { x: 260, y: 352 } }] },
   { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres en anglais). Laisse-le tel quel.", zones: [Z.auto] },
   { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
@@ -570,6 +572,7 @@ const DEMO = [
   { titre: "Régler la largeur", texte: "La fine barre verticale entre le milieu et le navigateur se déplace : garde le bouton de la souris appuyé dessus et glisse à gauche ou à droite.", zones: [Z.barre], images: [{ actif: "6c", curseur: { x: 476, y: 244 } }, { actif: "6c", curseur: { x: 420, y: 244 } }, { actif: "6c", curseur: { x: 530, y: 244 } }] },
   { titre: "Quitter Antigravity", texte: "En bas à gauche : Settings, puis ton nom, puis « Sign Out » pour te déconnecter. Pour fermer Antigravity : Cmd + Q (Mac) ou la croix de la fenêtre (Windows).", zones: [Z.settings, Z.fenetreSettings], bulle: { x: 300, y: 250 }, images: [{ curseur: { x: 40, y: 412 } }, { actif: "8", curseur: { x: 200, y: 296 } }, { actif: "8", curseur: { x: 190, y: 356 } }] },
 ];
+const dureeEtape = (e) => Math.max(dureeLecture(e.texte), e.boucle === false ? e.images.length * 1000 + 1500 : 0);
 const dureeLecture = (texte) => Math.max(3, Math.round(texte.split(/\s+/).length / 6)) * 1000;
 
 // Place la bulle d'explication SUR l'image, tout près de la partie éclairée (en % du schéma 760 × 430).
@@ -599,12 +602,12 @@ function DemoAntigravity({ explorer }) {
   const aller = (n) => { setImg(0); setI(Math.max(0, Math.min(DEMO.length, n))); };
   useEffect(() => { // passage automatique à l'étape suivante
     if (!etape || !auto) return;
-    const t = setTimeout(() => { setImg(0); setI((n) => n + 1); }, dureeLecture(etape.texte));
+    const t = setTimeout(() => { setImg(0); setI((n) => n + 1); }, dureeEtape(etape));
     return () => clearTimeout(t);
   }, [i, auto, etape]);
   useEffect(() => { // la petite animation de l'étape (images qui s'enchaînent en boucle)
     if (!etape?.images) return;
-    const t = setInterval(() => setImg((k) => (k + 1) % etape.images.length), 1000);
+    const t = setInterval(() => setImg((k) => (etape.boucle === false ? Math.min(k + 1, etape.images.length - 1) : (k + 1) % etape.images.length)), 1000);
     return () => clearInterval(t);
   }, [i, etape]);
   useEffect(() => {
@@ -632,7 +635,7 @@ function DemoAntigravity({ explorer }) {
         <div className="v-bulle" key={i} aria-live="polite" style={placerBulle(etape.zones, etape.etiquettes, etape.bulle)}>
           <h2>{etape.titre}</h2>
           <p>{etape.texte}</p>
-          {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeLecture(etape.texte)}ms` }} /></div>}
+          {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeEtape(etape)}ms` }} /></div>}
         </div>
       </div>
       <div className="v-commandes">
