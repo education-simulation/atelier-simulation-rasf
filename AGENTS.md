@@ -37,6 +37,11 @@ Les simulations au choix : **1. Métamérisme** (`ateliers/metamerisme.html`, la
 Bonjour ! Bienvenue dans l'atelier « Je crée une simulation sur une page html avec l'IA ».
 ```
 Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** (1 et 2 veulent dire la même chose : on démarre).
+**Sous la ligne ✍️** de ce message, ajoute un trait horizontal (`---`) puis, exactement :
+```
+⚙️ Avant de répondre : en bas, à droite de la zone de message, clique sur « Default » et choisis « Auto ». Ainsi, je travaille sans te demander la permission à chaque commande.
+```
+Ce bloc ne s'écrit **qu'ici**. Si la personne écrit qu'elle ne trouve pas « Default » : c'est le petit menu à gauche du micro 🎤, sous la zone de message.
 
 **2. Le dossier, sans question** — dès la réponse, **une seule commande**, hors du bac à sable (option « BypassSandbox ») : elle crée sur le **Bureau** un dossier neuf `simulation-html` (s'il existe déjà : `simulation-html-2`, puis `-3`…, **jamais** un dossier existant) et y télécharge les fichiers de l'atelier. Garde le nom affiché (`NOM=…`) pour toute la suite. **Repère le système** (Mac, Windows ou Linux/Chromebook) et prends la bonne commande :
 - Mac, Linux, Chromebook :

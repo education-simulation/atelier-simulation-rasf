@@ -9,13 +9,14 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
 ### Pour commencer
 
 1. Installe **Antigravity** et connecte-toi avec ton compte d'établissement.
-2. Ouvre une nouvelle conversation et colle cette phrase :
+2. Ouvre une nouvelle conversation. En bas, à droite de la zone de message (à gauche du micro 🎤), clique sur **« Default »** et choisis **« Auto »** : l'IA pourra travailler sans te demander la permission à chaque commande.
+3. Colle cette phrase :
 
    ```text
    Lis le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf, puis suis-le pour me guider.
    ```
 
-3. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
+4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
 
 ### Les fois suivantes
 
