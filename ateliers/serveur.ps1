@@ -3,7 +3,7 @@
 #  Sert les fichiers de SON dossier sur http://localhost:<port>/ (pour les ouvrir dans le navigateur d'Antigravity,
 #  qui n'ouvre pas les adresses file://). Seulement pour cet ordinateur, jamais pour le réseau.
 #  Lancement : powershell -NoProfile -ExecutionPolicy Bypass -File serveur.ps1
-#  (port 5500, ou le suivant libre) — affiche « URL=http://localhost:PORT/progression.html ». Ne pas modifier.
+#  (port 5500, ou le suivant libre) — affiche « URL=http://localhost:PORT/ ». Ne pas modifier.
 # ============================================================
 param([int]$Port = 5500)
 $dossier = Split-Path -Parent $MyInvocation.MyCommand.Path
@@ -14,7 +14,7 @@ for ($essai = 0; $essai -lt 50; $essai++) {
   try { $l.Start(); $ecoute = $l; $Port = $Port + $essai; break } catch { $l.Close() }
 }
 if (-not $ecoute) { Write-Output "Aucun port libre"; exit 1 }
-Write-Output "URL=http://localhost:$Port/progression.html"
+Write-Output "URL=http://localhost:$Port/"
 
 $types = @{ '.html' = 'text/html; charset=utf-8'; '.js' = 'text/javascript; charset=utf-8'; '.css' = 'text/css; charset=utf-8';
   '.json' = 'application/json; charset=utf-8'; '.csv' = 'text/csv; charset=utf-8'; '.txt' = 'text/plain; charset=utf-8';
@@ -25,7 +25,7 @@ while ($ecoute.IsListening) {
   $rep = $ctx.Response
   try {
     $chemin = [System.Uri]::UnescapeDataString($ctx.Request.Url.AbsolutePath)
-    if ($chemin -eq '/') { $chemin = '/progression.html' }
+    if ($chemin -eq '/') { $chemin = '/metamerisme.html' }
     $fichier = Join-Path $dossier ($chemin.TrimStart('/').Replace('/', '\'))
     $plein = [System.IO.Path]::GetFullPath($fichier)
     if ($chemin -notmatch '\.\.' -and $plein.StartsWith($dossier) -and (Test-Path -LiteralPath $plein -PathType Leaf)) {

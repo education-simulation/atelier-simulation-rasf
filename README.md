@@ -4,7 +4,7 @@
 
 Un atelier pour apprendre à créer une **page HTML de simulation** en parlant à l'agent d'**Antigravity** (l'application gratuite de Google, avec ton compte Google d'établissement). **Rien à installer** : une simulation est un seul fichier `.html`, qui s'ouvre d'un double-clic dans le navigateur.
 
-Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
+Pour l'instant : **une simulation sur le métamérisme**, à partir d'une page modèle.
 
 ### Pour commencer
 
@@ -19,6 +19,14 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
+
+### Avec ChatGPT, Claude, Le Chat (Mistral) ou Gemini
+
+Pas de dossier ni de serveur : l'IA affiche la page dans son aperçu (« canvas » ou « artefact ») et la modifie là. Colle cette phrase (l'IA doit pouvoir lire une adresse web) :
+
+```text
+Lis le fichier AGENTS.md à cette adresse : https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/AGENTS.md, puis suis-le pour me guider.
+```
 
 ### Les fois suivantes
 
