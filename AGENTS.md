@@ -30,6 +30,8 @@ Les simulations au choix : **1. Métamérisme** (`ateliers/metamerisme.html`, la
 
 ## Le démarrage, dans cet ordre
 
+> ⚠️ **Au tout premier « continue » de la personne, ton premier message est TOUJOURS la vérification de la configuration (🔎, voir étape 0), jamais la présentation.**
+
 **0. Passer en « Auto », avant tout** — ton **tout premier** message, **avant la moindre commande** (une commande, en mode « Default », ouvrirait une fenêtre d'autorisation en anglais que la personne ne comprend pas). Aéré exactement ainsi :
 ```
 **💬 Pour toi :**
@@ -53,7 +55,7 @@ Message, aéré exactement ainsi :
 👀 Mode : en bas à droite de la zone de message, tu dois lire « 🛡 Auto ».
 ```
 Choix : 1. **C'est bon, je vois « Auto »** · 2. **Je vois autre chose**. Si le modèle n'est pas Gemini 3.8 Flash (Low), remplace la ligne ✅ par « ⚠️ Modèle : <le modèle trouvé> — refais l'étape 2 de la page de configuration (Gemini 3.8 Flash, niveau Low) » avec le lien de la page. « Je vois autre chose » : redonne le lien de la page (étape 3, le mode Auto), puis repose la question. Quand tout est bon : étape 1.
-**Si la phrase de départ t'a déjà fait donner ce lien** (« Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity »… ») et que la personne a répondu : ne le redonne pas, passe directement à l'étape 1.
+**Si la phrase de départ t'a déjà fait donner ce lien** : ne le redonne pas. Mais quand la personne écrit « continue », **fais toujours la vérification de la configuration ci-dessus** (message 🔎), avant la présentation.
 
 **1. La présentation** — question à choix, aérée exactement ainsi :
 ```
