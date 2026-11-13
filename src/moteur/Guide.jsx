@@ -330,6 +330,17 @@ export const CSS = `
 .ga { padding-bottom:110px !important; }
 .ga-repondre { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
 .ga-repondre.alerte { bottom:140px; background:#dc2626; color:#fff; animation:ga-alerte 1.2s ease-in-out infinite; }
+/* Mini fenêtre animée : la souris clique sur 3 « Yes, and always allow », puis sur Submit (en boucle, 4 s). */
+.ga-mini { position:relative; flex-shrink:0; width:250px; background:#16161b; border:1px solid #52525b; border-radius:10px; padding:7px 9px 8px; color:#d4d4d8; font-size:10.5px; line-height:1.2; }
+.ga-mini p { margin:0; }
+.ga-mini-titre { color:#fff; font-weight:800; margin-bottom:4px !important; }
+.ga-mini-l { padding:3px 5px; border-radius:5px; position:relative; }
+.ga-mini-3 { animation:ga-mini-3 4s infinite; }
+.ga-mini-submit { position:absolute; right:2px; top:0; background:#2563eb; color:#fff; font-weight:800; border-radius:8px; padding:2px 7px; animation:ga-mini-sub 4s infinite; }
+.ga-mini-souris { position:absolute; left:0; top:0; animation:ga-mini-souris 4s infinite; filter:drop-shadow(0 1px 1px rgba(0,0,0,.5)); }
+@keyframes ga-mini-souris { 0% { transform:translate(200px,10px); } 25% { transform:translate(90px,62px); } 32% { transform:translate(90px,64px) scale(.85); } 38% { transform:translate(90px,62px); } 62% { transform:translate(222px,84px); } 69% { transform:translate(222px,86px) scale(.85); } 75%,100% { transform:translate(222px,84px); } }
+@keyframes ga-mini-3 { 0%,30% { background:transparent; color:#d4d4d8; } 33%,100% { background:#f59e0b; color:#1f1300; font-weight:800; } }
+@keyframes ga-mini-sub { 0%,66% { filter:none; transform:none; } 69% { filter:brightness(1.4); transform:scale(.92); } 73%,100% { filter:none; transform:none; } }
 /* La fenêtre d'autorisation s'affiche AU-DESSUS de la zone de message d'Antigravity : la bande rouge monte à sa hauteur. */
 @keyframes ga-alerte { 0%,100% { background:#dc2626; } 50% { background:#991b1b; } }
 .ga-fleche { font-size:34px; font-weight:800; line-height:1; animation:ga-fleche 1s ease-in-out infinite; }
@@ -1115,12 +1126,24 @@ export function Guide() {
       {(attente || !reflexion) && (
         <div className={`ga-repondre${attente ? " alerte" : ""}`} role={attente ? "alert" : "note"}>
         <span className="ga-fleche" aria-hidden="true">⬅</span>
+        {attente && (
+          <div className="ga-mini" aria-hidden="true">
+            <p className="ga-mini-titre">📄 Allow access to this path?</p>
+            <p className="ga-mini-l">1 Yes, allow this time</p>
+            <p className="ga-mini-l">2 Yes, and always allow in this conversation</p>
+            <p className="ga-mini-l ga-mini-3">3 Yes, and always allow</p>
+            <p className="ga-mini-l ga-mini-4">4 No <span className="ga-mini-submit">Submit ↵</span></p>
+            <span className="ga-mini-souris">
+              <svg viewBox="0 0 14 21" width="14" height="21"><path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#000" strokeWidth="1.3" /></svg>
+            </span>
+          </div>
+        )}
         {attente ? (
           <span className="ga-repondre-texte"><b>🔐 Une petite fenêtre t'attend</b> <em>au-dessus de la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Clique sur 3 « Yes, and always allow », puis sur Submit.</span></span>
         ) : (
           <span className="ga-repondre-texte"><b>Réponds à l'IA</b> <em>dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 {quoi}</span></span>
         )}
-        <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>
+        {!attente && <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>}
         </div>
       )}
       <div className="ga-fenetre">
