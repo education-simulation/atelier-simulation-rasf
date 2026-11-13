@@ -849,6 +849,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   const parNum = Object.fromEntries(liste.map((x) => [x.num, x.etape]));
   const remiseAZero = () => {
     ecrire(`${page}.ouvertesN`, [0, 1]); ecrire(`${page}.faitesN`, []); ecrire(`${page}.valideesVuesN`, []);
+    ecrire(`${page}.atelierIntro`, []);   // l'atelier repart de sa 1re étape (« L'état actuel de la page »)
     [0, ...etapes.map((_, i) => i + 1)].forEach((n) => ecrire(`${page}.indices.${n}`, 0));
   };
   // Page d'atelier (…/?atelier=<id>, sur l'ordinateur) : la vue « progression de l'atelier ».
