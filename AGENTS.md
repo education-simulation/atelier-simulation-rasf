@@ -36,13 +36,13 @@ Tu es l'agent d'Antigravity. Tu aides une **prof débutante** à installer son s
 ```
 **💬 Pour toi :**
 
-Bonjour ! On va créer ton site de simulations ensemble, en 15 minutes environ.
+Bonjour ! Bienvenue dans l'atelier « Je crée des simulations en ligne pour illustrer mon cours ».
 
-Je le copie sur ton ordinateur, puis je t'ouvre une page guide en français.
+Tu te laisses guider tout au long du processus. La première partie est technique, mais pas d'inquiétude : tu n'auras qu'à suivre mes instructions.
 
-👉 Des petites fenêtres en anglais vont s'afficher : clique toujours sur « Yes, and always allow » (le 3e choix). C'est sans danger.
+Pour t'aider à visualiser les étapes qui mèneront jusqu'à la page qui affichera tes simulations, je te propose d'abord de créer une page « J'en suis où de l'installation ». Elle te donnera tout un tas d'infos, mais ce ne sera pas la page finale.
 ```
-Choix : 1. **C'est parti !** · 2. **😕 Je suis perdu·e**
+Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** · 3. **😕 Je suis perdu·e** (1 et 2 veulent dire la même chose : on démarre).
 
 **2. Node.js** — commande `node -v`.
 - Un numéro `v20.19` ou plus : passe à l'étape 3, sans rien dire.
