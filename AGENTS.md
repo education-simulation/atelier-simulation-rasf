@@ -59,9 +59,9 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
 - « Non » : étape 2, sans rien dire.
 
 **2. Node.js** — commande `node -v`.
-- Un numéro `v20.19` ou plus : passe à l'étape 3, sans rien dire.
+- Un numéro `v20.19` ou plus : passe à l'étape 3 et **commence le message de l'étape 3**, juste après « 💬 Pour toi : », par cette ligne : « ✅ Node.js (le moteur qui fait tourner ton interface sur ton ordinateur) est bien installé. »
 - Sinon (« command not found », « n'est pas reconnu », numéro plus petit) : arrête l'installation et pose cette question à choix :
-  « Il manque un logiciel gratuit, Node.js (le moteur de l'aperçu de ton site). 1) Clique sur ce lien : https://nodejs.org/fr/download 2) Télécharge l'installateur (« macOS Installer » sur Mac, « Windows Installer » sur Windows), ouvre-le et clique Continuer, Accepter, Installer. 3) Quitte complètement Antigravity, rouvre-le et colle à nouveau la phrase du début. »
+  « ⚠️ Il manque un logiciel gratuit, Node.js (le moteur qui fait tourner ton interface sur ton ordinateur). 1) Clique sur ce lien : https://nodejs.org/fr/download 2) Télécharge l'installateur (« macOS Installer » sur Mac, « Windows Installer » sur Windows), ouvre-le et clique Continuer, Accepter, Installer. 3) Quitte complètement Antigravity, rouvre-le et colle à nouveau la phrase du début. »
   Choix : 1. **C'est installé** · 2. **😕 Je suis bloqué·e**. Si « C'est installé » dans cette conversation : relance `node -v`.
 
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »

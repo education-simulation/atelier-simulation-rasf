@@ -61,7 +61,7 @@ function CarteMail({ suivi }) {
 }
 
 const ETAPES = [
-  { emoji: "📦", titre: "Installation de la progression", texte: "L'IA Gemini copie ton interface simulations sur ton ordinateur, l'installe et t'ouvre ta page de progression." },
+  { emoji: "📦", titre: "Installation de la progression", texte: "L'IA Gemini vérifie Node.js, copie ton interface simulations sur ton ordinateur, l'installe et t'ouvre ta page de progression." },
   { emoji: "🎨", titre: "Personnalise ton interface (optionnel)", texte: "Son nom, sa couleur, son style… ou garde les réglages par défaut (« Mes simulations »).",
     sous: [
       ["Le nom de ton interface", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
@@ -919,7 +919,7 @@ export const AIDE_EN_LIGNE = "https://education-simulation.github.io/atelier-sim
 
 // Ce que montre la page de chaque étape : un schéma en pictogrammes (flux), une seule ligne « à toi », et des liens.
 const DETAILS = [
-  { flux: [["📦", "Copie sur ton ordinateur"], ["⚙️", "Installation"], ["📊", "Ta page de progression"]],
+  { flux: [["🟢", "Node.js vérifié"], ["📦", "Copie sur ton ordinateur"], ["⚙️", "Installation"], ["📊", "Ta page de progression"]],
     toi: "Réponds à l'IA, et accepte les petites fenêtres : « Yes, and always allow ».",
     liens: [["🧭 Découvrir Antigravity", "antigravity.html", "atelier-antigravity"], ["🔐 Donner ton autorisation (anglais)", "fenetres.html", "atelier-autorisation"]] },
   { flux: [["🏷️", "Le nom"], ["🎨", "La couleur"], ["🧩", "Le style"], ["🏫", "L'établissement"], ["👤", "Ton nom"]],
