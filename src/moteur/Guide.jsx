@@ -234,18 +234,18 @@ export const CSS = `
 .g-clic { animation:g-clic 1.2s ease-out infinite; transform-origin:center; transform-box:fill-box; }
 @keyframes g-clic { 0%,55% { opacity:0; transform:scale(.4); } 65% { opacity:1; } 100% { opacity:0; transform:scale(1.8); } }
 .g-trou, .g-zone { transition: x .55s cubic-bezier(.2,.8,.2,1), y .55s cubic-bezier(.2,.8,.2,1), width .55s cubic-bezier(.2,.8,.2,1), height .55s cubic-bezier(.2,.8,.2,1); }
-.v { max-width:min(1000px, max(340px, calc((100vh - 300px) * 1.77))); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+.v { max-width:min(1100px, max(340px, calc((100vh - 170px) * 1.77))); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
 .v-tete { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
 .v-tete h1 { font:800 clamp(24px,3.6vw,34px)/1.1 'Outfit',sans-serif; margin:0; flex:1; letter-spacing:-.02em; }
 .v-compte { font-weight:800; color:#475569; }
 .v-barre { height:8px; border-radius:99px; background:#e2e8f0; overflow:hidden; }
 .v-barre > div { height:100%; background:linear-gradient(90deg,#60a5fa,#f59e0b); transition:width .5s; }
 .v-scene { position:relative; border-radius:16px; box-shadow:0 18px 50px rgba(15,23,42,.25); overflow:hidden; }
-.v-bulle { background:#fff; border-radius:18px; padding:18px 22px; border:3px solid #f59e0b; box-shadow:0 8px 28px rgba(15,23,42,.12); animation:v-entre .45s cubic-bezier(.2,.8,.2,1); }
+.v-bulle { position:absolute; z-index:2; background:#fff; border-radius:14px; padding:10px 14px; border:3px solid #f59e0b; box-shadow:0 8px 28px rgba(15,23,42,.12); animation:v-entre .45s cubic-bezier(.2,.8,.2,1); }
 @keyframes v-entre { from { opacity:0; transform:translateY(14px) scale(.98); } to { opacity:1; transform:none; } }
-.v-bulle h2 { margin:0 0 6px; display:flex; align-items:center; gap:10px; font:800 22px/1.2 'Outfit',sans-serif; }
-.v-bulle p { margin:0; font-size:18px; line-height:1.55; color:#1e293b; }
-.v-minuteur { height:4px; border-radius:99px; background:#fde68a; margin-top:14px; overflow:hidden; }
+.v-bulle h2 { margin:0 0 4px; font:800 clamp(14px,1.7vw,19px)/1.2 'Outfit',sans-serif; }
+.v-bulle p { margin:0; font-size:clamp(12px,1.45vw,16px); line-height:1.45; color:#1e293b; }
+.v-minuteur { height:4px; border-radius:99px; background:#fde68a; margin-top:8px; overflow:hidden; }
 .v-minuteur > div { height:100%; background:#f59e0b; animation:v-temps linear forwards; }
 @keyframes v-temps { from { width:0; } to { width:100%; } }
 .v-commandes { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
@@ -558,7 +558,7 @@ const DEMO = [
   { titre: "② Au milieu : Antigravity", texte: "C'est ici que tu parles avec l'IA Gemini : elle t'écrit, tu lui réponds.", zones: [Z.milieu] },
   { titre: "L'historique", texte: "Les messages de la conversation, du plus ancien au plus récent. Ceux qui sont pour toi commencent par 💬 Pour toi. Le reste (« Ran commands »…) est technique : tu peux l'ignorer.", zones: [Z.historique] },
   { titre: "La zone de prompt", texte: "Tout en bas, « Ask anything… » : écris ici ta réponse ou ta demande (ton « prompt »), puis appuie sur Entrée. Le micro 🎤 permet de dicter.", zones: [Z.prompt] },
-  { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, 3 niveaux : Low (rapide), Medium, High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }] },
+  { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, 3 niveaux : Low (rapide), Medium, High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], bulle: { x: 452, y: 308 }, images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }] },
   { titre: "Ton usage", texte: "Dans ce même menu, « View Usage » montre ce qu'il te reste pour la semaine, pour chaque famille de modèles.", zones: [Z.modele, Z.menuModeles, Z.usage], images: [{ actif: "5", curseur: { x: 260, y: 352 } }] },
   { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres en anglais). Laisse-le tel quel.", zones: [Z.auto] },
   { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
@@ -569,6 +569,24 @@ const DEMO = [
   { titre: "Régler la largeur", texte: "La fine barre verticale entre le milieu et le navigateur se déplace : garde le bouton de la souris appuyé dessus et glisse à gauche ou à droite.", zones: [Z.barre], images: [{ actif: "6c", curseur: { x: 476, y: 244 } }, { actif: "6c", curseur: { x: 420, y: 244 } }, { actif: "6c", curseur: { x: 530, y: 244 } }] },
 ];
 const dureeLecture = (texte) => Math.max(4, Math.round(texte.split(/\s+/).length / 4.5)) * 1000;
+
+// Place la bulle d'explication SUR l'image, tout près de la partie éclairée (en % du schéma 760 × 430).
+const LARGEUR_BULLE = 300;
+function placerBulle(zones, etiquettes, bulle) {
+  const g = Math.min(...zones.map((r) => r.x)), h = Math.min(...zones.map((r) => r.y));
+  const d = Math.max(...zones.map((r) => r.x + r.w)), b = Math.max(...zones.map((r) => r.y + r.h));
+  const pc = (v, tot) => `${(v / tot) * 100}%`;
+  const largeur = pc(LARGEUR_BULLE, 760);
+  if (bulle) return { left: pc(bulle.x, 760), top: pc(bulle.y, 430), width: largeur };
+  if (etiquettes) return { left: pc(380 - LARGEUR_BULLE / 2, 760), bottom: pc(16, 430), width: largeur };
+  if (b - h > 260) { // zone haute (une colonne entière) : à côté, à droite si possible
+    const x = d + 12 + LARGEUR_BULLE <= 752 ? d + 12 : Math.max(8, g - 12 - LARGEUR_BULLE);
+    return { left: pc(x, 760), top: pc(140, 430), width: largeur };
+  }
+  const x = Math.min(752 - LARGEUR_BULLE, Math.max(8, (g + d) / 2 - LARGEUR_BULLE / 2));
+  if (b < 250) return { left: pc(x, 760), top: pc(b + 14, 430), width: largeur };  // en dessous
+  return { left: pc(x, 760), bottom: pc(430 - h + 14, 430), width: largeur };      // au-dessus
+}
 
 function DemoAntigravity({ explorer }) {
   const [i, setI] = useState(0);
@@ -616,11 +634,13 @@ function DemoAntigravity({ explorer }) {
         <button type="button" className="v-bouton orange" onClick={explorer}>🔢 Explorer</button>
       </div>
       <div className="v-barre" aria-hidden="true"><div style={{ width: `${((i + 1) / DEMO.length) * 100}%` }} /></div>
-      <div className="v-scene"><SchemaAntigravity spot pastilles={false} zones={zonesVues} etiquettes={etape.etiquettes} setActif={() => {}} {...vue} /></div>
-      <div className="v-bulle" key={i} aria-live="polite">
-        <h2>{etape.titre}</h2>
-        <p>{etape.texte}</p>
-        {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeLecture(etape.texte)}ms` }} /></div>}
+      <div className="v-scene">
+        <SchemaAntigravity spot pastilles={false} zones={zonesVues} etiquettes={etape.etiquettes} setActif={() => {}} {...vue} />
+        <div className="v-bulle" key={i} aria-live="polite" style={placerBulle(etape.zones, etape.etiquettes, etape.bulle)}>
+          <h2>{etape.titre}</h2>
+          <p>{etape.texte}</p>
+          {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeLecture(etape.texte)}ms` }} /></div>}
+        </div>
       </div>
       <div className="v-commandes">
         <button type="button" className="v-bouton" onClick={() => { setAuto(false); aller(i - 1); }} disabled={i === 0} style={i === 0 ? { opacity: .4, cursor: "default" } : null}>‹ Précédent</button>
