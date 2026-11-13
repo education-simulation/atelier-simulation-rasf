@@ -1,0 +1,293 @@
+Pas de problème, oublions Python ! 
+
+J&#39;ai créé pour vous **un unique fichier HTML** prêt à l&#39;emploi. Vous n&#39;avez rien à installer : il s&#39;ouvre dans n&#39;importe quel navigateur (Google Chrome, Edge, Firefox, Safari).
+
+---
+
+### 👉 Comment l&#39;ouvrir tout de suite ?
+
+1. **Cliquez directement sur ce lien pour l&#39;ouvrir :**  
+   👉 **[simulation_chimie.html](file:///C:/Users/Utilisateur/.gemini/antigravity/scratch/simulation_chimie/simulation_chimie.html)**
+2. *(Ou retrouvez-le dans vos dossiers à cet emplacement : `C:\Users\Utilisateur\.gemini\antigravity\scratch\simulation_chimie\` et double-cliquez dessus).*
+
+---
+
+### 🖥️ Ce que vous (et vos élèves) pouvez faire dessus :
+
+1. **Modifier les entrées :**  
+   - Vous tapez les coefficients $a, b, c, d$.
+   - Vous tapez les quantités initiales $n_{A,0}, n_{B,0}, n_{C,0}, n_{D,0}$ (en mol).
+2. **Le programme calcule instantanément :**  
+   - $x_a = n_{A,0} / a$ et $x_b = n_{B,0} / b$.
+   - L&#39;avancement final $X_f = \min(x_a, x_b)$.
+   - Il affiche clairement le **réactif limitant** dans un encadré rouge (ou prévient si le mélange est stœchiométrique).
+3. **Faire évoluer la réaction :**  
+   - Vous déplacez le curseur d&#39;avancement $X$ entre $0$ et $X_f$ (ou vous tapez directement la valeur voulue).
+   - **L&#39;histogramme s&#39;anime sous vos yeux :** les barres des réactifs (A et B) diminuent jusqu&#39;à $0$ pour le réactif limitant, et les produits (C et D) augmentent.
+   - Un bouton **« ▶️ Animer la réaction »** permet de lancer la réaction automatiquement pas à pas.
+   - Un **tableau d&#39;avancement** complet est mis à jour en temps réel en bas de page.
+
+---
+
+### 📤 Comment le partager à vos élèves ou collègues ?
+
+C&#39;est très simple :
+- Prenez simplement le fichier **`simulation_chimie.html`**.
+- Déposez-le sur votre **ENT**, envoyez-le par **e-mail** ou mettez-le sur une **clé USB**.
+- Vos élèves et collègues n&#39;ont qu&#39;à double-cliquer dessus : cela fonctionne sur n&#39;importe quel ordinateur, tablette ou smartphone, même **sans connexion Internet**.
+
+---
+
+*(Au besoin, voici le code complet du fichier HTML ci-dessous si vous souhaitez le copier-coller dans un bloc-notes et l&#39;enregistrer vous-même sous le nom `simulation_chimie.html`)* :
+
+```html
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation Réaction Chimique - Avancement et Réactif Limitant</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --reactif-a: #3b82f6;
+            --reactif-b: #6366f1;
+            --produit-c: #10b981;
+            --produit-d: #f59e0b;
+            --bg: #f8fafc;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg); color: #1e293b; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 18px; }
+        header { background: linear-gradient(135deg, #1e3a8a, #2563eb); color: white; padding: 20px; border-radius: 12px; text-align: center; }
+        .equation { font-size: 1.3rem; font-weight: bold; background: rgba(255,255,255,0.2); display: inline-block; padding: 6px 16px; border-radius: 20px; margin-top: 10px; }
+        .card { background: white; border-radius: 12px; padding: 18px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card h3 { margin-bottom: 12px; font-size: 1.1rem; color: #0f172a; }
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 12px; }
+        .box-espece { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: #fafafa; }
+        .box-espece.a { border-left: 4px solid var(--reactif-a); }
+        .box-espece.b { border-left: 4px solid var(--reactif-b); }
+        .box-espece.c { border-left: 4px solid var(--produit-c); }
+        .box-espece.d { border-left: 4px solid var(--produit-d); }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
+        .row:last-child { margin-bottom: 0; }
+        .row input { width: 75px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: right; font-weight: bold; }
+        .diag-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 10px; text-align: center; }
+        .diag-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+        .diag-item .num { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
+        .alerte-limitant { grid-column: 1 / -1; background: #fee2e2; border: 1px solid #ef4444; color: #b91c1c; padding: 10px; border-radius: 8px; font-weight: bold; text-align: center; }
+        .slider-bar { display: flex; align-items: center; gap: 14px; margin-top: 10px; }
+        .slider-bar input[type="range"] { flex: 1; height: 8px; cursor: pointer; }
+        .btn { padding: 8px 14px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: var(--primary); color: white; }
+        .btn-sec { background: #e2e8f0; color: #334155; }
+        .chart-box { height: 340px; width: 100%; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.9rem; margin-top: 10px; }
+        th, td { border: 1px solid var(--border); padding: 8px; }
+        th { background: #f1f5f9; }
+        tr.active { background: #eff6ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>⚗️ Simulation Réaction Chimique</h1>
+        <p>Modélisation de l&#39;avancement et recherche du réactif limitant</p>
+        <div class="equation" id="eqBadge">aA + bB ➔ cC + dD</div>
+    </header>
+
+    <!-- 1. Paramètres -->
+    <div class="card">
+        <h3>1. Coefficients stœchiométriques et quantités initiales</h3>
+        <div class="grid-inputs">
+            <div class="box-espece a">
+                <strong>Espèce A (Réactif)</strong>
+                <div class="row"><label>Coeff. a :</label><input type="number" id="a" value="1" min="1"></div>
+                <div class="row"><label>nA,0 (mol) :</label><input type="number" id="na0" value="3" min="0" step="0.1"></div>
+            </div>
+            <div class="box-espece b">
+                <strong>Espèce B (Réactif)</strong>
+                <div class="row"><label>Coeff. b :</label><input type="number" id="b" value="2" min="1"></div>
+                <div class="row"><label>nB,0 (mol) :</label><input type="number" id="nb0" value="4" min="0" step="0.1"></div>
+            </div>
+            <div class="box-espece c">
+                <strong>Espèce C (Produit)</strong>
+                <div class="row"><label>Coeff. c :</label><input type="number" id="c" value="1" min="1"></div>
+                <div class="row"><label>nC,0 (mol) :</label><input type="number" id="nc0" value="0" min="0" step="0.1"></div>
+            </div>
+            <div class="box-espece d">
+                <strong>Espèce D (Produit)</strong>
+                <div class="row"><label>Coeff. d :</label><input type="number" id="d" value="3" min="1"></div>
+                <div class="row"><label>nD,0 (mol) :</label><input type="number" id="nd0" value="0" min="0" step="0.1"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Bilan et Réactif limitant -->
+    <div class="card">
+        <h3>2. Calculs et Réactif Limitant</h3>
+        <div class="diag-grid">
+            <div class="diag-item"><div>xa = nA,0 / a</div><div class="num" id="resXa">3.00 mol</div></div>
+            <div class="diag-item"><div>xb = nB,0 / b</div><div class="num" id="resXb">2.00 mol</div></div>
+            <div class="diag-item"><div>Xf = min(xa, xb)</div><div class="num" id="resXf">2.00 mol</div></div>
+            <div class="alerte-limitant" id="resLimitant">Réactif limitant : B</div>
+        </div>
+    </div>
+
+    <!-- 3. Contrôle de X -->
+    <div class="card">
+        <h3>3. Évolution de l&#39;avancement X</h3>
+        <div class="slider-bar">
+            <span>0</span>
+            <input type="range" id="sliderX" min="0" max="2" step="0.01" value="0">
+            <span id="maxSliderLabel">Xf = 2.00</span>
+            <span style="font-weight:bold; color:var(--primary); margin-left:10px;">X = <input type="number" id="inputX" min="0" max="2" step="0.01" value="0.00" style="width:70px; font-weight:bold; text-align:right;"> mol</span>
+        </div>
+        <div style="display:flex; gap:10px; justify-content:center; margin-top:12px;">
+            <button class="btn btn-sec" onclick="setX(0)">⏮️ État initial (X=0)</button>
+            <button class="btn" id="btnAnim" onclick="toggleAnim()">▶️ Animer la réaction</button>
+            <button class="btn btn-sec" onclick="setXMax()">⏭️ État final (X=Xf)</button>
+        </div>
+    </div>
+
+    <!-- 4. Histogramme -->
+    <div class="card">
+        <h3>4. Histogramme des quantités de matière</h3>
+        <div class="chart-box">
+            <svg id="svgChart" width="100%" height="100%" viewbox="0 0 800 320" preserveaspectratio="none"></svg>
+        </div>
+    </div>
+
+    <!-- 5. Tableau d'avancement -->
+    <div class="card">
+        <h3>5. Tableau d&#39;avancement</h3>
+        <table>
+            <thead>
+                <tr><th>État</th><th>Avancement</th><th>Espèce A</th><th>Espèce B</th><th>Espèce C</th><th>Espèce D</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Équation</td><td>-</td><td id="tEqA">1 A</td><td id="tEqB">2 B</td><td id="tEqC">1 C</td><td id="tEqD">3 D</td></tr>
+                <tr><td>Initial</td><td>X = 0</td><td id="tInitA">0</td><td id="tInitB">0</td><td id="tInitC">0</td><td id="tInitD">0</td></tr>
+                <tr class="active"><td>En cours</td><td id="tActuelX">X = 0.00 mol</td><td id="tActuelA">0</td><td id="tActuelB">0</td><td id="tActuelC">0</td><td id="tActuelD">0</td></tr>
+                <tr><td>Final</td><td id="tFinalX">Xf = 0.00 mol</td><td id="tFinalA">0</td><td id="tFinalB">0</td><td id="tFinalC">0</td><td id="tFinalD">0</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let timer = null;
+    const aIn = document.getElementById('a'), bIn = document.getElementById('b'), cIn = document.getElementById('c'), dIn = document.getElementById('d');
+    const na0In = document.getElementById('na0'), nb0In = document.getElementById('nb0'), nc0In = document.getElementById('nc0'), nd0In = document.getElementById('nd0');
+    const slider = document.getElementById('sliderX'), numX = document.getElementById('inputX');
+
+    [aIn, bIn, cIn, dIn, na0In, nb0In, nc0In, nd0In].forEach(i => i.addEventListener('input', () => calculer(true)));
+    slider.addEventListener('input', (e) => { stopAnim(); numX.value = parseFloat(e.target.value).toFixed(2); actualiser(); });
+    numX.addEventListener('change', (e) => { stopAnim(); let v = Math.min(Math.max(0, parseFloat(e.target.value) || 0), parseFloat(slider.max)); slider.value = v; numX.value = v.toFixed(2); actualiser(); });
+
+    function setX(v) { stopAnim(); slider.value = v; numX.value = parseFloat(v).toFixed(2); actualiser(); }
+    function setXMax() { setX(slider.max); }
+
+    function toggleAnim() {
+        if (timer) { stopAnim(); }
+        else {
+            if (parseFloat(slider.value) >= parseFloat(slider.max) - 0.001) slider.value = 0;
+            document.getElementById('btnAnim').textContent = "⏸️ Pause";
+            const step = Math.max(parseFloat(slider.max) / 100, 0.01);
+            timer = setInterval(() => {
+                let v = parseFloat(slider.value) + step;
+                if (v >= parseFloat(slider.max)) { v = parseFloat(slider.max); stopAnim(); }
+                slider.value = v; numX.value = v.toFixed(2); actualiser();
+            }, 40);
+        }
+    }
+    function stopAnim() { clearInterval(timer); timer = null; document.getElementById('btnAnim').textContent = "▶️ Animer la réaction"; }
+
+    function calculer(reset = false) {
+        stopAnim();
+        const a = Math.max(1, parseFloat(aIn.value) || 1), b = Math.max(1, parseFloat(bIn.value) || 1);
+        const c = Math.max(0, parseFloat(cIn.value) || 0), d = Math.max(0, parseFloat(dIn.value) || 0);
+        const na0 = Math.max(0, parseFloat(na0In.value) || 0), nb0 = Math.max(0, parseFloat(nb0In.value) || 0);
+        
+        document.getElementById('eqBadge').textContent = `${a}A + ${b}B ➔ ${c}C + ${d}D`;
+        const xa = na0 / a, xb = nb0 / b, xf = Math.min(xa, xb);
+
+        document.getElementById('resXa').textContent = xa.toFixed(2) + " mol";
+        document.getElementById('resXb').textContent = xb.toFixed(2) + " mol";
+        document.getElementById('resXf').textContent = xf.toFixed(2) + " mol";
+
+        const alerte = document.getElementById('resLimitant');
+        if (Math.abs(xa - xb) < 1e-6) {
+            alerte.style.background = "#e0f2fe"; alerte.style.borderColor = "#0284c7"; alerte.style.color = "#0369a1";
+            alerte.innerHTML = "⚖️ Mélange stœchiométrique : A et B s'épuisent en même temps !";
+        } else if (xa < xb) {
+            alerte.style.background = "#fee2e2"; alerte.style.borderColor = "#ef4444"; alerte.style.color = "#b91c1c";
+            alerte.innerHTML = "⚠️ Réactif limitant : Espèce A (xa < xb)";
+        } else {
+            alerte.style.background = "#fee2e2"; alerte.style.borderColor = "#ef4444"; alerte.style.color = "#b91c1c";
+            alerte.innerHTML = "⚠️ Réactif limitant : Espèce B (xb < xa)";
+        }
+
+        slider.max = xf.toString(); numX.max = xf.toString();
+        document.getElementById('maxSliderLabel').textContent = "Xf = " + xf.toFixed(2);
+        if (reset || parseFloat(slider.value) > xf) { slider.value = 0; numX.value = "0.00"; }
+        actualiser();
+    }
+
+    function actualiser() {
+        const a = parseFloat(aIn.value)||1, b = parseFloat(bIn.value)||1, c = parseFloat(cIn.value)||0, d = parseFloat(dIn.value)||0;
+        const na0 = parseFloat(na0In.value)||0, nb0 = parseFloat(nb0In.value)||0, nc0 = parseFloat(nc0In.value)||0, nd0 = parseFloat(nd0In.value)||0;
+        const x = parseFloat(slider.value) || 0, xf = parseFloat(slider.max) || 0;
+
+        const na = Math.max(0, na0 - a * x), nb = Math.max(0, nb0 - b * x), nc = nc0 + c * x, nd = nd0 + d * x;
+
+        // Tableau
+        document.getElementById('tEqA').textContent = a + " A"; document.getElementById('tEqB').textContent = b + " B";
+        document.getElementById('tEqC').textContent = c + " C"; document.getElementById('tEqD').textContent = d + " D";
+        document.getElementById('tInitA').textContent = na0.toFixed(2); document.getElementById('tInitB').textContent = nb0.toFixed(2);
+        document.getElementById('tInitC').textContent = nc0.toFixed(2); document.getElementById('tInitD').textContent = nd0.toFixed(2);
+        document.getElementById('tActuelX').textContent = "X = " + x.toFixed(2) + " mol";
+        document.getElementById('tActuelA').textContent = na.toFixed(2); document.getElementById('tActuelB').textContent = nb.toFixed(2);
+        document.getElementById('tActuelC').textContent = nc.toFixed(2); document.getElementById('tActuelD').textContent = nd.toFixed(2);
+        document.getElementById('tFinalX').textContent = "Xf = " + xf.toFixed(2) + " mol";
+        document.getElementById('tFinalA').textContent = Math.max(0, na0 - a * xf).toFixed(2);
+        document.getElementById('tFinalB').textContent = Math.max(0, nb0 - b * xf).toFixed(2);
+        document.getElementById('tFinalC').textContent = (nc0 + c * xf).toFixed(2);
+        document.getElementById('tFinalD').textContent = (nd0 + d * xf).toFixed(2);
+
+        // Dessin SVG
+        const data = [
+            { nom: "A (Réactif)", n0: na0, n: na, col: "#3b82f6" },
+            { nom: "B (Réactif)", n0: nb0, n: nb, col: "#6366f1" },
+            { nom: "C (Produit)", n0: nc0, n: nc, col: "#10b981" },
+            { nom: "D (Produit)", n0: nd0, n: nd, col: "#f59e0b" }
+        ];
+        const maxVal = Math.max(...data.map(d => Math.max(d.n0, d.n, 1))) * 1.2;
+        const chartH = 240, chartW = 700, padL = 60, padT = 30;
+        let svg = `<rect x="${padL}" y="${padT}" width="${chartW}" height="${chartH}" fill="#fafafa" stroke="#e2e8f0"/>`;
+
+        data.forEach((item, i) => {
+            const slotW = chartW / 4, barW = 70;
+            const cx = padL + i * slotW + slotW / 2;
+            const xBar = cx - barW / 2;
+            const hBar = (item.n / maxVal) * chartH;
+            const yBar = padT + chartH - hBar;
+            const hInit = (item.n0 / maxVal) * chartH;
+            const yInit = padT + chartH - hInit;
+
+            if (item.n0 > 0) {
+                svg += `<rect x="${xBar - 4}" y="${yInit}" width="${barW + 8}" height="${hInit}" fill="none" stroke="${item.col}" stroke-dasharray="4,4" opacity="0.6"/>`;
+            }
+            svg += `<rect x="${xBar}" y="${yBar}" width="${barW}" height="${hBar}" fill="${item.col}" rx="4"/>`;
+            svg += `<text x="${cx}" y="${Math.max(15, yBar - 6)}" text-anchor="middle" font-size="12" font-weight="bold">${item.n.toFixed(2)} mol</text>`;
+            svg += `<text x="${cx}" y="${padT + chartH + 20}" text-anchor="middle" font-size="13" font-weight="bold">${item.nom}</text>`;
+        });
+        document.getElementById('svgChart').innerHTML = svg;
+    }
+
+    calculer(true);
+</script>
+</body>
+</html>
+```

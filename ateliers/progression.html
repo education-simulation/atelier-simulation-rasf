@@ -43,6 +43,10 @@ h1 small { font:800 15px 'Nunito',system-ui,sans-serif; color:#a1a1aa; }
 .popup iframe { width:100%; height:100%; border:0; }
 .popup .fermer { position:absolute; top:8px; right:8px; z-index:2; border:0; cursor:pointer; background:#0b0b0f; color:#fff; font-weight:800; font-size:14px; border-radius:8px; padding:7px 13px; }
 .popup .fermer:hover { background:#dc2626; }
+details { background:#16161b; border:1px solid #3f3f46; border-radius:10px; padding:8px 12px; }
+summary { cursor:pointer; font-weight:800; }
+details ul { margin:8px 0 2px; padding-left:20px; line-height:1.5; }
+.carte .st { margin:4px 0; }
 .bravo { margin:0; text-align:center; font:800 22px 'Outfit',system-ui,sans-serif; color:#86efac; }
 .bande { position:fixed; left:0; right:0; bottom:40px; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
 .bande.alerte { bottom:140px; background:#dc2626; color:#fff; animation:alerte 1.2s ease-in-out infinite; }
@@ -67,36 +71,85 @@ h1 small { font:800 15px 'Nunito',system-ui,sans-serif; color:#a1a1aa; }
 
 <script>
 const AIDE = "https://education-simulation.github.io/atelier-simulation-rasf/";
+// Les 3 grandes étapes ; à l'étape 3, les sous-étapes de la simulation choisie (progression.js : simulation, sous).
 const ETAPES = [
   { titre: "Découvrir Antigravity", texte: "Si tu veux, une démo d'environ 1 minute, ou l'écran d'Antigravity numéroté, à explorer à ton rythme. Tu peux aussi passer cette étape.",
     liens: [["🧭 Découvrir Antigravity", AIDE + "antigravity.html"], ["🔐 Les fenêtres d'autorisation", AIDE + "fenetres.html"]] },
-  { titre: "Ouvrir ta simulation", texte: "Ta simulation du métamérisme est dans ce même dossier. Ouvre-la : en haut, l'atelier ; en dessous, la simulation. Fais ses étapes 1 et 2 sur la page.",
-    liens: [["🎨 Ouvrir ma simulation", "metamerisme.html", true]] },
-  { titre: "Faire fonctionner les boutons des illuminants", texte: "Écris ton prompt pour faire fonctionner les boutons A, D65 et F11 de la cabine. L'IA l'analyse avant de l'exécuter." },
-  { titre: "Choisir la couleur des cartes", texte: "Écris ton prompt pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère." },
-  { titre: "Rendre les cartes mobiles", texte: "Écris ton prompt pour déplacer les deux cartes de la table jusque dans la cabine." },
-  { titre: "Mesurer l'écart de couleur", texte: "Écris ton prompt pour mesurer et afficher l'écart ΔE*ab entre les deux cartes." },
-  { titre: "Le message à retenir", texte: "Écris ton prompt pour ajouter la conclusion de la simulation." },
+  { titre: "Choisir ta simulation", texte: "Trois simulations au choix : le métamérisme (la page existe déjà, tu la fais fonctionner), l'avancement d'une réaction, ou un dosage (tu pars d'une page vide)." },
+  { titre: "Construire ta simulation" },
 ];
+const SIMULATIONS = {
+  metamerisme: { nom: "Métamérisme", fichier: "metamerisme.html",
+    texte: "Ta simulation est déjà dans ton dossier : en haut, ses étapes ; en dessous, la simulation. Les mêmes étapes qu'ici.",
+    sous: [
+      { titre: "L'état actuel de la page", objectif: "Sur ta simulation : regarde ce que fait la page, puis clique sur « J'ai regardé »." },
+      { titre: "Les modèles", objectif: "Sur ta simulation : lis l'étape (et « Voir les modèles »), puis clique sur « J'ai compris »." },
+      { titre: "Les boutons des illuminants", objectif: "Faire fonctionner les boutons A, D65 et F11 de la cabine." },
+      { titre: "La couleur des cartes", objectif: "Choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère." },
+      { titre: "Les cartes mobiles", objectif: "Déplacer les deux cartes de la table jusque dans la cabine." },
+      { titre: "L'écart de couleur", objectif: "Mesurer et afficher l'écart ΔE*ab entre les deux cartes." },
+      { titre: "Le message à retenir", objectif: "Ajouter la conclusion de la simulation." },
+    ] },
+  avancement: { nom: "Avancement d'une réaction", fichier: "avancement.html",
+    texte: "Tu pars d'une page vide : l'IA crée le fichier avancement.html à partir de ta demande.",
+    sous: [
+      { titre: "Le tableau d'avancement", exemple: "exemples/avancement.html",
+        objectif: "Une simulation de la réaction aA + bB → cC + dD : l'avancement X varie de 0 à Xf, et un histogramme montre les quantités de matière.",
+        pistes: ["Quoi modéliser ? La réaction aA + bB → cC + dD, avec les coefficients et les quantités initiales nA,0 … nD,0 modifiables.",
+          "Quels calculs ? xA = nA,0/a, xB = nB,0/b, Xf = min(xA, xB) : le réactif limitant ; puis nA, nB, nC, nD pour tout X entre 0 et Xf.",
+          "Quel affichage ? Un histogramme des 4 espèces qui se met à jour quand X change, l'équation, les quantités initiales et Xf. Un seul fichier HTML, à partager."] },
+      { titre: "Ajuster ta simulation", objectif: "Ce que tu veux changer ou ajouter, avec tes mots." },
+    ] },
+  dosage: { nom: "Dosage", fichier: "dosage.html",
+    texte: "Tu pars d'une page vide : l'IA crée le fichier dosage.html à partir de ta demande.",
+    sous: [
+      { titre: "Le dosage", exemple: "exemples/dosage.html",
+        objectif: "Une simulation de dosage : on fait varier le volume VB d'espèce titrante versée, et un histogramme montre les quantités de matière.",
+        pistes: ["Qui est qui ? A est l'espèce titrée (dans le bécher), B l'espèce titrante (dans la burette) ; on entre VB, de 0 à Veq et au-delà.",
+          "Quels calculs ? nA,0 = cA·VA ; Veq = cA·VA·b / (a·cB) ; avant l'équivalence X = cB·VB / b ; après, B s'accumule : nB = cB·(VB − Veq).",
+          "Quel affichage ? L'équation, cA, VA, cB, Veq, et l'histogramme des quantités de matière qui se met à jour avec VB."] },
+      { titre: "L'exploitation d'un fichier de mesures", exemple: "exemples/dosage-exploitation.html",
+        objectif: "Un 2e onglet pour importer un fichier de mesures (CSV ou Excel) et exploiter la courbe de dosage.",
+        pistes: ["Quel fichier ? Un CSV ou un Excel : la page reconnaît la colonne du volume V et la grandeur mesurée (pH, potentiel…).",
+          "Quel tracé ? La grandeur mesurée en fonction du volume.",
+          "Quelle exploitation ? La dérivée première, la dérivée seconde, éventuellement les tangentes, pour trouver l'équivalence."] },
+      { titre: "Ajuster ta simulation", objectif: "Ce que tu veux changer ou ajouter, avec tes mots." },
+    ] },
+};
 const h = (t) => String(t ?? "").replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+const stepper = (liste, ici) => `<ol class="st" style="grid-template-columns:repeat(${liste.length},minmax(0,1fr))">${liste.map((x, i) => `
+  <li class="${i + 1 < ici ? "fait" : i + 1 === ici ? "ici" : ""}"><span class="rond">${i + 1 < ici ? "✓" : i + 1}</span><span class="nom">${h(x.titre)}</span></li>`).join("")}</ol>`;
 let dernier = "";
 
-// Appelée par progression.js (réécrit par l'IA) : { etape, quoi, alerte }.
+// Appelée par progression.js (réécrit par l'IA) : { etape, simulation, sous, quoi, alerte }.
 window.progression = (p) => {
   const cle = JSON.stringify(p);
   if (cle === dernier) return;
   dernier = cle;
   const ici = Math.max(1, Math.min(ETAPES.length + 1, Number(p.etape) || 1));   // ETAPES.length + 1 = tout est fini
   const e = ETAPES[ici - 1];
+  const sim = SIMULATIONS[p.simulation];
+  const toi = `<p class="toi${p.alerte ? " alerte" : ""}">${p.alerte ? "🔐 Une petite fenêtre t'attend : clique sur 3 « Yes, and always allow », puis sur Submit." : `✍️ Ce qu'on attend de toi : ${h(p.quoi || "écris ta réponse dans Antigravity, puis Entrée.")}`}</p>`;
+  let carte = "";
+  if (e && ici === 3 && sim) {
+    const n = Math.max(1, Math.min(sim.sous.length, Number(p.sous) || 1));
+    const s = sim.sous[n - 1];
+    carte = `<div class="carte"><h2>3. ${h(sim.nom)} <span class="badge">en cours</span></h2><p>${h(sim.texte)}</p>
+      ${stepper(sim.sous, n)}
+      <h2 style="font-size:18px">${n}. ${h(s.titre)}</h2>
+      <p>🎯 ${h(s.objectif)}</p>
+      ${toi}
+      ${s.pistes ? `<details><summary>💡 Des pistes pour ta demande</summary><ul>${s.pistes.map((x) => `<li>${h(x)}</li>`).join("")}</ul></details>` : ""}
+      <div class="rangee"><a class="btn vert" href="${sim.fichier}" target="_blank" rel="noopener">🎨 Ouvrir ma simulation</a>
+      ${s.exemple ? `<button type="button" class="btn" data-popup="${AIDE + s.exemple}">👀 Voir un exemple de résultat</button>` : ""}</div></div>`;
+  } else if (e) {
+    carte = `<div class="carte"><h2>${ici}. ${h(e.titre)} <span class="badge">en cours</span></h2><p>${h(e.texte || "")}</p>${toi}
+      ${e.liens ? `<div class="rangee">${e.liens.map(([t, u]) => `<button type="button" class="btn" data-popup="${u}">${t}</button>`).join("")}</div>` : ""}</div>`;
+  } else carte = `<p class="bravo">🎉 Tu as fini l'atelier !</p>`;
   document.getElementById("corps").innerHTML = `
     <h1>Progression de ton atelier <small>${Math.min(ici - 1, ETAPES.length)} sur ${ETAPES.length}</small></h1>
-    <ol class="st" style="grid-template-columns:repeat(${ETAPES.length},minmax(0,1fr))">${ETAPES.map((x, i) => `
-      <li class="${i + 1 < ici ? "fait" : i + 1 === ici ? "ici" : ""}"><span class="rond">${i + 1 < ici ? "✓" : i + 1}</span><span class="nom">${h(x.titre)}</span></li>`).join("")}
-    </ol>
-    ${e ? `<div class="carte"><h2>${ici}. ${h(e.titre)} <span class="badge">en cours</span></h2><p>${h(e.texte)}</p>
-      <p class="toi${p.alerte ? " alerte" : ""}">${p.alerte ? "🔐 Une petite fenêtre t'attend : clique sur 3 « Yes, and always allow », puis sur Submit." : `✍️ Ce qu'on attend de toi : ${h(p.quoi || "écris ta réponse dans Antigravity, puis Entrée.")}`}</p>
-      ${e.liens ? `<div class="rangee">${e.liens.map(([t, u, local]) => local ? `<a class="btn vert" href="${u}" target="_blank" rel="noopener">${t}</a>` : `<button type="button" class="btn" data-popup="${u}">${t}</button>`).join("")}</div>` : ""}</div>`
-      : `<p class="bravo">🎉 Tu as fini l'atelier !</p>`}`;
+    ${stepper(ETAPES.map((x, i) => (i === 2 && sim ? { titre: `${x.titre} : ${sim.nom}` } : x)), ici)}
+    ${carte}`;
   document.getElementById("bande").innerHTML = p.alerte
     ? `<div class="bande alerte" role="alert"><span class="fleche" aria-hidden="true">⬅</span>
         <div class="mini" aria-hidden="true">📄 Allow access to this path?<br>1 Yes, allow this time<br>2 Yes, and always allow in this conversation<br><span class="trois">3 Yes, and always allow</span><br>4 No <span class="submit">Submit ↵</span></div>

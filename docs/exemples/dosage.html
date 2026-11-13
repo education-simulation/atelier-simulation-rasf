@@ -1,0 +1,271 @@
+<!doctype html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simulation de Dosage Chimique - Évolution des quantités de matière</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --espece-a: #2563eb;
+            --espece-b: #dc2626;
+            --espece-c: #10b981;
+            --espece-d: #f59e0b;
+            --bg: #f8fafc;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: system-ui, -apple-system, sans-serif; }
+        body { background: var(--bg); color: #1e293b; padding: 20px; line-height: 1.5; }
+        .container { max-width: 1000px; margin: 0 auto; display: flex; flex-direction: column; gap: 16px; }
+        header { background: linear-gradient(135deg, #0f172a, #1e3a8a); color: white; padding: 20px; border-radius: 12px; text-align: center; }
+        .equation { font-size: 1.3rem; font-weight: bold; background: rgba(255,255,255,0.2); display: inline-block; padding: 6px 18px; border-radius: 20px; margin-top: 10px; }
+        .card { background: white; border-radius: 12px; padding: 18px; border: 1px solid var(--border); box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .card h3 { margin-bottom: 12px; font-size: 1.1rem; color: #0f172a; }
+        .grid-inputs { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; }
+        .box { border: 1px solid var(--border); border-radius: 8px; padding: 12px; background: #fafafa; }
+        .box.a { border-left: 4px solid var(--espece-a); }
+        .box.b { border-left: 4px solid var(--espece-b); }
+        .box.c { border-left: 4px solid var(--espece-c); }
+        .box.d { border-left: 4px solid var(--espece-d); }
+        .row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.9rem; }
+        .row:last-child { margin-bottom: 0; }
+        .row input { width: 75px; padding: 4px 6px; border: 1px solid #cbd5e1; border-radius: 6px; text-align: right; font-weight: bold; }
+        .diag-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); gap: 10px; text-align: center; }
+        .diag-item { background: #f8fafc; border: 1px solid var(--border); border-radius: 8px; padding: 10px; }
+        .diag-item .num { font-size: 1.3rem; font-weight: bold; color: var(--primary); }
+        .status-box { grid-column: 1 / -1; padding: 10px 14px; border-radius: 8px; font-weight: bold; text-align: center; font-size: 0.95rem; }
+        .slider-bar { display: flex; align-items: center; gap: 12px; margin-top: 10px; }
+        .slider-bar input[type="range"] { flex: 1; height: 8px; cursor: pointer; }
+        .btn { padding: 8px 14px; border: none; border-radius: 6px; font-weight: bold; cursor: pointer; background: var(--primary); color: white; }
+        .btn-sec { background: #e2e8f0; color: #334155; }
+        .btn-veq { background: #10b981; color: white; }
+        .chart-box { height: 340px; width: 100%; margin-top: 10px; }
+        table { width: 100%; border-collapse: collapse; text-align: center; font-size: 0.9rem; margin-top: 10px; }
+        th, td { border: 1px solid var(--border); padding: 8px; }
+        th { background: #f1f5f9; }
+        tr.active { background: #eff6ff; font-weight: bold; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h1>🧪 Simulation de Titrage / Dosage</h1>
+        <p>Suivi des quantités de matière dans le bécher selon le volume <em>V</em><sub>B</sub> de titrant versé</p>
+        <div class="equation" id="eqBadge">aA + bB ➔ cC + dD</div>
+    </header>
+
+    <!-- 1. Paramètres -->
+    <div class="card">
+        <h3>1. Espèce titrée (bécher) et espèce titrante (burette)</h3>
+        <div class="grid-inputs">
+            <div class="box a">
+                <strong>Espèce A (Titrée)</strong>
+                <div class="row"><label>Coeff. a :</label><input type="number" id="a" value="1" min="1"></div>
+                <div class="row"><label>cA (mol/L) :</label><input type="number" id="ca" value="0.10" min="0.001" step="0.01"></div>
+                <div class="row"><label>VA (mL) :</label><input type="number" id="va" value="20.0" min="0.1" step="0.5"></div>
+            </div>
+            <div class="box b">
+                <strong>Espèce B (Titrante)</strong>
+                <div class="row"><label>Coeff. b :</label><input type="number" id="b" value="1" min="1"></div>
+                <div class="row"><label>cB (mol/L) :</label><input type="number" id="cb" value="0.20" min="0.001" step="0.01"></div>
+                <div class="row" style="color:#64748b; font-size:0.8rem; font-style:italic;">Burette graduée</div>
+            </div>
+            <div class="box c">
+                <strong>Espèce C (Produit)</strong>
+                <div class="row"><label>Coeff. c :</label><input type="number" id="c" value="1" min="0"></div>
+                <div class="row" style="color:#64748b; font-size:0.8rem; font-style:italic;">nC,0 = 0 mmol</div>
+            </div>
+            <div class="box d">
+                <strong>Espèce D (Produit)</strong>
+                <div class="row"><label>Coeff. d :</label><input type="number" id="d" value="1" min="0"></div>
+                <div class="row" style="color:#64748b; font-size:0.8rem; font-style:italic;">nD,0 = 0 mmol</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. Bilan Équivalence -->
+    <div class="card">
+        <h3>2. Repères de l&#39;équivalence</h3>
+        <div class="diag-grid">
+            <div class="diag-item"><div>nA,0 = cA × VA</div><div class="num" id="resNa0">2.00 mmol</div></div>
+            <div class="diag-item"><div>Veq = (cA·VA·b)/(a·cB)</div><div class="num" id="resVeq">10.00 mL</div></div>
+            <div class="diag-item"><div>Xeq = nA,0 / a</div><div class="num" id="resXeq">2.00 mmol</div></div>
+            <div class="status-box" id="statusBox">Avant l&#39;équivalence</div>
+        </div>
+    </div>
+
+    <!-- 3. Contrôle du volume VB -->
+    <div class="card">
+        <h3>3. Volume de titrant versé <em>V</em><sub>B</sub> (mL)</h3>
+        <div class="slider-bar">
+            <span>0 mL</span>
+            <input type="range" id="sliderVb" min="0" max="20" step="0.1" value="0">
+            <span id="maxSliderLabel">2 × Veq = 20.0 mL</span>
+            <span style="font-weight:bold; color:var(--espece-b); margin-left:10px;">
+                VB = <input type="number" id="inputVb" min="0" max="20" step="0.1" value="0.0" style="width:70px; font-weight:bold; text-align:right;"> mL
+            </span>
+        </div>
+        <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:12px;">
+            <button class="btn btn-sec" onclick="setVb(0)">⏮️ État initial (VB = 0)</button>
+            <button class="btn" id="btnAnim" onclick="toggleAnim()">▶️ Verser la burette</button>
+            <button class="btn btn-veq" onclick="setVbVeq()">🎯 Sauter à l&#39;équivalence (VB = Veq)</button>
+            <button class="btn btn-sec" onclick="setVbMax()">⏭️ Fin (2 × Veq)</button>
+        </div>
+    </div>
+
+    <!-- 4. Histogramme -->
+    <div class="card">
+        <h3>4. Histogramme des quantités de matière dans le bécher</h3>
+        <div class="chart-box">
+            <svg id="svgChart" width="100%" height="100%" viewbox="0 0 800 320" preserveaspectratio="none"></svg>
+        </div>
+    </div>
+
+    <!-- 5. Tableau d'avancement -->
+    <div class="card">
+        <h3>5. Bilan des quantités de matière dans le bécher</h3>
+        <table>
+            <thead>
+                <tr><th>Situation</th><th>Volume VB</th><th>Avancement X</th><th>nA (Titrée)</th><th>nB (Titrante)</th><th>nC (Produit)</th><th>nD (Produit)</th></tr>
+            </thead>
+            <tbody>
+                <tr><td>Équation</td><td>-</td><td>-</td><td id="tEqA">1 A</td><td id="tEqB">1 B</td><td id="tEqC">1 C</td><td id="tEqD">1 D</td></tr>
+                <tr><td>Initial (VB=0)</td><td>0 mL</td><td>0 mmol</td><td id="tInitA">2.00</td><td>0 (absent)</td><td>0</td><td>0</td></tr>
+                <tr class="active"><td>Actuel</td><td id="tActuelVb">0.0 mL</td><td id="tActuelX">0.00 mmol</td><td id="tActuelA">2.00</td><td id="tActuelB">0</td><td id="tActuelC">0</td><td id="tActuelD">0</td></tr>
+                <tr><td>À l&#39;équivalence</td><td id="tEqVb">10.0 mL</td><td id="tEqX">2.00 mmol</td><td style="color:#059669; font-weight:bold;">0</td><td style="color:#059669; font-weight:bold;">0</td><td id="tEqC">2.00</td><td id="tEqD">2.00</td></tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<script>
+    let timer = null;
+    const aIn = document.getElementById('a'), bIn = document.getElementById('b'), cIn = document.getElementById('c'), dIn = document.getElementById('d');
+    const caIn = document.getElementById('ca'), vaIn = document.getElementById('va'), cbIn = document.getElementById('cb');
+    const slider = document.getElementById('sliderVb'), numVb = document.getElementById('inputVb');
+
+    [aIn, bIn, cIn, dIn, caIn, vaIn, cbIn].forEach(i => i.addEventListener('input', () => calculer(true)));
+    slider.addEventListener('input', (e) => { stopAnim(); numVb.value = parseFloat(e.target.value).toFixed(1); actualiser(); });
+    numVb.addEventListener('change', (e) => { stopAnim(); let v = Math.min(Math.max(0, parseFloat(e.target.value) || 0), parseFloat(slider.max)); slider.value = v; numVb.value = v.toFixed(1); actualiser(); });
+
+    function setVb(v) { stopAnim(); slider.value = v; numVb.value = parseFloat(v).toFixed(1); actualiser(); }
+    function setVbVeq() { const { veq } = getParams(); setVb(veq); }
+    function setVbMax() { setVb(slider.max); }
+
+    function toggleAnim() {
+        if (timer) { stopAnim(); }
+        else {
+            if (parseFloat(slider.value) >= parseFloat(slider.max) - 0.05) slider.value = 0;
+            document.getElementById('btnAnim').textContent = "⏸️ Pause";
+            const step = Math.max(parseFloat(slider.max) / 160, 0.05);
+            timer = setInterval(() => {
+                let v = parseFloat(slider.value) + step;
+                if (v >= parseFloat(slider.max)) { v = parseFloat(slider.max); stopAnim(); }
+                slider.value = v; numVb.value = v.toFixed(1); actualiser();
+            }, 40);
+        }
+    }
+    function stopAnim() { clearInterval(timer); timer = null; document.getElementById('btnAnim').textContent = "▶️ Verser la burette"; }
+
+    function getParams() {
+        const a = Math.max(1, parseFloat(aIn.value)||1), b = Math.max(1, parseFloat(bIn.value)||1);
+        const c = Math.max(0, parseFloat(cIn.value)||0), d = Math.max(0, parseFloat(dIn.value)||0);
+        const ca = Math.max(0.0001, parseFloat(caIn.value)||0.1), va = Math.max(0.01, parseFloat(vaIn.value)||20), cb = Math.max(0.0001, parseFloat(cbIn.value)||0.2);
+        const na0 = ca * va;
+        const veq = (ca * va * b) / (a * cb);
+        const xeq = na0 / a;
+        return { a, b, c, d, ca, va, cb, na0, veq, xeq };
+    }
+
+    function calculer(reset = false) {
+        stopAnim();
+        const { a, b, c, d, na0, veq, xeq } = getParams();
+        document.getElementById('eqBadge').textContent = `${a}A + ${b}B ➔ ${c}C + ${d}D`;
+        document.getElementById('resNa0').textContent = na0.toFixed(2) + " mmol";
+        document.getElementById('resVeq').textContent = veq.toFixed(2) + " mL";
+        document.getElementById('resXeq').textContent = xeq.toFixed(2) + " mmol";
+
+        const maxV = Math.ceil(veq * 2);
+        slider.max = maxV.toString(); numVb.max = maxV.toString();
+        document.getElementById('maxSliderLabel').textContent = "2 × Veq = " + maxV + " mL";
+
+        if (reset || parseFloat(slider.value) > maxV) { slider.value = 0; numVb.value = "0.0"; }
+        actualiser();
+    }
+
+    function actualiser() {
+        const { a, b, c, d, cb, na0, veq, xeq } = getParams();
+        const vb = parseFloat(slider.value) || 0;
+        let na = 0, nb = 0, nc = 0, nd = 0, x = 0;
+        const diff = vb - veq;
+        const status = document.getElementById('statusBox');
+
+        if (diff < -1e-4) {
+            // Avant équivalence
+            x = (cb * vb) / b;
+            na = Math.max(0, na0 - a * x);
+            nb = 0;
+            nc = c * x; nd = d * x;
+            status.style.background = "#eff6ff"; status.style.color = "#1e40af";
+            status.innerHTML = `🔵 <strong>Avant l'équivalence (VB &lt; Veq) :</strong> Le titrant B est limitant (nB = 0). A diminue.`;
+        } else if (Math.abs(diff) <= 1e-4) {
+            // À l'équivalence
+            x = xeq; na = 0; nb = 0; nc = c * xeq; nd = d * xeq;
+            status.style.background = "#d1fae5"; status.style.color = "#065f46";
+            status.innerHTML = `🟢 <strong>À l'équivalence (VB = Veq = ${veq.toFixed(2)} mL) :</strong> nA = 0 et nB = 0 (proportions stœchiométriques) !`;
+        } else {
+            // Après équivalence
+            x = xeq; na = 0; nb = cb * (vb - veq); nc = c * xeq; nd = d * xeq;
+            status.style.background = "#fee2e2"; status.style.color = "#991b1b";
+            status.innerHTML = `🔴 <strong>Après l'équivalence (VB &gt; Veq) :</strong> L'espèce titrée A est épuisée (nA = 0). Le titrant B s'accumule (nB = ${nb.toFixed(2)} mmol).`;
+        }
+
+        // Tableau
+        document.getElementById('tEqA').textContent = a + " A"; document.getElementById('tEqB').textContent = b + " B";
+        document.getElementById('tEqC').textContent = c + " C"; document.getElementById('tEqD').textContent = d + " D";
+        document.getElementById('tInitA').textContent = na0.toFixed(2);
+        document.getElementById('tActuelVb').textContent = vb.toFixed(1) + " mL";
+        document.getElementById('tActuelX').textContent = x.toFixed(2) + " mmol";
+        document.getElementById('tActuelA').textContent = na.toFixed(2);
+        document.getElementById('tActuelB').textContent = nb.toFixed(2);
+        document.getElementById('tActuelC').textContent = nc.toFixed(2);
+        document.getElementById('tActuelD').textContent = nd.toFixed(2);
+        document.getElementById('tEqVb').textContent = veq.toFixed(1) + " mL";
+        document.getElementById('tEqX').textContent = xeq.toFixed(2) + " mmol";
+        document.getElementById('tEqC').textContent = (c * xeq).toFixed(2);
+        document.getElementById('tEqD').textContent = (d * xeq).toFixed(2);
+
+        // Dessin SVG
+        const data = [
+            { nom: "A (Titrée)", n0: na0, n: na, col: "#2563eb" },
+            { nom: "B (Titrante)", n0: 0, n: nb, col: "#dc2626" },
+            { nom: "C (Produit)", n0: 0, n: nc, col: "#10b981" },
+            { nom: "D (Produit)", n0: 0, n: nd, col: "#f59e0b" }
+        ];
+        const maxVal = Math.max(...data.map(d => Math.max(d.n0, d.n, 1))) * 1.2;
+        const chartH = 240, chartW = 700, padL = 60, padT = 30;
+        let svg = `<rect x="${padL}" y="${padT}" width="${chartW}" height="${chartH}" fill="#fafafa" stroke="#e2e8f0"/>`;
+
+        data.forEach((item, i) => {
+            const slotW = chartW / 4, barW = 70;
+            const cx = padL + i * slotW + slotW / 2;
+            const xBar = cx - barW / 2;
+            const hBar = (item.n / maxVal) * chartH;
+            const yBar = padT + chartH - hBar;
+
+            if (item.n0 > 0) {
+                const hInit = (item.n0 / maxVal) * chartH;
+                svg += `<rect x="${xBar - 4}" y="${padT + chartH - hInit}" width="${barW + 8}" height="${hInit}" fill="none" stroke="${item.col}" stroke-dasharray="4,4" opacity="0.6"/>`;
+            }
+            svg += `<rect x="${xBar}" y="${yBar}" width="${barW}" height="${hBar}" fill="${item.col}" rx="4"/>`;
+            svg += `<text x="${cx}" y="${Math.max(15, yBar - 6)}" text-anchor="middle" font-size="12" font-weight="bold">${item.n.toFixed(2)} mmol</text>`;
+            svg += `<text x="${cx}" y="${padT + chartH + 20}" text-anchor="middle" font-size="13" font-weight="bold">${item.nom}</text>`;
+        });
+        document.getElementById('svgChart').innerHTML = svg;
+    }
+
+    calculer(true);
+</script>
+</body>
+</html>
