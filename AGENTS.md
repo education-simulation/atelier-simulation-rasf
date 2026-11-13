@@ -64,7 +64,7 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
   « ⚠️ Il manque un logiciel gratuit, Node.js (le moteur qui fait tourner ton interface sur ton ordinateur). 1) Clique sur ce lien : https://nodejs.org/fr/download 2) Télécharge l'installateur (« macOS Installer » sur Mac, « Windows Installer » sur Windows), ouvre-le et clique Continuer, Accepter, Installer. 3) Quitte complètement Antigravity, rouvre-le et colle à nouveau la phrase du début. »
   Choix : 1. **C'est installé** · 2. **😕 Je suis bloqué·e**. Si « C'est installé » dans cette conversation : relance `node -v`.
 
-**3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »
+**3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton interface ? »
 Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. **Sous la ligne ✍️**, ajoute un trait horizontal (`---`) puis, exactement :
   ```
   🔐 Juste après, des petites fenêtres en anglais vont s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger.
