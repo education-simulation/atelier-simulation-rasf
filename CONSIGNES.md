@@ -152,21 +152,23 @@ La page guide donne la phrase : « Supprime mon site, dossier <nom> <sur le Bure
 ### Étape 0 — Installer ta page guide (décrite dans `AGENTS.md`, déjà faite)
 Présentation, Node.js, dossier, copie, installation, page guide : tout est dans `AGENTS.md`. Si la personne revient sans que l'étape 0 soit cochée, refais `AGENTS.md`.
 
-### Étape 1 — Faire connaissance (questions à cliquer, une par une)
-Pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur le public visé, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
-1. **Le nom de ton site ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse virtuelle », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mon atelier de simulations » ; **dis-le-lui en une ligne** au début du message suivant : « D'accord, ton site s'appellera « Mon atelier de simulations » pour l'instant : tu pourras le changer plus tard. »), puis Autre.
+### Étape 1 — Personnalise ton interface (questions à cliquer, une par une)
+**D'abord, une question à choix :** « Veux-tu personnaliser ton interface maintenant (son nom, sa couleur, son style…) ? » → 1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** (tu pourras tout changer plus tard) · 3. **😕 Je suis perdu·e**.
+- **« Non »** : ne pose aucune des 5 questions. Prends les réglages par défaut : nom « Mes simulations », couleur bleue `#0b4f94`, style « Barre latérale » (`"lateral"`), établissement vide, nom « Prof de sciences ». Écris en une ligne : « D'accord, ton interface s'appellera « Mes simulations », en bleu : tu pourras tout changer plus tard en me le demandant. » Coche les cinq sous-étapes `1.1` à `1.5` **et** `- [x] Étape 1 — Personnalise ton interface` dans `PROGRESSION.md`, puis enchaîne aussitôt sur l'étape 2.
+- **« Oui »** : pose ces questions **dans cet ordre, une par message**, chacune avec ses choix et « Autre (écris ta réponse) ». Ne pose **aucune** question sur le public visé, les niveaux, les modules ou la grande phrase : le site démarre avec les menus Exemples, A, B, C et la phrase « Essayer, observer, comprendre. », que la personne changera plus tard si elle veut.
+1. **Le nom de ton interface ?** Propose 3 noms (ex. « Mon labo virtuel », « La paillasse virtuelle », « Atelier de sciences »), puis **« Je ne sais pas »** (→ on garde « Mes simulations » ; **dis-le-lui en une ligne** au début du message suivant : « D'accord, ton interface s'appellera « Mes simulations » pour l'instant : tu pourras le changer plus tard. »), puis Autre.
 2. **Ta couleur ?** Bleu · Vert · Violet · Orange · Autre.
 3. **Le style de ton site ?** → **Blocs de couleur** (menus en haut, accueil en grands blocs colorés, joyeux) · **Barre latérale** (menus dans une barre sombre à gauche, accueil sobre en cartes) · **Liste** (menus en haut, accueil en simple liste, le plus rapide à lire). Ajoute : « Tu pourras en changer à tout moment, en me le demandant. »
 4. **Ton établissement ?** (tel qu'il s'affichera sur le site) → **« Je le dirai plus tard »** (→ rien ne s'affiche) · Autre (écris le nom de ton établissement). **N'ajoute pas d'option « Indiquer mon établissement »** : le choix « Autre » permet déjà de l'écrire, en une seule question.
 5. **Ton nom ou ton pseudo ?** (affiché en bas du site) → « Prof de sciences » · Autre (écris ton nom ou ton pseudo).
 - **Après chaque réponse**, ajoute sa sous-étape dans `PROGRESSION.md` (outil d'écriture de fichier), exactement sous cette forme, pour que la page guide la coche devant la personne :
-  `- [x] Étape 1.1 — Nom du site`, puis `1.2 — Couleur`, `1.3 — Style`, `1.4 — Établissement`, `1.5 — Ton nom`.
+  `- [x] Étape 1.1 — Nom de l'interface`, puis `1.2 — Couleur`, `1.3 — Style`, `1.4 — Établissement`, `1.5 — Ton nom`.
 - **À la question du style**, ajoute dans le message, sur sa propre ligne : « 👉 Pour voir les 3 styles côte à côte : https://education-simulation.github.io/atelier-simulation-rasf/etape.html?n=2 »
-- **Vérification :** tu as les cinq réponses ; coche alors `- [x] Étape 1 — Faire connaissance`.
+- **Vérification :** tu as les cinq réponses ; coche alors `- [x] Étape 1 — Personnalise ton interface`.
 
-### Étape 2 — Installer ton site (tes choix dans ton site)
+### Étape 2 — Appliquer tes choix (dans ton interface)
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
-- Puis coche `- [x] Étape 2 — Installer ton site` et enchaîne **aussitôt** sur l'étape 3, sans question.
+- Puis coche `- [x] Étape 2 — Appliquer tes choix` et enchaîne **aussitôt** sur l'étape 3, sans question.
 
 ### Étape 3 — Voir ton site sur ton ordinateur
 - L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message court, avec le vrai lien, et rien de plus** (les menus et les boutons ronds sont expliqués dans la page guide) :

@@ -62,7 +62,7 @@ function CarteMail({ suivi }) {
 
 const ETAPES = [
   { emoji: "📦", titre: "Installation de la progression", texte: "L'IA Gemini copie ton interface simulations sur ton ordinateur, l'installe et t'ouvre ta page de progression." },
-  { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
+  { emoji: "🎨", titre: "Personnalise ton interface", texte: "Son nom, sa couleur, son style… ou garde les réglages par défaut (« Mes simulations »).",
     sous: [
       ["Le nom de ton interface", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
       ["Sa couleur", "Écris le numéro de la couleur qui te plaît (ou son nom, par exemple « rouge »)."],
@@ -70,7 +70,7 @@ const ETAPES = [
       ["Ton établissement", "Écris son nom tel qu'il doit s'afficher, ou le numéro de « Je le dirai plus tard »."],
       ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s’affiche en bas de ton interface."],
     ] },
-  { emoji: "🛠️", titre: "Personnaliser ton interface", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton interface." },
+  { emoji: "🛠️", titre: "Appliquer tes choix", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton interface." },
   { emoji: "👀", titre: "Voir ton interface", texte: "Ton interface s'affiche sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
     infos: [
       "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
@@ -95,7 +95,7 @@ const LEXIQUE = [
 // Lit PROGRESSION.md : les étapes cochées « - [x] Étape N » et l'adresse du site en ligne.
 function lire(texte) {
   const faites = new Set([...texte.matchAll(/^\s*-\s*\[x\]\s*Étape\s*(\d+)(?![.\d])/gim)].map((m) => Number(m[1])));
-  // Sous-étapes cochées « - [x] Étape 1.3 — … » (les questions de l'étape « Faire connaissance »).
+  // Sous-étapes cochées « - [x] Étape 1.3 — … » (les questions de l'étape « Personnalise ton interface »).
   const sousFaites = new Set([...texte.matchAll(/^\s*-\s*\[x\]\s*Étape\s*(\d+)\.(\d+)/gim)].map((m) => `${m[1]}.${m[2]}`));
   const adresse = texte.match(/Adresse du site\s*:\s*(https?:\/\/\S+)/i)?.[1];
   // Connexion Vercel en attente (écrite par l'agent) : « Connexion Vercel : https://vercel.com/… (code : ABCD-EFGH) »
@@ -923,7 +923,7 @@ const DETAILS = [
     toi: "Réponds à l'IA, et accepte les petites fenêtres : « Yes, and always allow ».",
     liens: [["🧭 Découvrir Antigravity", "antigravity.html", "atelier-antigravity"], ["🔐 Donner ton autorisation (anglais)", "fenetres.html", "atelier-autorisation"]] },
   { flux: [["🏷️", "Le nom"], ["🎨", "La couleur"], ["🧩", "Le style"], ["🏫", "L'établissement"], ["👤", "Ton nom"]],
-    toi: "Écris le numéro de ta réponse, puis Entrée.", styles: true },
+    toi: "Personnalise (5 questions) ou garde les réglages par défaut. Écris le numéro de ta réponse, puis Entrée.", styles: true },
   { flux: [["✍️", "Tes 5 réponses"], ["🛠️", "L'IA les range"], ["✨", "Ton interface personnalisée"]],
     toi: "Rien : attends quelques secondes." },
   { flux: [["💻", "Sur ton ordinateur"], ["👀", "Tu te promènes"], ["🔒", "Toi seul la vois"]],

@@ -10,7 +10,7 @@
 
 export default {
   // Nom du site (en haut à gauche et dans l'onglet du navigateur).
-  titre: "Mon atelier de simulations",
+  titre: "Mes simulations",
 
   // Grande phrase de la page d'accueil. Le morceau entre [crochets] est surligné.
   accroche: "Essayer, observer, [comprendre.]",
