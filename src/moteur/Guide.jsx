@@ -230,6 +230,32 @@ export const CSS = `
 .g-liste-parties button { all:unset; box-sizing:border-box; width:100%; display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:9px; font-size:14px; font-weight:700; color:#334155; cursor:pointer; border:2px solid transparent; }
 .g-liste-parties button:hover, .g-liste-parties button.actif { background:#fffbeb; border-color:#f59e0b; color:#0f172a; }
 .g-liste-parties .g-num-partie { min-width:24px; height:22px; font-size:12px; }
+.g-trou, .g-zone { transition: x .55s cubic-bezier(.2,.8,.2,1), y .55s cubic-bezier(.2,.8,.2,1), width .55s cubic-bezier(.2,.8,.2,1), height .55s cubic-bezier(.2,.8,.2,1); }
+.v { max-width:min(1000px, max(340px, calc((100vh - 300px) * 1.77))); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
+.v-tete { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
+.v-tete h1 { font:800 clamp(24px,3.6vw,34px)/1.1 'Outfit',sans-serif; margin:0; flex:1; letter-spacing:-.02em; }
+.v-compte { font-weight:800; color:#475569; }
+.v-barre { height:8px; border-radius:99px; background:#e2e8f0; overflow:hidden; }
+.v-barre > div { height:100%; background:linear-gradient(90deg,#60a5fa,#f59e0b); transition:width .5s; }
+.v-scene { position:relative; border-radius:16px; box-shadow:0 18px 50px rgba(15,23,42,.25); overflow:hidden; }
+.v-bulle { background:#fff; border-radius:18px; padding:18px 22px; border:3px solid #f59e0b; box-shadow:0 8px 28px rgba(15,23,42,.12); animation:v-entre .45s cubic-bezier(.2,.8,.2,1); }
+@keyframes v-entre { from { opacity:0; transform:translateY(14px) scale(.98); } to { opacity:1; transform:none; } }
+.v-bulle h2 { margin:0 0 6px; display:flex; align-items:center; gap:10px; font:800 22px/1.2 'Outfit',sans-serif; }
+.v-bulle p { margin:0; font-size:18px; line-height:1.55; color:#1e293b; }
+.v-minuteur { height:4px; border-radius:99px; background:#fde68a; margin-top:14px; overflow:hidden; }
+.v-minuteur > div { height:100%; background:#f59e0b; animation:v-temps linear forwards; }
+@keyframes v-temps { from { width:0; } to { width:100%; } }
+.v-commandes { display:flex; align-items:center; gap:10px; flex-wrap:wrap; }
+.v-bouton { all:unset; cursor:pointer; padding:11px 20px; border-radius:12px; font-weight:800; font-size:17px; background:#e2e8f0; color:#0f172a; }
+.v-bouton:hover { filter:brightness(.95); } .v-bouton:focus-visible { outline:3px solid #2563eb; outline-offset:2px; }
+.v-bouton.bleu { background:#2563eb; color:#fff; } .v-bouton.orange { background:#f59e0b; color:#1f1300; }
+.v-points { display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
+.v-point { all:unset; cursor:pointer; min-width:28px; height:28px; border-radius:14px; display:grid; place-items:center; font-size:12px; font-weight:800; background:#e2e8f0; color:#475569; transition:all .2s; }
+.v-point.vu { background:#fde68a; color:#92400e; } .v-point.ici { background:#f59e0b; color:#1f1300; transform:scale(1.15); }
+.v-accueil { text-align:center; background:#fff; border-radius:22px; padding:34px 24px; box-shadow:0 8px 28px rgba(15,23,42,.1); animation:v-entre .5s; }
+.v-accueil .g-main { font-size:60px; }
+.v-accueil h1 { font:800 clamp(28px,4.5vw,42px)/1.1 'Outfit',sans-serif; margin:10px 0; }
+.v-accueil p { font-size:19px; color:#334155; margin:0 auto 22px; max-width:560px; }
 .g-fiche { margin-top:12px; background:#fffbeb; border:2px solid #f59e0b; border-radius:14px; padding:12px 16px; min-height:84px; }
 .g-fiche b { display:flex; align-items:center; gap:8px; font-size:17px; }
 .g-fiche p { margin:6px 0 0; font-size:16px; line-height:1.5; color:#1e293b; }
@@ -283,7 +309,7 @@ function Pastille({ id, actif, setActif }) {
   );
 }
 
-function SchemaAntigravity({ actif, setActif }) {
+function SchemaAntigravity({ actif, setActif, spot = false }) {
   const t = { fontFamily: "Nunito, system-ui, sans-serif" };
   const z = actif && ZONES[actif];
   return (
@@ -403,6 +429,18 @@ function SchemaAntigravity({ actif, setActif }) {
           <path d="M456 244 l7 -6 v4 h26 v-4 l7 6 l-7 6 v-4 h-26 v4 z" fill="#1f1300" />
         </g>
       )}
+      {/* visite guidée : tout s'assombrit sauf la partie présentée (le trou glisse d'une partie à l'autre) */}
+      {spot && z && (
+        <g pointerEvents="none">
+          <defs>
+            <mask id="g-trou">
+              <rect x="0" y="0" width="760" height="430" fill="#fff" />
+              <rect className="g-trou" x={z.x - 4} y={z.y - 4} width={z.w + 8} height={z.h + 8} rx="10" fill="#000" />
+            </mask>
+          </defs>
+          <rect x="0" y="0" width="760" height="430" rx="14" fill="rgba(2,6,23,.62)" mask="url(#g-trou)" />
+        </g>
+      )}
       {/* zone encadrée */}
       {z && (
         <rect className="g-zone" x={z.x} y={z.y} width={z.w} height={z.h} rx="8" fill="rgba(245,158,11,.16)" stroke="#f59e0b" strokeWidth="3" pointerEvents="none" />
@@ -452,6 +490,73 @@ export function FenetreAntigravity({ fermer }) {
             </ol>
           </aside>
         </div>
+      </div>
+    </div>
+  );
+}
+
+// --- Visite guidée d'Antigravity : une partie après l'autre, comme la présentation d'un site (page en ligne aide/antigravity.html) ---
+const dureeLecture = (texte) => Math.max(6, Math.round(texte.split(/\s+/).length / 3)) * 1000;
+
+export function VisiteAntigravity() {
+  const [i, setI] = useState(-1);          // -1 : accueil ; PARTIES.length : fin
+  const [auto, setAuto] = useState(true);  // lecture automatique (on peut la mettre en pause)
+  const fin = i >= PARTIES.length;
+  const partie = i >= 0 && !fin ? PARTIES[i] : null;
+  const aller = (n) => setI(Math.max(0, Math.min(PARTIES.length, n)));
+  useEffect(() => {
+    if (!partie || !auto) return;
+    const t = setTimeout(() => setI((n) => n + 1), dureeLecture(partie.texte));
+    return () => clearTimeout(t);
+  }, [i, auto, partie]);
+  useEffect(() => {
+    const touche = (e) => {
+      if (e.key === "ArrowRight") { setAuto(false); setI((n) => Math.min(PARTIES.length, n + 1)); }
+      if (e.key === "ArrowLeft") { setAuto(false); setI((n) => Math.max(0, n - 1)); }
+      if (e.key === " ") { e.preventDefault(); setAuto((a) => !a); }
+    };
+    window.addEventListener("keydown", touche);
+    return () => window.removeEventListener("keydown", touche);
+  }, []);
+
+  if (i < 0) return (
+    <div className="v"><div className="v-accueil">
+      <span className="g-main" aria-hidden="true">🧭</span>
+      <h1>Découvre Antigravity</h1>
+      <p>Une petite visite en {PARTIES.length} étapes (environ 2 minutes) : chaque partie de l'écran s'allume à son tour, avec son explication.</p>
+      <button type="button" className="v-bouton bleu" onClick={() => { setAuto(true); setI(0); }}>▶ Commencer la visite</button>
+    </div></div>
+  );
+  if (fin) return (
+    <div className="v"><div className="v-accueil">
+      <span className="g-main" aria-hidden="true">🎉</span>
+      <h1>Tu connais Antigravity !</h1>
+      <p>Reviens dans la conversation d'Antigravity et réponds <b>1</b> (« J'ai regardé, on continue »).</p>
+      <button type="button" className="v-bouton" onClick={() => { setAuto(true); setI(0); }}>↺ Revoir la visite</button>
+    </div></div>
+  );
+  return (
+    <div className="v">
+      <div className="v-tete">
+        <h1><span aria-hidden="true">🧭</span> Découvre Antigravity</h1>
+        <span className="v-compte">Étape {i + 1} sur {PARTIES.length}</span>
+      </div>
+      <div className="v-barre" aria-hidden="true"><div style={{ width: `${((i + 1) / PARTIES.length) * 100}%` }} /></div>
+      <div className="v-scene"><SchemaAntigravity actif={partie.id} setActif={() => {}} spot /></div>
+      <div className="v-bulle" key={partie.id} aria-live="polite">
+        <h2><span className="g-num-partie" aria-hidden="true">{partie.id}</span> {partie.titre}</h2>
+        <p>{partie.texte}</p>
+        {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeLecture(partie.texte)}ms` }} /></div>}
+      </div>
+      <div className="v-commandes">
+        <button type="button" className="v-bouton" onClick={() => { setAuto(false); aller(i - 1); }} disabled={i === 0} style={i === 0 ? { opacity: .4, cursor: "default" } : null}>‹ Précédent</button>
+        <div className="v-points">
+          {PARTIES.map((p, n) => (
+            <button key={p.id} type="button" className={`v-point${n === i ? " ici" : n < i ? " vu" : ""}`} onClick={() => { setAuto(false); aller(n); }} aria-label={`Étape ${n + 1} : ${p.titre}`}>{p.id}</button>
+          ))}
+        </div>
+        <button type="button" className="v-bouton orange" onClick={() => setAuto((a) => !a)}>{auto ? "⏸ Pause" : "▶ Lecture"}</button>
+        <button type="button" className="v-bouton bleu" onClick={() => { setAuto(false); aller(i + 1); }}>{i === PARTIES.length - 1 ? "Terminer ✓" : "Suivant ›"}</button>
       </div>
     </div>
   );
