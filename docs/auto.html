@@ -24,6 +24,7 @@ h1 { margin:0; font:800 clamp(22px,3.4vw,30px)/1.2 'Outfit',system-ui,sans-serif
 .st .ici { color:#fde68a; font-weight:800; }
 .etape { display:none; border:2px solid #f59e0b; background:#1f1a10; border-radius:14px; padding:14px 16px; font-size:17px; line-height:1.5; }
 .etape.ici { display:block; }
+.etape { min-height:525px; box-sizing:border-box; }
 .etape h2 { margin:0 0 6px; font:800 20px 'Outfit',system-ui,sans-serif; color:#fff; }
 b.cle { color:#fde68a; }
 .nav { display:flex; gap:10px; justify-content:space-between; }
@@ -77,8 +78,8 @@ b.cle { color:#fde68a; }
 .menu .titre { font-size:12px; color:#71717a; padding:4px 10px; }
 .souris { position:absolute; z-index:5; filter:drop-shadow(0 2px 3px rgba(0,0,0,.6)); }
 /* étape 2 : modèle → Gemini 3.8 Flash → Low (9 s, en boucle), d'après le vrai menu d'Antigravity */
-.e2h { height:430px; }
-.e2 .menu.modeles { left:20px; top:12px; width:340px; animation:m-menu 9s infinite; }
+.e2h { overflow:visible; }
+.e2 .menu.modeles { left:20px; bottom:96px; width:340px; z-index:10; box-shadow:0 12px 30px rgba(0,0,0,.6); animation:m-menu 9s infinite; }
 .e2 .menu .ligne { display:flex; align-items:center; justify-content:space-between; gap:8px; color:#e4e4e7; padding:6px 10px; font-size:14px; }
 .e2 .menu .ligne.off { color:#52525b; }
 .e2 .menu .ligne.usage { border-top:1px solid #3f3f46; border-radius:0; margin-top:4px; padding-top:9px; }
@@ -86,7 +87,7 @@ b.cle { color:#fde68a; }
 .e2 .menu .off .tag { color:#52525b; }
 .e2 .menu .niv { font-style:normal; color:#a1a1aa; margin-left:4px; }
 .e2 .menu .chev { color:#a1a1aa; }
-.e2 .menu.niveaux { left:366px; top:40px; width:150px; animation:m-niv 9s infinite; }
+.e2 .menu.niveaux { left:366px; bottom:236px; width:150px; z-index:10; box-shadow:0 12px 30px rgba(0,0,0,.6); animation:m-niv 9s infinite; }
 .e2 .menu.niveaux p { display:flex; justify-content:space-between; align-items:center; }
 .e2 .flash { animation:m-flash 9s infinite; }
 .e2 .low { animation:m-low 9s infinite; }
@@ -96,16 +97,16 @@ b.cle { color:#fde68a; }
 .e2 .bouton-ag { animation:m-bouton 9s infinite; }
 .e2 .bouton-ag .avant { animation:m-avant 9s infinite; }
 .e2 .bouton-ag .apres { animation:m-apres 9s infinite; }
-.e2 .souris { left:470px; top:220px; animation:m-souris 9s infinite; }
+.e2 .souris { left:470px; bottom:150px; z-index:11; animation:m-souris 9s infinite; }
 @keyframes m-souris {
-  0% { left:470px; top:220px; transform:scale(1); }
-  18% { left:110px; top:392px; transform:scale(1); }
-  21% { left:110px; top:392px; transform:scale(.8); }
-  24% { left:110px; top:392px; transform:scale(1); }
-  40% { left:200px; top:46px; }
-  56% { left:400px; top:52px; transform:scale(1); }
-  59% { left:400px; top:52px; transform:scale(.8); }
-  62%, 100% { left:400px; top:52px; transform:scale(1); }
+  0% { left:470px; bottom:150px; transform:scale(1); }
+  18% { left:110px; bottom:6px; transform:scale(1); }
+  21% { left:110px; bottom:6px; transform:scale(.8); }
+  24% { left:110px; bottom:6px; transform:scale(1); }
+  40% { left:200px; bottom:262px; }
+  56% { left:400px; bottom:302px; transform:scale(1); }
+  59% { left:400px; bottom:302px; transform:scale(.8); }
+  62%, 100% { left:400px; bottom:302px; transform:scale(1); }
 }
 @keyframes m-menu { 0%, 21% { opacity:0; } 23%, 66% { opacity:1; } 69%, 100% { opacity:0; } }
 @keyframes m-niv { 0%, 38% { opacity:0; } 40%, 66% { opacity:1; } 69%, 100% { opacity:0; } }
