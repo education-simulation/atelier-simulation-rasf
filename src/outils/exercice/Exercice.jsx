@@ -654,7 +654,7 @@ function ToutRecommencer({ page, fermer, remiseAZero, modele }) {
 function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, cocher, etapeProps, ouvertes, basculer, scene, motsCles, outils, sans, idees, etapes, recommencer }) {
   const [choisi, setChoisi] = useState(() => lire(`${page}.atelierModeChoisi`, false) === true);
   const [intro, setIntro] = useState(() => lire(`${page}.atelierIntro`, []));
-  const [revues, setRevues] = useState(() => new Set());
+  const [vue, setVue] = useState(null);   // une étape déjà faite qu'on revoit (null = l'étape en cours)
   const [aide, setAide] = useState(null);   // la fenêtre « les modèles déjà installés »
   const choisir = (m) => { choisirMode(m); setChoisi(true); ecrire(`${page}.atelierModeChoisi`, true); };
   const changerDeMode = () => { setChoisi(false); ecrire(`${page}.atelierModeChoisi`, false); };
@@ -691,8 +691,10 @@ function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, coche
     ...liste.map(({ num, etape }) => ({ id: `e${num}`, num, etape, titre: etape.titre, fait: faites.includes(num) })),
   ];
   const ici = toutes.findIndex((e) => !e.fait);
-  const basculerRevue = (id) => setRevues((r) => { const n = new Set(r); if (n.has(id)) n.delete(id); else n.add(id); return n; });
-  const visibles = toutes.map((e, i) => ({ e, i })).filter(({ e, i }) => i === ici || (e.fait && revues.has(e.id))).reverse();
+  // Un clic sur une étape faite l'affiche à la place de l'étape en cours ; « Revenir à l'étape en cours » (ou son rond) ramène.
+  const iVue = vue ? toutes.findIndex((e) => e.id === vue) : -1;
+  const montree = iVue >= 0 ? iVue : ici;
+  const visibles = montree >= 0 ? [{ e: toutes[montree], i: montree }] : [];
 
   const contenu = (e) => {
     if (e.id === "etat") return (
@@ -730,13 +732,20 @@ function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, coche
           const rond = <span className="st-rond" aria-hidden="true">{e.fait ? "✓" : i + 1}</span>;
           return (
             <li key={e.id} className={`st-etape ${etatRond}`}>
-              {e.fait ? <button type="button" className={`st-bouton${revues.has(e.id) ? " ouvert" : ""}`} onClick={() => basculerRevue(e.id)} title={revues.has(e.id) ? "Masquer cette étape" : "Revoir cette étape"}>{rond}</button> : rond}
+              {e.fait || i === ici
+                ? <button type="button" className={`st-bouton${i === montree ? " ouvert" : ""}`} onClick={() => setVue(i === ici ? null : e.id)} title={i === ici ? "L'étape en cours" : "Revoir cette étape"}>{rond}</button>
+                : rond}
               <span className="st-nom">{e.titre}</span>
             </li>
           );
         })}
       </ol>
-      {ici === -1 && <p className="va-bravo">🎉 Tu as fini l'atelier !</p>}
+      {ici === -1 && iVue < 0 && <p className="va-bravo">🎉 Tu as fini l'atelier !</p>}
+      {iVue >= 0 && iVue !== ici && (
+        <button type="button" className="va-retour" onClick={() => setVue(null)}>
+          ↩ {ici >= 0 ? <>Revenir à l'étape en cours : <b>{ici + 1}. {toutes[ici].titre}</b></> : "Revenir à la fin de l'atelier"}
+        </button>
+      )}
       <ol className="ga-etapes">
         {visibles.map(({ e, i }) => (
           <li key={e.id} className={e.fait ? "fait" : "encours"}>
@@ -774,6 +783,9 @@ const STYLE_VUE_ATELIER = `
 .va-carte-claire { color:#0f172a; }
 .va-suivant { all:unset; cursor:pointer; justify-self:start; background:#f59e0b; color:#1f1300; font-weight:800; border-radius:12px; padding:10px 16px; }
 .va-suivant:hover { background:#fbbf24; }
+.va-retour { all:unset; cursor:pointer; justify-self:start; background:#2563eb; color:#fff; font-weight:800; border-radius:12px; padding:10px 16px; font-size:15px; }
+.va-retour b { color:#fff; }
+.va-retour:hover { background:#1d4ed8; }
 .va-bravo { margin:0; text-align:center; font-weight:800; font-size:20px; color:#86efac; }
 `;
 
