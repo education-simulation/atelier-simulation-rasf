@@ -66,8 +66,8 @@ export function Atelier() {
   return <Tuiles />;
 }
 
-// La page des tuiles : les tuiles ne s'ouvrent qu'une fois que la prof a répondu à l'IA (« J'ai ouvert l'atelier » :
-// l'étape 3 est cochée dans PROGRESSION.md). Avant, la bande jaune lui dit quoi répondre.
+// La page des tuiles : les tuiles ne s'ouvrent qu'une fois que la prof a écrit « continue » à l'IA (l'étape 3 est
+// alors cochée dans PROGRESSION.md). Avant, la bande verte lui dit d'écrire « continue ».
 function Tuiles() {
   const { faites, pret } = useProgression();
   const ouvert = faites.has(3);
@@ -89,7 +89,7 @@ function Tuiles() {
               </>;
               const cls = `at-tuile${k === 0 ? " premier" : ""}${t.bientot ? " bientot" : ""}${t.site ? " site" : ""}`;
               return t.bientot || !ouvert
-                ? <div key={k} className={`${cls}${!t.bientot ? " fermee" : ""}`} aria-disabled="true" title={!t.bientot ? "Réponds d'abord à l'IA, dans Antigravity" : undefined}>{contenu}</div>
+                ? <div key={k} className={`${cls}${!t.bientot ? " fermee" : ""}`} aria-disabled="true" title={!t.bientot ? "Écris d'abord « continue » à l'IA, dans Antigravity" : undefined}>{contenu}</div>
                 : <a key={k} className={cls} href={t.lien} target="atelier-site">{contenu}</a>;
             })}
           </div>
@@ -97,7 +97,7 @@ function Tuiles() {
       </div>
       {pret && (ouvert
         ? <BandeIA quoi="Écris le numéro de l'atelier que tu veux faire (1 : Métamérisme), puis Entrée — ou clique sur sa tuile." />
-        : <BandeIA quoi="Écris 1 (J'ai ouvert l'atelier), puis Entrée : les tuiles s'ouvriront." />)}
+        : <BandeIA vert titre="✅ L'atelier est ouvert" ou="reviens dans la zone de message, en bas à gauche" quoi="Écris « continue » (ou « aide »), puis Entrée : les tuiles s'ouvriront." />)}
     </div>
   );
 }

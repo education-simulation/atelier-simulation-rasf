@@ -180,14 +180,9 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
   On commence l'atelier « Comment créer une simulation avec l'IA sur mon ordinateur ».
 
   👉 Clique sur ce lien : http://localhost:NNNN/?atelier
-
-  Choisis « Atelier 1 : Métamérisme » : il te guide pas à pas. La tuile « Voir la page de mon site de simulations » te montre ton interface.
-
-  1. J'ai ouvert l'atelier
-
-  ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Besoin d'aide ? Écris « aide ».*
   ```
-- **« J'ai ouvert l'atelier »** : coche `- [x] Étape 3 — L'atelier` (les tuiles de la page s'ouvrent alors), puis pose cette question à choix :
+  Pas de question, pas de ligne ✍️ : c'est la page de l'atelier qui dit à la personne, dans sa bande verte en bas, d'écrire « continue ». Puis attends.
+- **Quand elle écrit « continue »** (ou n'importe quoi qui veut dire qu'elle a ouvert l'atelier) : coche `- [x] Étape 3 — L'atelier` (les tuiles de la page s'ouvrent alors), puis pose cette question à choix :
   ```
   **💬 Pour toi :**
 

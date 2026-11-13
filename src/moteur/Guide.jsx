@@ -1036,17 +1036,17 @@ export function PageEtape({ n, fermer = null }) {   // fermer : le bouton « ✕
 
 // La bande du bas, réutilisée par les pages de l'atelier : jaune « Réponds à l'IA » (titre, quoi),
 // rouge avec la mini fenêtre animée quand une autorisation attend, masquée pendant que l'IA réfléchit.
-export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de message, en bas à gauche", quoi }) {
-  const [etat, setEtat] = useState({ attente: false, reflexion: false });
+export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de message, en bas à gauche", quoi, vert = false }) {
+  const [etat, setEtat] = useState({ attente: false, reflexion: false, recu: false });
   useEffect(() => {
     let fini = false;
     const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
-      .then((r) => { if (!fini) setEtat({ attente: !!r.attente, reflexion: !!r.reflexion }); }).catch(() => {});
+      .then((r) => { if (!fini) setEtat({ attente: !!r.attente, reflexion: !!r.reflexion, recu: true }); }).catch(() => setEtat((e) => ({ ...e, recu: true })));
     voir();
     const id = setInterval(voir, 2000);
     return () => { fini = true; clearInterval(id); };
   }, []);
-  if (etat.reflexion && !etat.attente) return null;
+  if (!etat.recu || (etat.reflexion && !etat.attente)) return null;
   if (etat.attente) return (
     <div className="ga-repondre alerte" role="alert">
       <span className="ga-fleche" aria-hidden="true">⬅</span>
@@ -1055,7 +1055,7 @@ export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de mess
     </div>
   );
   return (
-    <div className="ga-repondre" role="note">
+    <div className={`ga-repondre${vert ? " continuer" : ""}`} role="note">
       <span className="ga-fleche" aria-hidden="true">⬅</span>
       <span className="ga-repondre-texte"><b>{titre}</b> <em>{ou}</em><span className="ga-quoi">👉 {quoi}</span></span>
     </div>
@@ -1156,7 +1156,7 @@ export function Guide() {
     "Écris le numéro de ton choix, puis Entrée",
     sousEnCours <= 0 && !sousFaites.size ? "Personnaliser ? Écris 1 (oui) ou 2 (non, par défaut)" : `À toi : ${ETAPES[1].sous[Math.max(0, sousEnCours)][0].toLowerCase()}`,
     "Attends : l'IA applique tes choix",
-    "Ouvre l'atelier avec le lien de l'IA, puis écris 1",
+    "Ouvre l'atelier avec le lien de l'IA, puis écris « continue »",
     "Fais l'atelier ; pour la mise en ligne, bouton en haut de ton interface",
     "Demande à l'IA ce que tu veux, avec tes mots",
   ][encours] || "Demande à l'IA ce que tu veux, avec tes mots";
