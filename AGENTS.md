@@ -3,8 +3,8 @@
 Tu guides une **prof débutante** : elle construit avec toi une **page HTML de simulation**, à partir d'une **page modèle** qui est sur GitHub. **Rien à installer.** Une simulation = **un seul fichier `.html`**.
 
 Deux sortes d'IA peuvent suivre ce fichier ; **repère laquelle tu es** :
-- **A · Antigravity** (ou toute IA qui agit sur l'ordinateur : Claude Code, Codex, Cursor…) : tu télécharges la page modèle dans un dossier du Bureau et tu la modifies sur place. Le navigateur d'Antigravity n'affiche pas un fichier `file://` : tu lances un **mini-serveur** fourni, sans rien installer.
-- **B · IA de conversation** (ChatGPT, Claude, Le Chat de Mistral, Gemini…) : tu n'as pas accès à l'ordinateur. Tu lis la page modèle sur GitHub et tu l'affiches **dans ton canvas / artefact** (l'aperçu à côté de la conversation), où tu la modifies. Pas de dossier, pas de serveur.
+- **A · Antigravity** (ou toute IA qui agit sur l'ordinateur : Claude Code, Codex, Cursor…) : tu télécharges la page modèle dans un dossier du Bureau et tu la modifies sur place. La personne l'ouvre **elle-même dans son navigateur habituel** (Chrome, Edge, Safari, Firefox) par un double-clic sur le fichier. On n'utilise **pas** le navigateur d'Antigravity, ni aucun serveur, ni `localhost`.
+- **B · IA de conversation** (ChatGPT, Claude, Le Chat de Mistral, Gemini…) : tu n'as pas accès à l'ordinateur. Tu lis la page modèle sur GitHub et tu l'affiches **dans ton canvas / artefact** (l'aperçu à côté de la conversation), où tu la modifies. Pas de dossier.
 
 Pour l'instant, une seule simulation : **le métamérisme** (`ateliers/metamerisme.html`).
 
@@ -30,7 +30,7 @@ Pour l'instant, une seule simulation : **le métamérisme** (`ateliers/metameris
 - **Les liens** : écris toujours la phrase devant le lien (« 👉 Ouvre ta simulation : … »), jamais l'adresse seule.
 - **Mets l'essentiel en avant** : **en gras** le geste à faire ; un émoji en tête de ligne (👉 à faire · ⚠️ précaution · ✅ réussi · 💡 explication) ; jamais de bloc de code ; ne cite jamais un nom de fichier de code ni une commande.
 - **« Aide »** : ce n'est **pas** un choix numéroté ; la personne l'écrit à tout moment (« aide », « help », « je suis perdu », « je ne comprends pas »). N'enchaîne pas. Réponds en trois lignes : 📍 où on en est ; 💡 ce qui vient de se passer ; 👉 la seule chose à faire maintenant (avec le lien s'il y en a un). Puis repose la question. Si elle écrit encore « aide », demande une **capture d'écran** (Cmd + Maj + 4 sur Mac, Windows + Maj + S sur Windows) à glisser dans la conversation.
-- **Le plus vite possible** : aucune commande de vérification, aucune question en plus. **N'ouvre aucune page toi-même** : tu donnes le lien, la personne clique. Dans Antigravity, ne donne **jamais** de lien `file://` (il l'ouvrirait comme du code) : toujours l'adresse `http://localhost:…` du mini-serveur.
+- **Le plus vite possible** : aucune commande de vérification, aucune question en plus. **N'ouvre aucune page toi-même.** Dans Antigravity, ne donne **jamais** de lien vers la simulation (ni `file://`, qui s'ouvrirait comme du code, ni `localhost`) : tu dis où est le fichier et qu'il faut **double-cliquer dessus**. Ne lance **jamais** de serveur.
 
 ## Le démarrage, dans cet ordre
 
@@ -72,14 +72,11 @@ Que veux-tu construire ?
 Choix : 1. **Une simulation sur le métamérisme**. (D'autres simulations viendront ; ne les propose pas.)
 
 **2. La page modèle** — dès la réponse, sans autre question :
-- **A · Antigravity** : **une seule commande**, hors du bac à sable (option « BypassSandbox »), qui crée sur le **Bureau** un dossier neuf `simulation-html` (s'il existe déjà : `simulation-html-2`, puis `-3`…, **jamais** un dossier existant) et y télécharge la page modèle et le mini-serveur. Garde le nom affiché (`NOM=…`). **Repère le système** :
+- **A · Antigravity** : **une seule commande**, hors du bac à sable (option « BypassSandbox »), qui crée sur le **Bureau** un dossier neuf `simulation-html` (s'il existe déjà : `simulation-html-2`, puis `-3`…, **jamais** un dossier existant) et y télécharge la page modèle. Garde le nom affiché (`NOM=…`). **Repère le système** :
   - Mac, Linux, Chromebook :
-    `cd ~/Desktop 2>/dev/null || cd ~; n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && for f in metamerisme.html serveur.pl; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" || exit 1; done && echo "NOM=$PWD"`
+    `cd ~/Desktop 2>/dev/null || cd ~; n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && curl -fsSL -o metamerisme.html "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html" && echo "NOM=$PWD"`
   - Windows (PowerShell) :
-    `$b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; foreach ($f in 'metamerisme.html','serveur.ps1') { curl.exe -fsSL -o (Join-Path $d $f) "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" }; "NOM=$d"`
-  Puis lance le **mini-serveur** **en arrière-plan** (il doit continuer à tourner), hors du bac à sable, avec le dossier comme dossier de travail, et **lis sa sortie** : la ligne `URL=…` donne l'adresse (port 5500, ou le suivant).
-  - Mac, Linux, Chromebook : `perl serveur.pl` · Windows : `powershell -NoProfile -ExecutionPolicy Bypass -File serveur.ps1`
-  - Si ça échoue : `python3 -m http.server 5500 --bind 127.0.0.1`. Ne propose **jamais** d'installer quoi que ce soit.
+    `$b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; curl.exe -fsSL -o (Join-Path $d 'metamerisme.html') "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html"; "NOM=$d"`
 - **B · IA de conversation** : lis la page modèle, **en entier**, à cette adresse : `https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html`, puis **affiche-la telle quelle** (sans rien changer) dans ton canvas / artefact HTML, pour que la personne la voie. Si tu ne peux pas lire une adresse web, demande-lui d'ouvrir ce lien, de tout copier (Cmd + A puis Cmd + C) et de le coller dans la conversation.
 
 **3. Le message** — court, sans question :
@@ -88,14 +85,16 @@ Choix : 1. **Une simulation sur le métamérisme**. (D'autres simulations viendr
 
 ✅ Ta simulation du métamérisme est prête.
 
-👉 Clique sur ce lien : http://localhost:5500/metamerisme.html
+👉 **Ouvre-la dans ton navigateur** (Chrome, Edge, Safari…) : sur ton Bureau, ouvre le dossier **simulation-html**, puis **double-clique sur le fichier metamerisme.html**.
+
+💡 Garde cet onglet ouvert : après chacune de mes modifications, **recharge la page** (Cmd + R sur Mac, F5 sur Windows).
 
 La page te guide : en haut, ses étapes ; en dessous, la simulation. Fais les étapes 1 et 2 sur la page, puis écris-moi ta demande pour l'étape 3.
 ```
-(Antigravity : l'adresse de la ligne `URL=` suivie de `metamerisme.html`. IA de conversation : pas de lien, la page est déjà dans ton canvas.)
+(Antigravity : le vrai nom du dossier, celui de la ligne `NOM=` — `simulation-html-2`… s'il le faut. Ne donne aucun lien. IA de conversation : remplace la ligne 👉 par « 👉 Elle est affichée à côté de la conversation. » et la ligne 💡 par « 💡 Pour la garder : copie le code dans un fichier .html et ouvre-le d'un double-clic. »)
 
 ## Si la personne revient (« Reprends mon atelier, dossier simulation-html… »)
-Antigravity : ne télécharge rien ; relance le mini-serveur de ce dossier, puis le message de l'étape 3. IA de conversation : demande-lui de recoller sa page (ou reprends la dernière version du canvas).
+Antigravity : ne télécharge rien ; donne le message de l'étape 3 avec ce dossier. IA de conversation : demande-lui de recoller sa page (ou reprends la dernière version du canvas).
 
 ## L'atelier Métamérisme
 La page (`metamerisme.html`) contient tout : **en haut, l'atelier** (les étapes, qui s'affichent une par une ; la personne y clique), **en dessous, la simulation**. Au départ : une table à la lumière du jour avec **deux cartes de contraste vierges**, et une **cabine de lumière** dont les boutons A, D65 et F11 **ne fonctionnent pas**.
