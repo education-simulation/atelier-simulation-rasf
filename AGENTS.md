@@ -53,7 +53,7 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
 
   👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/antigravity.html
 
-  Choisis « ▶ Démo » (une présentation animée d'environ 2 minutes) ou « 🔢 Explorer » (l'écran numéroté, à ton rythme).
+  Choisis « ▶ Démo » (une présentation animée d'environ 1 minute) ou « 🔢 Explorer » (l'écran numéroté, à ton rythme).
   ```
   Choix : 1. **J'ai regardé, on continue** · 2. **😕 Je suis perdu·e**. Puis étape 2.
 - « Non » : étape 2, sans rien dire.

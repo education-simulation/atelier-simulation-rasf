@@ -231,7 +231,7 @@ export const CSS = `
 .g-liste-parties button:hover, .g-liste-parties button.actif { background:#fffbeb; border-color:#f59e0b; color:#0f172a; }
 .g-liste-parties .g-num-partie { min-width:24px; height:22px; font-size:12px; }
 .g-apparait { animation:g-fondu .45s; }
-.g-clic { animation:g-clic 1.8s ease-out infinite; transform-origin:center; transform-box:fill-box; }
+.g-clic { animation:g-clic 1.2s ease-out infinite; transform-origin:center; transform-box:fill-box; }
 @keyframes g-clic { 0%,55% { opacity:0; transform:scale(.4); } 65% { opacity:1; } 100% { opacity:0; transform:scale(1.8); } }
 .g-trou, .g-zone { transition: x .55s cubic-bezier(.2,.8,.2,1), y .55s cubic-bezier(.2,.8,.2,1), width .55s cubic-bezier(.2,.8,.2,1), height .55s cubic-bezier(.2,.8,.2,1); }
 .v { max-width:min(1000px, max(340px, calc((100vh - 300px) * 1.77))); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
@@ -476,7 +476,7 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
       ))}
       {/* démo : la souris qui clique */}
       {curseur && (
-        <g pointerEvents="none" style={{ transform: `translate(${curseur.x}px, ${curseur.y}px)`, transition: "transform .7s cubic-bezier(.2,.8,.2,1)" }}>
+        <g pointerEvents="none" style={{ transform: `translate(${curseur.x}px, ${curseur.y}px)`, transition: "transform .5s cubic-bezier(.2,.8,.2,1)" }}>
           <circle r="11" fill="rgba(251,191,36,.45)" className="g-clic" />
           <path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#0b0b0f" strokeWidth="1.3" />
         </g>
@@ -565,7 +565,7 @@ const DEMO = [
   { titre: "Refermer le navigateur", texte: "Le rectangle tout en haut à droite ferme le navigateur ; un 2e clic le rouvre.", zones: [Z.fermer], images: [{ curseur: { x: 716, y: 18 } }, { curseur: { x: 716, y: 18 }, ferme: true }] },
   { titre: "Régler la largeur", texte: "La fine barre verticale entre le milieu et le navigateur se déplace : garde le bouton de la souris appuyé dessus et glisse à gauche ou à droite.", zones: [Z.barre], images: [{ actif: "6c", curseur: { x: 476, y: 244 } }, { actif: "6c", curseur: { x: 420, y: 244 } }, { actif: "6c", curseur: { x: 530, y: 244 } }] },
 ];
-const dureeLecture = (texte) => Math.max(7, Math.round(texte.split(/\s+/).length / 3)) * 1000;
+const dureeLecture = (texte) => Math.max(4, Math.round(texte.split(/\s+/).length / 4.5)) * 1000;
 
 function DemoAntigravity({ explorer }) {
   const [i, setI] = useState(0);
@@ -581,7 +581,7 @@ function DemoAntigravity({ explorer }) {
   }, [i, auto, etape]);
   useEffect(() => { // la petite animation de l'étape (images qui s'enchaînent en boucle)
     if (!etape?.images) return;
-    const t = setInterval(() => setImg((k) => (k + 1) % etape.images.length), 1800);
+    const t = setInterval(() => setImg((k) => (k + 1) % etape.images.length), 1200);
     return () => clearInterval(t);
   }, [i, etape]);
   useEffect(() => {
@@ -641,7 +641,7 @@ export function VisiteAntigravity() {
         <div className="v-accueil">
           <span className="g-main" aria-hidden="true">🧭</span>
           <h1>Découvre Antigravity</h1>
-          <p>Deux façons de le découvrir : la <b>démo</b>, une présentation animée d'environ 2 minutes, ou <b>explorer</b> l'écran toi-même, partie par partie, avec les numéros.</p>
+          <p>Deux façons de le découvrir : la <b>démo</b>, une présentation animée d'environ 1 minute, ou <b>explorer</b> l'écran toi-même, partie par partie, avec les numéros.</p>
           <div className="v-commandes" style={{ justifyContent: "center" }}>
             <button type="button" className="v-bouton bleu" onClick={() => setMode("demo")}>▶ Démo</button>
             <button type="button" className="v-bouton orange" onClick={() => setMode("explorer")}>🔢 Explorer</button>
