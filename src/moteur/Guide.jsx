@@ -327,7 +327,8 @@ export const CSS = `
 .ga-fleche { font-size:34px; font-weight:800; line-height:1; animation:ga-fleche 1s ease-in-out infinite; }
 @keyframes ga-fleche { 0%,100% { transform:translateX(0); } 50% { transform:translateX(-12px); } }
 .ga-repondre-texte { flex:1; }
-.ga-repondre-texte b { font-size:18px; }
+.ga-repondre-texte b { display:block; font-size:19px; }
+.ga-repondre-texte small { display:block; font-size:14px; opacity:.85; }
 .ga-decouvrir { flex-shrink:0; text-decoration:none; background:#0b0b0f; color:#fff; border-radius:12px; padding:10px 14px; font-weight:800; font-size:15px; }
 .ga-decouvrir:hover { background:#27272a; }
 @media (max-width:600px) { .ga-repondre { flex-wrap:wrap; } }
@@ -1004,6 +1005,16 @@ export function Guide() {
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, [mail]);
+  // Ce qu'il faut répondre maintenant, en très court (bande orange en bas à gauche).
+  const sousEnCours = encours >= 0 && ETAPES[encours].sous ? ETAPES[encours].sous.findIndex((_, k) => !sousFaites.has(`${encours}.${k + 1}`)) : -1;
+  const quoi = [
+    "Réponds à l'IA : le numéro de ton choix",
+    sousEnCours <= 0 && !sousFaites.size ? "Personnaliser ? Écris 1 (oui) ou 2 (non, par défaut)" : `À toi : ${ETAPES[1].sous[Math.max(0, sousEnCours)][0].toLowerCase()}`,
+    "Attends : l'IA applique tes choix",
+    "La mettre en ligne ? Écris 1 (oui) ou 2 (pas maintenant)",
+    "Suis l'IA pour Vercel : écris « C'est fait » à chaque étape",
+    "Demande à l'IA ce que tu veux, avec tes mots",
+  ][encours] || "Demande à l'IA ce que tu veux, avec tes mots";
   const pageEtape = (i) => `${AIDE_EN_LIGNE}etape.html?n=${i + 1}`;
   useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
 
@@ -1013,7 +1024,7 @@ export function Guide() {
       {/* En bas à gauche : une flèche animée vers la zone de message d'Antigravity (à gauche de ce navigateur) */}
       <div className="ga-repondre" role="note">
         <span className="ga-fleche" aria-hidden="true">⬅</span>
-        <span className="ga-repondre-texte"><b>Réponds à l'IA</b> dans la zone de message, en bas à gauche : écris le numéro de ta réponse, puis Entrée.</span>
+        <span className="ga-repondre-texte"><b>{quoi}</b><small>Écris dans la zone de message, en bas à gauche, puis Entrée.</small></span>
         <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>
       </div>
       <div className="ga-fenetre">
