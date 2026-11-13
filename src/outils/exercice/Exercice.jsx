@@ -551,6 +551,7 @@ function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, coche
   const [choisi, setChoisi] = useState(() => lire(`${page}.atelierModeChoisi`, false) === true);
   const [intro, setIntro] = useState(() => lire(`${page}.atelierIntro`, []));
   const [revues, setRevues] = useState(() => new Set());
+  const [aide, setAide] = useState(null);   // la fenêtre « les modèles déjà installés »
   const choisir = (m) => { choisirMode(m); setChoisi(true); ecrire(`${page}.atelierModeChoisi`, true); };
   const changerDeMode = () => { setChoisi(false); ecrire(`${page}.atelierModeChoisi`, false); };
   const finirIntro = (id) => { const m = [...new Set([...intro, id])]; setIntro(m); ecrire(`${page}.atelierIntro`, m); };
@@ -601,8 +602,9 @@ function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, coche
     if (e.id === "modeles") return (
       <>
         <p className="va-texte">Pour <b>toute</b> simulation, il faut d'abord trouver les <b>modèles</b> : les lois, les formules et les données qui décrivent le phénomène. Puis il faut <b>les donner à l'IA</b> : sans modèle, elle invente, et la simulation est fausse.</p>
-        <p className="va-texte">Ici, les {nomModele} sont <b>fournis</b> (par défaut). Tu peux aussi choisir de <b>les construire toi-même</b> avec l'IA.</p>
-        <div className="va-carte-claire"><BoiteOutils page={page} avec={!sans} outils={outils} choix={estApercu && !!etapes.etapeOutils} /></div>
+        <p className="va-texte">Ici, les modèles sont <b>déjà installés</b> dans ton interface : l'IA s'en servira à chaque étape.</p>
+        {outils?.[0] && <button type="button" className="va-lien" style={{ justifySelf: "start", fontSize: 15, padding: "8px 14px" }} onClick={() => setAide(outils[0])}>🧰 Voir les modèles déjà installés</button>}
+        {aide && <AideOutil outil={aide} fermer={() => setAide(null)} />}
         {!e.fait && <button type="button" className="va-suivant" onClick={() => finirIntro("modeles")}>J'ai compris, étape suivante ›</button>}
       </>
     );
