@@ -44,6 +44,19 @@ Pour t'aider à visualiser les étapes qui mèneront jusqu'à la page qui affich
 ```
 Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** · 3. **😕 Je suis perdu·e** (1 et 2 veulent dire la même chose : on démarre).
 
+**1 bis. Antigravity en un coup d'œil** — question à choix : « Veux-tu que je te montre comment fonctionne Antigravity ? »
+Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis perdu·e**
+- « Oui » : question à choix, aérée ainsi :
+  ```
+  **💬 Pour toi :**
+
+  👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/antigravity.html
+
+  Survole ou clique les numéros : chaque partie d'Antigravity s'entoure en orange et s'explique.
+  ```
+  Choix : 1. **J'ai regardé, on continue** · 2. **😕 Je suis perdu·e**. Puis étape 2.
+- « Non » : étape 2, sans rien dire.
+
 **2. Node.js** — commande `node -v`.
 - Un numéro `v20.19` ou plus : passe à l'étape 3, sans rien dire.
 - Sinon (« command not found », « n'est pas reconnu », numéro plus petit) : arrête l'installation et pose cette question à choix :
@@ -51,7 +64,13 @@ Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** · 3. **😕 Je 
   Choix : 1. **C'est installé** · 2. **😕 Je suis bloqué·e**. Si « C'est installé » dans cette conversation : relance `node -v`.
 
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »
-Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. Ajoute juste avant les choix, sur sa propre ligne : « 👉 Ensuite, des petites fenêtres en anglais peuvent s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger. » Rien d'autre. **Pas de question sur le nom** : le dossier s'appelle `mon-site`.
+Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. **Sous la ligne ✍️**, ajoute un trait horizontal (`---`) puis, exactement :
+  ```
+  🔐 Juste après, des petites fenêtres en anglais vont s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger.
+
+  👉 Voir à quoi elles ressemblent : https://education-simulation.github.io/atelier-simulation-rasf/fenetres.html
+  ```
+  Rien d'autre. **Pas de question sur le nom** : le dossier s'appelle `mon-site`.
 - Bureau : `Desktop` sur Mac ; sur Windows, souvent `C:\Users\<nom>\OneDrive\Bureau` (prends le vrai chemin).
 - **Ne touche JAMAIS à un dossier qui existe déjà** : la personne peut déjà avoir un site (créé dans une autre conversation), qu'il ne faut ni écraser, ni remplir, ni supprimer. **Ne cherche pas à vérifier toi-même** si le dossier existe (dans le bac à sable, le Bureau paraît vide : un `ls` y répond « rien » même quand le dossier est là). C'est la **copie** qui vérifie, à l'étape 4.
 

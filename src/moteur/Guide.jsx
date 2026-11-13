@@ -115,7 +115,7 @@ function useProgression() {
   return etat;
 }
 
-const CSS = `
+export const CSS = `
 .g { --g-bleu:#2563eb; --g-vert:#16a34a; --g-orange:#f59e0b; min-height:100vh; background:linear-gradient(160deg,#eef4ff 0%,#fdf6ec 100%); color:#0f172a; padding:28px 16px 60px; }
 .g * { box-sizing:border-box; }
 .g-col { max-width:880px; margin:0 auto; display:flex; flex-direction:column; gap:22px; }
@@ -411,7 +411,7 @@ function SchemaAntigravity({ actif, setActif }) {
   );
 }
 
-function FenetreAntigravity({ fermer }) {
+export function FenetreAntigravity({ fermer }) {
   const [actif, setActif] = useState(null);     // partie survolée
   const [choisi, setChoisi] = useState("3");    // partie cliquée (reste affichée)
   useEffect(() => {
@@ -537,6 +537,32 @@ function CarteSupprimer({ dossier, lieu }) {
   );
 }
 
+// --- Les petites fenêtres d'autorisation (en anglais) : contenu de la carte, aussi publié en ligne (aide/fenetres.html) ---
+export function ContenuFenetres() {
+  return (
+    <>
+    <p style={{ margin: "0 0 14px", color: "#334155" }}>
+      Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
+    </p>
+    <div className="g-fenetre" aria-label="Exemple de petite fenêtre d'autorisation">
+      <p className="g-fenetre-titre"><span aria-hidden="true">🖥️</span> Allow …?</p>
+      {CHOIX_FENETRE.map(([en, fr, bon], i) => (
+        <div key={i} className={`g-choix${bon ? " bon" : ""}`}>
+          <span className="n">{i + 1}</span>
+          <span>{en}<small>{fr}</small></span>
+          {bon && <span className="g-fleche" aria-hidden="true">👈</span>}
+        </div>
+      ))}
+    </div>
+    <p className="g-regle">👉 <b>Clique toujours sur le 3e choix, « Yes, and always allow »</b>, puis sur <b>Submit</b>. La même demande ne reviendra plus.</p>
+    <p className="g-regle g-danger">⛔ <b>Sauf si la fenêtre parle de supprimer</b> (« delete », « rm », « Permanently deletes ») : choisis <b>4 · No</b>, écris « Non, mets-le à la Corbeille », puis <b>Submit</b>. Rien ne doit être supprimé pour de bon.</p>
+    <div className="g-lexique">
+      {LEXIQUE.map(([en, fr]) => <div key={en} className="g-mot"><b>{en}</b> = {fr}</div>)}
+    </div>
+    </>
+  );
+}
+
 export function Guide() {
   const suivi = useProgression();
   const { faites, sousFaites, adresse, connexion } = suivi;
@@ -596,24 +622,7 @@ export function Guide() {
 
         <details className="g-carte g-pliable" open={fenetresOuvertes} onToggle={(e) => basculerFenetres(e.currentTarget.open)}>
           <summary><h2 id="g-fenetres"><span aria-hidden="true">🔐</span> Les autorisations à accepter (en anglais)</h2><span className="g-chevron" aria-hidden="true">{fenetresOuvertes ? "Réduire ▴" : "Afficher ▾"}</span></summary>
-          <p style={{ margin: "0 0 14px", color: "#334155" }}>
-            Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
-          </p>
-          <div className="g-fenetre" aria-label="Exemple de petite fenêtre d'autorisation">
-            <p className="g-fenetre-titre"><span aria-hidden="true">🖥️</span> Allow …?</p>
-            {CHOIX_FENETRE.map(([en, fr, bon], i) => (
-              <div key={i} className={`g-choix${bon ? " bon" : ""}`}>
-                <span className="n">{i + 1}</span>
-                <span>{en}<small>{fr}</small></span>
-                {bon && <span className="g-fleche" aria-hidden="true">👈</span>}
-              </div>
-            ))}
-          </div>
-          <p className="g-regle">👉 <b>Clique toujours sur le 3e choix, « Yes, and always allow »</b>, puis sur <b>Submit</b>. La même demande ne reviendra plus.</p>
-          <p className="g-regle g-danger">⛔ <b>Sauf si la fenêtre parle de supprimer</b> (« delete », « rm », « Permanently deletes ») : choisis <b>4 · No</b>, écris « Non, mets-le à la Corbeille », puis <b>Submit</b>. Rien ne doit être supprimé pour de bon.</p>
-          <div className="g-lexique">
-            {LEXIQUE.map(([en, fr]) => <div key={en} className="g-mot"><b>{en}</b> = {fr}</div>)}
-          </div>
+          <ContenuFenetres />
         </details>
 
         <section className="g-carte" aria-labelledby="g-parcours">
