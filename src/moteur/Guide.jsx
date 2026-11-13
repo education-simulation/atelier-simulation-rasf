@@ -975,7 +975,7 @@ const DETAILS = [
 ];
 
 // Une page d'étape (en ligne) : même habillage que la page de progression, très visuelle, peu de texte.
-export function PageEtape({ n }) {
+export function PageEtape({ n, fermer = null }) {   // fermer : le bouton « ✕ Fermer » (pages en ligne)
   const i = Math.min(ETAPES.length, Math.max(1, n || 1)) - 1;
   const e = ETAPES[i], d = DETAILS[i];
   const lien = (url) => (url.startsWith("http") ? url : AIDE_EN_LIGNE + url);
@@ -984,7 +984,7 @@ export function PageEtape({ n }) {
   if (d.styles) return (
     <div className="ga">
       <div className="ga-fenetre">
-        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Les 3 styles de ton interface</b><em>infos</em></div>
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Les 3 styles de ton interface</b>{fermer}</div>
         <div className="ga-corps pe2">
           <div className="pe2-titre"><span aria-hidden="true">🎨</span><h1>Les 3 styles de ton interface</h1></div>
           <div className="pe2-styles">
@@ -997,7 +997,7 @@ export function PageEtape({ n }) {
   return (
     <div className="ga">
       <div className="ga-fenetre">
-        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Étape {i + 1} sur {ETAPES.length}</b><em>infos</em></div>
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Étape {i + 1} sur {ETAPES.length}</b>{fermer}</div>
         <div className="ga-corps pe2">
           <ol className="st" aria-label="Les étapes">
             {ETAPES.map((x, k) => (
