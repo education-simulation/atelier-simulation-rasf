@@ -34,6 +34,9 @@ b.cle { color:#fde68a; }
 .fini { text-align:center; font:800 22px 'Outfit',system-ui,sans-serif; color:#86efac; margin:6px 0; }
 /* étape 1 : les petites fenêtres à fermer (8 s, en boucle) */
 .absent { color:#a1a1aa; font-size:15px; }
+.vers-suivant { margin:12px 0 0; text-align:right; font-weight:800; }
+.fleche-bas { display:inline-block; font-size:30px; color:#f59e0b; vertical-align:middle; animation:f-bas 1.1s ease-in-out infinite; }
+@keyframes f-bas { 50% { transform:translate(6px, 8px); } }
 .e1 .carte-ag { position:absolute; right:14px; width:330px; box-sizing:border-box; }
 .e1 .ca { bottom:128px; animation:d-ca 8s infinite; }
 .e1 .cb { bottom:14px; animation:d-cb 8s infinite; }
@@ -164,6 +167,7 @@ b.cle { color:#fde68a; }
         <div class="carte-ag cb"><b>Search Across Conversations</b><span>Search conversations with 🔍 in the top left.</span><div class="boutons"><i class="dismiss">Dismiss</i></div></div>
         <svg class="souris" viewBox="0 0 14 21" width="22" height="33" aria-hidden="true"><path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#000" stroke-width="1.3"/></svg>
       </div>
+      <p class="vers-suivant">Quand c'est fait, clique sur <b class="cle">« Suivant »</b> <span class="fleche-bas" aria-hidden="true">↘</span></p>
     </section>
 
     <section class="etape e2">
