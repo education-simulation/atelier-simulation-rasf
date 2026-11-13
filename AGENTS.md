@@ -40,6 +40,8 @@ Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** (1 et 2 veulent 
 **Sous la ligne ✍️** de ce message, ajoute un trait horizontal (`---`) puis, exactement :
 ```
 ⚙️ Avant de répondre : en bas, à droite de la zone de message, clique sur « Default » et choisis « Auto ». Ainsi, je travaille sans te demander la permission à chaque commande.
+
+👉 Voir où cliquer : https://education-simulation.github.io/atelier-simulation-rasf/auto.html
 ```
 Ce bloc ne s'écrit **qu'ici**. Si la personne écrit qu'elle ne trouve pas « Default » : c'est le petit menu à gauche du micro 🎤, sous la zone de message.
 
