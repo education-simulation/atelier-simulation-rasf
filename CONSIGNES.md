@@ -189,7 +189,17 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
 
   ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Perdu·e ? Écris simplement « je suis perdu ».*
   ```
-- **« J'ai ouvert l'atelier »** : coche `- [x] Étape 3 — L'atelier` et laisse la personne faire. La page Métamérisme lui dit quoi t'écrire ; suis alors la section « L'exercice Métamérisme ». **« Je ne vois pas la page »** ou autre souci écrit avec ses mots : aide-la.
+- **« J'ai ouvert l'atelier »** : coche `- [x] Étape 3 — L'atelier` (les tuiles de la page s'ouvrent alors), puis pose cette question à choix :
+  ```
+  **💬 Pour toi :**
+
+  Que veux-tu faire ?
+  ```
+  Choix : 1. **Faire l'atelier 1 : Métamérisme** · 2. **Faire l'atelier 2** · 3. **Faire l'atelier 3** · 4. **Voir la page de mon site** · 5. **😕 Je suis perdu·e**
+  - **1** → « 👉 Clique sur la tuile « Atelier 1 : Métamérisme » (ou sur ce lien : http://localhost:NNNN/?atelier=metamerisme). La page te demande d'abord comment tu veux travailler : parcours guidé ou exploration libre. » Puis suis la section « L'exercice Métamérisme ».
+  - **2** ou **3** → « Cet atelier arrive bientôt. Pour l'instant, commence par l'atelier 1 : Métamérisme. » et repose la question.
+  - **4** → « 👉 Clique sur la tuile « Voir la page de mon site de simulations » (ou sur ce lien : http://localhost:NNNN/). C'est la page d'accueil de ton interface ; en haut, un bouton permet de la mettre en ligne quand tu veux. » Puis repose la question.
+  - **« Je ne vois pas la page »** ou autre souci écrit avec ses mots : aide-la.
 - **Mise en ligne** : seulement quand la personne la demande (bouton du bandeau, ou avec ses mots) → étape 4.
 
 ### Étape 4 — Mettre l'interface en ligne avec Vercel, quand la personne le demande (la 1re fois : se connecter)

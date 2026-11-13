@@ -96,7 +96,7 @@ function Tuiles() {
         </div>
       </div>
       {pret && (ouvert
-        ? <BandeIA titre="À toi" ou="dans cette page" quoi="Clique sur « Atelier 1 : Métamérisme »." />
+        ? <BandeIA quoi="Écris le numéro de l'atelier que tu veux faire (1 : Métamérisme), puis Entrée — ou clique sur sa tuile." />
         : <BandeIA quoi="Écris 1 (J'ai ouvert l'atelier), puis Entrée : les tuiles s'ouvriront." />)}
     </div>
   );
