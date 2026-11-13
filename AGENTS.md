@@ -71,34 +71,25 @@ Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** (1 et 2 veulent 
 
 👉 Clique sur ce lien : http://localhost:5500/progression.html
 ```
-Rien d'autre : la page s'ouvre à droite, dans Antigravity, et dit quoi faire (sa 1re étape : découvrir Antigravity, puis écrire « continue »).
+Rien d'autre : la page s'ouvre à droite, dans Antigravity, et dit quoi faire (sa 1re étape : choisir sa simulation, en écrivant 1, 2 ou 3).
 
 ## La page de progression (à tenir à jour à CHAQUE message)
 La page `progression.html` se relit toute seule toutes les 2 secondes : elle affiche l'étape en cours, **ce qu'on attend de la personne** (dans l'étape et dans la **bande jaune** en bas) — ou une **bande rouge** quand une petite fenêtre d'autorisation va s'afficher. **Tu la pilotes en réécrivant le petit fichier `progression.js`** du dossier, **par une commande** (jamais avec ton outil d'écriture de fichier : une commande ne déclenche pas de fenêtre d'autorisation). Le fichier contient une seule ligne :
-`window.progression({ etape: 3, simulation: "dosage", sous: 1, quoi: "Écris ta demande pour le dosage, puis Entrée.", alerte: false });`
+`window.progression({ etape: 2, simulation: "dosage", sous: 1, quoi: "Écris ta demande pour le dosage, puis Entrée.", alerte: false });`
 - Mac, Linux, Chromebook : `printf '%s\n' 'window.progression({ … });' > "<dossier>/progression.js"`
 - Windows : `Set-Content -Encoding utf8 -Path "<dossier>\progression.js" -Value 'window.progression({ … });'`
 - Dans `quoi`, **jamais d'apostrophe droite `'`** (elle casse la commande) : écris l'apostrophe typographique `’` (« l’IA », « l’étape »). Une seule phrase courte, avec le geste exact.
-- **`etape`** : 1. Découvrir Antigravity · 2. Choisir ta simulation · 3. Construire ta simulation · `4` = atelier fini.
-- **À l'étape 3** : `simulation` (`"metamerisme"`, `"avancement"` ou `"dosage"`) et `sous` (la sous-étape en cours) :
+- **`etape`** : 1. Choisir ta simulation · 2. Construire ta simulation · `3` = atelier fini. (Découvrir Antigravity se fait avant, sur la page de configuration.)
+- **À l'étape 2** : `simulation` (`"metamerisme"`, `"avancement"` ou `"dosage"`) et `sous` (la sous-étape en cours) :
   - `metamerisme` : 1. L'état actuel · 2. Les modèles · 3. Les boutons des illuminants · 4. La couleur des cartes · 5. Les cartes mobiles · 6. L'écart de couleur · 7. Le message à retenir (**les mêmes numéros** que dans la simulation).
   - `avancement` : 1. Le tableau d'avancement · 2. Ajuster ta simulation.
   - `dosage` : 1. Le dosage · 2. L'exploitation d'un fichier de mesures · 3. Ajuster ta simulation.
 - **Quand la mettre à jour** : à **chaque** message que tu envoies, **juste avant** (le `quoi` dit ce qu'il faut répondre à ce message : « Écris 1, 2 ou 3, puis Entrée. », « Choisis : 1 Exécute-le, 2 Je corrige mon prompt. »…).
 - **`alerte: true`** : seulement **juste avant** ta **première** lecture et ta **première** écriture d'un fichier de simulation (`metamerisme.html`, `avancement.html`, `dosage.html`) dans la conversation (c'est là qu'Antigravity affiche sa petite fenêtre). Remets `alerte: false` dès que c'est fait.
 
-**« continue »** (étape 1 finie) : `etape: 2`, `quoi` : « Écris 1, 2 ou 3 pour choisir ta simulation, puis Entrée. » Puis la question à choix :
-```
-**💬 Pour toi :**
-
-Quelle simulation veux-tu construire ?
-
-1. Le métamérisme (la page existe déjà : tu la fais fonctionner)
-2. L'avancement d'une réaction (tu pars d'une page vide)
-3. Un dosage (tu pars d'une page vide)
-```
-- **1** → `etape: 3, simulation: "metamerisme", sous: 1`, `quoi` : « Ouvre ta simulation (bouton vert), fais ses étapes 1 et 2 sur la page, puis écris-moi ton prompt pour l’étape 3. » Message court : « 👉 Ouvre ta simulation avec le bouton vert de ta page de progression. » Puis suis « L'atelier Métamérisme » ; à chaque étape validée, `sous` suit le numéro de l'étape suivante.
-- **2** → `etape: 3, simulation: "avancement", sous: 1` ; **3** → `etape: 3, simulation: "dosage", sous: 1`. `quoi` : « Écris ta demande pour <titre de la sous-étape>, puis Entrée. » Message court : « 👉 Ta page de progression te donne l’objectif et des pistes : écris-moi ta demande. » Puis suis « Les simulations Avancement et Dosage ».
+**Le choix de la simulation** (étape 1 de la page) : la page montre les 3 choix et dit d'écrire 1, 2 ou 3 (`progression.js` est déjà à `etape: 1`). **Ne repose pas la question** : attends le chiffre.
+- **1** → `etape: 2, simulation: "metamerisme", sous: 1`, `quoi` : « Ouvre ta simulation (bouton vert), fais ses étapes 1 et 2 sur la page, puis écris-moi ton prompt pour l’étape 3. » Message court : « 👉 Ouvre ta simulation avec le bouton vert de ta page de progression. » Puis suis « L'atelier Métamérisme » ; à chaque étape validée, `sous` suit le numéro de l'étape suivante.
+- **2** → `etape: 2, simulation: "avancement", sous: 1` ; **3** → `etape: 2, simulation: "dosage", sous: 1`. `quoi` : « Écris ta demande pour <titre de la sous-étape>, puis Entrée. » Message court : « 👉 Ta page de progression te donne l’objectif et des pistes : écris-moi ta demande. » Puis suis « Les simulations Avancement et Dosage ».
 - La personne peut changer de simulation à tout moment (« je veux faire le dosage ») : remets `simulation` et `sous: 1`.
 
 ## Les simulations Avancement et Dosage
@@ -106,7 +97,7 @@ La personne part d'une **page vide** : c'est **toi qui crées** le fichier (`ava
 - **Analyse d'abord sa demande** avec les pistes de la sous-étape, comme pour le métamérisme (✅ ce qui est réussi, ⚠️ ce qui manque, formulé en question, sans donner la réponse ; appréciation ; puis **Exécute-le tel quel** · **Je corrige ma demande**). Un prompt court qui a l'essentiel est un bon prompt.
 - **Exécute** : fais exactement ce que dit sa demande. **Un seul fichier HTML**, en français, qui s'ouvre seul (CSS et JavaScript dans le fichier ; une bibliothèque en ligne seulement si c'est indispensable, par exemple pour lire un fichier Excel). Puis donne le lien (adresse du mini-serveur, `…/avancement.html` ou `…/dosage.html`) et commente : 👀 ce qui a changé (« recharge la page »), ✅ ce qui correspond à l'objectif, ⚠️ ce qui manque **et pourquoi**, 💡 une astuce. Choix : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat**.
 - **Vérifie les calculs** avant de dire que c'est réussi : réactif limitant et Xf (avancement) ; Veq = cA·VA·b / (a·cB) et nA = nB = 0 à l'équivalence (dosage).
-- « Je continue » → `sous` suivant. Après la dernière sous-étape : `etape: 4` (atelier fini).
+- « Je continue » → `sous` suivant. Après la dernière sous-étape : `etape: 3` (atelier fini).
 
 ## Si la personne revient (« Reprends mon atelier, dossier simulation-html… »)
 Ne télécharge rien : relance le mini-serveur de ce dossier (étape 2 bis), lis `progression.js` pour savoir où elle en était, puis le message de l'étape 3 (le lien), puis attends.
@@ -131,7 +122,7 @@ Pour chaque étape 3 à 7, l'objectif (`consigne`) et les critères (`indices`) 
 1. **Repère l'étape** en comparant la demande aux `consigne`.
    - **Elle correspond à une étape** : **ne code pas tout de suite. Analyse d'abord le prompt** avec les `indices` de cette étape, en quelques lignes : ✅ ce qui est réussi (**un prompt court est un bon prompt** ; ce qui existe déjà dans la page n'a pas à être redécrit) ; ⚠️ ce qui manque ou reste ambigu, formulé comme une question, **sans donner la réponse** ; une appréciation : « complet », « presque complet » ou « à compléter ». Puis la question à choix : **Exécute-le tel quel** · **Je corrige mon prompt** (« Exécute-le » en premier si le prompt est complet).
    - « Exécute-le tel quel » : fais **exactement ce que dit son prompt**, rien de plus, puis : 👀 ce qui a changé (« **Recharge la page** : Cmd + R sur Mac, Ctrl + R sur Windows ») ; ✅ ce qui correspond à l'objectif ; ⚠️ ce qui manque encore **et pourquoi** (« ton prompt ne précisait pas … ») ; 💡 une astuce d'écriture. Choix : **Je continue : étape suivante** · **Je veux ajuster ce résultat** · **Je ne vois pas le résultat**.
-   - **Valider l'étape** : quand le résultat atteint l'objectif (vérifie-le dans le code) et que la personne choisit « Je continue », ajoute le **numéro de l'écran** à `ETAPES_VALIDEES` (ex. `[3]`, puis `[3, 4]`), et passe la page de progression à la sous-étape suivante (`sous: N + 1` ; après la 7 : `etape: 4`). Dans la simulation, l'étape passe « ✅ validée par l'IA » et la suivante s'ouvre. Dis-le en une ligne.
+   - **Valider l'étape** : quand le résultat atteint l'objectif (vérifie-le dans le code) et que la personne choisit « Je continue », ajoute le **numéro de l'écran** à `ETAPES_VALIDEES` (ex. `[3]`, puis `[3, 4]`), et passe la page de progression à la sous-étape suivante (`sous: N + 1` ; après la 7 : `etape: 3`). Dans la simulation, l'étape passe « ✅ validée par l'IA » et la suivante s'ouvre. Dis-le en une ligne.
    - **C'est une autre idée** : fais-la directement (et seulement ça), puis 👀 ce qui a changé et 💡 une astuce pour la prochaine demande.
 2. **Tiens à jour `ETAT_ACTUEL`** après chaque changement : 2 à 4 lignes **très courtes**, avec un émoji en tête, qui disent ce que fait la simulation maintenant (ce qui marche, ce qui ne marche pas encore). Des faits, pas des conseils.
 3. **Les modèles couleur sont déjà dans la page** (`window.Couleur`) : **tous les calculs de couleur passent par eux**, sans le demander à la personne. `const { LONGUEURS, ILLUMINANTS, xyz, blanc, lab, deltaE, versEcran, paireMetamere, couleurLumiere, croisements } = window.Couleur;` (code dans le `<script type="module">` de la zone de l'IA). Spectres de 380 à 780 nm, pas de 5 nm ; `ILLUMINANTS.A`, `.D65`, `.F11` ont `spectre`, `nom`, `detail`, `couleur`.

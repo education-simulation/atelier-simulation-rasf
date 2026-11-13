@@ -47,6 +47,7 @@ details { background:#16161b; border:1px solid #3f3f46; border-radius:10px; padd
 summary { cursor:pointer; font-weight:800; }
 details ul { margin:8px 0 2px; padding-left:20px; line-height:1.5; }
 .carte .st { margin:4px 0; }
+.choix { margin:0; padding-left:4px; list-style:none; display:grid; gap:6px; font-size:17px; }
 .bravo { margin:0; text-align:center; font:800 22px 'Outfit',system-ui,sans-serif; color:#86efac; }
 .bande { position:fixed; left:0; right:0; bottom:40px; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
 .bande.alerte { bottom:140px; background:#dc2626; color:#fff; animation:alerte 1.2s ease-in-out infinite; }
@@ -73,9 +74,7 @@ details ul { margin:8px 0 2px; padding-left:20px; line-height:1.5; }
 const AIDE = "https://education-simulation.github.io/atelier-simulation-rasf/";
 // Les 3 grandes étapes ; à l'étape 3, les sous-étapes de la simulation choisie (progression.js : simulation, sous).
 const ETAPES = [
-  { titre: "Découvrir Antigravity", texte: "Si tu veux, une démo d'environ 1 minute, ou l'écran d'Antigravity numéroté, à explorer à ton rythme. Tu peux aussi passer cette étape.",
-    liens: [["🧭 Découvrir Antigravity", AIDE + "antigravity.html"], ["🔐 Les fenêtres d'autorisation", AIDE + "fenetres.html"]] },
-  { titre: "Choisir ta simulation", texte: "Trois simulations au choix : le métamérisme (la page existe déjà, tu la fais fonctionner), l'avancement d'une réaction, ou un dosage (tu pars d'une page vide)." },
+  { titre: "Choisir ta simulation", texte: "Trois simulations au choix :", choix: ["1. Le métamérisme : la page existe déjà, tu la fais fonctionner.", "2. L'avancement d'une réaction : tu pars d'une page vide.", "3. Un dosage : tu pars d'une page vide."] },
   { titre: "Construire ta simulation" },
 ];
 const SIMULATIONS = {
@@ -131,10 +130,10 @@ window.progression = (p) => {
   const sim = SIMULATIONS[p.simulation];
   const toi = `<p class="toi${p.alerte ? " alerte" : ""}">${p.alerte ? "🔐 Une petite fenêtre t'attend : clique sur 3 « Yes, and always allow », puis sur Submit." : `✍️ Ce qu'on attend de toi : ${h(p.quoi || "écris ta réponse dans Antigravity, puis Entrée.")}`}</p>`;
   let carte = "";
-  if (e && ici === 3 && sim) {
+  if (e && ici === 2 && sim) {
     const n = Math.max(1, Math.min(sim.sous.length, Number(p.sous) || 1));
     const s = sim.sous[n - 1];
-    carte = `<div class="carte"><h2>3. ${h(sim.nom)} <span class="badge">en cours</span></h2><p>${h(sim.texte)}</p>
+    carte = `<div class="carte"><h2>2. ${h(sim.nom)} <span class="badge">en cours</span></h2><p>${h(sim.texte)}</p>
       ${stepper(sim.sous, n)}
       <h2 style="font-size:18px">${n}. ${h(s.titre)}</h2>
       <p>🎯 ${h(s.objectif)}</p>
@@ -143,12 +142,12 @@ window.progression = (p) => {
       <div class="rangee"><a class="btn vert" href="${sim.fichier}" target="_blank" rel="noopener">🎨 Ouvrir ma simulation</a>
       ${s.exemple ? `<button type="button" class="btn" data-popup="${AIDE + s.exemple}">👀 Voir un exemple de résultat</button>` : ""}</div></div>`;
   } else if (e) {
-    carte = `<div class="carte"><h2>${ici}. ${h(e.titre)} <span class="badge">en cours</span></h2><p>${h(e.texte || "")}</p>${toi}
+    carte = `<div class="carte"><h2>${ici}. ${h(e.titre)} <span class="badge">en cours</span></h2><p>${h(e.texte || "")}</p>${e.choix ? `<ul class="choix">${e.choix.map((c) => `<li>${h(c)}</li>`).join("")}</ul>` : ""}${toi}
       ${e.liens ? `<div class="rangee">${e.liens.map(([t, u]) => `<button type="button" class="btn" data-popup="${u}">${t}</button>`).join("")}</div>` : ""}</div>`;
   } else carte = `<p class="bravo">🎉 Tu as fini l'atelier !</p>`;
   document.getElementById("corps").innerHTML = `
     <h1>Progression de ton atelier <small>${Math.min(ici - 1, ETAPES.length)} sur ${ETAPES.length}</small></h1>
-    ${stepper(ETAPES.map((x, i) => (i === 2 && sim ? { titre: `${x.titre} : ${sim.nom}` } : x)), ici)}
+    ${stepper(ETAPES.map((x, i) => (i === 1 && sim ? { titre: `${x.titre} : ${sim.nom}` } : x)), ici)}
     ${carte}`;
   document.getElementById("bande").innerHTML = p.alerte
     ? `<div class="bande alerte" role="alert"><span class="fleche" aria-hidden="true">⬅</span>
@@ -179,7 +178,7 @@ function relire() {
   s.onload = s.onerror = () => s.remove();
   document.head.appendChild(s);
 }
-window.progression({ etape: 1, quoi: "Écris « continue », puis Entrée." });
+window.progression({ etape: 1, quoi: "Écris 1, 2 ou 3 pour choisir ta simulation, puis Entrée." });
 relire();
 setInterval(relire, 2000);
 </script>
