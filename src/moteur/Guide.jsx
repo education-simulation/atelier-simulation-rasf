@@ -61,7 +61,7 @@ function CarteMail({ suivi }) {
 }
 
 const ETAPES = [
-  { emoji: "📦", titre: "Installer ton interface", texte: "L'IA Gemini copie ton interface simulations sur ton ordinateur et l'installe." },
+  { emoji: "📦", titre: "Installation de la progression", texte: "L'IA Gemini copie ton interface simulations sur ton ordinateur, l'installe et t'ouvre ta page de progression." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
     sous: [
       ["Le nom de ton interface", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
@@ -903,13 +903,13 @@ export const AIDE_EN_LIGNE = "https://education-simulation.github.io/atelier-sim
 const DETAILS = [
   { quoi: ["L'IA Gemini copie ton interface simulations dans un dossier de ton ordinateur (le Bureau ou Documents).", "Elle installe ce qu'il faut pour la faire marcher, puis lance son aperçu (localhost).", "Elle t'ouvre ta page de progression de l'installation : garde-la ouverte, elle se met à jour toute seule."],
     toi: ["Réponds aux questions de l'IA dans la zone de message d'Antigravity.", "Accepte les petites fenêtres en anglais : « Yes, and always allow », puis Submit."],
-    liens: [["🧭 Découvrir Antigravity", "antigravity.html"], ["🔐 Les petites fenêtres en anglais", "fenetres.html"]] },
+    liens: [["🧭 Découvrir Antigravity", "antigravity.html", "atelier-antigravity"], ["🔐 Donner ton autorisation (anglais)", "fenetres.html", "atelier-autorisation"]] },
   { quoi: ["L'IA Gemini te pose 5 questions, une par une, pour personnaliser ton interface."], toi: ["Écris le numéro de ta réponse, ou ta réponse avec tes mots, puis Entrée."], styles: true },
   { quoi: ["L'IA Gemini range tes réponses dans ton interface : son nom, sa couleur, son style, ton établissement et ton nom."], toi: ["Rien : attends quelques secondes."] },
   { quoi: ["Ton interface s'ouvre dans le navigateur d'Antigravity, à droite. C'est ton brouillon : elle n'est que sur ton ordinateur."], toi: ["Promène-toi dans les menus.", "Dis à l'IA si tu veux le mettre en ligne maintenant ou plus tard."] },
   { quoi: ["Vercel est un service gratuit qui met ton interface sur Internet, à une adresse que tu pourras partager (par exemple mon-site.vercel.app)."],
     toi: ["Crée ton compte Vercel : choisis Hobby (gratuit), écris ton nom, puis « Continue with Google » avec ton compte d'établissement.", "Si Vercel te propose de relier GitHub ou de créer un projet : ne fais rien, reviens dans Antigravity.", "Pour la connexion, ta page de progression t'affiche un bouton et un code à vérifier."],
-    liens: [["▲ Créer mon compte Vercel", "https://vercel.com/signup"]] },
+    liens: [["▲ Créer mon compte Vercel", "https://vercel.com/signup", "atelier-vercel"]] },
   { quoi: ["Ton interface est prête. Tu peux maintenant la remplir : ta première simulation, renommer les menus, changer les textes…"], toi: ["Demande à l'IA ce que tu veux, avec tes mots. Le bouton 👆 de ton interface lui montre exactement ce que tu veux changer."] },
 ];
 
@@ -947,7 +947,7 @@ export function PageEtape({ n }) {
           <div className="g-styles">{STYLES_SITE.map((st) => <figure key={st.id} className="g-style"><MiniSite id={st.id} /><figcaption><b>{st.nom}</b><span>{st.texte}</span></figcaption></figure>)}</div>
         </section>
       )}
-      {d.liens && <div className="v-commandes" style={{ justifyContent: "center" }}>{d.liens.map(([t, u]) => <a key={u} className="v-bouton bleu" href={lien(u)} target="_blank" rel="noreferrer">{t}</a>)}</div>}
+      {d.liens && <div className="v-commandes" style={{ justifyContent: "center" }}>{d.liens.map(([t, u, onglet]) => <a key={u} className="v-bouton bleu" href={lien(u)} target={onglet} rel="noreferrer">{t}</a>)}</div>}
       <p className="aide-retour">✅ Quand tu as fini de lire, reviens dans Antigravity.</p>
     </div>
   );
@@ -971,6 +971,7 @@ export function Guide() {
     return () => window.removeEventListener("keydown", touche);
   }, [mail]);
   const pageEtape = (i) => `${AIDE_EN_LIGNE}etape.html?n=${i + 1}`;
+  const ongletEtape = (i) => `atelier-etape-${i + 1}`;   // un onglet par étape : rouvert s'il existe déjà, sinon un nouvel onglet
   useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
 
   return (
@@ -990,7 +991,7 @@ export function Guide() {
               const rond = <span className="st-rond" aria-hidden="true">{etat === "fait" ? "✓" : i + 1}</span>;
               return (
                 <li key={i} className={`st-etape ${etat}`} aria-current={etat === "ici" ? "step" : undefined}>
-                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target="atelier-etape" rel="noreferrer" title="Voir l'étape">{rond}</a>}
+                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer" title="Voir l'étape">{rond}</a>}
                   <span className="st-nom">{e.titre}</span>
                 </li>
               );
@@ -1008,7 +1009,7 @@ export function Guide() {
                       <h2>{i + 1}. {e.titre} {!fait && <span className="ga-badge">en cours</span>}</h2>
                       {!fait && <p>{e.texte}</p>}
                     </div>
-                    <a className="ga-voir" href={pageEtape(i)} target="atelier-etape" rel="noreferrer">📖 Voir l'étape</a>
+                    <a className="ga-voir" href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer">📖 Voir l'étape</a>
                   </div>
                   {e.sous && !fait && (
                     <ol className="ga-sous">
