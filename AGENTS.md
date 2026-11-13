@@ -58,13 +58,21 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
   Choix : 1. **J'ai regardé, on continue** · 2. **😕 Je suis perdu·e**. Puis étape 2.
 - « Non » : étape 2, sans rien dire.
 
-**2. Node.js** — commande `node -v`.
-- Un numéro `v20.19` ou plus : passe à l'étape 3 et **commence le message de l'étape 3**, juste après « 💬 Pour toi : », par cette ligne : « ✅ Node.js (le moteur qui fait tourner ton interface sur ton ordinateur) est bien installé. »
-- Sinon (« command not found », « n'est pas reconnu », numéro plus petit) : arrête l'installation et pose cette question à choix :
+**2. Node.js** — commande `node -v`, puis **un message à part**, avant la question du dossier.
+- **Un numéro `v20.19` ou plus** : question à choix, aérée ainsi :
+  ```
+  **💬 Pour toi :**
+
+  ✅ Node.js est bien installé sur ton ordinateur.
+  ```
+  Choix : 1. **Continuer** · 2. **C'est quoi Node.js ?** · 3. **😕 Je suis perdu·e**
+  - « Continuer » → étape 3 (le dossier).
+  - « C'est quoi Node.js ? » → explique en deux phrases simples, **au début du message de l'étape 3**, puis pose la question du dossier dans ce même message : « Node.js est un logiciel gratuit qui fait tourner ton interface sur ton ordinateur, comme un moteur : c'est grâce à lui que tu vois ton interface avant de la mettre en ligne. Tu n'as rien à faire avec : il travaille tout seul, en coulisses. »
+- **Sinon** (« command not found », « n'est pas reconnu », numéro plus petit) : arrête l'installation et pose cette question à choix :
   « ⚠️ Il manque un logiciel gratuit, Node.js (le moteur qui fait tourner ton interface sur ton ordinateur). 1) Clique sur ce lien : https://nodejs.org/fr/download 2) Télécharge l'installateur (« macOS Installer » sur Mac, « Windows Installer » sur Windows), ouvre-le et clique Continuer, Accepter, Installer. 3) Quitte complètement Antigravity, rouvre-le et colle à nouveau la phrase du début. »
   Choix : 1. **C'est installé** · 2. **😕 Je suis bloqué·e**. Si « C'est installé » dans cette conversation : relance `node -v`.
 
-**3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton interface ? »
+**3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton interface ? » (sans redire que Node.js est installé)
 Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. **Sous la ligne ✍️**, ajoute un trait horizontal (`---`) puis, exactement :
   ```
   🔐 Juste après, des petites fenêtres d'autorisation en anglais vont s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger.
