@@ -271,7 +271,7 @@ export const CSS = `
 .pe-questions { margin:0; padding-left:22px; display:flex; flex-direction:column; gap:10px; font-size:17px; }
 .pe-questions span { display:block; color:#475569; font-size:15px; }
 .aide-retour { text-align:center; color:#334155; font-size:17px; margin:6px 0 0; }
-.ga { min-height:100vh; background:#e9ecf2; padding:22px 14px 50px; font-family:'Nunito',system-ui,sans-serif; }
+.ga { --g-bleu:#2563eb; --g-vert:#16a34a; --g-orange:#f59e0b; min-height:100vh; background:#e9ecf2; padding:22px 14px 50px; font-family:'Nunito',system-ui,sans-serif; }
 .ga-fenetre { max-width:820px; margin:0 auto; border-radius:16px; overflow:hidden; background:#0b0b0f; box-shadow:0 24px 60px rgba(15,23,42,.35); border:1px solid #27272a; }
 .ga-barre-titre { display:flex; align-items:center; gap:7px; padding:10px 14px; background:#1c1c22; color:#d4d4d8; font-size:14px; }
 .ga-barre-titre span { width:11px; height:11px; border-radius:50%; background:#52525b; }
@@ -322,7 +322,12 @@ export const CSS = `
 .ga-outils b { color:#e4e4e7; }
 .ga-liens { display:flex; gap:10px; flex-wrap:wrap; }
 .ga-liens a { color:#bfdbfe; text-decoration:none; border:1px solid #1e3a8a; border-radius:10px; padding:7px 12px; font-weight:700; }
-.ga-liens a:hover { background:#172554; }
+.ga-liens a, .ga-liens button { font:700 14.5px 'Nunito',sans-serif; cursor:pointer; background:transparent; }
+.ga-liens button { color:#bbf7d0; border:1px solid #166534; border-radius:10px; padding:7px 12px; }
+.ga-liens a:hover { background:#172554; } .ga-liens button:hover { background:#052e16; }
+.ga-popup { position:relative; width:min(640px,100%); }
+.ga-popup .g-carte { margin:0; }
+.ga-popup .g-fermer { position:absolute; top:10px; right:12px; z-index:2; }
 .ga-clair { display:flex; flex-direction:column; gap:12px; }
 .ga-clair .g-carte { padding:14px 18px; background:#16161b; border:1px solid #3f3f46; box-shadow:none; color:#e4e4e7; }
 .ga-clair .g-carte p, .ga-clair .g-carte li, .ga-clair .g-note { color:#d4d4d8 !important; }
@@ -946,6 +951,13 @@ export function Guide() {
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
   const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => faites.has(i) || i === encours);
+  const [mail, setMail] = useState(false);   // la fenêtre « Recevoir les instructions sur ton mail RASF »
+  useEffect(() => {
+    if (!mail) return;
+    const touche = (e) => { if (e.key === "Escape") setMail(false); };
+    window.addEventListener("keydown", touche);
+    return () => window.removeEventListener("keydown", touche);
+  }, [mail]);
   const pageEtape = (i) => `${AIDE_EN_LIGNE}etape.html?n=${i + 1}`;
   useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
 
@@ -1018,13 +1030,22 @@ export function Guide() {
           <div className="ga-outils">
             <p>✍️ Pour répondre à l'IA : écris le <b>numéro</b> (ou ta réponse avec tes mots) dans la zone de message d'Antigravity, puis Entrée. Perdu·e ? Écris <b>« je suis perdu »</b>.</p>
             <div className="ga-liens">
-              <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="atelier-etape" rel="noreferrer">🧭 Découvrir Antigravity</a>
-              <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="atelier-etape" rel="noreferrer">🔐 Les fenêtres en anglais</a>
+              <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="atelier-antigravity" rel="noreferrer">🧭 Découvrir Antigravity</a>
+              <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="atelier-autorisation" rel="noreferrer">🔐 Donner ton autorisation (anglais)</a>
+              <button type="button" onClick={() => setMail(true)}>📧 Recevoir les instructions sur mon mail RASF</button>
             </div>
           </div>
 
+          {mail && (
+            <div className="g-voile" onClick={() => setMail(false)}>
+              <div className="ga-popup" role="dialog" aria-modal="true" aria-label="Recevoir les instructions sur ton mail RASF" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="g-fermer" onClick={() => setMail(false)} aria-label="Fermer">×</button>
+                <CarteMail suivi={suivi} />
+              </div>
+            </div>
+          )}
+
           <div className="ga-clair">
-            <CarteMail suivi={suivi} />
             <CarteSupprimer dossier={suivi.dossier || "mon-site"} lieu={suivi.lieu || "Bureau"} />
           </div>
         </div>
