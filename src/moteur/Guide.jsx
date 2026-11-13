@@ -314,7 +314,7 @@ function Pastille({ id, actif, setActif }) {
   );
 }
 
-function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastilles = true, conv = 0, replie = false, ferme = false, curseur = null, etiquettes = false, niveau = "Medium" }) {
+function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastilles = true, conv = 0, replie = false, ferme = false, curseur = null, etiquettes = false, niveau = "Medium", fenetre = 0 }) {
   const t = { fontFamily: "Nunito, system-ui, sans-serif" };
   // zones : la démo passe ses propres rectangles (plusieurs possibles) ; sinon, la zone du numéro actif.
   const liste = zones || (actif && ZONES[actif] ? [ZONES[actif]] : []);
@@ -470,6 +470,22 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
       {liste.map((r, n) => (
         <rect key={n} className="g-zone" x={r.x} y={r.y} width={r.w} height={r.h} rx="8" fill="rgba(245,158,11,.10)" stroke="#f59e0b" strokeWidth="3" pointerEvents="none" />
       ))}
+      {/* démo : la petite fenêtre d'autorisation, au-dessus de la zone de prompt (1 : affichée, 2 : 3e choix sélectionné) */}
+      {fenetre > 0 && (
+        <g className="g-apparait" pointerEvents="none">
+          <rect x="160" y="208" width="300" height="128" rx="12" fill="#1c1c22" stroke="#52525b" />
+          <text x="172" y="226" fontSize="10.5" fontWeight="800" fill="#fff" style={t}>📄 Allow write access to this path?</text>
+          <rect x="170" y="233" width="280" height="15" rx="4" fill="#26262e" /><text x="176" y="244" fontSize="8" fill="#d4d4d8" fontFamily="Menlo, monospace">/Users/…/Desktop/mon-site/PROGRESSION.md</text>
+          {["Yes, allow this time", "Yes, and always allow in this conversation", "Yes, and always allow", "No (tell the agent what to do instead)"].map((txt, n) => (
+            <g key={n}>
+              {(fenetre === 2 ? n === 2 : n === 0) && <rect x="168" y={252 + n * 18} width="284" height="17" rx="5" fill={n === 2 ? "#f59e0b" : "#2e2e36"} />}
+              <text x="176" y={264 + n * 18} fontSize="9.5" fill={fenetre === 2 && n === 2 ? "#1f1300" : "#d4d4d8"} fontWeight={fenetre === 2 && n === 2 ? 800 : 400} style={t}>{n + 1}   {txt}</text>
+            </g>
+          ))}
+          <rect x="404" y="318" width="48" height="15" rx="7" fill="#2563eb" /><text x="428" y="329" fontSize="9" fontWeight="800" fill="#fff" textAnchor="middle" style={t}>Submit ↵</text>
+          <text x="384" y="329" fontSize="9" fill="#a1a1aa" textAnchor="middle" style={t}>Skip</text>
+        </g>
+      )}
       {/* démo : le nom des 3 parties */}
       {etiquettes && [["① Le menu", 75], ["② Antigravity", 312], ["③ Le navigateur", 618]].map(([nom, x]) => (
         <g key={nom} className="g-apparait" pointerEvents="none">
@@ -552,7 +568,7 @@ const Z = {
   reglages: { x: 164, y: 386, w: 268, h: 24 }, modele: { x: 164, y: 386, w: 158, h: 24 }, auto: { x: 352, y: 386, w: 56, h: 24 },
   menuModeles: { x: 164, y: 196, w: 230, h: 186 }, niveaux: { x: 398, y: 214, w: 138, h: 86 }, usage: { x: 398, y: 262, w: 210, h: 112 }, conversations: { x: 6, y: 96, w: 138, h: 52 },
   onglets: { x: 478, y: 34, w: 236, h: 22 }, adresse: { x: 480, y: 60, w: 276, h: 20 }, fermer: { x: 702, y: 3, w: 26, h: 26 },
-  barre: { x: 468, y: 60, w: 16, h: 330 }, settings: { x: 6, y: 400, w: 84, h: 22 }, fenetreSettings: { x: 12, y: 232, w: 250, h: 160 },
+  barre: { x: 468, y: 60, w: 16, h: 330 }, fenetre: { x: 160, y: 208, w: 300, h: 128 }, settings: { x: 6, y: 400, w: 84, h: 22 }, fenetreSettings: { x: 12, y: 232, w: 250, h: 160 },
 };
 const DEMO = [
   { titre: "Les 3 parties d'Antigravity", texte: "L'écran d'Antigravity a 3 parties : à gauche le menu, au milieu Antigravity (là où tu parles avec l'IA Gemini), à droite un navigateur.", zones: [Z.gauche, Z.milieu, Z.droite], etiquettes: true },
@@ -564,6 +580,7 @@ const DEMO = [
   { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, choisis un niveau : Low (rapide), Medium ou High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], bulle: { x: 452, y: 308 }, images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 440, y: 232 } }, { actif: "4", niveau: "Low", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 440, y: 232 } }, { niveau: "Low", curseur: { x: 230, y: 398 } }], boucle: false },
   { titre: "Ton usage", texte: "Dans ce même menu, « View Usage » montre ce qu'il te reste pour la semaine, pour chaque famille de modèles. À 0 %, écris à marc-olivier.reula@rasf.fr.", zones: [Z.modele, Z.menuModeles, Z.usage], images: [{ actif: "5", curseur: { x: 260, y: 352 } }] },
   { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres en anglais). Laisse-le tel quel.", zones: [Z.auto] },
+  { titre: "Les petites fenêtres en anglais", texte: "Avant certaines actions, l'IA demande la permission dans une petite fenêtre, au-dessus de la zone de prompt. Clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. ⛔ Si elle parle de supprimer (delete) : choisis No.", zones: [Z.fenetre], bulle: { x: 470, y: 200 }, boucle: false, images: [{ fenetre: 1 }, { fenetre: 1, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 428, y: 326 } }, { zones: [Z.prompt], curseur: { x: 428, y: 326 } }] },
   { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
   { titre: "③ À droite : le navigateur", texte: "Un navigateur intégré à Antigravity, comme Chrome : tu y vois ta page « J'en suis où » et ton site.", zones: [Z.droite] },
   { titre: "Les onglets", texte: "Comme dans Chrome : un clic sur un onglet pour passer de l'un à l'autre, le × pour le fermer, le + pour en ouvrir un nouveau, ↗ pour l'ouvrir dans ton navigateur habituel.", zones: [Z.onglets] },
