@@ -1111,7 +1111,24 @@ function MessageIA({ texte }) {
 // les étapes faites et l'étape en cours, chacune avec un bouton vers sa page d'explication en ligne.
 export function Guide() {
   const suivi = useProgression();
-  const { faites, sousFaites, adresse, connexion } = suivi;
+  // Une petite fenêtre d'autorisation attend-elle un clic ? Le serveur d'aperçu le déduit du journal d'Antigravity (vite.config.js).
+  const [attente, setAttente] = useState(false);
+  const [message, setMessage] = useState("");   // le dernier message de l'IA dans Antigravity, affiché tel quel
+  const [reflexion, setReflexion] = useState(null);   // l'IA réfléchit : { reponse } (la réponse que la personne vient d'écrire)
+  useEffect(() => {
+    let fini = false;
+    const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
+      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); setReflexion(r.reflexion ? { reponse: r.reponse || "" } : null); } }).catch(() => {});
+    voir();
+    const id = setInterval(voir, 2000);
+    return () => { fini = true; clearInterval(id); };
+  }, []);
+  // L'IA vient de donner le lien de cette page et attend « continue » (AGENTS.md, étape 8) : bande verte.
+  const attendContinue = /\?guide/.test(message) && !/\?\s*$|personnaliser/im.test(message.replace(/https?:\/\/\S+/g, ""));
+  // Tant que la personne n'a pas écrit « continue », on est toujours à l'étape 1 (installation), même si l'IA l'a déjà cochée.
+  const avantContinue = attendContinue && !suivi.sousFaites.size && [...suivi.faites].every((i) => i === 0);
+  const faites = avantContinue ? new Set() : suivi.faites;
+  const { sousFaites, adresse, connexion } = suivi;
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
@@ -1129,24 +1146,10 @@ export function Guide() {
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, [mail, poubelle]);
-  // Une petite fenêtre d'autorisation attend-elle un clic ? Le serveur d'aperçu le déduit du journal d'Antigravity (vite.config.js).
-  const [attente, setAttente] = useState(false);
-  const [message, setMessage] = useState("");   // le dernier message de l'IA dans Antigravity, affiché tel quel
-  const [reflexion, setReflexion] = useState(null);   // l'IA réfléchit : { reponse } (la réponse que la personne vient d'écrire)
-  useEffect(() => {
-    let fini = false;
-    const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
-      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); setReflexion(r.reflexion ? { reponse: r.reponse || "" } : null); } }).catch(() => {});
-    voir();
-    const id = setInterval(voir, 2000);
-    return () => { fini = true; clearInterval(id); };
-  }, []);
   // Quand l'IA pose la question du style, la fenêtre des 3 styles s'ouvre une fois toute seule.
   const questionStyle = /style/i.test(message) && /barre lat|blocs|liste/i.test(message);
   const [stylesVus, setStylesVus] = useState(false);
   useEffect(() => { if (questionStyle && !stylesVus) { setStyles(true); setStylesVus(true); } }, [questionStyle, stylesVus]);
-  // L'IA vient de donner le lien de cette page et attend « continue » (AGENTS.md, étape 8) : bande verte.
-  const attendContinue = /\?guide/.test(message) && !/\?\s*$|personnaliser/im.test(message.replace(/https?:\/\/\S+/g, ""));
   // Ce qu'il faut répondre maintenant, en très court (bande orange en bas à gauche).
   const sousEnCours = encours >= 0 && ETAPES[encours].sous ? ETAPES[encours].sous.findIndex((_, k) => !sousFaites.has(`${encours}.${k + 1}`)) : -1;
   const quoi = [
