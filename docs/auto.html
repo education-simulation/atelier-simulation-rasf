@@ -146,7 +146,9 @@ b.cle { color:#fde68a; }
 @keyframes a-avant { 0%, 65% { opacity:1; } 67%, 100% { opacity:0; } }
 @keyframes a-apres { 0%, 65% { opacity:0; } 67%, 100% { opacity:1; } }
 /* étape 4 : la démo dans une fenêtre par-dessus la page */
-.rangee-dec { margin-top:12px; }
+.rangee-dec { margin-top:14px; display:flex; gap:12px; flex-wrap:wrap; }
+.btn-dec.orange { background:#f59e0b; color:#1f1300; }
+.btn-dec.orange:hover { background:#fbbf24; }
 .btn-dec { all:unset; cursor:pointer; background:#2563eb; color:#fff; font-weight:800; font-size:16px; border-radius:10px; padding:10px 16px; }
 .btn-dec:hover { background:#1d4ed8; }
 .voile { position:fixed; inset:0; z-index:100; background:rgba(15,23,42,.75); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:12px; }
@@ -229,8 +231,8 @@ b.cle { color:#fde68a; }
 
     <section class="etape">
       <h2>4. Découvrir Antigravity</h2>
-      Si tu veux, découvre l'écran d'Antigravity : une démo animée d'environ 1 minute, ou l'écran numéroté, à explorer à ton rythme. Tu peux aussi passer cette étape.
-      <div class="rangee-dec"><button type="button" class="btn-dec" data-popup="antigravity.html">🧭 Découvrir Antigravity</button></div>
+      Si tu veux, découvre l'écran d'Antigravity : la <b class="cle">démo</b>, une présentation animée d'environ 1 minute, ou <b class="cle">explorer</b> l'écran toi-même, partie par partie. Tu peux aussi passer cette étape.
+      <div class="rangee-dec"><button type="button" class="btn-dec" data-popup="antigravity.html?mode=demo">▶ Démo</button><button type="button" class="btn-dec orange" data-popup="antigravity.html?mode=explorer">🔢 Explorer</button></div>
       <p class="vers-suivant">Quand c'est fait, clique sur <b class="cle">« Suivant »</b> <span class="fleche-bas" aria-hidden="true">↘</span></p>
     </section>
 
