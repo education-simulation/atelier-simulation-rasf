@@ -497,7 +497,6 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
         <text x="166" y="152" fontSize="10.5" fill="#e4e4e7" style={t}>Quel nom pour ton site ?</text>
         <text x="166" y="174" fontSize="10.5" fill="#d4d4d8" style={t}>1. Mon labo virtuel</text>
         <text x="166" y="190" fontSize="10.5" fill="#d4d4d8" style={t}>2. La paillasse virtuelle</text>
-        <text x="166" y="206" fontSize="10.5" fill="#d4d4d8" style={t}>3. 😕 Je suis perdu·e</text>
         <text x="166" y="228" fontSize="10" fill="#a1a1aa" fontStyle="italic" style={t}>✍️ Écris le numéro dans la zone de message</text>
         </g>
       ) : (
@@ -1185,7 +1184,7 @@ export function Guide() {
         {attente ? (
           <span className="ga-repondre-texte"><b>🔐 Une petite fenêtre t'attend</b> <em>au-dessus de la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Clique sur 3 « Yes, and always allow », puis sur Submit.</span></span>
         ) : attendContinue ? (
-          <span className="ga-repondre-texte"><b>✅ Ta page de progression est ouverte</b> <em>reviens dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Écris « continue », puis Entrée.</span></span>
+          <span className="ga-repondre-texte"><b>✅ Ta page de progression est ouverte</b> <em>reviens dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Écris « continue » (ou « aide »), puis Entrée.</span></span>
         ) : (
           <span className="ga-repondre-texte"><b>Réponds à l'IA</b> <em>dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 {quoi}</span></span>
         )}

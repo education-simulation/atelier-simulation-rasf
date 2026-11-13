@@ -15,14 +15,13 @@ Tu es l'agent d'Antigravity. Tu aides une **prof débutante** à installer son s
 
   1. <premier choix>
   2. <deuxième choix>
-  3. 😕 Je suis perdu·e
 
-  ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Perdu·e ? Écris simplement « je suis perdu ».*
+  ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Besoin d'aide ? Écris « aide ».*
   ```
   Les trois accents graves ``` ne servent qu'à te montrer la forme : **ne les écris jamais** (sinon le message s'affiche comme du code et le lien n'est plus cliquable).
   **Aère** : une **ligne vide** entre chaque bloc (titre, question, lien, liste, consigne ✍️), sinon tout se colle en un pavé. Une idée par ligne, phrases courtes. Le lien et la consigne ✍️ ne sont **jamais** collés à une autre phrase.
 
-  Pas de « (Recommended) » ni de « recommandé » dans les choix (sauf « Bureau (recommandé) ») ; le choix le plus courant en premier. La personne répond « 1 », « 2 »… ou écrit autre chose avec ses mots : comprends-la. Si elle écrit « je suis perdu·e » à n'importe quel moment, aide-la (voir « Je suis perdu·e »).
+  Pas de « (Recommended) » ni de « recommandé » dans les choix (sauf « Bureau (recommandé) ») ; le choix le plus courant en premier. La personne répond « 1 », « 2 »… ou écrit autre chose avec ses mots : comprends-la. Pas de choix « Je suis perdu·e » : si elle écrit « aide », « help » ou « je suis perdu » à n'importe quel moment, aide-la (voir « Aide » dans `CONSIGNES.md`).
   Dans ce fichier, « question à choix » veut dire **ce message numéroté**. Ne mets jamais de nom de fichier ni de commande dans un message.
 - **Les liens** : écris toujours la phrase devant le lien, mot pour mot (« 👉 Clique sur ce lien : … », « 👉 Voir à quoi elles ressemblent : … »), jamais l'adresse seule.
 - **Le plus vite possible** : aucune commande de vérification (`ls`, `pwd`, `which`, `cat`), aucune lecture de fichier (ni `package.json`, ni `PROGRESSION.md`), aucune question en plus.
@@ -43,10 +42,10 @@ Tu te laisses guider tout au long du processus. La première partie est techniqu
 
 Pour t'aider à visualiser les étapes qui mèneront jusqu'à la page qui affichera tes simulations, je te propose d'abord de créer une page « Progression de l'installation de ton interface simulations ». Elle te donnera tout un tas d'infos, mais ce ne sera pas la page finale.
 ```
-Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** · 3. **😕 Je suis perdu·e** (1 et 2 veulent dire la même chose : on démarre).
+Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** (1 et 2 veulent dire la même chose : on démarre).
 
 **1 bis. Antigravity en un coup d'œil** — question à choix : « Veux-tu que je te montre comment fonctionne Antigravity ? »
-Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis perdu·e**
+Choix : 1. **Oui, montre-moi** · 2. **Non, on continue**
 - « Oui » : question à choix, aérée ainsi :
   ```
   **💬 Pour toi :**
@@ -55,7 +54,7 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
 
   Choisis « ▶ Démo » (une présentation animée d'environ 1 minute) ou « 🔢 Explorer » (l'écran numéroté, à ton rythme).
   ```
-  Choix : 1. **J'ai regardé, on continue** · 2. **😕 Je suis perdu·e**. Puis étape 2.
+  Choix : 1. **J'ai regardé, on continue**. Puis étape 2.
 - « Non » : étape 2, sans rien dire.
 
 **2. Node.js** — commande `node -v`, puis **un message à part**, avant la question du dossier.
@@ -65,7 +64,7 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
 
   ✅ Node.js est bien installé sur ton ordinateur.
   ```
-  Choix : 1. **Continuer** · 2. **C'est quoi Node.js ?** · 3. **😕 Je suis perdu·e**
+  Choix : 1. **Continuer** · 2. **C'est quoi Node.js ?**
   - « Continuer » → étape 3 (le dossier).
   - « C'est quoi Node.js ? » → explique en deux phrases simples, **au début du message de l'étape 3**, puis pose la question du dossier dans ce même message : « Node.js est un logiciel gratuit qui fait tourner ton interface sur ton ordinateur, comme un moteur : c'est grâce à lui que tu vois ton interface avant de la mettre en ligne. Tu n'as rien à faire avec : il travaille tout seul, en coulisses. »
 - **Sinon** (« command not found », « n'est pas reconnu », numéro plus petit) : arrête l'installation et pose cette question à choix :
@@ -73,7 +72,7 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
   Choix : 1. **C'est installé** · 2. **😕 Je suis bloqué·e**. Si « C'est installé » dans cette conversation : relance `node -v`.
 
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton interface ? » (sans redire que Node.js est installé)
-Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. **Sous la ligne ✍️**, ajoute un trait horizontal (`---`) puis, exactement :
+Choix : 1. **Bureau (recommandé)** · 2. **Documents**. **Sous la ligne ✍️**, ajoute un trait horizontal (`---`) puis, exactement :
   ```
   🔐 Juste après, des petites fenêtres d'autorisation en anglais vont s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger.
 
@@ -111,9 +110,9 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 
 👉 Clique sur ce lien : http://localhost:5799/?guide
 ```
-Puis attends. Quand la personne écrit « continue » (ou n'importe quoi d'autre qui veut dire qu'elle est prête), pose la 1re question de l'étape 1 de `CONSIGNES.md` (« Veux-tu personnaliser ton interface maintenant ? »), avec ses choix (1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** · 3. **😕 Je suis perdu·e**) et la ligne ✍️ habituelle.
+Puis attends. Quand la personne écrit « continue » (ou n'importe quoi d'autre qui veut dire qu'elle est prête), pose la 1re question de l'étape 1 de `CONSIGNES.md` (« Veux-tu personnaliser ton interface maintenant ? »), avec ses choix (1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut**) et la ligne ✍️ habituelle.
 - Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien.
-- « Je suis perdu·e » (avant « continue ») : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis d'écrire « continue ».
+- « aide » (avant « continue ») : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis d'écrire « continue ».
 - Ensuite, suis `CONSIGNES.md` à partir de la réponse à cette question.
 - Le bloc 🔐 sur les petites fenêtres d'autorisation (étape 3) ne sert qu'**avant** la page de progression : une fois qu'elle est ouverte, c'est elle qui le dit (bande rouge). **Ne le répète jamais** dans un message suivant.
 
