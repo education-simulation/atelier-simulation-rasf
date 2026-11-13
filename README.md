@@ -8,6 +8,8 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
 
 ### Pour commencer
 
+👉 **Tout est expliqué, avec une image, sur cette page : https://education-simulation.github.io/atelier-simulation-rasf/demarrer.html** (c'est le lien à envoyer aux profs).
+
 1. Installe **Antigravity** et connecte-toi avec ton compte d'établissement.
 2. Ouvre une nouvelle conversation. En bas, à droite de la zone de message (à gauche du micro 🎤), clique sur **« Default »** et choisis **« Auto »** : l'IA pourra travailler sans te demander la permission à chaque commande.
 3. Colle cette phrase :
