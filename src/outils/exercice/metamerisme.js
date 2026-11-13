@@ -199,12 +199,12 @@ function donneesColorimetrie(m = MODELE_FOURNI) {
   const carte2 = paireMetamere(carte1);
   const ecarts = [D65, A, F11].map((il) => { const w = blanc(il.spectre); return `${il.nom} : ${deltaE(lab(xyz(carte1, il.spectre), w), lab(xyz(carte2, il.spectre), w)).toFixed(1).replace(".", ",")}`; });
   return [
-    { id: "illuminants", onglet: "📈 Les illuminants", titre: "📈 Distributions spectrales normalisées des illuminants (maximum = 1)", unite: "puissance normalisée",
+    { id: "illuminants", tableau: true, onglet: "📈 Les illuminants", titre: "📈 Distributions spectrales normalisées des illuminants (maximum = 1)", unite: "puissance normalisée",
       explication: m === MODELE_FOURNI
         ? "A : lampe à incandescence (formule de Planck, 2856 K) · D65 : lumière du jour (table CIE) · F11 : tube fluorescent à trois bandes (table CIE)."
         : `A : ${A.detail || A.type || "lampe à incandescence"} · D65 : ${D65.detail || D65.type || "lumière du jour"} · F11 : ${F11.detail || F11.type || "tube fluorescent"} (données de tes modèles).`,
       series: [A, D65, F11].map((il) => ({ nom: il.nom, couleur: il.couleur, valeurs: normalisee(il.spectre) })) },
-    { id: "observateur", onglet: "👁 L'observateur 1931", titre: "👁 Observateur de référence CIE 1931", unite: "sensibilité",
+    { id: "observateur", tableau: true, onglet: "👁 L'observateur 1931", titre: "👁 Observateur de référence CIE 1931", unite: "sensibilité",
       explication: "Les trois courbes x̄, ȳ, z̄ : comment l'œil moyen répond à chaque longueur d'onde (ȳ = la luminosité perçue).",
       series: [["x̄", "#dc2626", XBAR], ["ȳ", "#16a34a", YBAR], ["z̄", "#2563eb", ZBAR]].map(([nom, couleur, valeurs]) => ({ nom, couleur, valeurs })) },
     { id: "paire-metamere", comparer: true, onglet: "🎨 Conditions de métamérie", titre: "🎨 Exemple de paire métamère (réflectances spectrales)", unite: "réflectance",

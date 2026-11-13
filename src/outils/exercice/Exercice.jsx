@@ -164,7 +164,7 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
       <summary style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
         <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
         <strong style={{ flex: 1, fontSize: 14.5 }}>{g.titre}</strong>
-        <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerCSV(`${prefixe}-${g.id}`, [g]); }}>⬇️ CSV</button>
+        {!g.tableau && <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerCSV(`${prefixe}-${g.id}`, [g]); }}>⬇️ CSV</button>}
       </summary>
       <figure style={{ margin: 0, paddingBottom: 8 }}>
       <svg viewBox={`0 0 ${L} ${H}`} style={{ width: "100%", height: "auto", display: "block" }} role="img" aria-label={g.titre}>
@@ -210,6 +210,32 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
         {g.explication}
       </figcaption>
       </figure>
+      {g.tableau && (
+        <div style={{ margin: "4px 0 10px" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 8, margin: "0 0 6px" }}>
+            <strong style={{ flex: 1, fontSize: 14 }}>📋 Les valeurs ({X.length} lignes)</strong>
+            <button type="button" style={bouton()} onClick={() => telechargerCSV(`${prefixe}-${g.id}`, [g])}>⬇️ CSV</button>
+          </div>
+          <div style={{ maxHeight: 260, overflowY: "auto", border: "1px solid #e2e8f0", borderRadius: 10 }}>
+            <table style={{ width: "100%", borderCollapse: "collapse", fontSize: 13, fontVariantNumeric: "tabular-nums" }}>
+              <thead>
+                <tr>
+                  <th style={{ position: "sticky", top: 0, background: "#f1f5f9", textAlign: "left", padding: "5px 10px", borderBottom: "1px solid #cbd5e1" }}>{(g.axeX || AXE_SPECTRAL).titre}</th>
+                  {g.series.map((s) => <th key={s.nom} style={{ position: "sticky", top: 0, background: "#f1f5f9", textAlign: "right", padding: "5px 10px", borderBottom: "1px solid #cbd5e1", color: s.couleur }}>{s.nom}</th>)}
+                </tr>
+              </thead>
+              <tbody>
+                {X.map((l, i) => (
+                  <tr key={l} style={{ background: i % 2 ? "#f8fafc" : "#fff" }}>
+                    <td style={{ padding: "3px 10px" }}>{l}</td>
+                    {g.series.map((s) => <td key={s.nom} style={{ padding: "3px 10px", textAlign: "right" }}>{Number(s.valeurs[i]).toFixed(4).replace(".", ",")}</td>)}
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      )}
     </details>
   );
 }
