@@ -37,10 +37,8 @@ Les simulations au choix : **1. Métamérisme** (`ateliers/metamerisme.html`, la
 Bonjour ! Avant de commencer, un seul réglage, pour que je puisse travailler sans te demander la permission à chaque fois.
 
 👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/auto.html
-
-1. C'est fait
 ```
-(avec la ligne ✍️ habituelle). Puis étape 1.
+Puis attends : la page dit d'écrire « continue ». Puis étape 1.
 **Si la phrase de départ t'a déjà fait donner ce lien** (« Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity »… ») et que la personne a répondu : ne le redonne pas, passe directement à l'étape 1.
 
 **1. La présentation** — question à choix, aérée exactement ainsi :

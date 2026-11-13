@@ -36,7 +36,8 @@ b.cle { color:#fde68a; }
 /* étape 1 : les petites fenêtres à fermer (8 s, en boucle) */
 .absent { color:#a1a1aa; font-size:15px; }
 .vers-suivant { margin:12px 0 0; text-align:right; font-weight:800; }
-.fermer-onglet { margin:10px 0; font-weight:800; }
+.fermer-onglet { margin:10px 0; font-weight:800; display:flex; align-items:center; gap:10px; }
+.fermer-onglet .num { flex:none; width:28px; height:28px; border-radius:50%; background:#f59e0b; color:#1f1300; display:grid; place-items:center; font-size:15px; }
 .fleche-haut { display:inline-block; font-size:30px; color:#f59e0b; vertical-align:middle; animation:f-haut 1.1s ease-in-out infinite; }
 @keyframes f-haut { 50% { transform:translateY(-10px); } }
 .fleche-bas { display:inline-block; font-size:30px; color:#f59e0b; vertical-align:middle; animation:f-bas 1.1s ease-in-out infinite; }
@@ -233,15 +234,15 @@ b.cle { color:#fde68a; }
 
     <section class="etape">
       <p class="fini">✅ Antigravity est prêt.</p>
-      <p class="fermer-onglet"><span class="fleche-haut" aria-hidden="true">↑</span> Ferme cet onglet : clique sur le <b class="cle">×</b> à côté de son nom, tout en haut.</p>
-      Puis reviens dans la zone de message, en bas à gauche, et écris <b class="cle">1</b>, puis Entrée.
+      <p class="fermer-onglet"><span class="num">1</span> Dans la zone de message, en bas à gauche, écris <b class="cle">continue</b>, puis Entrée.</p>
+      <p class="fermer-onglet"><span class="num">2</span> Ferme cet onglet : clique sur le <b class="cle">×</b> à côté de son nom, tout en haut. <span class="fleche-haut" aria-hidden="true">↑</span></p>
     </section>
 
     <div class="nav"><button type="button" class="prec" id="prec">‹ Précédent</button><button type="button" class="suiv" id="suiv">Suivant ›</button></div>
   </div>
 </div>
 <div class="bande" id="bande" role="note" hidden><span class="bfleche" aria-hidden="true">⬅</span>
-  <span><b>Réponds à l'IA</b> <em>dans la zone de message d'Antigravity, en bas à gauche</em><span class="quoi">👉 Ferme cet onglet (le × en haut), puis écris 1 (C'est fait) et Entrée.</span></span></div>
+  <span><b>Réponds à l'IA</b> <em>dans la zone de message d'Antigravity, en bas à gauche</em><span class="quoi">👉 Écris « continue », puis Entrée. Ensuite, ferme cet onglet (le × en haut).</span></span></div>
 <script>
 const etapes = [...document.querySelectorAll(".etape")], ronds = [...document.querySelectorAll("#st li")];
 let n = 0;
