@@ -10,10 +10,10 @@ import { EnChargement } from "./chargement";
 import { CSS, BandeIA, useProgression } from "./Guide.jsx";
 
 const TUILES = [
-  { icone: "🎨", titre: "Atelier 1 : Métamérisme", texte: "Construis une simulation avec l'IA, une étape à la fois, à partir d'une cabine de lumière et de deux cartes.", lien: "./?atelier=metamerisme" },
+  { id: "metamerisme", icone: "🎨", titre: "Atelier 1 : Métamérisme", texte: "Construis une simulation avec l'IA, une étape à la fois, à partir d'une cabine de lumière et de deux cartes.", lien: "./?atelier=metamerisme" },
   { icone: "🧪", titre: "Atelier 2", texte: "Bientôt.", bientot: true },
   { icone: "⚗️", titre: "Atelier 3", texte: "Bientôt.", bientot: true },
-  { icone: "🏠", titre: "Voir la page de mon site de simulations", texte: "La page d'accueil de ton site, avec ses menus.", lien: "./", site: true },
+  { id: "site", icone: "🏠", titre: "Voir la page de mon site de simulations", texte: "La page d'accueil de ton site, avec ses menus.", lien: "./", site: true },
 ];
 
 const PLUS = `
@@ -35,6 +35,8 @@ a.at-tuile:hover { transform:translateY(-3px); border-color:#f59e0b; }
 /* Le texte d'introduction de l'exercice (écrit pour un fond clair) : lisible sur le fond sombre. */
 .at-contenu .ex-principal > div:first-child > p { color:#e4e4e7; font-size:16px; }
 .at-contenu .ex-principal > div:first-child > p strong { color:#fde68a; }
+.at-tuile.choisie { border:3px solid #22c55e; background:#0f2a18; box-shadow:0 0 0 6px rgba(34,197,94,.18); }
+.at-badge.vert { background:#22c55e; color:#052e14; }
 .at-badge { align-self:flex-start; font:800 12px 'Nunito',sans-serif; background:#f59e0b; color:#1f1300; border-radius:99px; padding:2px 10px; }
 `;
 
@@ -42,6 +44,7 @@ a.at-tuile:hover { transform:translateY(-3px); border-color:#f59e0b; }
 const FICHIERS = import.meta.glob("../../simulations/*.jsx");
 const charges = {};
 function PageAtelier({ id }) {
+  const { commences, pret } = useProgression();
   const page = (SITE.pages || []).find((p) => p.id === id);
   const chemin = page && `../../simulations/${page.fichier}.jsx`;
   const Composant = chemin && FICHIERS[chemin] ? (charges[chemin] ||= lazy(FICHIERS[chemin])) : null;
@@ -55,7 +58,9 @@ function PageAtelier({ id }) {
           {Composant ? <EnChargement key={id}><Composant /></EnChargement> : <p className="erreur">Atelier « {id} » introuvable.</p>}
         </div>
       </div>
-      <BandeIA quoi="Écris ta demande pour l'étape en cours (ton prompt), puis Entrée." />
+      {pret && (commences.has(id)
+        ? <BandeIA quoi="Écris ta demande pour l'étape en cours (ton prompt), puis Entrée." />
+        : <BandeIA vert titre={`✅ L'atelier ${page ? `« ${page.titre} » ` : ""}est ouvert`} ou="reviens dans la zone de message, en bas à gauche" quoi="Écris « continue » (ou « aide »), puis Entrée." />)}
     </div>
   );
 }
@@ -66,11 +71,13 @@ export function Atelier() {
   return <Tuiles />;
 }
 
-// La page des tuiles : les tuiles ne s'ouvrent qu'une fois que la prof a écrit « continue » à l'IA (l'étape 3 est
-// alors cochée dans PROGRESSION.md). Avant, la bande verte lui dit d'écrire « continue ».
+// La page des tuiles : rien ne s'ouvre tant que la prof n'a pas écrit « continue » à l'IA (l'étape 3 est alors cochée
+// dans PROGRESSION.md ; avant, la bande verte lui dit d'écrire « continue »). Ensuite, seule la tuile qu'elle a choisie
+// en répondant à l'IA (« Atelier choisi : … ») s'ouvre, en vert ; les ateliers déjà commencés restent ouverts.
 function Tuiles() {
-  const { faites, pret } = useProgression();
+  const { faites, pret, choix, commences } = useProgression();
   const ouvert = faites.has(3);
+  const tuileChoisie = TUILES.find((t) => t.id && t.id === choix);
   useEffect(() => { document.title = "Atelier : créer une simulation avec l'IA"; }, []);
   return (
     <div className="ga">
@@ -83,20 +90,23 @@ function Tuiles() {
             {TUILES.map((t, k) => {
               const contenu = <>
                 <span className="at-icone" aria-hidden="true">{t.icone}</span>
-                {k === 0 && <span className="at-badge">commence ici</span>}
+                {t.id && t.id === choix ? <span className="at-badge vert">👉 clique ici</span> : k === 0 && !choix && <span className="at-badge">commence ici</span>}
                 <span className="at-titre">{t.titre}</span>
                 <span className="at-texte">{t.texte}</span>
               </>;
-              const cls = `at-tuile${k === 0 ? " premier" : ""}${t.bientot ? " bientot" : ""}${t.site ? " site" : ""}`;
-              return t.bientot || !ouvert
-                ? <div key={k} className={`${cls}${!t.bientot ? " fermee" : ""}`} aria-disabled="true" title={!t.bientot ? "Écris d'abord « continue » à l'IA, dans Antigravity" : undefined}>{contenu}</div>
+              const active = ouvert && !t.bientot && (t.id === choix || commences.has(t.id));
+              const cls = `at-tuile${t.id === choix ? " choisie" : k === 0 && !choix ? " premier" : ""}${t.bientot ? " bientot" : ""}${t.site ? " site" : ""}`;
+              return !active
+                ? <div key={k} className={`${cls}${!t.bientot ? " fermee" : ""}`} aria-disabled="true" title={!t.bientot ? (ouvert ? "Choisis d'abord cet atelier en répondant à l'IA, dans Antigravity" : "Écris d'abord « continue » à l'IA, dans Antigravity") : undefined}>{contenu}</div>
                 : <a key={k} className={cls} href={t.lien} target="atelier-site">{contenu}</a>;
             })}
           </div>
         </div>
       </div>
       {pret && (ouvert
-        ? <BandeIA quoi="Écris le numéro de l'atelier que tu veux faire (1 : Métamérisme), puis Entrée — ou clique sur sa tuile." />
+        ? (tuileChoisie
+          ? <BandeIA titre="👆 Clique sur la tuile verte" ou="elle vient de s'ouvrir" quoi={`« ${tuileChoisie.titre} »`} />
+          : <BandeIA quoi="Écris le numéro de ce que tu veux faire (1 : l'atelier Métamérisme), puis Entrée : sa tuile s'ouvrira." />)
         : <BandeIA vert titre="✅ L'atelier est ouvert" ou="reviens dans la zone de message, en bas à gauche" quoi="Écris « continue » (ou « aide »), puis Entrée : les tuiles s'ouvriront." />)}
     </div>
   );

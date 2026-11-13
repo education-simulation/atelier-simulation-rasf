@@ -98,11 +98,14 @@ function lire(texte) {
   const morceaux = chemin.split(/[\\/]/).filter(Boolean);
   const dossier = morceaux.at(-1) || "";
   const lieu = /documents/i.test(morceaux.at(-2) || "") ? "Documents" : "Bureau";
-  return { faites, sousFaites, adresse, connexion, dossier, lieu };
+  // L'atelier choisi (« Atelier choisi : metamerisme », ou « site ») et ceux commencés (« Atelier commencé : metamerisme »).
+  const choix = texte.match(/^Atelier choisi\s*:\s*(\S+)/im)?.[1]?.toLowerCase() || "";
+  const commences = new Set([...texte.matchAll(/^Atelier commencé\s*:\s*(\S+)/gim)].map((x) => x[1].toLowerCase()));
+  return { faites, sousFaites, adresse, connexion, dossier, lieu, choix, commences };
 }
 
 export function useProgression() {
-  const [etat, setEtat] = useState({ faites: new Set(), sousFaites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", pret: false });
+  const [etat, setEtat] = useState({ faites: new Set(), sousFaites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", choix: "", commences: new Set(), pret: false });
   useEffect(() => {
     let fini = false;
     const charger = () => fetch("./__atelier/progression", { cache: "no-store" })

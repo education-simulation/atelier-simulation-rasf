@@ -189,9 +189,16 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
   Que veux-tu faire ?
   ```
   Choix : 1. **Faire l'atelier 1 : Métamérisme** · 2. **Faire l'atelier 2** · 3. **Faire l'atelier 3** · 4. **Voir la page de mon site**
-  - **1** → « 👉 Clique sur la tuile « Atelier 1 : Métamérisme » (ou sur ce lien : http://localhost:NNNN/?atelier=metamerisme). La page te demande d'abord comment tu veux travailler : parcours guidé ou exploration libre. » Puis suis la section « L'exercice Métamérisme ».
+  **Le choix ouvre sa tuile** : la page des tuiles n'ouvre que la tuile choisie, d'après la ligne `Atelier choisi : …` de `PROGRESSION.md` (juste sous la phrase de reprise ; remplace-la si elle existe déjà, ne l'ajoute pas deux fois).
+  - **1** → écris `Atelier choisi : metamerisme` dans `PROGRESSION.md`, puis un message **avec le lien et rien d'autre** (pas de question, pas de ligne ✍️ : la page de l'atelier dit d'écrire « continue ») :
+    ```
+    **💬 Pour toi :**
+
+    👉 Clique sur la tuile verte « Atelier 1 : Métamérisme », ou sur ce lien : http://localhost:NNNN/?atelier=metamerisme
+    ```
+    **Quand elle écrit « continue »** : ajoute la ligne `Atelier commencé : metamerisme` sous `Atelier choisi : …` (la bande de la page passe alors à « Écris ta demande pour l'étape en cours »), puis : « La page te demande d'abord comment tu veux travailler : parcours guidé ou exploration libre. » Puis suis la section « L'exercice Métamérisme ».
   - **2** ou **3** → « Cet atelier arrive bientôt. Pour l'instant, commence par l'atelier 1 : Métamérisme. » et repose la question.
-  - **4** → « 👉 Clique sur la tuile « Voir la page de mon site de simulations » (ou sur ce lien : http://localhost:NNNN/). C'est la page d'accueil de ton interface ; en haut, un bouton permet de la mettre en ligne quand tu veux. » Puis repose la question.
+  - **4** → écris `Atelier choisi : site` dans `PROGRESSION.md`, puis « 👉 Clique sur la tuile verte « Voir la page de mon site de simulations » (ou sur ce lien : http://localhost:NNNN/). C'est la page d'accueil de ton interface ; en haut, un bouton permet de la mettre en ligne quand tu veux. » Puis repose la question.
   - **« Je ne vois pas la page »** ou autre souci écrit avec ses mots : aide-la.
 - **Mise en ligne** : seulement quand la personne la demande (bouton du bandeau, ou avec ses mots) → étape 4.
 
