@@ -41,7 +41,7 @@ Bonjour ! Bienvenue dans l'atelier « Je crée des simulations en ligne pour ill
 
 Tu te laisses guider tout au long du processus. La première partie est technique, mais pas d'inquiétude : tu n'auras qu'à suivre mes instructions.
 
-Pour t'aider à visualiser les étapes qui mèneront jusqu'à la page qui affichera tes simulations, je te propose d'abord de créer une page « J'en suis où de l'installation ». Elle te donnera tout un tas d'infos, mais ce ne sera pas la page finale.
+Pour t'aider à visualiser les étapes qui mèneront jusqu'à la page qui affichera tes simulations, je te propose d'abord de créer une page « Progression de l'installation de ton interface simulations ». Elle te donnera tout un tas d'infos, mais ce ne sera pas la page finale.
 ```
 Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** · 3. **😕 Je suis perdu·e** (1 et 2 veulent dire la même chose : on démarre).
 
@@ -89,13 +89,13 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 ```
 **💬 Pour toi :**
 
-✅ Ta page « J'en suis où de l'installation » est prête, en français.
+✅ Ta page de progression de l'installation est prête, en français.
 
 👉 Clique sur ce lien : http://localhost:5799/?guide
 
 Garde cet onglet ouvert : il te montre où tu en es et traduit les petites fenêtres en anglais.
 ```
-Choix : 1. **J'ai ouvert ma page « J'en suis où »** · 2. **😕 Je suis perdu·e**
+Choix : 1. **J'ai ouvert ma page de progression** · 2. **😕 Je suis perdu·e**
 - Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien. 
 - « Je suis perdu·e » : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis repose la question.
 

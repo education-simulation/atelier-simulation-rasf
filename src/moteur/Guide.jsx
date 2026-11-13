@@ -1,5 +1,5 @@
 // ============================================================
-//  GUIDE (moteur, ne pas modifier) — la page « J'en suis où de l'installation », à l'adresse  …/?guide
+//  GUIDE (moteur, ne pas modifier) — la page « Progression de l'installation de ton interface simulations », à l'adresse  …/?guide
 //  Seulement sur l'ordinateur (aperçu) : elle n'existe pas sur le site en ligne.
 //  Elle relit PROGRESSION.md toutes les 2 secondes (via le serveur d'aperçu, voir vite.config.js) :
 //  quand l'agent coche une étape, la page se met à jour toute seule.
@@ -52,23 +52,23 @@ function CarteMail({ suivi }) {
 }
 
 const ETAPES = [
-  { emoji: "🗺️", titre: "Installer ta page « J'en suis où »", texte: "L'IA Gemini copie le modèle sur ton ordinateur et t'ouvre ta page « J'en suis où de l'installation »." },
+  { emoji: "📦", titre: "Installer ton interface", texte: "L'IA Gemini copie ton interface simulations sur ton ordinateur et l'installe." },
   { emoji: "👋", titre: "Faire connaissance", texte: "Cinq questions dans Antigravity : réponds en écrivant le numéro de ton choix.",
     sous: [
-      ["Le nom de ton site", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
+      ["Le nom de ton interface", "Écris 1, 2 ou 3 pour un nom proposé, ou tape directement le nom que tu veux."],
       ["Sa couleur", "Écris le numéro de la couleur qui te plaît (ou son nom, par exemple « rouge »)."],
       ["Son style", "Regarde les 3 styles, puis écris 1, 2 ou 3."],
       ["Ton établissement", "Écris son nom tel qu'il doit s'afficher, ou le numéro de « Je le dirai plus tard »."],
-      ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s'affiche en bas de ton site."],
+      ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s’affiche en bas de ton interface."],
     ] },
-  { emoji: "🛠️", titre: "Installer ton site", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton site." },
-  { emoji: "👀", titre: "Voir ton site", texte: "Ton site s'affiche sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
+  { emoji: "🛠️", titre: "Personnaliser ton interface", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton interface." },
+  { emoji: "👀", titre: "Voir ton interface", texte: "Ton interface s'affiche sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
     infos: [
       "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
-      "Les boutons ronds en bas à droite : 🗺️ revenir à ta page « J'en suis où » · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
+      "Les boutons ronds en bas à droite : 🗺️ revenir à ta page de progression · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
     ], boutonSite: true },
-  { emoji: "🚀", titre: "Le mettre en ligne", texte: "Vercel le publie gratuitement, à une adresse que tu pourras partager." },
-  { emoji: "✨", titre: "La suite", texte: "Des idées à cliquer : ta première simulation, renommer les menus…" },
+  { emoji: "🚀", titre: "La mettre en ligne", texte: "Vercel la publie gratuitement, à une adresse que tu pourras partager." },
+  { emoji: "✨", titre: "La suite", texte: "Des idées : ta première simulation, renommer les menus…" },
 ];
 
 const CHOIX_FENETRE = [
@@ -278,8 +278,23 @@ export const CSS = `
 .ga-barre-titre b { margin-left:10px; flex:1; font-weight:700; }
 .ga-barre-titre em { font-style:normal; font-size:12px; color:#a1a1aa; border:1px solid #3f3f46; border-radius:99px; padding:2px 10px; }
 .ga-corps { padding:20px 22px 24px; display:flex; flex-direction:column; gap:16px; color:#e4e4e7; }
+.st { list-style:none; margin:4px 0 6px; padding:0; display:grid; grid-template-columns:repeat(6, minmax(0,1fr)); }
+.st-etape { position:relative; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; }
+.st-etape::before { content:""; position:absolute; top:21px; left:-50%; width:100%; height:4px; background:#3f3f46; z-index:0; }
+.st-etape:first-child::before { display:none; }
+.st-etape.fait::before, .st-etape.ici::before { background:#22c55e; }
+.st-etape a { text-decoration:none; z-index:1; }
+.st-rond { position:relative; z-index:1; width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font:800 18px 'Outfit',sans-serif; background:#27272a; color:#a1a1aa; border:3px solid #3f3f46; transition:all .3s; }
+.st-etape.fait .st-rond { background:#16a34a; border-color:#22c55e; color:#fff; }
+.st-etape.ici .st-rond { background:#f59e0b; border-color:#fde68a; color:#1f1300; animation:st-pulse 1.8s ease-in-out infinite; }
+@keyframes st-pulse { 0%,100% { box-shadow:0 0 0 0 rgba(245,158,11,.55); } 50% { box-shadow:0 0 0 9px rgba(245,158,11,0); } }
+.st-etape a:hover .st-rond { transform:scale(1.08); }
+.st-nom { font-size:13px; line-height:1.25; color:#71717a; font-weight:700; padding:0 4px; }
+.st-etape.fait .st-nom { color:#d4d4d8; }
+.st-etape.ici .st-nom { color:#fde68a; }
+@media (max-width:600px) { .st-nom { font-size:11px; } .st-rond { width:34px; height:34px; font-size:15px; } .st-etape::before { top:16px; } }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
-.ga-progres-tete h1 { margin:0; font:800 28px/1.1 'Outfit',sans-serif; color:#fff; }
+.ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
 .ga .g-barre { background:#27272a; }
 .ga-etapes { list-style:none; margin:0; padding:0; display:flex; flex-direction:column; gap:10px; }
@@ -338,8 +353,8 @@ const PARTIES = [
   { id: "3", titre: "La zone de message", texte: "Tout en bas (« Ask anything… »). Écris-y le numéro de ta réponse, ou ta question, puis appuie sur Entrée. Le micro 🎤 permet de dicter." },
   { id: "4", titre: "Le choix du modèle", texte: "Sous la zone de message, à gauche (par exemple « Gemini 3.8 Flash »). Un clic ouvre la liste des modèles. Passe la souris sur un modèle Gemini : 3 niveaux s'affichent, Low (faible : le plus rapide, consomme le moins), Medium (moyen) et High (élevé : plus réfléchi, consomme plus). Low ou Medium suffisent pour ton site." },
   { id: "5", titre: "Ton usage", texte: "Dans le menu des modèles, passe la souris sur « View Usage » : Antigravity montre ce qu'il te reste pour la semaine, en pourcentage, pour chaque famille : « Gemini Models » (avec la date de remise à zéro, par exemple « resets in 6d 22h ») et « Claude and GPT models ». À 0 %, il affiche « Model quota reached » : attends la remise à zéro, ou choisis un modèle de l'autre famille. Si tes crédits sont à 0 %, contacte marc-olivier.reula@rasf.fr." },
-  { id: "6a", titre: "Le navigateur d'Antigravity", texte: "Le volet de droite est un navigateur intégré à Antigravity, avec des onglets, comme Chrome : ta page « J'en suis où », ton site (localhost)… Clique sur un onglet pour passer de l'un à l'autre ; le × d'un onglet le ferme ; ↗ ouvre l'onglet dans ton navigateur habituel." },
-  { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page « J'en suis où »." },
+  { id: "6a", titre: "Le navigateur d'Antigravity", texte: "Le volet de droite est un navigateur intégré à Antigravity, avec des onglets, comme Chrome : ta page de progression, ton interface (localhost)… Clique sur un onglet pour passer de l'un à l'autre ; le × d'un onglet le ferme ; ↗ ouvre l'onglet dans ton navigateur habituel." },
+  { id: "6b", titre: "Ouvrir un nouvel onglet", texte: "Le bouton + à droite des onglets ouvre un onglet vide. Tapes-y l'adresse de ton site (par exemple http://localhost:5799/) pour le voir à côté de ta page de progression." },
   { id: "6c", titre: "Régler la largeur", texte: "La fine barre verticale entre la conversation (2) et le volet de droite (6) se déplace : pose la souris dessus (le curseur devient ↔), garde le bouton appuyé et glisse à gauche ou à droite pour donner plus de place à l'un ou à l'autre." },
   { id: "7a", titre: "Fermer le volet de droite", texte: "Le bouton en forme de rectangle, tout en haut à droite : un clic ferme le volet de droite, un 2e clic le rouvre." },
   { id: "7b", titre: "Agrandir le volet de droite", texte: "Le bouton ⤢, tout en haut à droite : le volet prend toute la fenêtre. Un 2e clic le remet à côté de la conversation." },
@@ -428,7 +443,7 @@ function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastil
       <text x="654" y="50" fontSize="14" fill="#d4d4d8" textAnchor="middle" style={t}>+</text>
       <text x="700" y="49" fontSize="12" fill="#a1a1aa" textAnchor="middle" style={t}>↗</text>
       <rect x="482" y="62" width="272" height="16" rx="8" fill="#e2e8f0" /><text x="492" y="73" fontSize="8.5" fill="#64748b" style={t}>localhost:5799/?guide</text>
-      <text x="610" y="104" fontSize="15" fontWeight="800" fill="#0f172a" textAnchor="middle" style={t}>J'en suis où</text>
+      <text x="610" y="104" fontSize="15" fontWeight="800" fill="#0f172a" textAnchor="middle" style={t}>Progression</text>
       <rect x="496" y="118" width="244" height="40" rx="8" fill="#fff" /><rect x="496" y="168" width="244" height="80" rx="8" fill="#fff" />
       <rect x="506" y="182" width="224" height="18" rx="5" fill="#dcfce7" /><rect x="506" y="206" width="224" height="18" rx="5" fill="#fef3c7" stroke="#f59e0b" />
       {/* menu des modèles, montré pour 4 et 5 */}
@@ -641,7 +656,7 @@ const DEMO = [
   { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres en anglais). Laisse-le tel quel.", zones: [Z.auto] },
   { titre: "Les petites fenêtres en anglais", texte: "Avant certaines actions, l'IA demande la permission dans une petite fenêtre, au-dessus de la zone de prompt. Clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. ⛔ Si elle parle de supprimer (delete) : choisis No.", zones: [Z.fenetre], bulle: { x: 470, y: 200 }, boucle: false, images: [{ fenetre: 1 }, { fenetre: 1, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 428, y: 326 } }, { zones: [Z.prompt], curseur: { x: 428, y: 326 } }] },
   { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], bulle: { x: 20, y: 250 }, images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
-  { titre: "③ À droite : le navigateur", texte: "Un navigateur intégré à Antigravity, comme Chrome : tu y vois ta page « J'en suis où » et ton site.", zones: [Z.droite] },
+  { titre: "③ À droite : le navigateur", texte: "Un navigateur intégré à Antigravity, comme Chrome : tu y vois ta page de progression et ton interface simulations.", zones: [Z.droite] },
   { titre: "Les onglets", texte: "Comme dans Chrome : un clic sur un onglet pour passer de l'un à l'autre, le × pour le fermer, le + pour en ouvrir un nouveau, ↗ pour l'ouvrir dans ton navigateur habituel.", zones: [Z.onglets] },
   { titre: "L'adresse : localhost", texte: "« localhost » veut dire « ton ordinateur » : ton site y tourne en brouillon et toi seul le vois. Il sera visible par tous une fois mis en ligne.", zones: [Z.adresse] },
   { titre: "Refermer le navigateur", texte: "Le rectangle tout en haut à droite ferme le navigateur ; un 2e clic le rouvre.", zones: [Z.fermer], images: [{ curseur: { x: 716, y: 18 } }, { curseur: { x: 716, y: 18 }, ferme: true }] },
@@ -869,16 +884,16 @@ export const AIDE_EN_LIGNE = "https://education-simulation.github.io/atelier-sim
 
 // Ce que chaque page d'étape explique en plus du texte court (ETAPES).
 const DETAILS = [
-  { quoi: ["L'IA Gemini copie le modèle de ton site dans un dossier de ton ordinateur (le Bureau ou Documents).", "Elle installe ce qu'il faut pour le faire marcher, puis lance son aperçu (localhost).", "Elle t'ouvre ta page « J'en suis où de l'installation » : garde-la ouverte, elle se met à jour toute seule."],
+  { quoi: ["L'IA Gemini copie ton interface simulations dans un dossier de ton ordinateur (le Bureau ou Documents).", "Elle installe ce qu'il faut pour la faire marcher, puis lance son aperçu (localhost).", "Elle t'ouvre ta page de progression de l'installation : garde-la ouverte, elle se met à jour toute seule."],
     toi: ["Réponds aux questions de l'IA dans la zone de message d'Antigravity.", "Accepte les petites fenêtres en anglais : « Yes, and always allow », puis Submit."],
     liens: [["🧭 Découvrir Antigravity", "antigravity.html"], ["🔐 Les petites fenêtres en anglais", "fenetres.html"]] },
-  { quoi: ["L'IA Gemini te pose 5 questions, une par une, pour personnaliser ton site."], toi: ["Écris le numéro de ta réponse, ou ta réponse avec tes mots, puis Entrée."], styles: true },
-  { quoi: ["L'IA Gemini range tes réponses dans ton site : son nom, sa couleur, son style, ton établissement et ton nom."], toi: ["Rien : attends quelques secondes."] },
-  { quoi: ["Ton site s'ouvre dans le navigateur d'Antigravity, à droite. C'est ton brouillon : il n'est que sur ton ordinateur."], toi: ["Promène-toi dans les menus.", "Dis à l'IA si tu veux le mettre en ligne maintenant ou plus tard."] },
-  { quoi: ["Vercel est un service gratuit qui met ton site sur Internet, à une adresse que tu pourras partager (par exemple mon-site.vercel.app)."],
-    toi: ["Crée ton compte Vercel : choisis Hobby (gratuit), écris ton nom, puis « Continue with Google » avec ton compte d'établissement.", "Si Vercel te propose de relier GitHub ou de créer un projet : ne fais rien, reviens dans Antigravity.", "Pour la connexion, ta page « J'en suis où » t'affiche un bouton et un code à vérifier."],
+  { quoi: ["L'IA Gemini te pose 5 questions, une par une, pour personnaliser ton interface."], toi: ["Écris le numéro de ta réponse, ou ta réponse avec tes mots, puis Entrée."], styles: true },
+  { quoi: ["L'IA Gemini range tes réponses dans ton interface : son nom, sa couleur, son style, ton établissement et ton nom."], toi: ["Rien : attends quelques secondes."] },
+  { quoi: ["Ton interface s'ouvre dans le navigateur d'Antigravity, à droite. C'est ton brouillon : elle n'est que sur ton ordinateur."], toi: ["Promène-toi dans les menus.", "Dis à l'IA si tu veux le mettre en ligne maintenant ou plus tard."] },
+  { quoi: ["Vercel est un service gratuit qui met ton interface sur Internet, à une adresse que tu pourras partager (par exemple mon-site.vercel.app)."],
+    toi: ["Crée ton compte Vercel : choisis Hobby (gratuit), écris ton nom, puis « Continue with Google » avec ton compte d'établissement.", "Si Vercel te propose de relier GitHub ou de créer un projet : ne fais rien, reviens dans Antigravity.", "Pour la connexion, ta page de progression t'affiche un bouton et un code à vérifier."],
     liens: [["▲ Créer mon compte Vercel", "https://vercel.com/signup"]] },
-  { quoi: ["Ton site est prêt. Tu peux maintenant le remplir : ta première simulation, renommer les menus, changer les textes…"], toi: ["Demande à l'IA ce que tu veux, avec tes mots. Le bouton 👆 de ton site lui montre exactement ce que tu veux changer."] },
+  { quoi: ["Ton interface est prête. Tu peux maintenant la remplir : ta première simulation, renommer les menus, changer les textes…"], toi: ["Demande à l'IA ce que tu veux, avec tes mots. Le bouton 👆 de ton interface lui montre exactement ce que tu veux changer."] },
 ];
 
 // Une page d'étape (en ligne) : présentation de l'étape, dans le style de la page Antigravity.
@@ -921,35 +936,42 @@ export function PageEtape({ n }) {
   );
 }
 
-// La page « J'en suis où de l'installation » (sur l'ordinateur) : une fenêtre d'application, pour ne pas la confondre avec son site.
-// Elle ne montre que les étapes faites et l'étape en cours ; chaque étape ouvre sa page d'explication en ligne.
+// La page « Progression de l'installation de ton interface simulations » (sur l'ordinateur) : une fenêtre d'application,
+// pour ne pas la confondre avec l'interface elle-même. En haut, une barre d'étapes visuelle (stepper) ; dessous, seulement
+// les étapes faites et l'étape en cours, chacune avec un bouton vers sa page d'explication en ligne.
 export function Guide() {
   const suivi = useProgression();
   const { faites, sousFaites, adresse, connexion } = suivi;
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
-  const partEnCours = encours >= 0 && ETAPES[encours].sous
-    ? ETAPES[encours].sous.filter((_, j) => sousFaites.has(`${encours}.${j + 1}`)).length / ETAPES[encours].sous.length : 0;
-  const avancement = Math.min(ETAPES.length, nbFaites + partEnCours);
   const toutFini = encours === -1;
   const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => faites.has(i) || i === encours);
-  useEffect(() => { document.title = "J'en suis où de l'installation"; window.name = "atelier-guide"; }, []);
+  const pageEtape = (i) => `${AIDE_EN_LIGNE}etape.html?n=${i + 1}`;
+  useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
 
   return (
     <div className="ga">
       <style>{CSS}</style>
       <div className="ga-fenetre">
-        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · J'en suis où de l'installation</b><em>ce n'est pas ton site</em></div>
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Progression de l'installation</b><em>ce n'est pas ton interface</em></div>
         <div className="ga-corps">
-          <section className="ga-progres" aria-label="Où tu en es">
-            <div className="ga-progres-tete">
-              <h1>J'en suis où</h1>
-              <span>{toutFini ? "Tout est fait 🎉" : `${nbFaites} étape${nbFaites > 1 ? "s" : ""} sur ${ETAPES.length}`}</span>
-            </div>
-            <div className="g-barre" role="progressbar" aria-valuemin={0} aria-valuemax={ETAPES.length} aria-valuenow={Math.round(avancement * 10) / 10}>
-              <div style={{ width: `${Math.max(4, (100 * avancement) / ETAPES.length)}%` }} />
-            </div>
-          </section>
+          <div className="ga-progres-tete">
+            <h1>Progression de l'installation de ton interface simulations</h1>
+            <span>{toutFini ? "Tout est fait 🎉" : `${nbFaites} sur ${ETAPES.length}`}</span>
+          </div>
+
+          <ol className="st" aria-label="Les étapes de l'installation">
+            {ETAPES.map((e, i) => {
+              const etat = faites.has(i) ? "fait" : i === encours ? "ici" : "avenir";
+              const rond = <span className="st-rond" aria-hidden="true">{etat === "fait" ? "✓" : i + 1}</span>;
+              return (
+                <li key={i} className={`st-etape ${etat}`} aria-current={etat === "ici" ? "step" : undefined}>
+                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target="atelier-etape" rel="noreferrer" title="Voir l'étape">{rond}</a>}
+                  <span className="st-nom">{e.titre}</span>
+                </li>
+              );
+            })}
+          </ol>
 
           <ol className="ga-etapes">
             {visibles.map(({ e, i }) => {
@@ -962,7 +984,7 @@ export function Guide() {
                       <h2>{i + 1}. {e.titre} {!fait && <span className="ga-badge">en cours</span>}</h2>
                       {!fait && <p>{e.texte}</p>}
                     </div>
-                    <a className="ga-voir" href={`${AIDE_EN_LIGNE}etape.html?n=${i + 1}`} target="atelier-etape" rel="noreferrer">📖 Voir l'étape</a>
+                    <a className="ga-voir" href={pageEtape(i)} target="atelier-etape" rel="noreferrer">📖 Voir l'étape</a>
                   </div>
                   {e.sous && !fait && (
                     <ol className="ga-sous">
@@ -973,7 +995,7 @@ export function Guide() {
                       })}
                     </ol>
                   )}
-                  {e.boutonSite && <a className="ga-action vert" href="./" target="atelier-site">👀 Aller sur mon site (localhost)</a>}
+                  {e.boutonSite && <a className="ga-action vert" href="./" target="atelier-site">👀 Aller sur mon interface (localhost)</a>}
                 </li>
               );
             })}
@@ -991,7 +1013,7 @@ export function Guide() {
               <a className="ga-action" href={connexion.lien} target="_blank" rel="noreferrer">🔑 Connecter mon compte Vercel</a>
             </section>
           )}
-          {adresse && <a className="ga-action vert" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon site en ligne</a>}
+          {adresse && <a className="ga-action vert" href={adresse} target="atelier-en-ligne">🌍 Aller sur mon interface en ligne</a>}
 
           <div className="ga-outils">
             <p>✍️ Pour répondre à l'IA : écris le <b>numéro</b> (ou ta réponse avec tes mots) dans la zone de message d'Antigravity, puis Entrée. Perdu·e ? Écris <b>« je suis perdu »</b>.</p>
