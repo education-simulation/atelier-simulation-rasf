@@ -339,6 +339,12 @@ export const CSS = `
 .ga-decouvrir { flex-shrink:0; text-decoration:none; background:#0b0b0f; color:#fff; border-radius:9px; padding:6px 10px; font-weight:800; font-size:13px; }
 .ga-decouvrir:hover { background:#27272a; }
 @media (max-width:600px) { .ga-repondre { flex-wrap:wrap; } }
+.ga-ia { margin:12px 0 0 36px; background:#0b0b0f; border:1px solid #a16207; border-radius:12px; padding:12px 14px; animation:g-fondu .4s; }
+.ga-ia-titre { margin:0 0 6px !important; font-weight:800; color:#fde68a !important; font-size:14px !important; }
+.ga-ia p { margin:0 0 6px; color:#e4e4e7; font-size:16px; line-height:1.45; }
+.ga-ia a { color:#93c5fd; word-break:break-all; }
+.ga-ia-choix { display:flex; align-items:center; gap:10px; margin:6px 0 0; color:#fff; font-weight:700; font-size:16px; }
+.ga-ia-choix span { flex-shrink:0; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:#f59e0b; color:#1f1300; font-weight:800; font-size:14px; }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
@@ -995,6 +1001,27 @@ export function PageEtape({ n }) {
   );
 }
 
+// Le dernier message de l'IA (lu dans le journal d'Antigravity), mis en forme simplement : texte, puis les choix numérotés.
+const enLiens = (t) => t.split(/(https?:\/\/[^\s)]+)/g).map((m, k) => (/^https?:/.test(m) ? <a key={k} href={m} target="_blank" rel="noopener noreferrer">{m}</a> : m));
+function MessageIA({ texte }) {
+  const propre = texte.replace(/\*\*/g, "").replace(/(^|\s)\*([^*\n]+)\*/g, "$1$2");
+  const lignes = propre.split("\n").map((l) => l.trim()).filter(Boolean);
+  const fin = lignes.findIndex((l) => l.startsWith("✍️") || l === "---");
+  const utiles = (fin >= 0 ? lignes.slice(0, fin) : lignes).filter((l) => !/^💬\s*Pour toi\s*:?$/i.test(l));
+  if (!utiles.length) return null;
+  return (
+    <div className="ga-ia" aria-live="polite">
+      <p className="ga-ia-titre">💬 L'IA te demande :</p>
+      {utiles.map((l, k) => {
+        const choix = l.match(/^(\d+)[.)]\s*(.+)$/);
+        return choix
+          ? <div key={k} className="ga-ia-choix"><span>{choix[1]}</span>{enLiens(choix[2])}</div>
+          : <p key={k}>{enLiens(l)}</p>;
+      })}
+    </div>
+  );
+}
+
 // La page « Progression de l'installation de ton interface simulations » (sur l'ordinateur) : une fenêtre d'application,
 // pour ne pas la confondre avec l'interface elle-même. En haut, une barre d'étapes visuelle (stepper) ; dessous, seulement
 // les étapes faites et l'étape en cours, chacune avec un bouton vers sa page d'explication en ligne.
@@ -1019,10 +1046,11 @@ export function Guide() {
   }, [mail, poubelle]);
   // Une petite fenêtre d'autorisation attend-elle un clic ? Le serveur d'aperçu le déduit du journal d'Antigravity (vite.config.js).
   const [attente, setAttente] = useState(false);
+  const [message, setMessage] = useState("");   // le dernier message de l'IA dans Antigravity, affiché tel quel
   useEffect(() => {
     let fini = false;
     const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
-      .then((r) => { if (!fini) setAttente(!!r.attente); }).catch(() => {});
+      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); } }).catch(() => {});
     voir();
     const id = setInterval(voir, 2000);
     return () => { fini = true; clearInterval(id); };
@@ -1087,7 +1115,8 @@ export function Guide() {
                       {!fait && <p>{e.texte}</p>}
                     </div>
                   </div>
-                  {e.sous && !fait && (
+                  {!fait && message && <MessageIA texte={message} />}
+                  {e.sous && !fait && !message && (
                     <ol className="ga-sous">
                       {e.sous.map(([titre, aide], j) => {
                         const ok = sousFaites.has(`${i}.${j + 1}`);

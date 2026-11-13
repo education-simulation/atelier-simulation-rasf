@@ -69,15 +69,15 @@ function progression() {
 // Quand l'IA lance une action (lire/écrire un fichier, une commande), une ligne « action » s'ajoute ; son résultat ne
 // s'écrit qu'APRÈS l'action. Une fenêtre d'autorisation bloque l'action : la dernière ligne reste une action sans résultat.
 // C'est une déduction (pas une vraie détection) : une commande longue (copie, installation) y ressemble, d'où un délai plus long.
-//   GET /__atelier/attente → { attente: true|false, outil }. Lecture seule, aperçu seulement. En cas de doute : false.
+//   GET /__atelier/attente → { attente: true|false, outil, message } (message : le dernier message de l'IA). Lecture seule, aperçu seulement. En cas de doute : false.
 function attenteAutorisation() {
   const dossierBrain = join(homedir(), '.gemini', 'antigravity', 'brain')
-  const derniereLigne = (fichier) => {
-    const taille = statSync(fichier).size, n = Math.min(taille, 65536), b = Buffer.alloc(n)
+  const dernieresLignes = (fichier) => {
+    const taille = statSync(fichier).size, n = Math.min(taille, 262144), b = Buffer.alloc(n)
     const fd = openSync(fichier, 'r'); readSync(fd, b, 0, n, taille - n); closeSync(fd)
-    const lignes = b.toString('utf8').split('\n').filter((l) => l.trim())
-    return lignes.length ? lignes[lignes.length - 1] : ''
+    return b.toString('utf8').split('\n').filter((l) => l.trim())
   }
+  const lire = (l) => { try { return JSON.parse(l) } catch { return {} } }
   const etat = () => {
     if (!existsSync(dossierBrain)) return { attente: false }
     let recent = null
@@ -88,17 +88,24 @@ function attenteAutorisation() {
       if (!recent || t > recent.t) recent = { f, t }
     }
     if (!recent || Date.now() - recent.t > 30 * 60 * 1000) return { attente: false }
-    const d = JSON.parse(derniereLigne(recent.f) || '{}')
+    const lignes = dernieresLignes(recent.f)
+    const d = lire(lignes[lignes.length - 1] || '{}')
+    // Le dernier message de l'IA pour la personne (une réponse sans action), pour l'afficher dans la page de progression.
+    let message = ''
+    for (let k = lignes.length - 1; k >= 0; k--) {
+      const m = lire(lignes[k])
+      if (m.type === 'PLANNER_RESPONSE' && !(m.tool_calls && m.tool_calls.length) && m.content) { message = String(m.content).slice(0, 4000); break }
+    }
     const appel = d.type === 'PLANNER_RESPONSE' && Array.isArray(d.tool_calls) && d.tool_calls[0]
-    if (!appel) return { attente: false }
+    if (!appel) return { attente: false, message }
     const outil = String(appel.name || '')
     const commande = JSON.stringify(appel.args || {})
     const depuis = Date.now() - Date.parse(d.created_at || '')
-    if (!Number.isFinite(depuis)) return { attente: false }
+    if (!Number.isFinite(depuis)) return { attente: false, message }
     // Commandes longues connues (copie, installation, aperçu) : on attend plus longtemps avant de conclure.
     const longue = outil === 'run_command' && /git clone|npm install|npm i\b|npm run dev|IsDaemon/.test(commande)
     const seuil = longue ? 45000 : outil === 'run_command' ? 12000 : 3500
-    return { attente: depuis > seuil, outil }
+    return { attente: depuis > seuil, outil, message }
   }
   return {
     name: 'atelier-attente-autorisation',
