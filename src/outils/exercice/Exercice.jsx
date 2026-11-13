@@ -7,7 +7,7 @@
 //   - les sauvegardes (sauver / reprendre une version) — sur l'ordinateur seulement ;
 //   - dans le guide (les deux modes) : « 📍 État actuel de la simulation », fourni par la page (prop etat),
 //     que l'agent tient à jour à chaque changement ;
-//   - à droite (en dessous sur petit écran) : les mots clés qui rendent un prompt précis (un clic copie le mot).
+//   - (les mots clés ne sont plus affichés : retirés à la demande de Marco, 13/11/2026 ; MotsCles reste pour mémoire).
 //  Les écritures sur l'ordinateur passent par le serveur d'aperçu (vite.config.js) : jamais en ligne.
 // ============================================================
 import { useEffect, useRef, useState } from "react";
@@ -868,7 +868,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   if (estApercu && new URLSearchParams(window.location.search).has("atelier")) {
     const etapeProps = (num) => ({ page, numero: num, etape: parNum[num], faite: faites.includes(num), parIA: parIA.includes(num), verrouillee: false,
       cocher: () => cocher(num), precedente: undefined, outil: outils[0], controle: num === 0 && sans ? controle : null, bloquee: bloqueeParControle(num) });
-    const motsBloc = groupesMots.length > 0 ? <div className="va-carte-claire"><MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} /></div> : null;
+    const motsBloc = false ? <div className="va-carte-claire"><MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} /></div> : null;
     return (
       <div className="ex-conteneur">
         <style>{STYLE_VUE_ATELIER}</style>
@@ -882,7 +882,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
   }
   return (
     <div className="ex-conteneur">
-    <div className={`ex-cadre${motsCles.length && !guideMasque ? " avec-colonne" : ""}`}>
+    <div className="ex-cadre">
       <style>{`
         .ex-conteneur { container-type: inline-size; }
         .ex-cadre { max-width: 1360px; margin: 0 auto; display: grid; gap: 16px; grid-template-columns: minmax(0, 1fr); }
@@ -902,7 +902,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
       `}</style>
       <div className="ex-principal">
         <div style={{ display: "flex", gap: 10, alignItems: "flex-start", flexWrap: "wrap" }}>
-          {!guideMasque && <p style={{ margin: 0, flex: "1 1 320px" }}>À toi de construire la simulation du <strong>{sujet}</strong> en écrivant tes demandes à l'agent, dans Antigravity. Regarde d'abord l'<strong>état actuel</strong> dans le guide, puis aide-toi des <strong>mots clés</strong>.</p>}
+          {!guideMasque && <p style={{ margin: 0, flex: "1 1 320px" }}>À toi de construire la simulation du <strong>{sujet}</strong> en écrivant tes demandes à l'agent, dans Antigravity. Regarde d'abord l'<strong>état actuel</strong> dans le guide.</p>}
           <span style={{ display: "flex", gap: 8, marginLeft: "auto", flexWrap: "wrap" }}>
             <button type="button" style={bouton()} onClick={basculerGuide}>{guideMasque ? "🧭 Afficher le guide" : "🙈 Masquer le guide"}</button>
             {estApercu && !guideMasque && <button type="button" style={bouton("danger")} onClick={() => setRecommencer(true)}>↺ Tout recommencer</button>}
@@ -941,7 +941,7 @@ export function CadreExercice({ page, sujet, etapes, idees, motsCles = [], etat 
         </section>}
 
       </div>
-      {!guideMasque && groupesMots.length > 0 && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
+      {false && <MotsCles groupes={groupesMots} surlignes={new Set(actives.flatMap((n) => parNum[n]?.motsCles || []))} pourEtapes={actives} />}
       {recommencer && <ToutRecommencer page={page} fermer={() => setRecommencer(false)} remiseAZero={remiseAZero} modele={etapes.outilsSans?.[0]?.chemin} />}
     </div>
     </div>
