@@ -77,7 +77,7 @@ Choix : 1. **Une simulation sur le métamérisme**. (D'autres simulations viendr
     `cd ~/Desktop 2>/dev/null || cd ~; n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && curl -fsSL -o metamerisme.html "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html" && echo "NOM=$PWD"`
   - Windows (PowerShell) :
     `$b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; curl.exe -fsSL -o (Join-Path $d 'metamerisme.html') "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html"; "NOM=$d"`
-- **B · IA de conversation** : rien à lancer. Ton message (court, sans question) :
+- **B · IA de conversation** : rien à lancer. **Si le fichier `metamerisme.html` est déjà dans la conversation** (la page « Préparer ton IA » le fait télécharger et glisser avant « continue ») : lis-le en entier et passe directement au message de l'étape 3. Sinon, ton message (court, sans question) :
 ```
 **💬 Pour toi :**
 

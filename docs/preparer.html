@@ -27,6 +27,9 @@ b.cle { color:#fde68a; }
 .continue { margin:10px 0 0; background:#0b0b0f; border:2px dashed #f59e0b; border-radius:10px; padding:10px 12px; color:#fde68a; font-weight:800; }
 .aller { all:unset; cursor:pointer; display:inline-block; background:#f59e0b; color:#1f1300; font-weight:800; font-size:16px; border-radius:10px; padding:10px 18px; margin-top:6px; }
 .note { margin:0; color:#a1a1aa; font-size:14px; }
+.panneau.tele { border-style:dashed; }
+.etat { font-size:15px; color:#a1a1aa; margin-left:8px; }
+.etat.ok { color:#86efac; } .etat.ko { color:#fca5a5; }
 </style>
 </head>
 <body>
@@ -55,7 +58,6 @@ b.cle { color:#fde68a; }
         <li>Rien à régler : ChatGPT lira les consignes sur Internet. Ta simulation sera un <b class="cle">fichier sur ton ordinateur</b>, ouvert dans ton navigateur ; à chaque modification, ChatGPT te donne le nouveau fichier à télécharger.</li>
         <li>Si ChatGPT dit qu'il ne peut pas lire une page web : sous la zone de message, active <b class="cle">« Rechercher »</b> (le globe 🌐), puis réécris « continue ».</li>
       </ol>
-      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
     </section>
 
     <section class="panneau" data-pour="claude" hidden>
@@ -64,7 +66,6 @@ b.cle { color:#fde68a; }
         <li>Rien à régler : Claude lira les consignes sur Internet. Ta simulation sera un <b class="cle">fichier sur ton ordinateur</b>, ouvert dans ton navigateur ; à chaque modification, Claude te donne le nouveau fichier à télécharger.</li>
         <li>Si Claude dit qu'il ne peut pas lire une page web : dans le menu des outils, sous la zone de message, active <b class="cle">la recherche web</b>, puis réécris « continue ».</li>
       </ol>
-      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
     </section>
 
     <section class="panneau" data-pour="lechat" hidden>
@@ -73,7 +74,6 @@ b.cle { color:#fde68a; }
         <li>Sous la zone de message, dans les outils, active <b class="cle">« Recherche web »</b> et <b class="cle">« Interpréteur de code »</b>.</li>
         <li>Ta simulation sera un <b class="cle">fichier sur ton ordinateur</b>, ouvert dans ton navigateur ; Le Chat te donne chaque nouvelle version à télécharger.</li>
       </ol>
-      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
     </section>
 
     <section class="panneau" data-pour="gemini" hidden>
@@ -82,7 +82,6 @@ b.cle { color:#fde68a; }
         <li>Rien à régler : Gemini lira les consignes sur Internet.</li>
         <li>Ta simulation sera un <b class="cle">fichier sur ton ordinateur</b>, ouvert dans ton navigateur ; Gemini te donne chaque nouvelle version.</li>
       </ol>
-      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
     </section>
 
     <section class="panneau" data-pour="autre" hidden>
@@ -91,21 +90,48 @@ b.cle { color:#fde68a; }
         <li>Ton IA doit pouvoir <b class="cle">lire une page web</b> (recherche web activée) et <b class="cle">recevoir un fichier</b> que tu glisses dans la conversation.</li>
         <li>Elle te rendra chaque version de ta simulation en fichier <b class="cle">.html</b> (ou en code à enregistrer), à ouvrir d'un double-clic.</li>
       </ol>
-      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
     </section>
 
-    <p class="note">Ta simulation sera une seule page HTML : rien à installer.</p>
+    <section class="panneau tele" id="tele" hidden>
+      <h2>📥 Ta simulation sur ton ordinateur</h2>
+      <ol>
+        <li><button type="button" class="aller" id="bouton-tele">⬇️ Télécharger ma simulation</button> <span class="etat" id="etat"></span><br>Le fichier <b class="cle">metamerisme.html</b> arrive dans ton dossier <b class="cle">Téléchargements</b>.</li>
+        <li><b class="cle">Double-clique</b> dessus : il s'ouvre dans ton navigateur. Garde cet onglet ouvert.</li>
+        <li><b class="cle">Glisse ce fichier</b> dans la conversation avec ton IA (ou clique sur le <b class="cle">+</b> de la zone de message pour l'ajouter).</li>
+      </ol>
+      <p class="continue">✍️ Puis écris <b class="cle">continue</b> dans la conversation, et Entrée.</p>
+    </section>
+
+    <p class="note">Ta simulation sera une seule page HTML, sur ton ordinateur : rien à installer.</p>
   </div>
 </div>
 <script>
 // Une tuile choisie montre ses réglages ; le choix est retenu au rechargement.
 const montrer = (ia) => {
   document.querySelectorAll(".tuile").forEach((t) => t.classList.toggle("choisie", t.dataset.ia === ia));
-  document.querySelectorAll(".panneau").forEach((p) => { p.hidden = p.dataset.pour !== ia; });
+  document.querySelectorAll(".panneau[data-pour]").forEach((p) => { p.hidden = p.dataset.pour !== ia; });
+  document.getElementById("tele").hidden = ia === "antigravity";
   try { localStorage.setItem("atelier.ia", ia); } catch { /* aperçu sans stockage */ }
 };
 document.getElementById("tuiles").addEventListener("click", (e) => { const t = e.target.closest(".tuile"); if (t) montrer(t.dataset.ia); });
 document.addEventListener("click", (e) => { const b = e.target.closest("[data-lien]"); if (b) location.href = b.dataset.lien; });
+// Télécharger la page modèle (prise sur GitHub, adresse brute autorisée depuis n'importe quel site).
+const etat = document.getElementById("etat");
+const boutonTele = document.getElementById("bouton-tele");
+boutonTele.addEventListener("click", async () => {
+  boutonTele.disabled = true; etat.className = "etat"; etat.textContent = "…";
+  try {
+    const r = await fetch("https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/metamerisme.html", { cache: "no-store" });
+    if (!r.ok) throw new Error(r.status);
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob([await r.text()], { type: "text/html" }));
+    a.download = "metamerisme.html";
+    document.body.appendChild(a); a.click(); a.remove();
+    etat.className = "etat ok"; etat.textContent = "✅ Téléchargé";
+  } catch {
+    etat.className = "etat ko"; etat.textContent = "⚠️ Échec : réessaie dans un instant.";
+  } finally { boutonTele.disabled = false; }
+});
 try { const ia = localStorage.getItem("atelier.ia"); if (ia) montrer(ia); } catch { /* rien */ }
 </script>
 </body>
