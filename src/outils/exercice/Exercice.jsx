@@ -117,6 +117,36 @@ const AXE_SPECTRAL = { titre: "Longueur d'onde λ (nm)", min: 380, max: 780, gra
 const abscissesDe = (g) => g.abscisses || g.longueurs;
 // Pas « rond » des graduations (1, 2 ou 5 × 10ⁿ), pour les graphiques qui ont leur propre axe.
 const pasRond = (max) => { const b = 10 ** Math.floor(Math.log10(max / 4)), r = max / 4 / b; return (r >= 5 ? 5 : r >= 2 ? 2 : 1) * b; };
+// Deux courbes comparées (paire métamère) : où elles se croisent, la plus grande zone où elles diffèrent beaucoup,
+// et la plus grande zone où elles sont quasi identiques.
+function comparerCourbes(g, X) {
+  const [a, b] = g.series; if (!a || !b) return null;
+  const xs = a.x || X, d = a.valeurs.map((v, i) => b.valeurs[i] - v);
+  const croisements = []; let dernier = -1;
+  d.forEach((v, i) => {
+    if (Math.abs(v) < 0.01) return;
+    if (dernier >= 0 && Math.sign(v) !== Math.sign(d[dernier])) {
+      const t = d[dernier] / (d[dernier] - v), l = xs[dernier] + t * (xs[i] - xs[dernier]);
+      croisements.push({ l, v: a.valeurs[dernier] + t * (a.valeurs[i] - a.valeurs[dernier]) });
+    }
+    dernier = i;
+  });
+  const plusGrande = (test) => {
+    let best = null, debut = null;
+    d.forEach((v, i) => {
+      if (test(Math.abs(v))) { if (debut === null) debut = i; }
+      if ((!test(Math.abs(v)) || i === d.length - 1) && debut !== null) {
+        const fin = test(Math.abs(v)) ? i : i - 1;
+        if (!best || xs[fin] - xs[debut] > best.a - best.de) best = { de: xs[debut], a: xs[fin] };
+        debut = null;
+      }
+    });
+    return best;
+  };
+  const tresDiff = plusGrande((e) => e > 0.2), proches = plusGrande((e) => e < 0.02);
+  return { croisements, zones: [...(tresDiff ? [{ type: "differentes", ...tresDiff }] : []), ...(proches ? [{ type: "proches", ...proches }] : [])] };
+}
+
 function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
   const L = 560, H = 220, mg = { g: 58, d: 10, h: 10, b: 32 };
   const ax = g.axeX || AXE_SPECTRAL, X = abscissesDe(g);
@@ -125,6 +155,7 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
   const y = (v) => H - mg.b - ((v - min) / (max - min)) * (H - mg.h - mg.b);
   const pas = g.axeX ? pasRond(max || 1) : max > 20 ? 50 : max > 1.2 ? 0.5 : 0.2;
   const graduations = []; for (let v = 0; v <= max; v += pas) graduations.push(Number(v.toFixed(g.axeX ? 6 : 2)));
+  const comp = g.comparer ? comparerCourbes(g, X) : null;
   return (
     <details open={ouvert || undefined} style={{ margin: "10px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
       <summary style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
@@ -144,15 +175,34 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
         <line x1={mg.g} x2={L - mg.d} y1={y(0)} y2={y(0)} stroke="#475569" />
         <text x={(mg.g + L - mg.d) / 2} y={H - 3} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{ax.titre}</text>
         <text transform={`translate(13 ${(mg.h + H - mg.b) / 2}) rotate(-90)`} fontSize="11" textAnchor="middle" fill="#334155" fontWeight="700">{g.unite.charAt(0).toUpperCase() + g.unite.slice(1)}</text>
+        {comp && comp.zones.map((z) => (
+          <g key={z.type}>
+            <rect x={x(z.de)} y={mg.h} width={x(z.a) - x(z.de)} height={H - mg.b - mg.h} fill={z.type === "differentes" ? "rgba(220,38,38,.12)" : "rgba(22,163,74,.13)"} />
+            <text x={(x(z.de) + x(z.a)) / 2} y={mg.h + 11} fontSize="10" fontWeight="800" textAnchor="middle" fill={z.type === "differentes" ? "#b91c1c" : "#15803d"}>{z.type === "differentes" ? "très différentes" : "quasi identiques"}</text>
+          </g>
+        ))}
         {g.series.map((s) => (
           <polyline key={s.nom} fill="none" stroke={s.couleur} strokeWidth="2.2" strokeDasharray={s.tirets ? "6 4" : undefined}
             points={s.valeurs.map((v, i) => `${x((s.x || X)[i]).toFixed(1)},${y(v).toFixed(1)}`).join(" ")} />
+        ))}
+        {comp && comp.croisements.map((c, k) => (
+          <g key={k}>
+            <circle cx={x(c.l)} cy={y(c.v)} r="7" fill="none" stroke="#f59e0b" strokeWidth="2.5" />
+            <circle cx={x(c.l) + 9} cy={y(c.v) - 10} r="7" fill="#f59e0b" />
+            <text x={x(c.l) + 9} y={y(c.v) - 6.5} fontSize="9.5" fontWeight="800" textAnchor="middle" fill="#1f1300">{k + 1}</text>
+          </g>
         ))}
       </svg>
       <figcaption style={{ fontSize: 12.5, color: "#475569", lineHeight: 1.5 }}>
         <span style={{ display: "flex", gap: 12, flexWrap: "wrap", marginBottom: 2 }}>
           {g.series.map((s) => <span key={s.nom}><span style={{ display: "inline-block", width: 16, height: 3, background: s.couleur, verticalAlign: "middle", marginRight: 4 }} />{s.nom}</span>)}
         </span>
+        {comp && (
+          <span style={{ display: "flex", gap: 14, flexWrap: "wrap", margin: "2px 0 4px", fontWeight: 700 }}>
+            <span><span style={{ color: "#f59e0b" }}>●</span> {comp.croisements.length} intersection{comp.croisements.length > 1 ? "s" : ""} (vers {comp.croisements.map((c) => Math.round(c.l)).join(", ")} nm)</span>
+            {comp.zones.map((z) => <span key={z.type}><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: z.type === "differentes" ? "rgba(220,38,38,.35)" : "rgba(22,163,74,.35)" }} />{z.type === "differentes" ? "Très différentes" : "Quasi identiques"} : {Math.round(z.de)} à {Math.round(z.a)} nm</span>)}
+          </span>
+        )}
         {g.explication}
       </figcaption>
       </figure>

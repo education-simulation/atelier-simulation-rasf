@@ -197,7 +197,6 @@ function donneesColorimetrie(m = MODELE_FOURNI) {
   const normalisee = (S) => { const m = Math.max(...S); return S.map((v) => v / m); };
   const carte1 = LONGUEURS.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
   const carte2 = paireMetamere(carte1);
-  const nCrois = compterCroisements(carte1, carte2, LONGUEURS);
   const ecarts = [D65, A, F11].map((il) => { const w = blanc(il.spectre); return `${il.nom} : ${deltaE(lab(xyz(carte1, il.spectre), w), lab(xyz(carte2, il.spectre), w)).toFixed(1).replace(".", ",")}`; });
   return [
     { id: "illuminants", onglet: "📈 Les illuminants", titre: "📈 Distributions spectrales normalisées des illuminants (maximum = 1)", unite: "puissance normalisée",
@@ -208,8 +207,8 @@ function donneesColorimetrie(m = MODELE_FOURNI) {
     { id: "observateur", onglet: "👁 L'observateur 1931", titre: "👁 Observateur de référence CIE 1931", unite: "sensibilité",
       explication: "Les trois courbes x̄, ȳ, z̄ : comment l'œil moyen répond à chaque longueur d'onde (ȳ = la luminosité perçue).",
       series: [["x̄", "#dc2626", XBAR], ["ȳ", "#16a34a", YBAR], ["z̄", "#2563eb", ZBAR]].map(([nom, couleur, valeurs]) => ({ nom, couleur, valeurs })) },
-    { id: "paire-metamere", onglet: "🎨 Conditions de métamérie", titre: "🎨 Exemple de paire métamère (réflectances spectrales)", unite: "réflectance",
-      explication: `Deux couleurs calculées avec paireMetamere : identiques sous D65, différentes sous A. Les courbes se croisent ${nCrois} fois et s'écartent surtout dans le rouge. Écart ΔE*ab — ${ecarts.join(" · ")}.`,
+    { id: "paire-metamere", comparer: true, onglet: "🎨 Conditions de métamérie", titre: "🎨 Exemple de paire métamère (réflectances spectrales)", unite: "réflectance",
+      explication: `Deux couleurs calculées avec paireMetamere : identiques sous D65, différentes sous A. Condition de métamérie : les deux courbes doivent se croiser au moins 3 fois ; ici, elles s'écartent surtout dans le rouge. Écart ΔE*ab — ${ecarts.join(" · ")}.`,
       series: [{ nom: "carte 1", couleur: versEcran(xyz(carte1, D65.spectre), blanc(D65.spectre)), valeurs: carte1 }, { nom: "carte 2", couleur: "#0f172a", valeurs: carte2, tirets: true }] },
   ].map((g) => ({ ...g, longueurs: LONGUEURS }));
 }
