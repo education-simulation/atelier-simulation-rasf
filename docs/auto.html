@@ -151,7 +151,9 @@ b.cle { color:#fde68a; }
 @keyframes m-avant { 0%, 67% { opacity:1; } 69%, 100% { opacity:0; } }
 @keyframes m-apres { 0%, 67% { opacity:0; } 69%, 100% { opacity:1; } }
 /* étape 3 : Default → Auto (8 s, en boucle) */
-.e3 .menu.permissions { right:60px; bottom:96px; width:280px; animation:a-menu 8s infinite; }
+.e3 .ecran { overflow:visible; }
+.e3 .menu.permissions { right:60px; bottom:96px; width:280px; z-index:10; box-shadow:0 12px 30px rgba(0,0,0,.6); animation:a-menu 8s infinite; }
+.e3 .souris { z-index:11; }
 .e3 .auto { animation:a-auto 8s infinite; }
 .e3 .auto b { animation:a-autob 8s infinite; }
 .e3 .bouton-ag { animation:a-bouton 8s infinite; }
