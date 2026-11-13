@@ -102,6 +102,7 @@ Chaque action que tu fais (lire, écrire un fichier, lancer une commande) fait a
 | `.vercel/` | Lien entre ce dossier et le projet Vercel (créé à la 1re mise en ligne) | Non, ne jamais le supprimer |
 
 - Le site est fait avec **React + Vite**. Navigation : `…/?sim=<id>` (un rafraîchissement reste sur la même page).
+- **Les ateliers** (sur l'ordinateur seulement) : `…/?atelier` = la page des tuiles ; `…/?atelier=<id>` = un exercice seul, sans les menus du site (ex. `…/?atelier=metamerisme`). **Pendant un atelier, donne toujours le lien `…/?atelier=<id>`**, jamais `…/?sim=<id>`.
 - **Chaque menu a sa page intermédiaire** (`…/?sim=menu:<id du menu>`) : une tuile par page du menu, avec son icône, son titre et sa `description`. On y arrive en cliquant sur le nom du menu (en haut, ou dans la barre latérale), et par le fil d'Ariane. Rien à créer : elle se construit toute seule à partir de `site.config.js`.
 - **6 menus** au départ : **Construire avec l'IA**, **Menu A**, **Menu B**, **Menu C**, **Outils** et **Exemples**. L'accueil montre chaque menu (bloc, carte ou liste selon le style).
   - **Construire avec l'IA** : métamérisme et titrage direct, deux exercices pour apprendre à écrire ses demandes à l'IA (une scène de départ et un guide, étape par étape).

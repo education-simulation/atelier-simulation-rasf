@@ -4,11 +4,13 @@
 //  Des tuiles : les ateliers (le 1er : Métamérisme), et la page habituelle du site.
 //  Même habillage que la page de progression (fenêtre sombre) : on ne la confond pas avec son site.
 // ============================================================
-import { useEffect } from "react";
+import { lazy, Suspense, useEffect } from "react";
+import SITE from "../../site.config.js";
+import { EnChargement } from "./chargement";
 import { CSS } from "./Guide.jsx";
 
 const TUILES = [
-  { icone: "🎨", titre: "Atelier 1 : Métamérisme", texte: "Construis une simulation avec l'IA, une étape à la fois, à partir d'une cabine de lumière et de deux cartes.", lien: "./?sim=metamerisme" },
+  { icone: "🎨", titre: "Atelier 1 : Métamérisme", texte: "Construis une simulation avec l'IA, une étape à la fois, à partir d'une cabine de lumière et de deux cartes.", lien: "./?atelier=metamerisme" },
   { icone: "🧪", titre: "Atelier 2", texte: "Bientôt.", bientot: true },
   { icone: "⚗️", titre: "Atelier 3", texte: "Bientôt.", bientot: true },
   { icone: "🏠", titre: "Voir la page de mon site de simulations", texte: "La page d'accueil de ton site, avec ses menus.", lien: "./", site: true },
@@ -24,10 +26,40 @@ a.at-tuile:hover { transform:translateY(-3px); border-color:#f59e0b; }
 .at-icone { font-size:36px; line-height:1; }
 .at-titre { font:800 19px/1.25 'Outfit',sans-serif; color:#fff; }
 .at-texte { font-size:15px; color:#a1a1aa; line-height:1.4; }
+.at-page .ga-fenetre.at-fenetre { max-width:1280px; }
+.at-retour { margin-left:auto; color:#fde68a; text-decoration:none; font-weight:800; font-size:13px; border:1px solid #a16207; border-radius:8px; padding:3px 10px; }
+.at-retour:hover { background:#3a2a08; }
+.at-contenu { padding:18px 20px 24px; background:#0b0b0f; }
+/* Le texte d'introduction de l'exercice (écrit pour un fond clair) : lisible sur le fond sombre. */
+.at-contenu .ex-principal > div:first-child > p { color:#e4e4e7; font-size:16px; }
+.at-contenu .ex-principal > div:first-child > p strong { color:#fde68a; }
 .at-badge { align-self:flex-start; font:800 12px 'Nunito',sans-serif; background:#f59e0b; color:#1f1300; border-radius:99px; padding:2px 10px; }
 `;
 
+// Une page d'atelier (…/?atelier=<id de la page>) : la simulation seule, sans les menus du site, dans la même fenêtre sombre.
+const FICHIERS = import.meta.glob("../../simulations/*.jsx");
+const charges = {};
+function PageAtelier({ id }) {
+  const page = (SITE.pages || []).find((p) => p.id === id);
+  const chemin = page && `../../simulations/${page.fichier}.jsx`;
+  const Composant = chemin && FICHIERS[chemin] ? (charges[chemin] ||= lazy(FICHIERS[chemin])) : null;
+  useEffect(() => { document.title = page ? `Atelier · ${page.titre}` : "Atelier"; }, [page]);
+  return (
+    <div className="ga at-page">
+      <style>{CSS + PLUS}</style>
+      <div className="ga-fenetre at-fenetre">
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · {page ? page.titre : id}</b><a className="at-retour" href="./?atelier">← Les ateliers</a></div>
+        <div className="at-contenu">
+          {Composant ? <EnChargement key={id}><Composant /></EnChargement> : <p className="erreur">Atelier « {id} » introuvable.</p>}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export function Atelier() {
+  const id = new URLSearchParams(window.location.search).get("atelier");
+  if (id) return <Suspense fallback={null}><PageAtelier id={id} /></Suspense>;
   useEffect(() => { document.title = "Atelier : créer une simulation avec l'IA"; }, []);
   return (
     <div className="ga">
