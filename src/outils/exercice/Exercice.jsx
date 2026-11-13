@@ -144,14 +144,9 @@ function comparerCourbes(g, X) {
     return best;
   };
   const tresDiff = plusGrande((e) => e > 0.2);
-  // Quasi identiques : autour de chaque intersection, tant que l'écart reste petit (< 0,04).
-  const proches = croisements.map((c) => {
-    let i = xs.findIndex((l) => l >= c.l); if (i < 0) i = xs.length - 1;
-    let de = i, a2 = i;
-    while (de > 0 && Math.abs(d[de - 1]) < 0.04) de--;
-    while (a2 < d.length - 1 && Math.abs(d[a2 + 1]) < 0.04) a2++;
-    return { type: "proches", de: Math.max(Math.min(xs[de], c.l - 3), c.l - 12), a: Math.min(Math.max(xs[a2], c.l + 3), c.l + 12) };
-  });
+  // Quasi identiques : toute la zone du début du spectre jusqu'à la dernière intersection (les courbes s'y compensent).
+  const finCroise = croisements.length ? croisements[croisements.length - 1].l : null;
+  const proches = finCroise !== null ? [{ type: "proches", de: xs[0], a: tresDiff ? Math.min(finCroise + 4, tresDiff.de) : finCroise + 4 }] : [];
   return { croisements, zones: [...(tresDiff ? [{ type: "differentes", ...tresDiff }] : []), ...proches] };
 }
 
@@ -186,7 +181,7 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
         {comp && comp.zones.map((z, k) => (
           <g key={k}>
             <rect x={x(z.de)} y={mg.h} width={x(z.a) - x(z.de)} height={H - mg.b - mg.h} fill={z.type === "differentes" ? "rgba(220,38,38,.12)" : "rgba(22,163,74,.13)"} />
-            <text x={(x(z.de) + x(z.a)) / 2} y={mg.h + 11} fontSize="10" fontWeight="800" textAnchor="middle" fill={z.type === "differentes" ? "#b91c1c" : "#15803d"}>{z.type === "differentes" ? "très différentes" : "≈"}</text>
+            <text x={(x(z.de) + x(z.a)) / 2} y={mg.h + 11} fontSize="10" fontWeight="800" textAnchor="middle" fill={z.type === "differentes" ? "#b91c1c" : "#15803d"}>{z.type === "differentes" ? "très différentes" : "quasi identiques"}</text>
           </g>
         ))}
         {g.series.map((s) => (
@@ -209,7 +204,7 @@ function Graphique({ g, ouvert = false, prefixe = "colorimetrie" }) {
           <span style={{ display: "flex", gap: 14, flexWrap: "wrap", margin: "2px 0 4px", fontWeight: 700 }}>
             <span><span style={{ color: "#f59e0b" }}>●</span> {comp.croisements.length} intersection{comp.croisements.length > 1 ? "s" : ""} (vers {comp.croisements.map((c) => Math.round(c.l)).join(", ")} nm)</span>
             {comp.zones.filter((z) => z.type === "differentes").map((z) => <span key="d"><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: "rgba(220,38,38,.35)" }} />Très différentes : {Math.round(z.de)} à {Math.round(z.a)} nm</span>)}
-            {comp.zones.some((z) => z.type === "proches") && <span><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: "rgba(22,163,74,.35)" }} />Quasi identiques : autour des intersections</span>}
+            {comp.zones.some((z) => z.type === "proches") && <span><span style={{ display: "inline-block", width: 12, height: 12, borderRadius: 3, verticalAlign: "-1px", marginRight: 4, background: "rgba(22,163,74,.35)" }} />Quasi identiques : {Math.round(comp.zones.find((z) => z.type === "proches").de)} à {Math.round(comp.zones.find((z) => z.type === "proches").a)} nm</span>}
           </span>
         )}
         {g.explication}
