@@ -15,18 +15,23 @@ function CarteMail({ suivi }) {
   const [envoyeA, setEnvoyeA] = useState(lireMail);
   const [adresse, setAdresse] = useState("");
   const [etat, setEtat] = useState("");
-  const valable = /^[^@\s]+@rasf\.fr$/i.test(adresse.trim());
+  // Vérification de l'adresse : un vrai mail (prenom.nom@…), et seulement en @rasf.fr.
+  const saisie = adresse.trim().toLowerCase();
+  const estMail = /^[a-z0-9]+([._-][a-z0-9]+)*@[a-z0-9-]+(\.[a-z0-9-]+)+$/.test(saisie);
+  const valable = estMail && saisie.endsWith("@rasf.fr");
+  const souci = !saisie ? "vide" : !estMail ? "pasmail" : !valable ? "pasrasf" : "";
 
   async function envoyer(e) {
     e.preventDefault();
     if (!valable) { setEtat("erreur"); return; }
+    const a = saisie;
     setEtat("envoi");
     try {
       // Le mail s'adapte à l'endroit où en est la personne : étapes faites, dossier, adresse en ligne.
-      const p = new URLSearchParams({ a: adresse.trim(), faites: [...suivi.faites].join(","), dossier: suivi.dossier || "", lieu: suivi.lieu || "", adresse: suivi.adresse || "" });
+      const p = new URLSearchParams({ a, faites: [...suivi.faites].join(","), dossier: suivi.dossier || "", lieu: suivi.lieu || "", adresse: suivi.adresse || "" });
       await fetch(`${ADRESSE_ENVOI}?${p}`, { mode: "no-cors" });
-      try { localStorage.setItem(CLE_MAIL, adresse.trim()); } catch { /* rien */ }
-      setEnvoyeA(adresse.trim()); setEtat("");
+      try { localStorage.setItem(CLE_MAIL, a); } catch { /* rien */ }
+      setEnvoyeA(a); setEtat("");
     } catch { setEtat("panne"); }
   }
 
@@ -39,11 +44,15 @@ function CarteMail({ suivi }) {
         <>
           <p>Un mail qui fait le point sur <b>là où tu en es</b>, explique comment tout fonctionne (Antigravity, Gemini, ton dossier, Vercel) et comment reprendre un autre jour. Tu peux le redemander à chaque étape.</p>
           <form className="g-form" onSubmit={envoyer}>
-            <input type="email" inputMode="email" autoComplete="email" placeholder="prenom.nom@rasf.fr" value={adresse}
+            <input type="email" inputMode="email" autoComplete="email" placeholder="prenom.nom@rasf.fr" value={adresse} className={saisie ? (valable ? "ok" : "ko") : ""} aria-invalid={!!saisie && !valable}
               onChange={(e) => { setAdresse(e.target.value); if (etat === "erreur") setEtat(""); }} aria-label="Ton adresse mail RASF" />
             <button type="submit" className="g-bouton bleu" disabled={etat === "envoi"}>{etat === "envoi" ? "Envoi…" : "M'envoyer les instructions"}</button>
           </form>
-          {etat === "erreur" && <p className="g-alerte">Il faut ton adresse RASF, celle qui finit par <b>@rasf.fr</b>.</p>}
+          {valable && <p className="g-valide">✅ Adresse RASF valide</p>}
+          {souci === "pasrasf" && <p className="g-alerte">Ce n'est pas une adresse RASF : elle doit finir par <b>@rasf.fr</b>.</p>}
+          {souci === "pasmail" && saisie.includes("@") && <p className="g-alerte">Ce n'est pas une adresse mail valide : écris-la comme <b>prenom.nom@rasf.fr</b>.</p>}
+          {etat === "erreur" && souci === "vide" && <p className="g-alerte">Écris d'abord ton adresse RASF (<b>prenom.nom@rasf.fr</b>).</p>}
+          {etat === "erreur" && souci === "pasmail" && !saisie.includes("@") && <p className="g-alerte">Ce n'est pas une adresse mail valide : écris-la comme <b>prenom.nom@rasf.fr</b>.</p>}
           {etat === "panne" && <p className="g-alerte">L'envoi n'a pas marché : vérifie ta connexion à Internet, puis réessaie.</p>}
         </>
       )}
@@ -177,6 +186,9 @@ export const CSS = `
 .g-form button { border:0; cursor:pointer; }
 .g-form button:disabled { opacity:.6; cursor:wait; }
 .g-mail .g-alerte { color:#b91c1c; font-weight:700; margin:10px 0 0 !important; }
+.g-mail .g-valide { color:#166534; font-weight:700; margin:10px 0 0 !important; }
+.g-mail input.ok { border-color:#16a34a !important; }
+.g-mail input.ko { border-color:#dc2626 !important; }
 .g-mail .g-ok { color:#166534 !important; font-size:16.5px; margin:0 !important; }
 .g-lien { background:none; border:0; padding:0; color:var(--g-bleu); font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; margin-left:6px; }
 .g-connexion { box-shadow:0 0 0 5px rgba(245,158,11,.35); }

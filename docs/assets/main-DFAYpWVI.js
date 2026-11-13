@@ -68,6 +68,9 @@ Error generating stack: `+e.message+`
 .g-form button { border:0; cursor:pointer; }
 .g-form button:disabled { opacity:.6; cursor:wait; }
 .g-mail .g-alerte { color:#b91c1c; font-weight:700; margin:10px 0 0 !important; }
+.g-mail .g-valide { color:#166534; font-weight:700; margin:10px 0 0 !important; }
+.g-mail input.ok { border-color:#16a34a !important; }
+.g-mail input.ko { border-color:#dc2626 !important; }
 .g-mail .g-ok { color:#166534 !important; font-size:16.5px; margin:0 !important; }
 .g-lien { background:none; border:0; padding:0; color:var(--g-bleu); font:inherit; font-weight:700; text-decoration:underline; cursor:pointer; margin-left:6px; }
 .g-connexion { box-shadow:0 0 0 5px rgba(245,158,11,.35); }
