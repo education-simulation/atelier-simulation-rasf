@@ -14,6 +14,7 @@ import { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { courbesPubliees, useCourbesPubliees, oublierCourbes } from "./courbes.js";
 import { estApercu } from "../../moteur/Apercu";
+import { useProgression } from "../../moteur/Guide.jsx";
 
 const lire = (cle, defaut) => { try { const v = localStorage.getItem(cle); return v === null ? defaut : JSON.parse(v); } catch { return defaut; } };
 const ecrire = (cle, v) => { try { localStorage.setItem(cle, JSON.stringify(v)); } catch { /* sans importance */ } };
@@ -652,32 +653,47 @@ function ToutRecommencer({ page, fermer, remiseAZero, modele }) {
 // un clic sur un rond vert réaffiche une étape passée. Étapes : 1. l'état actuel de la page, 2. les modèles de la
 // simulation, puis les étapes de construction de l'exercice (celles du parcours guidé).
 function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, cocher, etapeProps, ouvertes, basculer, scene, motsCles, outils, sans, idees, etapes, recommencer }) {
-  const [choisi, setChoisi] = useState(() => lire(`${page}.atelierModeChoisi`, false) === true);
+  // Le mode se choisit en répondant à l'IA (« Mode choisi : metamerisme guide » dans PROGRESSION.md) : la page suit.
+  const { modes, pret } = useProgression();
+  const modeIA = modes[page.toLowerCase()];
+  const choisi = !!modeIA;
+  useEffect(() => { if (modeIA && modeIA !== mode) choisirMode(modeIA); }, [modeIA]);   // eslint-disable-line react-hooks/exhaustive-deps
+  if (modeIA) mode = modeIA;
   const [intro, setIntro] = useState(() => lire(`${page}.atelierIntro`, []));
   const [vue, setVue] = useState(null);   // une étape déjà faite qu'on revoit (null = l'étape en cours)
   const [aide, setAide] = useState(null);   // la fenêtre « les modèles déjà installés »
-  const choisir = (m) => { choisirMode(m); setChoisi(true); ecrire(`${page}.atelierModeChoisi`, true); };
-  const changerDeMode = () => { setChoisi(false); ecrire(`${page}.atelierModeChoisi`, false); };
   const finirIntro = (id) => { const m = [...new Set([...intro, id])]; setIntro(m); ecrire(`${page}.atelierIntro`, m); };
   const nomModele = outils?.[0]?.nomModele || "modèles";
 
+  // L'étape en cours, publiée pour la bande du bas de la page d'atelier (src/moteur/Atelier.jsx) : elle dit quoi faire.
+  const enCours = (() => {
+    if (!choisi) return { quoi: "mode" };
+    if (mode === "libre") return { quoi: "libre" };
+    if (!intro.includes("etat")) return { quoi: "etat" };
+    if (!intro.includes("modeles")) return { quoi: "modeles" };
+    const k = liste.findIndex(({ num }) => !faites.includes(num));
+    return k < 0 ? { quoi: "fini" } : { quoi: "prompt", numero: k + 3, titre: liste[k].etape.titre };
+  })();
+  const cleEnCours = JSON.stringify(enCours);
+  useEffect(() => { window.__atelierEtape = enCours; window.dispatchEvent(new CustomEvent("atelier-etape", { detail: enCours })); }, [cleEnCours]);   // eslint-disable-line react-hooks/exhaustive-deps
+  if (!pret) return null;
   if (!choisi) return (
     <div className="va">
       <h2 className="va-question">Comment veux-tu construire la simulation du <b>{sujet}</b> ?</h2>
       <div className="va-choix">
-        <button type="button" className="va-tuile premier" onClick={() => choisir("guide")}>
-          <span className="va-ic" aria-hidden="true">🧭</span><b>Parcours guidé</b><span>Étape par étape : à chaque étape, tu écris ta demande à l'IA, elle la vérifie et l'exécute.</span><em>conseillé pour commencer</em>
-        </button>
-        <button type="button" className="va-tuile" onClick={() => choisir("libre")}>
-          <span className="va-ic" aria-hidden="true">🧪</span><b>Exploration libre</b><span>Pas d'étapes : tu demandes à l'IA ce que tu veux ajouter ou changer.</span>
-        </button>
+        <div className="va-tuile premier va-fermee" title="Réponds à l'IA, dans Antigravity : écris 1">
+          <span className="va-ic" aria-hidden="true">🧭</span><b>1. Parcours guidé</b><span>Étape par étape : à chaque étape, tu écris ta demande à l'IA, elle la vérifie et l'exécute.</span><em>conseillé pour commencer</em>
+        </div>
+        <div className="va-tuile va-fermee" title="Réponds à l'IA, dans Antigravity : écris 2">
+          <span className="va-ic" aria-hidden="true">🧪</span><b>2. Exploration libre</b><span>Pas d'étapes : tu demandes à l'IA ce que tu veux ajouter ou changer.</span>
+        </div>
       </div>
     </div>
   );
 
   if (mode === "libre") return (
     <div className="va">
-      <div className="va-tete"><b>🧪 Exploration libre</b><button type="button" className="va-lien" onClick={changerDeMode}>Changer de mode</button></div>
+      <div className="va-tete"><b>🧪 Exploration libre</b><span className="va-note">Pour changer de mode, dis-le à l'IA.</span></div>
       {scene}
       <div className="va-carte-claire"><ExplorationLibre idees={idees} /></div>
       {motsCles}
@@ -725,7 +741,7 @@ function VueAtelier({ page, sujet, mode, choisirMode, etat, liste, faites, coche
 
   return (
     <div className="va">
-      <div className="va-tete"><b>🧭 Parcours guidé</b><button type="button" className="va-lien" onClick={changerDeMode}>Changer de mode</button>{recommencer}</div>
+      <div className="va-tete"><b>🧭 Parcours guidé</b><span className="va-note">Pour changer de mode, dis-le à l'IA.</span>{recommencer}</div>
       <ol className="st va-st" aria-label="Les étapes de l'atelier" style={{ gridTemplateColumns: `repeat(${toutes.length}, minmax(0,1fr))` }}>
         {toutes.map((e, i) => {
           const etatRond = e.fait ? "fait" : i === ici ? "ici" : "avenir";
@@ -769,6 +785,9 @@ const STYLE_VUE_ATELIER = `
 .va-tuile { all:unset; cursor:pointer; display:flex; flex-direction:column; gap:10px; background:#16161b; border:1px solid #3f3f46; border-radius:18px; padding:22px; transition:transform .15s, border-color .15s; }
 .va-tuile:hover, .va-tuile:focus-visible { transform:translateY(-3px); border-color:#f59e0b; }
 .va-tuile.premier { border:2px solid #f59e0b; background:#1f1a10; }
+.va-tuile.va-fermee { cursor:default; }
+.va-tuile.va-fermee:hover { transform:none; }
+.va-note { color:#a1a1aa; font-size:13px; }
 .va-tuile b { font:800 22px 'Outfit',sans-serif; color:#fff; }
 .va-tuile span { color:#d4d4d8; font-size:16px; line-height:1.45; }
 .va-tuile em { align-self:flex-start; font-style:normal; font-weight:800; font-size:12px; background:#f59e0b; color:#1f1300; border-radius:99px; padding:2px 10px; }

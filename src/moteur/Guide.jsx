@@ -101,11 +101,13 @@ function lire(texte) {
   // L'atelier choisi (« Atelier choisi : metamerisme », ou « site ») et ceux commencés (« Atelier commencé : metamerisme »).
   const choix = texte.match(/^Atelier choisi\s*:\s*(\S+)/im)?.[1]?.toLowerCase() || "";
   const commences = new Set([...texte.matchAll(/^Atelier commencé\s*:\s*(\S+)/gim)].map((x) => x[1].toLowerCase()));
-  return { faites, sousFaites, adresse, connexion, dossier, lieu, choix, commences };
+  // Le mode choisi en répondant à l'IA, par atelier : « Mode choisi : metamerisme guide » (ou « libre »).
+  const modes = Object.fromEntries([...texte.matchAll(/^Mode choisi\s*:\s*(\S+)\s+(guide|libre)/gim)].map((x) => [x[1].toLowerCase(), x[2].toLowerCase()]));
+  return { faites, sousFaites, adresse, connexion, dossier, lieu, choix, commences, modes };
 }
 
 export function useProgression() {
-  const [etat, setEtat] = useState({ faites: new Set(), sousFaites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", choix: "", commences: new Set(), pret: false });
+  const [etat, setEtat] = useState({ faites: new Set(), sousFaites: new Set(), adresse: null, connexion: null, dossier: "", lieu: "", choix: "", commences: new Set(), modes: {}, pret: false });
   useEffect(() => {
     let fini = false;
     const charger = () => fetch("./__atelier/progression", { cache: "no-store" })
@@ -1039,7 +1041,7 @@ export function PageEtape({ n, fermer = null }) {   // fermer : le bouton « ✕
 
 // La bande du bas, réutilisée par les pages de l'atelier : jaune « Réponds à l'IA » (titre, quoi),
 // rouge avec la mini fenêtre animée quand une autorisation attend, masquée pendant que l'IA réfléchit.
-export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de message, en bas à gauche", quoi, vert = false }) {
+export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de message, en bas à gauche", quoi, vert = false, fleche = true }) {
   const [etat, setEtat] = useState({ attente: false, reflexion: false, recu: false });
   useEffect(() => {
     let fini = false;
@@ -1059,7 +1061,7 @@ export function BandeIA({ titre = "Réponds à l'IA", ou = "dans la zone de mess
   );
   return (
     <div className={`ga-repondre${vert ? " continuer" : ""}`} role="note">
-      <span className="ga-fleche" aria-hidden="true">⬅</span>
+      {fleche && <span className="ga-fleche" aria-hidden="true">⬅</span>}
       <span className="ga-repondre-texte"><b>{titre}</b> <em>{ou}</em><span className="ga-quoi">👉 {quoi}</span></span>
     </div>
   );

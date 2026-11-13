@@ -4,7 +4,7 @@
 //  Des tuiles : les ateliers (le 1er : Métamérisme), et la page habituelle du site.
 //  Même habillage que la page de progression (fenêtre sombre) : on ne la confond pas avec son site.
 // ============================================================
-import { lazy, Suspense, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import SITE from "../../site.config.js";
 import { EnChargement } from "./chargement";
 import { CSS, BandeIA, useProgression } from "./Guide.jsx";
@@ -43,8 +43,24 @@ a.at-tuile:hover { transform:translateY(-3px); border-color:#f59e0b; }
 // Une page d'atelier (…/?atelier=<id de la page>) : la simulation seule, sans les menus du site, dans la même fenêtre sombre.
 const FICHIERS = import.meta.glob("../../simulations/*.jsx");
 const charges = {};
+// Ce que dit la bande du bas, selon l'étape en cours de l'atelier (publiée par la page : src/outils/exercice/Exercice.jsx).
+function bandeEtape(e) {
+  if (!e || e.quoi === "mode") return { quoi: "Écris 1 (parcours guidé) ou 2 (exploration libre), puis Entrée." };
+  if (e.quoi === "etat") return { titre: "👀 À toi, sur cette page", ou: "pas besoin de l'IA", quoi: "Regarde l'état actuel de la page, puis clique sur « J'ai regardé, étape suivante »." , fleche: false };
+  if (e.quoi === "modeles") return { titre: "📖 À toi, sur cette page", ou: "pas besoin de l'IA", quoi: "Lis l'étape (et « 🧰 Voir les modèles » si tu veux), puis clique sur « J'ai compris, étape suivante ».", fleche: false };
+  if (e.quoi === "prompt") return { quoi: `Écris ton prompt pour l'étape ${e.numero} (${e.titre}), puis Entrée.` };
+  if (e.quoi === "libre") return { quoi: "Écris ce que tu veux ajouter ou changer dans la simulation, puis Entrée." };
+  return { quoi: "Demande à l'IA ce que tu veux, avec tes mots." };
+}
+
 function PageAtelier({ id }) {
   const { commences, pret } = useProgression();
+  const [etape, setEtape] = useState(() => window.__atelierEtape || null);
+  useEffect(() => {
+    const suivre = (ev) => setEtape(ev.detail);
+    window.addEventListener("atelier-etape", suivre);
+    return () => window.removeEventListener("atelier-etape", suivre);
+  }, []);
   const page = (SITE.pages || []).find((p) => p.id === id);
   const chemin = page && `../../simulations/${page.fichier}.jsx`;
   const Composant = chemin && FICHIERS[chemin] ? (charges[chemin] ||= lazy(FICHIERS[chemin])) : null;
@@ -59,7 +75,7 @@ function PageAtelier({ id }) {
         </div>
       </div>
       {pret && (commences.has(id)
-        ? <BandeIA quoi="Écris ta demande pour l'étape en cours (ton prompt), puis Entrée." />
+        ? <BandeIA {...bandeEtape(etape)} />
         : <BandeIA vert titre={`✅ L'atelier ${page ? `« ${page.titre} » ` : ""}est ouvert`} ou="reviens dans la zone de message, en bas à gauche" quoi="Écris « continue » (ou « aide »), puis Entrée." />)}
     </div>
   );
