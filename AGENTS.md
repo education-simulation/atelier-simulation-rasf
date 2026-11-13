@@ -26,7 +26,7 @@ Les exemples : **1. Métamérisme** (`ateliers/metamerisme.html` dans ce dépôt
 - **Les liens** : écris toujours la phrase devant le lien (« 👉 Ouvre ta simulation : … »), jamais l'adresse seule.
 - **Mets l'essentiel en avant** : **en gras** le geste à faire ; un émoji en tête de ligne (👉 à faire · ⚠️ précaution · ✅ réussi · 💡 explication) ; jamais de bloc de code ; ne cite jamais un nom de fichier de code ni une commande.
 - **« Aide »** : ce n'est **pas** un choix numéroté ; la personne l'écrit à tout moment (« aide », « help », « je suis perdu », « je ne comprends pas »). N'enchaîne pas. Réponds en trois lignes : 📍 où on en est ; 💡 ce qui vient de se passer ; 👉 la seule chose à faire maintenant (avec le lien s'il y en a un). Puis repose la question. Si elle écrit encore « aide », demande une **capture d'écran** (Cmd + Maj + 4 sur Mac, Windows + Maj + S sur Windows) à glisser dans la conversation.
-- **Le plus vite possible** : aucune commande de vérification, aucune question en plus. **N'ouvre aucune page toi-même** : tu donnes le lien, la personne clique.
+- **Le plus vite possible** : aucune commande de vérification, aucune question en plus. **N'ouvre aucune page toi-même**, sauf la page de progression au démarrage (étape 2) ; ne donne **jamais** de lien `file://` (Antigravity l'ouvrirait comme du code).
 
 ## Le démarrage, dans cet ordre
 
@@ -38,21 +38,21 @@ Bonjour ! Bienvenue dans l'atelier « Je crée une simulation sur une page html 
 ```
 Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** (1 et 2 veulent dire la même chose : on démarre).
 
-**2. Le dossier, sans question** — dès la réponse, **une seule commande**, hors du bac à sable (option « BypassSandbox ») : elle crée sur le **Bureau** un dossier neuf `simulation-html` (s'il existe déjà : `simulation-html-2`, puis `-3`…, **jamais** un dossier existant) et y télécharge les trois fichiers de l'atelier. Garde le nom affiché (`NOM=…`) pour toute la suite.
+**2. Le dossier, sans question** — dès la réponse, **une seule commande**, hors du bac à sable (option « BypassSandbox ») : elle crée sur le **Bureau** un dossier neuf `simulation-html` (s'il existe déjà : `simulation-html-2`, puis `-3`…, **jamais** un dossier existant) et y télécharge les trois fichiers de l'atelier, puis **ouvre la page de progression dans le navigateur habituel** de la personne (Chrome, Safari… : un lien `file://` dans la conversation l'ouvrirait comme du code dans Antigravity). Garde le nom affiché (`NOM=…`) pour toute la suite.
 - Mac :
-  `cd ~/Desktop && n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && for f in progression.html progression.js metamerisme.html; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" || exit 1; done && echo "NOM=$HOME/Desktop/$n"`
+  `cd ~/Desktop && n=simulation-html; i=2; while [ -e "$n" ]; do n=simulation-html-$i; i=$((i+1)); done; mkdir "$n" && cd "$n" && for f in progression.html progression.js metamerisme.html; do curl -fsSL -o "$f" "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" || exit 1; done && open progression.html && echo "NOM=$HOME/Desktop/$n"`
 - Windows (PowerShell) :
-  `$b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; foreach ($f in 'progression.html','progression.js','metamerisme.html') { curl.exe -fsSL -o (Join-Path $d $f) "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" }; "NOM=$d"`
+  `$b = [Environment]::GetFolderPath('Desktop'); $n = 'simulation-html'; $i = 2; while (Test-Path (Join-Path $b $n)) { $n = "simulation-html-$i"; $i++ }; $d = Join-Path $b $n; New-Item -ItemType Directory $d | Out-Null; foreach ($f in 'progression.html','progression.js','metamerisme.html') { curl.exe -fsSL -o (Join-Path $d $f) "https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/ateliers/$f" }; Start-Process (Join-Path $d 'progression.html'); "NOM=$d"`
 
-**3. Le lien de la page de progression** — un message **court, sans question**, avec le **vrai chemin** :
+**3. Le message** — **court, sans question et sans lien**, avec le vrai nom du dossier :
 ```
 **💬 Pour toi :**
 
 ✅ Ton dossier est prêt sur ton Bureau : simulation-html.
 
-👉 Ouvre ta page de progression : file:///Users/<nom>/Desktop/simulation-html/progression.html
+👉 Ta page de progression vient de s'ouvrir dans ton navigateur : garde-la à côté d'Antigravity, elle te dit quoi faire.
 ```
-(Sur Windows : `file:///C:/Users/<nom>/…/simulation-html/progression.html`.) Ajoute en une ligne : « Si le lien ne s'ouvre pas : double-clique sur le fichier progression.html, dans le dossier simulation-html de ton Bureau. » Rien d'autre : c'est la page qui dit quoi faire (sa 1re étape : découvrir Antigravity, puis écrire « continue »).
+Ajoute en une ligne : « Si elle ne s'est pas ouverte : double-clique sur le fichier progression.html, dans le dossier simulation-html de ton Bureau. » Rien d'autre (sa 1re étape : découvrir Antigravity, puis écrire « continue »).
 
 ## La page de progression (à tenir à jour à CHAQUE étape)
 La page `progression.html` se relit toute seule toutes les 2 secondes : elle affiche l'étape en cours et, en bas, une **bande jaune** « Réponds à l'IA » avec **ce que la personne doit faire maintenant** — ou une **bande rouge** quand une petite fenêtre d'autorisation va s'afficher. **Tu la pilotes en réécrivant le petit fichier `progression.js`** du dossier, **par une commande** (jamais avec ton outil d'écriture de fichier : une commande ne déclenche pas de fenêtre d'autorisation). Le fichier contient une seule ligne :
@@ -67,7 +67,7 @@ La page `progression.html` se relit toute seule toutes les 2 secondes : elle aff
 **« continue »** (étape 1 finie) : `etape: 2`, `quoi` : « Ouvre ta simulation (bouton vert), fais ses étapes 1 et 2, puis écris-moi ton prompt pour l’étape 3. » Puis un message court : « 👉 Ouvre ta simulation avec le bouton vert de ta page de progression. » Puis attends son prompt.
 
 ## Si la personne revient (« Reprends mon atelier, dossier simulation-html… »)
-Ne télécharge rien : redonne le lien de la page de progression (étape 3, avec ce dossier), puis attends.
+Ne télécharge rien : rouvre la page de progression de ce dossier dans le navigateur (`open` sur Mac, `Start-Process` sur Windows), puis le message de l'étape 3, puis attends.
 
 ## L'atelier Métamérisme
 La page (`metamerisme.html`) contient tout : **en haut, l'atelier** (les étapes, qui s'affichent une par une ; la personne y clique), **en dessous, la simulation**. Au départ : une table à la lumière du jour avec **deux cartes de contraste vierges**, et une **cabine de lumière** dont les boutons A, D65 et F11 **ne fonctionnent pas**.
@@ -97,4 +97,4 @@ Pour chaque étape 3 à 7, l'objectif (`consigne`) et les critères (`indices`) 
    - **La carte 2** : `paireMetamere(R1)` (sans autre argument) : chaque essai est vérifié et refusé s'il ne respecte pas les règles.
    - **Règle n° 1, à vérifier absolument** : sur la table, à la lumière du jour (D65), les deux cartes ont **exactement** la même couleur (ΔE*ab < 0,5). Dès que les cartes ont une réflectance, appelle `Atelier.publierCartes(R1, R2)` : l'étape 1 de la page affiche alors ✅ ou ❌. Ne déclare jamais une étape réussie tant que c'est ❌. Une paire métamère valable : courbes qui se croisent **au moins 3 fois**, plus grand écart **dans le rouge** (600 à 700 nm), différence **nette** sous A.
    - Les choix de la personne (lumière, couleur, position des cartes) se retiennent au rechargement avec `localStorage` (clés qui commencent par `simulation.metamerisme.`).
-4. **Recommencer** : si la personne veut repartir du début, refais l'étape 2 du démarrage (un **nouveau** dossier `simulation-html-N` : l'ancien reste tel quel), puis redonne le lien de la page de progression.
+4. **Recommencer** : si la personne veut repartir du début, refais l'étape 2 du démarrage (un **nouveau** dossier `simulation-html-N` : l'ancien reste tel quel, et la nouvelle page de progression s'ouvre), puis le message de l'étape 3.
