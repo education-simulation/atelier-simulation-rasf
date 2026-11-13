@@ -990,7 +990,8 @@ export function Guide() {
   const encours = ETAPES.findIndex((_, i) => !faites.has(i));
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
-  const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => faites.has(i) || i === encours);
+  // De la plus récente (en cours) à la première : ce qui se passe maintenant est en haut.
+  const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => faites.has(i) || i === encours).reverse();
   const [mail, setMail] = useState(false);   // la fenêtre « Recevoir les instructions sur ton mail RASF »
   useEffect(() => {
     if (!mail) return;
