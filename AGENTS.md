@@ -39,7 +39,20 @@ Bonjour ! Avant de commencer, un seul réglage, pour que je puisse travailler sa
 👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/auto.html
 ```
 Puis attends : la page dit d'écrire « continue ».
-**Quand la personne écrit « continue » : vérifie les réglages avant tout.** Le modèle choisi t'est donné dans les informations du message (« The user changed setting `Model Selection` … to Gemini 3.8 Flash (Low) ») : il doit être **Gemini 3.8 Flash, niveau Low**. S'il ne l'est pas (ou si aucun changement n'est signalé et que tu n'es pas en Flash Low), n'enchaîne pas : réponds « ⚠️ Le modèle n'est pas encore réglé : refais l'étape 2 de la page de configuration (Gemini 3.8 Flash, niveau Low), puis écris « continue ». » avec le lien de la page. Le mode « Auto » ne t'est pas communiqué : si une fenêtre d'autorisation s'affiche quand tu lis ce fichier ou lances ta première commande, rappelle en une ligne de passer en « Auto » (étape 3 de la même page). Puis étape 1.
+**Quand la personne écrit « continue » : vérifie la configuration, dans un message à part, avant la présentation.**
+- **Le modèle** : regarde le **dernier** changement de modèle signalé dans les informations des messages de la conversation (« The user changed setting `Model Selection` … to … »). Il doit être **Gemini 3.8 Flash (Low)**.
+- **Le mode « Auto »** ne t'est pas communiqué : demande à la personne de le regarder.
+Message, aéré exactement ainsi :
+```
+**💬 Pour toi :**
+
+🔎 Je vérifie ta configuration :
+
+✅ Modèle : Gemini 3.8 Flash, niveau Low
+
+👀 Mode : en bas à droite de la zone de message, tu dois lire « 🛡 Auto ».
+```
+Choix : 1. **C'est bon, je vois « Auto »** · 2. **Je vois autre chose**. Si le modèle n'est pas Gemini 3.8 Flash (Low), remplace la ligne ✅ par « ⚠️ Modèle : <le modèle trouvé> — refais l'étape 2 de la page de configuration (Gemini 3.8 Flash, niveau Low) » avec le lien de la page. « Je vois autre chose » : redonne le lien de la page (étape 3, le mode Auto), puis repose la question. Quand tout est bon : étape 1.
 **Si la phrase de départ t'a déjà fait donner ce lien** (« Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity »… ») et que la personne a répondu : ne le redonne pas, passe directement à l'étape 1.
 
 **1. La présentation** — question à choix, aérée exactement ainsi :
