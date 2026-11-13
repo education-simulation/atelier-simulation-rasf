@@ -546,7 +546,8 @@ export function FenetreAntigravity({ fermer }) {
 const Z = {
   gauche: { x: 0, y: 32, w: 150, h: 398 }, milieu: { x: 152, y: 32, w: 322, h: 398 }, droite: { x: 476, y: 32, w: 284, h: 398 },
   reduire: { x: 59, y: 3, w: 28, h: 26 }, historique: { x: 158, y: 40, w: 312, h: 200 }, prompt: { x: 160, y: 340, w: 300, h: 40 },
-  reglages: { x: 164, y: 386, w: 268, h: 24 }, conversations: { x: 6, y: 96, w: 138, h: 52 },
+  reglages: { x: 164, y: 386, w: 268, h: 24 }, modele: { x: 164, y: 386, w: 122, h: 24 }, auto: { x: 352, y: 386, w: 56, h: 24 },
+  menuModeles: { x: 164, y: 196, w: 230, h: 186 }, niveaux: { x: 398, y: 214, w: 138, h: 86 }, usage: { x: 398, y: 262, w: 210, h: 112 }, conversations: { x: 6, y: 96, w: 138, h: 52 },
   onglets: { x: 478, y: 34, w: 236, h: 22 }, adresse: { x: 480, y: 60, w: 276, h: 20 }, fermer: { x: 702, y: 3, w: 26, h: 26 },
   barre: { x: 468, y: 60, w: 16, h: 330 },
 };
@@ -557,7 +558,9 @@ const DEMO = [
   { titre: "② Au milieu : Antigravity", texte: "C'est ici que tu parles avec l'IA Gemini : elle t'écrit, tu lui réponds.", zones: [Z.milieu] },
   { titre: "L'historique", texte: "Les messages de la conversation, du plus ancien au plus récent. Ceux qui sont pour toi commencent par 💬 Pour toi. Le reste (« Ran commands »…) est technique : tu peux l'ignorer.", zones: [Z.historique] },
   { titre: "La zone de prompt", texte: "Tout en bas, « Ask anything… » : écris ici ta réponse ou ta demande (ton « prompt »), puis appuie sur Entrée. Le micro 🎤 permet de dicter.", zones: [Z.prompt] },
-  { titre: "Le modèle, l'usage et « Auto »", texte: "Sous la zone de prompt : le modèle d'IA (Gemini 3.8 Flash, Low ou Medium suffisent), dans son menu « View Usage » montre ce qu'il te reste pour la semaine, et « Auto » laisse l'IA travailler seule en te demandant la permission quand il le faut.", zones: [Z.reglages], images: [{}, { actif: "4" }, { actif: "5" }] },
+  { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, 3 niveaux : Low (rapide), Medium, High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }] },
+  { titre: "Ton usage", texte: "Dans ce même menu, « View Usage » montre ce qu'il te reste pour la semaine, pour chaque famille de modèles.", zones: [Z.modele, Z.menuModeles, Z.usage], images: [{ actif: "5", curseur: { x: 260, y: 352 } }] },
+  { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres en anglais). Laisse-le tel quel.", zones: [Z.auto] },
   { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
   { titre: "③ À droite : le navigateur", texte: "Un navigateur intégré à Antigravity, comme Chrome : tu y vois ta page « J'en suis où » et ton site.", zones: [Z.droite] },
   { titre: "Les onglets", texte: "Comme dans Chrome : un clic sur un onglet pour passer de l'un à l'autre, le × pour le fermer, le + pour en ouvrir un nouveau, ↗ pour l'ouvrir dans ton navigateur habituel.", zones: [Z.onglets] },
@@ -604,6 +607,7 @@ function DemoAntigravity({ explorer }) {
     </div>
   );
   const vue = etape.images ? etape.images[img % etape.images.length] : {};
+  const zonesVues = vue.zones || etape.zones;
   return (
     <>
       <div className="v-tete">
@@ -612,7 +616,7 @@ function DemoAntigravity({ explorer }) {
         <button type="button" className="v-bouton orange" onClick={explorer}>🔢 Explorer</button>
       </div>
       <div className="v-barre" aria-hidden="true"><div style={{ width: `${((i + 1) / DEMO.length) * 100}%` }} /></div>
-      <div className="v-scene"><SchemaAntigravity spot pastilles={false} zones={etape.zones} etiquettes={etape.etiquettes} setActif={() => {}} {...vue} /></div>
+      <div className="v-scene"><SchemaAntigravity spot pastilles={false} zones={zonesVues} etiquettes={etape.etiquettes} setActif={() => {}} {...vue} /></div>
       <div className="v-bulle" key={i} aria-live="polite">
         <h2>{etape.titre}</h2>
         <p>{etape.texte}</p>
