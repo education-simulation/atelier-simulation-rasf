@@ -24,6 +24,7 @@ jobs:
           D=$( (ls -d ~/Desktop/simulation-html 2>/dev/null || ls -d ~/simulation-html) | head -1 )
           D2="${D}-2"
           cd "$D" && (perl serveur.pl > srv.log 2>&1 &)
+          sleep 2
           cd "$D2" && (perl serveur.pl > srv.log 2>&1 &)
           sleep 3; cat "$D/srv.log" "$D2/srv.log"
           grep -q "URL=http://localhost:5500/progression.html" "$D/srv.log"
@@ -50,6 +51,7 @@ jobs:
         run: |
           $b = [Environment]::GetFolderPath('Desktop'); $d = Join-Path $b 'simulation-html'; $d2 = Join-Path $b 'simulation-html-2'
           Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','serveur.ps1' -WorkingDirectory $d -RedirectStandardOutput (Join-Path $d 'srv.log') -WindowStyle Hidden
+          Start-Sleep 3
           Start-Process powershell -ArgumentList '-NoProfile','-ExecutionPolicy','Bypass','-File','serveur.ps1' -WorkingDirectory $d2 -RedirectStandardOutput (Join-Path $d2 'srv.log') -WindowStyle Hidden
           Start-Sleep 6
           Get-Content (Join-Path $d 'srv.log'); Get-Content (Join-Path $d2 'srv.log')
@@ -62,3 +64,15 @@ jobs:
           $js
           if ($js -notmatch 'etape: 3, quoi: "Écris ton prompt pour l’étape « 3 »') { throw 'progression.js' }
           'OK-WINDOWS'
+      - name: Accents comme l'agent (commande passée à PowerShell, pas un fichier)
+        shell: pwsh
+        run: |
+          $d = Join-Path ([Environment]::GetFolderPath('Desktop')) 'simulation-html'
+          $c = "Set-Content -Encoding utf8 -Path `"$d\progression.js`" -Value 'window.progression({ etape: 2, quoi: `"Écris l’étape « 3 », puis Entrée.`", alerte: false });'"
+          & powershell.exe -NoProfile -Command $c
+          $b = [System.IO.File]::ReadAllBytes("$d\progression.js")
+          ($b | Select-Object -First 60 | ForEach-Object { $_.ToString('X2') }) -join ' '
+          $t = [System.Text.Encoding]::UTF8.GetString($b)
+          $t
+          if ($t -notmatch 'quoi: "Écris l’étape « 3 », puis Entrée\."') { throw 'accents abimes (powershell -Command)' }
+          'OK-ACCENTS-WINDOWS'
