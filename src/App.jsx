@@ -18,6 +18,9 @@ import { fermerCalculatrice, useCalculatriceOuverte } from "./outils/calculatric
 // La calculatrice flottante, commune à tout le site : chargée seulement quand on l'ouvre.
 // La page « Guide » (…/?guide) : seulement dans l'aperçu, chargée seulement quand on l'ouvre.
 const Guide = lazy(() => import("./moteur/Guide.jsx").then((m) => ({ default: m.Guide })));
+// La page « Atelier » (…/?atelier) : seulement dans l'aperçu.
+const Atelier = lazy(() => import("./moteur/Atelier.jsx").then((m) => ({ default: m.Atelier })));
+const EnLigne = lazy(() => import("./moteur/EnLigne.jsx").then((m) => ({ default: m.EnLigne })));
 const CalculatriceFlottante = lazy(() => import("./outils/CalculatriceScientifique.jsx").then((m) => ({ default: m.CalculatriceScientifique })));
 import { EnChargement } from "./moteur/chargement";
 import { InspecteurLocal } from "./moteur/InspecteurLocal";
@@ -43,6 +46,7 @@ const lireId = () => new URLSearchParams(window.location.search).get("sim");
 
 export default function App() {
   if (estApercu && new URLSearchParams(window.location.search).has("guide")) return <Suspense fallback={null}><Guide /></Suspense>;
+  if (estApercu && new URLSearchParams(window.location.search).has("atelier")) return <Suspense fallback={null}><Atelier /></Suspense>;
   return <Site />;
 }
 
@@ -94,6 +98,7 @@ function Site() {
   return (
     <div className={`racine racine-${style}${estApercu ? " avec-apercu" : ""}`}>
       {estApercu && <Apercu />}
+      {estApercu && !activeId && <Suspense fallback={null}><EnLigne /></Suspense>}
       <div className="cadre">
       {style === "lateral" && <BarreLaterale titre={SITE.titre} menus={menus} activeId={activeId} menuActif={sim?.menu || menuPage?.id} naviguer={naviguer} />}
       <main className="principal">

@@ -71,12 +71,8 @@ const ETAPES = [
       ["Ton nom ou ton pseudo", "Écris ton nom ou un pseudo : il s’affiche en bas de ton interface."],
     ] },
   { emoji: "🛠️", titre: "Appliquer tes choix", texte: "L'IA Gemini met tes choix (nom, couleur, style, établissement, ton nom) dans ton interface." },
-  { emoji: "👀", titre: "Voir ton interface", texte: "Ton interface s'affiche sur ton ordinateur : c'est ton brouillon (localhost), toi seul le vois.",
-    infos: [
-      "Les menus : « Construire avec l'IA » (s'entraîner à écrire ses demandes), « Exemples » (ce qu'on peut faire), A, B et C (pages vides, à toi de les remplir), « Outils ».",
-      "Les boutons ronds en bas à droite : 🗺️ revenir à ta page de progression · 👆 montrer à l'IA ce que tu veux changer · 🎨 changer de style.",
-    ], boutonSite: true },
-  { emoji: "🚀", titre: "La mettre en ligne", texte: "Vercel la publie gratuitement, à une adresse que tu pourras partager." },
+  { emoji: "🧑‍🔬", titre: "L'atelier : créer une simulation", texte: "Une page d'ateliers sur ton ordinateur : commence par l'atelier 1, Métamérisme.", atelier: true, },
+  { emoji: "🚀", titre: "La mettre en ligne (quand tu veux)", texte: "Bouton « Mettre mon site en ligne avec Vercel » en haut de l'accueil de ton interface." },
   { emoji: "✨", titre: "La suite", texte: "Des idées : ta première simulation, renommer les menus…" },
 ];
 
@@ -969,8 +965,8 @@ const DETAILS = [
     toi: "Personnalise (5 questions) ou garde les réglages par défaut. Écris le numéro de ta réponse, puis Entrée.", styles: true },
   { flux: [["✍️", "Tes 5 réponses"], ["🛠️", "L'IA les range"], ["✨", "Ton interface personnalisée"]],
     toi: "Rien : attends quelques secondes." },
-  { flux: [["💻", "Sur ton ordinateur"], ["👀", "Tu te promènes"], ["🔒", "Toi seul la vois"]],
-    toi: "Clique sur le lien de l'IA, puis dis-lui si tu veux la mettre en ligne." },
+  { flux: [["🎨", "Atelier 1 : Métamérisme"], ["🔜", "Ateliers 2 et 3"], ["🏠", "Ton site de simulations"]],
+    toi: "Clique sur le lien de l'IA, puis choisis l'atelier 1." },
   { flux: [["▲", "Ton compte Vercel"], ["🔑", "Connexion"], ["🌍", "En ligne, à partager"]],
     toi: "Crée ton compte (Hobby, gratuit), puis « Continue with Google ».",
     liens: [["▲ Créer mon compte Vercel", "https://vercel.com/signup", "atelier-vercel"]] },
@@ -1112,8 +1108,8 @@ export function Guide() {
     "Écris le numéro de ton choix, puis Entrée",
     sousEnCours <= 0 && !sousFaites.size ? "Personnaliser ? Écris 1 (oui) ou 2 (non, par défaut)" : `À toi : ${ETAPES[1].sous[Math.max(0, sousEnCours)][0].toLowerCase()}`,
     "Attends : l'IA applique tes choix",
-    "La mettre en ligne ? Écris 1 (oui) ou 2 (pas maintenant)",
-    "Suis l'IA pour Vercel : écris « C'est fait » à chaque étape",
+    "Ouvre l'atelier avec le lien de l'IA, puis écris 1",
+    "Fais l'atelier ; pour la mise en ligne, bouton en haut de ton interface",
     "Demande à l'IA ce que tu veux, avec tes mots",
   ][encours] || "Demande à l'IA ce que tu veux, avec tes mots";
   useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
@@ -1206,7 +1202,7 @@ export function Guide() {
                       <button type="button" onClick={() => setMail(true)} title="Recevoir les instructions sur ton mail RASF">📧 Mail RASF</button>
                     </div>
                   )}
-                  {e.boutonSite && <a className="ga-action vert" href="./" target="atelier-site">👀 Aller sur mon interface (localhost)</a>}
+                  {e.atelier && <a className="ga-action vert" href="./?atelier" target="atelier-site">🧑‍🔬 Ouvrir l'atelier</a>}
                 </li>
               );
             })}

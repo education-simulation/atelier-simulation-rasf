@@ -170,27 +170,28 @@ Présentation, Node.js, dossier, copie, installation, page guide : tout est dans
 - Dans `site.config.js` : `titre`, `auteur`, `etablissement` (`""` si « plus tard »), `style` (`"blocs"`, `"lateral"` ou `"liste"`), `couleur` (code #RRGGBB lisible sur fond blanc). Ne touche ni aux menus, ni aux pages, ni à la grande phrase.
 - Puis coche `- [x] Étape 2 — Appliquer tes choix` et enchaîne **aussitôt** sur l'étape 3, sans question.
 
-### Étape 3 — Voir ton interface sur ton ordinateur
-- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). Écris **ce message court, avec le vrai lien, et rien de plus** (les menus et les boutons ronds sont expliqués dans les pages d'étape) :
+### Étape 3 — L'atelier : créer une simulation avec l'IA
+- L'aperçu tourne déjà depuis l'étape 0 (sinon, relance-le : section 3). **Ne pose aucune question sur la mise en ligne** : elle se fait plus tard, quand la personne le demande (bandeau « Mettre mon site en ligne avec Vercel » en haut de l'accueil de son interface → étape 4). Écris **ce message, avec le vrai numéro, et rien de plus** :
   ```
   **💬 Pour toi :**
 
-  👉 Ton interface : http://localhost:NNNN/ (clique : elle s'ouvre à droite, dans Antigravity)
+  ✅ Ton interface est prête sur ton ordinateur.
 
-  C'est ton brouillon (localhost) : toi seul la vois.
+  On commence l'atelier « Comment créer une simulation avec l'IA sur mon ordinateur ».
 
-  Veux-tu la mettre en ligne maintenant ?
+  👉 Clique sur ce lien : http://localhost:NNNN/?atelier
 
-  1. Oui
-  2. Non, pas maintenant
-  3. 😕 Je suis perdu·e
+  Choisis « Atelier 1 : Métamérisme » : il te guide pas à pas. La tuile « Voir la page de mon site de simulations » te montre ton interface.
+
+  1. J'ai ouvert l'atelier
+  2. 😕 Je suis perdu·e
 
   ✍️ *Écris le numéro de ta réponse (ou ta réponse avec tes mots) dans la zone de message, en bas, puis Entrée. Perdu·e ? Écris simplement « je suis perdu ».*
   ```
-- **« Oui »** → étape 4 (Vercel). **« Non »** → n'insiste pas : réponds seulement « D'accord ! Explore ton interface tranquillement. Quand tu voudras la mettre en ligne, écris-le-moi. » et laisse la personne faire (elle peut demander des changements, poser des questions…). **« Je ne vois pas mon site »** ou autre souci écrit avec ses mots : aide-la.
-- Ce que tu dois cliquer maintenant : le lien, puis ta réponse.
+- **« J'ai ouvert l'atelier »** : coche `- [x] Étape 3 — L'atelier` et laisse la personne faire. La page Métamérisme lui dit quoi t'écrire ; suis alors la section « L'exercice Métamérisme ». **« Je ne vois pas la page »** ou autre souci écrit avec ses mots : aide-la.
+- **Mise en ligne** : seulement quand la personne la demande (bouton du bandeau, ou avec ses mots) → étape 4.
 
-### Étape 4 — Mettre le site en ligne avec Vercel (la 1re fois : se connecter)
+### Étape 4 — Mettre l'interface en ligne avec Vercel, quand la personne le demande (la 1re fois : se connecter)
 - **Tu n'ouvres JAMAIS une page Vercel toi-même** (ni `open`, ni `Start-Process`, ni ton outil de navigateur) : une page inconnue qui surgit toute seule perd la personne. **Chaque page Vercel s'ouvre par un bouton de la page guide, sur lequel la personne clique elle-même** (dans son navigateur habituel, hors d'Antigravity) : « Créer mon compte Vercel » (page de l'étape 5) et « Connecter mon compte Vercel ».
 - Explique en deux phrases : « Vercel est un service gratuit qui met ton site sur Internet. C'est Vercel qui choisit l'adresse, à partir du nom de ton dossier : par exemple `https://mon-site.vercel.app` (si ce nom est déjà pris, Vercel ajoute quelques lettres). Plus tard, si tu veux, tu pourras acheter un nom de domaine à toi (par exemple `mon-labo.fr`, environ 10 € par an) et le relier à ton site. »
 - **Vercel est-il déjà connecté sur cet ordinateur ?** Vérifie d'abord avec `npx --yes vercel@latest whoami` : s'il affiche un nom de compte, **ne demande aucune connexion** et passe directement à la mise en ligne.
