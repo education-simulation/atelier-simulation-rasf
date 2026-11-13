@@ -991,7 +991,7 @@ export function Guide() {
               const rond = <span className="st-rond" aria-hidden="true">{etat === "fait" ? "✓" : i + 1}</span>;
               return (
                 <li key={i} className={`st-etape ${etat}`} aria-current={etat === "ici" ? "step" : undefined}>
-                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer" title="Voir l'étape">{rond}</a>}
+                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer" title="Infos sur cette étape">{rond}</a>}
                   <span className="st-nom">{e.titre}</span>
                 </li>
               );
@@ -1009,7 +1009,7 @@ export function Guide() {
                       <h2>{i + 1}. {e.titre} {!fait && <span className="ga-badge">en cours</span>}</h2>
                       {!fait && <p>{e.texte}</p>}
                     </div>
-                    <a className="ga-voir" href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer">📖 Voir l'étape</a>
+                    <a className="ga-voir" href={pageEtape(i)} target={ongletEtape(i)} rel="noreferrer" title="Ce qui se passe à cette étape et ce que tu fais">ℹ️ Infos</a>
                   </div>
                   {e.sous && !fait && (
                     <ol className="ga-sous">
