@@ -1,0 +1,551 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Atelier · Métamérisme</title>
+<!--
+  ATELIER SIMULATION RASF — exemple 1 : le métamérisme. Un seul fichier : il s'ouvre d'un double-clic, sans rien installer.
+  IA : tu ne modifies QUE la « ZONE DE L'IA » ci-dessous (entre les deux lignes ====). Tout ce qui est après
+  « CADRE DE L'ATELIER » (les étapes, les modèles couleur, les styles du cadre) ne se modifie jamais.
+-->
+<style>
+/* ---- Styles de la simulation (zone de l'IA : tu peux en ajouter) ---- */
+.scene { position:relative; height:clamp(260px,40vw,380px); border-radius:18px; overflow:hidden; background:linear-gradient(#eef2f7 0 70%, #d6c3a5 70% 100%); border:1px solid #d5dfeb; font-family:'Nunito',system-ui,sans-serif; }
+.scene-titre { position:absolute; left:3%; top:6%; font-size:13px; font-weight:800; color:#475569; }
+.soleil { position:absolute; left:13%; top:15%; width:clamp(44px,8%,70px); }
+.objet { position:absolute; transition:transform .15s, box-shadow .15s, outline-color .15s; outline:3px solid transparent; outline-offset:3px; }
+.objet:hover { outline-color:#f59e0b; box-shadow:0 0 0 7px rgba(245,158,11,.25); z-index:5; }
+.etiquette { position:absolute; left:50%; transform:translateX(-50%); background:#0f172a; color:#fff; font-size:12.5px; font-weight:800; padding:4px 9px; border-radius:8px; white-space:nowrap; pointer-events:none; opacity:0; transition:opacity .15s; z-index:10; }
+.objet:hover > .etiquette { opacity:1; }
+.carte { width:12%; aspect-ratio:3/4; border-radius:4px; top:40%; }
+.carte:hover { transform:translateY(-4px) scale(1.04); }
+.carte-corps { width:100%; height:100%; border-radius:4px; overflow:hidden; box-shadow:0 4px 10px rgba(0,0,0,.25); border:2px solid #e5e7eb; display:grid; grid-template-rows:1fr 1fr; box-sizing:border-box; }
+.carte-haut { background:#fff; }
+.carte-bas { background:#111827; display:flex; align-items:flex-end; justify-content:center; padding-bottom:4px; }
+.carte-num { background:rgba(255,255,255,.9); border-radius:6px; padding:1px 6px; font-size:12px; font-weight:800; color:#0f172a; }
+.cabine { right:4%; top:7%; width:min(53%,430px); border-radius:10px; }
+.cabine-barre { display:flex; align-items:center; gap:6px; background:#27272a; border-radius:10px 10px 0 0; padding:6px 10px; flex-wrap:wrap; }
+.cabine-nom { color:#e4e4e7; font-size:12.5px; font-weight:800; flex:1; white-space:nowrap; }
+.bouton-lumiere { position:relative; border:1px solid #52525b; background:#3f3f46; color:#d4d4d8; border-radius:8px; padding:3px 10px; font:800 12.5px 'Nunito',system-ui,sans-serif; cursor:not-allowed; display:inline-flex; align-items:center; gap:5px; }
+.bouton-lumiere:hover { background:#52525b; border-color:#f59e0b; color:#fff; }
+.voyant { width:7px; height:7px; border-radius:50%; background:#52525b; }
+.cabine-dedans { display:block; width:100%; height:auto; background:#27272a; border-radius:0 0 10px 10px; padding:8px; box-sizing:border-box; }
+</style>
+</head>
+<body>
+
+<!-- ======================================================================================
+     ZONE DE L'IA : début. La simulation se construit ici, étape par étape.
+     ====================================================================================== -->
+<script>
+// Ce que fait la simulation EN CE MOMENT (affiché dans l'étape 1 de l'atelier). L'IA le met à jour après chaque changement.
+const ETAT_ACTUEL = [
+  "🃏 Les deux cartes de contraste sont vierges et pour le moment immobiles.",
+  "💡 Les trois boutons de la cabine de lumière ne fonctionnent pas.",
+  "📈 Aucune distribution spectrale des illuminants, aucune courbe de réflectance spectrale.",
+];
+// Étapes VALIDÉES PAR L'IA (numéro affiché dans l'atelier : 3 à 7). L'IA ajoute le numéro quand l'étape marche.
+const ETAPES_VALIDEES = [];
+</script>
+
+<section id="simulation" aria-label="La simulation">
+  <div class="scene" role="img" aria-label="Une table avec deux cartes de contraste vierges et une cabine de lumière éteinte">
+    <span class="scene-titre">Table, à la lumière du jour</span>
+    <svg class="soleil" viewBox="-50 -50 100 100" aria-hidden="true">
+      <g stroke="#f59e0b" stroke-width="5" stroke-linecap="round">
+        <line y1="-30" y2="-44"/><line y1="-30" y2="-44" transform="rotate(30)"/><line y1="-30" y2="-44" transform="rotate(60)"/><line y1="-30" y2="-44" transform="rotate(90)"/>
+        <line y1="-30" y2="-44" transform="rotate(120)"/><line y1="-30" y2="-44" transform="rotate(150)"/><line y1="-30" y2="-44" transform="rotate(180)"/><line y1="-30" y2="-44" transform="rotate(210)"/>
+        <line y1="-30" y2="-44" transform="rotate(240)"/><line y1="-30" y2="-44" transform="rotate(270)"/><line y1="-30" y2="-44" transform="rotate(300)"/><line y1="-30" y2="-44" transform="rotate(330)"/>
+      </g>
+      <circle r="22" fill="#fbbf24" stroke="#f59e0b" stroke-width="3"/>
+    </svg>
+    <div class="objet carte" id="carte1" style="left:6%">
+      <span class="etiquette" style="bottom:calc(100% + 8px)">🃏 Carte de contraste 1</span>
+      <div class="carte-corps"><div class="carte-haut"></div><div class="carte-bas"><span class="carte-num">1</span></div></div>
+    </div>
+    <div class="objet carte" id="carte2" style="left:21%">
+      <span class="etiquette" style="bottom:calc(100% + 8px)">🃏 Carte de contraste 2</span>
+      <div class="carte-corps"><div class="carte-haut"></div><div class="carte-bas"><span class="carte-num">2</span></div></div>
+    </div>
+    <div class="objet cabine" id="cabine">
+      <span class="etiquette" style="top:55%">💡 Cabine de lumière 3D</span>
+      <div class="cabine-barre">
+        <span class="cabine-nom">💡 Cabine de lumière</span>
+        <button type="button" class="bouton-lumiere" data-illuminant="A" title="Ce bouton ne fonctionne pas encore"><span class="voyant"></span>A</button>
+        <button type="button" class="bouton-lumiere" data-illuminant="D65" title="Ce bouton ne fonctionne pas encore"><span class="voyant"></span>D65</button>
+        <button type="button" class="bouton-lumiere" data-illuminant="F11" title="Ce bouton ne fonctionne pas encore"><span class="voyant"></span>F11</button>
+      </div>
+      <svg class="cabine-dedans" viewBox="0 0 400 260" role="img" aria-label="Intérieur de la cabine, éteint">
+        <polygon points="0,0 400,0 320,60 80,60" fill="#d4d4d8"/>
+        <polygon points="0,0 80,60 80,190 0,260" fill="#c4c4c8"/>
+        <polygon points="400,0 400,260 320,190 320,60" fill="#cbcbcf"/>
+        <polygon points="80,190 320,190 400,260 0,260" fill="#b4b4b8"/>
+        <rect x="80" y="60" width="240" height="130" fill="#e4e4e7"/>
+        <rect x="150" y="6" width="100" height="10" rx="3" fill="#a1a1aa"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<script type="module">
+// Le code de la simulation (vide au départ). Les modèles couleur sont dans window.Couleur :
+//   const { LONGUEURS, ILLUMINANTS, xyz, blanc, lab, deltaE, versEcran, paireMetamere, couleurLumiere, croisements } = window.Couleur;
+// Dès que les cartes ont une réflectance : Atelier.publierCartes(R1, R2) (contrôle de la règle n° 1 dans l'étape 1).
+</script>
+<!-- ======================================================================================
+     ZONE DE L'IA : fin. Tout ce qui suit est le CADRE DE L'ATELIER : ne pas le modifier.
+     ====================================================================================== -->
+
+<div id="atelier"></div>
+
+<style>
+/* ---- CADRE DE L'ATELIER (ne pas modifier) ---- */
+html { background:#e9ecf2; }
+body { margin:0; padding:22px 14px 60px; font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif; color:#e4e4e7; display:flex; flex-direction:column; align-items:center; }
+body > * { width:min(1180px,100%); box-sizing:border-box; }
+#atelier { order:-1; }
+.fen { background:#0b0b0f; border-radius:16px; overflow:hidden; box-shadow:0 18px 50px rgba(15,23,42,.35); margin-bottom:16px; }
+.barre { display:flex; align-items:center; gap:8px; padding:10px 16px; background:#18181b; border-bottom:1px solid #27272a; }
+.barre i { width:11px; height:11px; border-radius:50%; background:#3f3f46; }
+.barre b { margin-left:8px; color:#fff; font-size:14px; }
+.barre button { margin-left:auto; }
+.corps { padding:18px 20px 22px; display:grid; gap:16px; }
+.st { list-style:none; margin:0; padding:0; display:grid; gap:4px; }
+.st li { display:flex; flex-direction:column; align-items:center; gap:6px; text-align:center; position:relative; }
+.st li:not(:last-child)::after { content:""; position:absolute; top:18px; left:calc(50% + 22px); right:calc(-50% + 22px); height:3px; background:#3f3f46; }
+.st li.fait:not(:last-child)::after { background:#22c55e; }
+.rond { all:unset; width:36px; height:36px; border-radius:50%; display:grid; place-items:center; font-weight:800; background:#27272a; color:#a1a1aa; border:2px solid #3f3f46; }
+.fait .rond { background:#22c55e; color:#052e14; border-color:#22c55e; cursor:pointer; }
+.ici .rond { background:#f59e0b; color:#1f1300; border-color:#fde68a; box-shadow:0 0 0 5px rgba(245,158,11,.25); cursor:pointer; }
+.rond.vue { outline:3px solid #fff; outline-offset:2px; }
+.st span { font-size:12.5px; line-height:1.25; color:#a1a1aa; }
+.ici span { color:#fde68a; font-weight:800; }
+.carte-etape { border:2px solid #f59e0b; background:#1f1a10; border-radius:14px; padding:14px 16px; display:grid; gap:10px; }
+.carte-etape.faite { border-color:#22c55e; background:#0f2a18; }
+.carte-etape h2 { margin:0; font:800 20px/1.25 'Outfit',system-ui,sans-serif; color:#fff; }
+.badge { font-size:12px; font-weight:800; background:#f59e0b; color:#1f1300; border-radius:99px; padding:2px 9px; vertical-align:middle; margin-left:6px; }
+.faite .badge { background:#22c55e; color:#052e14; }
+.carte-etape p { margin:0; font-size:16px; line-height:1.5; }
+.ecris { background:#0b0b0f; border:1px dashed #f59e0b; border-radius:10px; padding:10px 12px; color:#fde68a; font-weight:800; }
+details { background:#16161b; border:1px solid #3f3f46; border-radius:10px; padding:8px 12px; }
+summary { cursor:pointer; font-weight:800; color:#e4e4e7; }
+details ul { margin:8px 0 2px; padding-left:20px; line-height:1.5; }
+.btn { all:unset; cursor:pointer; background:#27272a; border:1px solid #52525b; color:#fff; font-weight:800; font-size:14px; border-radius:10px; padding:7px 13px; }
+.btn:hover { border-color:#f59e0b; }
+.btn.suivant { background:#f59e0b; color:#1f1300; border-color:#f59e0b; justify-self:start; font-size:15px; }
+.btn.ok { background:#16a34a; border-color:#16a34a; }
+.rangee { display:flex; flex-wrap:wrap; gap:8px; align-items:center; }
+.etat { list-style:none; margin:0; padding:10px 12px; background:#16161b; border-radius:10px; display:grid; gap:4px; }
+.regle { font-weight:800; border-radius:8px; padding:6px 10px; }
+.regle.oui { background:#0f2a18; color:#86efac; } .regle.non { background:#2a0f0f; color:#fca5a5; } .regle.attente { background:#16161b; color:#a1a1aa; }
+.retour { all:unset; cursor:pointer; color:#fde68a; font-weight:800; }
+.bravo { margin:0; text-align:center; font:800 22px 'Outfit',system-ui,sans-serif; color:#86efac; }
+.voile { position:fixed; inset:0; z-index:100; background:rgba(15,23,42,.65); display:grid; place-items:center; padding:16px; }
+.popup { width:min(860px,100%); height:min(700px,92vh); background:#0b0b0f; border:1px solid #3f3f46; border-radius:16px; display:flex; flex-direction:column; overflow:hidden; }
+.onglets { position:sticky; top:0; display:flex; flex-wrap:wrap; gap:6px; padding:10px 12px; background:#18181b; border-bottom:1px solid #27272a; }
+.onglets button { all:unset; cursor:pointer; padding:6px 12px; border-radius:8px; font-weight:800; font-size:14px; color:#a1a1aa; }
+.onglets button.actif { background:#f59e0b; color:#1f1300; }
+.onglets .fermer { margin-left:auto; color:#fff; background:#3f3f46; }
+.popup-corps { overflow:auto; padding:14px 16px; display:flex; flex-direction:column; gap:12px; }
+.popup-corps > * { flex-shrink:0; }
+.graphe { display:block; width:100%; height:auto; aspect-ratio:760/300; background:#fff; border-radius:10px; }
+.legende { display:flex; gap:14px; flex-wrap:wrap; font-size:14px; }
+.legende i { display:inline-block; width:18px; height:4px; border-radius:2px; vertical-align:middle; margin-right:5px; }
+table { border-collapse:collapse; font-size:13px; width:100%; }
+th, td { border:1px solid #27272a; padding:3px 8px; text-align:right; }
+th { background:#18181b; position:sticky; top:0; }
+.tableau { max-height:260px; overflow:auto; border-radius:8px; }
+.formule { font-family:'Cambria Math',Georgia,serif; font-size:17px; color:#fde68a; margin:2px 0; }
+#simulation.cache-cadre { margin-top:0; }
+</style>
+
+<script>
+/* ---- CADRE DE L'ATELIER (ne pas modifier) : les modèles couleur ---- */
+window.Couleur = (() => {
+  const LONGUEURS = Array.from({ length: 81 }, (_, i) => 380 + 5 * i);
+
+  // --- Observateur CIE 1931 (2°) : table officielle de la CIE (CIE 018:2019, table 6 ; DOI 10.25039/CIE.DS.xvudnb9b), 380 → 780 nm, tous les 5 nm ---
+  const XBAR = [
+    0.001368, 0.002236, 0.004243, 0.00765, 0.01431, 0.02319, 0.04351, 0.07763, 0.13438, 0.21477,
+    0.2839, 0.3285, 0.34828, 0.34806, 0.3362, 0.3187, 0.2908, 0.2511, 0.19536, 0.1421,
+    0.09564, 0.05795, 0.03201, 0.0147, 0.0049, 0.0024, 0.0093, 0.0291, 0.06327, 0.1096,
+    0.1655, 0.22575, 0.2904, 0.3597, 0.43345, 0.51205, 0.5945, 0.6784, 0.7621, 0.8425,
+    0.9163, 0.9786, 1.0263, 1.0567, 1.0622, 1.0456, 1.0026, 0.9384, 0.85445, 0.7514,
+    0.6424, 0.5419, 0.4479, 0.3608, 0.2835, 0.2187, 0.1649, 0.1212, 0.0874, 0.0636,
+    0.04677, 0.0329, 0.0227, 0.01584, 0.0113592, 0.00811092, 0.00579035, 0.00410946, 0.00289933, 0.00204919,
+    0.00143997, 0.000999949, 0.000690079, 0.000476021, 0.000332301, 0.000234826, 0.000166151, 0.000117413, 8.30753e-05, 5.87065e-05,
+    4.15099e-05,
+  ];
+  const YBAR = [
+    3.9e-05, 6.4e-05, 0.00012, 0.000217, 0.000396, 0.00064, 0.00121, 0.00218, 0.004, 0.0073,
+    0.0116, 0.01684, 0.023, 0.0298, 0.038, 0.048, 0.06, 0.0739, 0.09098, 0.1126,
+    0.13902, 0.1693, 0.20802, 0.2586, 0.323, 0.4073, 0.503, 0.6082, 0.71, 0.7932,
+    0.862, 0.91485, 0.954, 0.9803, 0.99495, 1, 0.995, 0.9786, 0.952, 0.9154,
+    0.87, 0.8163, 0.757, 0.6949, 0.631, 0.5668, 0.503, 0.4412, 0.381, 0.321,
+    0.265, 0.217, 0.175, 0.1382, 0.107, 0.0816, 0.061, 0.04458, 0.032, 0.0232,
+    0.017, 0.01192, 0.00821, 0.005723, 0.004102, 0.002929, 0.002091, 0.001484, 0.001047, 0.00074,
+    0.00052, 0.0003611, 0.0002492, 0.0001719, 0.00012, 8.48e-05, 6e-05, 4.24e-05, 3e-05, 2.12e-05,
+    1.499e-05,
+  ];
+  const ZBAR = [
+    0.00645, 0.01055, 0.02005, 0.03621, 0.06785, 0.1102, 0.2074, 0.3713, 0.6456, 1.03905,
+    1.3856, 1.62296, 1.74706, 1.7826, 1.77211, 1.7441, 1.6692, 1.5281, 1.28764, 1.0419,
+    0.81295, 0.6162, 0.46518, 0.3533, 0.272, 0.2123, 0.1582, 0.1117, 0.07825, 0.05725,
+    0.04216, 0.02984, 0.0203, 0.0134, 0.00875, 0.00575, 0.0039, 0.00275, 0.0021, 0.0018,
+    0.00165, 0.0014, 0.0011, 0.001, 0.0008, 0.0006, 0.00034, 0.00024, 0.00019, 0.0001,
+    5e-05, 3e-05, 2e-05, 1e-05, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
+    0,
+  ];
+
+  // --- Illuminants (puissance relative, 100 à 560 nm) ---
+  const A = LONGUEURS.map((l) => 100 * (560 / l) ** 5 * (Math.exp(1.435e7 / (2848 * 560)) - 1) / (Math.exp(1.435e7 / (2848 * l)) - 1));
+
+  // D65 : table officielle de la CIE (ISO/CIE 11664-2), 380 → 780 nm, tous les 5 nm.
+  const D65 = [
+    49.9755, 52.3118, 54.6482, 68.7015, 82.7549, 87.1204, 91.486, 92.4589, 93.4318, 90.057,
+    86.6823, 95.7736, 104.865, 110.936, 117.008, 117.41, 117.812, 116.336, 114.861, 115.392,
+    115.923, 112.367, 108.811, 109.082, 109.354, 108.578, 107.802, 106.296, 104.79, 106.239,
+    107.689, 106.047, 104.405, 104.225, 104.046, 102.023, 100, 98.1671, 96.3342, 96.0611,
+    95.788, 92.2368, 88.6856, 89.3459, 90.0062, 89.8026, 89.5991, 88.6489, 87.6987, 85.4936,
+    83.2886, 83.4939, 83.6992, 81.863, 80.0268, 80.1207, 80.2146, 81.2462, 82.2778, 80.281,
+    78.2842, 74.0027, 69.7213, 70.6652, 71.6091, 72.979, 74.349, 67.9765, 61.604, 65.7448,
+    69.8856, 72.4863, 75.087, 69.3398, 63.5927, 55.0054, 46.4182, 56.6118, 66.8054, 65.0941,
+    63.3828,
+  ];
+
+  const F11 = [0.91, 0.63, 0.46, 0.37, 1.29, 12.68, 1.59, 1.79, 2.46, 3.33, 4.49, 33.94, 12.13, 6.95, 7.19, 7.12, 6.72, 6.13, 5.46, 4.79,
+    5.66, 14.29, 14.96, 8.97, 4.72, 2.33, 1.47, 1.10, 0.89, 0.83, 1.18, 4.90, 39.59, 72.84, 32.61, 7.52, 2.83, 1.96, 1.67, 4.43, 11.28,
+    14.76, 12.73, 9.74, 7.33, 9.72, 55.27, 42.58, 13.18, 13.16, 12.26, 5.11, 2.07, 2.34, 3.58, 3.01, 2.48, 2.14, 1.54, 1.33, 1.46, 1.94,
+    2.00, 1.20, 1.35, 4.10, 5.58, 2.51, 0.57, 0.27, 0.23, 0.21, 0.24, 0.24, 0.20, 0.24, 0.32, 0.26, 0.16, 0.12, 0.09]; // 380 → 780 nm, tous les 5 nm
+
+  const ILLUMINANTS = {
+    D65: { nom: "D65", detail: "lumière du jour moyenne (6500 K)", spectre: D65, couleur: "#2563eb" },
+    A: { nom: "A", detail: "lampe à incandescence (2856 K)", spectre: A, couleur: "#ea580c" },
+    F11: { nom: "F11", detail: "tube fluorescent à trois bandes (4000 K)", spectre: F11, couleur: "#16a34a" },
+  };
+
+  const somme = (f) => LONGUEURS.reduce((t, _, i) => t + f(i), 0);
+
+  // Tristimulus d'une réflectance R sous l'illuminant S, normalisés pour que le blanc parfait ait Y = 100.
+  function xyz(R, S) {
+    const k = 100 / somme((i) => S[i] * YBAR[i]);
+    return [k * somme((i) => S[i] * R[i] * XBAR[i]), k * somme((i) => S[i] * R[i] * YBAR[i]), k * somme((i) => S[i] * R[i] * ZBAR[i])];
+  }
+  const blanc = (S) => xyz(LONGUEURS.map(() => 1), S);
+
+  function lab([X, Y, Z], [Xn, Yn, Zn]) {
+    const f = (t) => (t > (6 / 29) ** 3 ? Math.cbrt(t) : t / (3 * (6 / 29) ** 2) + 4 / 29);
+    const fx = f(X / Xn), fy = f(Y / Yn), fz = f(Z / Zn);
+    return [116 * fy - 16, 500 * (fx - fy), 200 * (fy - fz)];
+  }
+  const deltaE = (a, b) => Math.hypot(a[0] - b[0], a[1] - b[1], a[2] - b[2]);
+
+  // Couleur d'écran : adaptation de Bradford du blanc de l'illuminant vers D65 (l'œil s'habitue à la lumière),
+  // avec un degré d'adaptation (1 = complète : un blanc paraît blanc ; < 1 : on voit encore la teinte de la lampe).
+  // Par défaut 0,4 (choix pédagogique, volontairement marqué) : dans la cabine, la teinte de la lampe saute aux yeux,
+  // et l'écart entre deux cartes métamères aussi.
+  const ADAPTATION = 0.4;
+  const BRAD = [[0.8951, 0.2664, -0.1614], [-0.7502, 1.7135, 0.0367], [0.0389, -0.0685, 1.0296]];
+  const BRAD_INV = [[0.9869929, -0.1470543, 0.1599627], [0.4323053, 0.5183603, 0.0492912], [-0.0085287, 0.0400428, 0.9684867]];
+  const mul = (M, v) => M.map((l) => l[0] * v[0] + l[1] * v[1] + l[2] * v[2]);
+  const BLANC_D65 = blanc(D65);
+
+  function versEcran(XYZ, blancSource, degre = ADAPTATION) {
+    const c = mul(BRAD, XYZ), ws = mul(BRAD, blancSource), wd = mul(BRAD, BLANC_D65);
+    const adapte = mul(BRAD_INV, c.map((v, i) => v * (degre * wd[i] / ws[i] + (1 - degre))));
+    const [X, Y, Z] = adapte.map((v) => v / 100);
+    const lin = [3.2406 * X - 1.5372 * Y - 0.4986 * Z, -0.9689 * X + 1.8758 * Y + 0.0415 * Z, 0.0557 * X - 0.2040 * Y + 1.0570 * Z];
+    const gamma = (u) => { u = Math.min(1, Math.max(0, u)); return u <= 0.0031308 ? 12.92 * u : 1.055 * u ** (1 / 2.4) - 0.055; };
+    return `rgb(${lin.map((u) => Math.round(255 * gamma(u))).join(",")})`;
+  }
+
+  // --- Paire métamère : deux réflectances qui donnent EXACTEMENT les mêmes XYZ sous D65 ---
+  // R2 = R1 + k·b, où b est un « noir métamérique » pour D65 : une courbe invisible sous D65
+  // (sa contribution à X, Y et Z est nulle). b croise forcément zéro au moins 3 fois → les deux courbes se croisent.
+  function paireBrute(R1, perturbation, cibleDeltaEsousA) {
+    const S = D65;
+    const bases = [XBAR, YBAR, ZBAR].map((c) => LONGUEURS.map((_, i) => S[i] * c[i]));
+    const ortho = [];
+    for (const v of bases) {
+      let u = v.slice();
+      for (const o of ortho) { const p = u.reduce((t, x, i) => t + x * o[i], 0); u = u.map((x, i) => x - p * o[i]); }
+      const n = Math.hypot(...u); ortho.push(u.map((x) => x / n));
+    }
+    let b = perturbation.slice();
+    for (const o of ortho) { const p = b.reduce((t, x, i) => t + x * o[i], 0); b = b.map((x, i) => x - p * o[i]); }
+    // k : la différence sous A vaut à peu près cibleDeltaEsousA, sans sortir des réflectances possibles (entre 2 % et 95 %).
+    const dE = (k) => { const R2 = R1.map((r, i) => r + k * b[i]); const w = blanc(A); return deltaE(lab(xyz(R1, A), w), lab(xyz(R2, A), w)); };
+    let k = cibleDeltaEsousA / dE(1);
+    const kMax = Math.min(...R1.map((r, i) => (b[i] > 0 ? (0.95 - r) / b[i] : b[i] < 0 ? (r - 0.02) / -b[i] : Infinity)));
+    k = Math.min(k, kMax);
+    return R1.map((r, i) => r + k * b[i]);
+  }
+
+  // Perturbations essayées par défaut : une bosse dans le ROUGE, pour que les deux courbes s'écartent dans le rouge.
+  const BOSSES_ROUGES = [[650, 35], [640, 30], [660, 40], [630, 30], [670, 35]]
+    .map(([c, w]) => LONGUEURS.map((l) => Math.exp(-(((l - c) / w) ** 2))));
+
+  // Une vraie paire métamère pour l'exercice : mêmes XYZ sous D65, AU MOINS 3 croisements,
+  // et le plus grand écart dans le rouge (600 à 700 nm).
+  function verifierPaire(R1, R2, minCroisements = 3) {
+    const n = croisements(R1, R2).length;
+    const d = R1.map((v, i) => Math.abs(v - R2[i]));
+    const pic = LONGUEURS[d.indexOf(Math.max(...d))];
+    const ecart = (S) => { const w = blanc(S); return deltaE(lab(xyz(R1, S), w), lab(xyz(R2, S), w)); };
+    const ecartD65 = ecart(D65), ecartA = ecart(A);
+    const divergeRouge = pic >= 600 && pic <= 700;
+    return { croisements: n, pic, divergeRouge, ecartD65, ecartA, ok: n >= minCroisements && divergeRouge && ecartD65 < 0.1 && ecartA > 1 };
+  }
+
+  // Fabrique la carte 2 à partir de la carte 1. Chaque essai est vérifié (verifierPaire) : un essai qui ne
+  // respecte pas les règles est REFUSÉ et on recommence avec une autre perturbation.
+  function paireMetamere(R1, perturbation, cibleDeltaEsousA = 12) {
+    const essais = [...(perturbation ? [perturbation] : []), ...BOSSES_ROUGES];
+    let meilleur = null;
+    for (const p of essais) {
+      const R2 = paireBrute(R1, p, cibleDeltaEsousA);
+      const v = verifierPaire(R1, R2);
+      if (v.ok) return R2;
+      if (!meilleur || v.croisements > meilleur.v.croisements) meilleur = { R2, v };
+    }
+    console.warn("paireMetamere : aucune paire ne respecte toutes les règles pour cette couleur", meilleur.v);
+    return meilleur.R2;
+  }
+
+  // Couleur d'une surface blanche (murs, fond, sol de la cabine) sous un illuminant, vue comme les cartes :
+  // à utiliser pour peindre la cabine, plutôt que des couleurs choisies à la main.
+  function couleurLumiere(S, facteur = 0.85) {
+    const R = LONGUEURS.map(() => facteur);
+    return versEcran(xyz(R, S), blanc(S));
+  }
+
+  // Longueurs d'onde où deux courbes se croisent (interpolation linéaire).
+  function croisements(R1, R2) {
+    const res = [];
+    for (let i = 1; i < LONGUEURS.length; i++) {
+      const d0 = R1[i - 1] - R2[i - 1], d1 = R1[i] - R2[i];
+      if (d0 === 0 || d0 * d1 < 0) res.push(LONGUEURS[i - 1] + (5 * d0) / (d0 - d1));
+    }
+    return res;
+  }
+  return { LONGUEURS, XBAR, YBAR, ZBAR, ILLUMINANTS, xyz, blanc, lab, deltaE, versEcran, verifierPaire, paireMetamere, couleurLumiere, croisements, ADAPTATION };
+})();
+</script>
+
+<script>
+/* ---- CADRE DE L'ATELIER (ne pas modifier) : les étapes, l'état actuel, les modèles ---- */
+window.Atelier = (() => {
+  const C = window.Couleur;
+  const CLE = "atelier.metamerisme.";
+  const lire = (k, d) => { try { const v = JSON.parse(localStorage.getItem(CLE + k)); return v ?? d; } catch { return d; } };
+  const ecrire = (k, v) => { try { localStorage.setItem(CLE + k, JSON.stringify(v)); } catch { /* fichier ouvert en navigation privée */ } };
+
+  const ETAPES = [
+    { titre: "Faire fonctionner les boutons des illuminants", graphe: "illuminants",
+      consigne: "Les trois boutons A, D65 et F11 sont déjà sur le bord de la cabine, mais ils ne font rien. Rédige un prompt pour qu'ils permettent de choisir la lumière de la cabine.",
+      indices: ["Les trois boutons et les trois illuminants existent déjà (sur la cabine et dans les modèles couleur) : inutile de les décrire, dis juste quoi en faire.",
+        "Un verbe d'action et la cible suffisent : « active… », « fais fonctionner… ».",
+        "Pour aller plus loin (facultatif) : tracer la distribution spectrale de l'illuminant choisi sur le fond de la cabine, un voyant sur le bouton actif, ou le choix retenu au rechargement."],
+      proposition: "Active les 3 boutons d'illuminants." },
+    { titre: "Choisir la couleur des cartes", graphe: "metamerie",
+      consigne: "Les deux cartes sont vierges. Rédige un prompt pour choisir la couleur de la carte 1, la carte 2 formant avec elle une paire métamère, et pour voir leurs courbes de réflectance.",
+      indices: ["Comment choisir ? Par exemple un bouton qui ouvre une fenêtre avec une palette de couleurs : un clic choisit la couleur de la carte 1.",
+        "La carte 2 n'est pas choisie : elle forme une paire métamère avec la carte 1 (même couleur à la lumière du jour D65, différente sous l'illuminant A).",
+        "Que montrer ? Les courbes de réflectance des deux cartes, superposées, de 380 à 780 nm : on voit qu'elles se croisent."],
+      proposition: "Crée un bouton qui ouvre une fenêtre pour choisir la couleur de la carte 1 ; la carte 2 forme avec elle une paire métamère. Montre les courbes de réflectance des deux cartes." },
+    { titre: "Rendre les cartes mobiles pour les placer dans la cabine",
+      consigne: "Rédige un prompt pour que l'on puisse déplacer les deux cartes de la table jusque dans la cabine.",
+      indices: ["Comment déplace-t-on les cartes ? Pense à la souris ET au doigt (tablette, téléphone).",
+        "Sur un petit écran, glisser est difficile : demande aussi un bouton qui place les deux cartes dans la cabine.",
+        "Dis ce qui change quand une carte entre dans la cabine : sa couleur est recalculée sous la lumière de la cabine ; sur la table, elle reste à la lumière du jour (D65)."],
+      proposition: "Rends les deux cartes déplaçables dans la cabine, à la souris et au doigt." },
+    { titre: "Mesurer l'écart de couleur",
+      consigne: "Rédige un prompt pour mesurer et afficher la différence de couleur entre les deux cartes, sous la lumière où elles se trouvent.",
+      indices: ["Quelle mesure ? L'écart ΔE*ab entre les deux cartes, calculé avec les modèles couleur, sous la lumière où sont les cartes.",
+        "Comment le rendre lisible ? Une valeur arrondie, une couleur verte, orange ou rouge selon que la différence se voit ou non, et une phrase d'explication.",
+        "Pour comprendre pourquoi : surligne sur le graphique des réflectances la zone où les deux courbes s'écartent le plus."],
+      proposition: "Affiche l'écart ΔE*ab entre les deux cartes sous la lumière où elles sont, en vert, orange ou rouge." },
+    { titre: "Le message à retenir",
+      consigne: "Rédige un prompt pour ajouter la conclusion de la simulation.",
+      indices: ["Quelle forme ? Un encadré « À retenir », bien visible sous la scène.",
+        "Quel contenu ? La définition du métamérisme, et une conséquence pratique : comment comparer correctement deux couleurs."],
+      proposition: "Ajoute sous la scène un encadré « À retenir » sur le métamérisme." },
+  ];
+
+  const EQUATIONS = [
+    ["De la réflectance à X, Y, Z (sous un illuminant)", ["X = k · Σ S(λ) · R(λ) · x̄(λ)", "Y = k · Σ S(λ) · R(λ) · ȳ(λ)", "Z = k · Σ S(λ) · R(λ) · z̄(λ)", "k = 100 / Σ S(λ) · ȳ(λ)"], "S : distribution spectrale de l'illuminant ; R : réflectance de l'échantillon (0 à 1) ; x̄, ȳ, z̄ : observateur CIE 1931 ; somme de 380 à 780 nm, pas de 5 nm."],
+    ["Le blanc de référence", ["(Xn, Yn, Zn) = X, Y, Z du blanc parfait (R = 1) sous le même illuminant"], "Les couleurs sont comparées à ce blanc : l'œil s'habitue à la lumière."],
+    ["De X, Y, Z à L*, a*, b* (CIELAB)", ["L* = 116 · f(Y/Yn) − 16", "a* = 500 · [ f(X/Xn) − f(Y/Yn) ]", "b* = 200 · [ f(Y/Yn) − f(Z/Zn) ]"], "L* : clarté ; a* : vert (−) → rouge (+) ; b* : bleu (−) → jaune (+)."],
+    ["L'écart de couleur", ["ΔE*ab = √( ΔL*² + Δa*² + Δb*² )"], "Moins de 1 : invisible ; de 1 à 3 : visible pour un œil exercé ; au-delà : nettement visible."],
+    ["La couleur affichée à l'écran", ["XYZ → adaptation de Bradford à 40 % → RVB (sRGB)"], "L'adaptation imite l'œil qui s'habitue à la lumière ; à 40 %, la teinte de la lampe et l'écart entre deux cartes métamères sautent aux yeux."],
+    ["La paire métamère", ["R₂(λ) = R₁(λ) + k · b(λ)", "Σ S_D65 · b · x̄ = Σ S_D65 · b · ȳ = Σ S_D65 · b · z̄ = 0"], "b est un « noir métamérique » : invisible sous D65. Les deux cartes ont les mêmes X, Y, Z sous D65, mais pas sous A ou F11."],
+  ];
+
+  // --- État : étapes d'introduction faites, étapes cochées par le prof, étape revue ---
+  let intro = lire("intro", []);
+  let cochees = lire("cochees", []);
+  let vue = null;
+  let cartes = null;      // { R1, R2 } publiées par la simulation
+  let cache = lire("cache", false);
+
+  const toutes = () => [
+    { id: "etat", titre: "L'état actuel de la page", fait: intro.includes("etat") },
+    { id: "modeles", titre: "Les modèles de la simulation", fait: intro.includes("modeles") },
+    ...ETAPES.map((e, k) => ({ id: `e${k + 3}`, num: k + 3, e, titre: e.titre, fait: (typeof ETAPES_VALIDEES !== "undefined" && ETAPES_VALIDEES.includes(k + 3)) || cochees.includes(k + 3), parIA: typeof ETAPES_VALIDEES !== "undefined" && ETAPES_VALIDEES.includes(k + 3) })),
+  ];
+
+  const h = (t) => String(t).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+
+  function regle() {
+    if (!cartes) return `<p class="regle attente">⏳ Règle n° 1 : pas encore de couleur sur les cartes.</p>`;
+    const S = C.ILLUMINANTS.D65.spectre, w = C.blanc(S);
+    const dE = C.deltaE(C.lab(C.xyz(cartes.R1, S), w), C.lab(C.xyz(cartes.R2, S), w));
+    const v = C.verifierPaire(cartes.R1, cartes.R2);
+    const ok = dE < 0.5;
+    return `<p class="regle ${ok ? "oui" : "non"}">${ok ? "✅" : "❌"} Règle n° 1 : à la lumière du jour (D65), les deux cartes ont exactement la même couleur (ΔE*ab = ${dE.toFixed(2).replace(".", ",")}) · ${v.croisements} croisements des courbes</p>`;
+  }
+
+  function contenu(t) {
+    if (t.id === "etat") return `
+      <p>Avant de demander quoi que ce soit à l'IA, <b>regarde ce que fait la page maintenant</b> (la simulation est en dessous) : c'est ton point de départ.</p>
+      <ul class="etat">${(typeof ETAT_ACTUEL !== "undefined" ? ETAT_ACTUEL : []).map((l) => `<li>${h(l)}</li>`).join("")}</ul>
+      ${regle()}
+      ${t.fait ? "" : `<button class="btn suivant" data-intro="etat">J'ai regardé, étape suivante ›</button>`}`;
+    if (t.id === "modeles") return `
+      <p>Pour <b>toute</b> simulation, il faut d'abord trouver les <b>modèles</b> : les lois, les formules et les données qui décrivent le phénomène. Puis il faut <b>les donner à l'IA</b> : sans modèle, elle invente, et la simulation est fausse.</p>
+      <p>Ici, les modèles couleur sont <b>déjà dans la page</b> : l'IA s'en servira à chaque étape.</p>
+      <div class="rangee"><button class="btn" data-modeles="illuminants">🧰 Voir les modèles déjà installés</button></div>
+      ${t.fait ? "" : `<button class="btn suivant" data-intro="modeles">J'ai compris, étape suivante ›</button>`}`;
+    const e = t.e;
+    return `
+      <p>${h(e.consigne)}</p>
+      ${t.fait ? "" : `<p class="ecris">✍️ Écris ton prompt pour cette étape dans la zone de message d'Antigravity, puis Entrée.</p>`}
+      <details><summary>💡 Des pistes pour ton prompt</summary><ul>${e.indices.map((i) => `<li>${h(i)}</li>`).join("")}</ul></details>
+      <details><summary>👀 Voir une proposition de prompt</summary><p style="margin-top:8px">« ${h(e.proposition)} »</p></details>
+      <div class="rangee">
+        ${e.graphe ? `<button class="btn" data-modeles="${e.graphe}">📈 ${e.graphe === "illuminants" ? "Voir les illuminants" : "Voir une paire métamère"}</button>` : ""}
+        ${t.fait ? (t.parIA ? `<span>✅ Étape validée par l'IA</span>` : `<button class="btn" data-decocher="${t.num}">Rouvrir cette étape</button>`) : `<button class="btn ok" data-cocher="${t.num}">✅ J'ai fini cette étape</button>`}
+      </div>`;
+  }
+
+  function afficher() {
+    const el = document.getElementById("atelier");
+    const T = toutes();
+    const ici = T.findIndex((t) => !t.fait);
+    const iVue = vue ? T.findIndex((t) => t.id === vue) : -1;
+    const montree = iVue >= 0 ? iVue : ici;
+    document.getElementById("simulation").hidden = false;
+    if (cache) {
+      el.innerHTML = `<div class="rangee" style="justify-content:flex-end;margin-bottom:10px"><button class="btn" data-cadre="montrer">👁 Montrer l'atelier</button></div>`;
+    } else {
+      el.innerHTML = `
+      <div class="fen">
+        <div class="barre"><i></i><i></i><i></i><b>Atelier · Métamérisme</b><button class="btn" data-cadre="cacher" title="Montrer la simulation seule (en classe)">🙈 Masquer l'atelier</button></div>
+        <div class="corps">
+          <ol class="st" style="grid-template-columns:repeat(${T.length},minmax(0,1fr))">${T.map((t, i) => `
+            <li class="${t.fait ? "fait" : i === ici ? "ici" : ""}">
+              ${t.fait || i === ici ? `<button class="rond${i === montree ? " vue" : ""}" data-vue="${t.id}" title="${i === ici ? "L'étape en cours" : "Revoir cette étape"}">${t.fait ? "✓" : i + 1}</button>` : `<span class="rond">${i + 1}</span>`}
+              <span>${h(t.titre)}</span></li>`).join("")}
+          </ol>
+          ${ici === -1 && iVue < 0 ? `<p class="bravo">🎉 Tu as fini l'atelier !</p>` : ""}
+          ${iVue >= 0 && iVue !== ici ? `<button class="retour" data-vue="">↩ ${ici >= 0 ? `Revenir à l'étape en cours : ${ici + 1}. ${h(T[ici].titre)}` : "Revenir à la fin de l'atelier"}</button>` : ""}
+          ${montree >= 0 ? `<div class="carte-etape${T[montree].fait ? " faite" : ""}"><h2>${montree + 1}. ${h(T[montree].titre)} <span class="badge">${T[montree].fait ? "fait" : "en cours"}</span></h2>${contenu(T[montree])}</div>` : ""}
+        </div>
+      </div>`;
+    }
+  }
+
+  document.addEventListener("click", (ev) => {
+    const b = ev.target.closest("button"); if (!b || !b.closest("#atelier, .voile")) return;
+    const d = b.dataset;
+    if (d.intro) { intro = [...new Set([...intro, d.intro])]; ecrire("intro", intro); vue = null; }
+    else if (d.vue !== undefined) { const T = toutes(); const ici = T.findIndex((t) => !t.fait); vue = d.vue && T.findIndex((t) => t.id === d.vue) !== ici ? d.vue : null; }
+    else if (d.cocher) { cochees = [...new Set([...cochees, Number(d.cocher)])]; ecrire("cochees", cochees); vue = null; }
+    else if (d.decocher) { cochees = cochees.filter((n) => n !== Number(d.decocher)); ecrire("cochees", cochees); vue = null; }
+    else if (d.cadre) { cache = d.cadre === "cacher"; ecrire("cache", cache); }
+    else if (d.modeles) { ouvrirModeles(d.modeles); return; }
+    else if (d.onglet) { ouvrirModeles(d.onglet); return; }
+    else if (d.fermer !== undefined) { document.querySelector(".voile")?.remove(); return; }
+    else if (d.csv) { telechargerCSV(d.csv); return; }
+    else return;
+    afficher();
+  });
+  document.addEventListener("keydown", (ev) => { if (ev.key === "Escape") document.querySelector(".voile")?.remove(); });
+
+  // --- La fenêtre des modèles : 4 onglets, même taille ---
+  const L = C.LONGUEURS;
+  const norm = (S) => { const m = Math.max(...S); return S.map((v) => v / m); };
+  const exemple = () => {
+    const R1 = L.map((l) => 0.30 + 0.15 * Math.exp(-(((l - 530) / 70) ** 2)));
+    return { R1, R2: C.paireMetamere(R1) };
+  };
+  const DONNEES = {
+    illuminants: () => ({ titre: "Distributions spectrales normalisées des illuminants (maximum = 1)",
+      texte: "A : lampe à incandescence (formule de Planck, 2856 K) · D65 : lumière du jour (table CIE) · F11 : tube fluorescent à trois bandes (table CIE).",
+      series: ["A", "D65", "F11"].map((k) => ({ nom: k, couleur: C.ILLUMINANTS[k].couleur, valeurs: norm(C.ILLUMINANTS[k].spectre), brut: C.ILLUMINANTS[k].spectre })) }),
+    observateur: () => ({ titre: "Observateur de référence CIE 1931 (2°)",
+      texte: "Les trois courbes x̄, ȳ, z̄ : comment l'œil moyen répond à chaque longueur d'onde (ȳ = la luminosité perçue). Table officielle de la CIE.",
+      series: [["x̄", "#dc2626", C.XBAR], ["ȳ", "#16a34a", C.YBAR], ["z̄", "#2563eb", C.ZBAR]].map(([nom, couleur, valeurs]) => ({ nom, couleur, valeurs, brut: valeurs })) }),
+    metamerie: () => {
+      const { R1, R2 } = cartes || exemple();
+      const ecart = (k) => { const S = C.ILLUMINANTS[k].spectre, w = C.blanc(S); return C.deltaE(C.lab(C.xyz(R1, S), w), C.lab(C.xyz(R2, S), w)).toFixed(1).replace(".", ","); };
+      const x = C.croisements(R1, R2);
+      return { titre: cartes ? "Les réflectances de tes deux cartes" : "Exemple de paire métamère (réflectances spectrales)",
+        texte: `Condition de métamérie : même couleur sous D65, et les deux courbes se croisent au moins 3 fois (ici ${x.length} : ${x.map((v) => Math.round(v) + " nm").join(", ")}). Écart ΔE*ab — D65 : ${ecart("D65")} · A : ${ecart("A")} · F11 : ${ecart("F11")}.`,
+        series: [{ nom: "carte 1", couleur: C.versEcran(C.xyz(R1, C.ILLUMINANTS.D65.spectre), C.blanc(C.ILLUMINANTS.D65.spectre)), valeurs: R1, brut: R1 }, { nom: "carte 2", couleur: "#0f172a", valeurs: R2, brut: R2, tirets: true }],
+        points: x };
+    },
+  };
+
+  function graphe(series, points = []) {
+    const W = 760, H = 300, g = 46, d = 14, hh = 16, b = 34;
+    const max = Math.max(...series.flatMap((s) => s.valeurs)) * 1.05 || 1;
+    const X = (l) => g + ((l - 380) / 400) * (W - g - d), Y = (v) => H - b - (v / max) * (H - b - hh);
+    const axes = [400, 450, 500, 550, 600, 650, 700, 750].map((l) => `<line x1="${X(l)}" x2="${X(l)}" y1="${hh}" y2="${H - b}" stroke="#e5e7eb"/><text x="${X(l)}" y="${H - b + 16}" font-size="12" text-anchor="middle" fill="#475569">${l}</text>`).join("");
+    const courbes = series.map((s) => `<polyline fill="none" stroke="${s.couleur}" stroke-width="2.5" ${s.tirets ? 'stroke-dasharray="6 4"' : ""} points="${s.valeurs.map((v, i) => `${X(L[i]).toFixed(1)},${Y(v).toFixed(1)}`).join(" ")}"/>`).join("");
+    const pts = points.map((l) => `<circle cx="${X(l)}" cy="${hh + 6}" r="5" fill="#f59e0b"/><line x1="${X(l)}" x2="${X(l)}" y1="${hh + 6}" y2="${H - b}" stroke="#f59e0b" stroke-dasharray="3 3"/>`).join("");
+    return `<svg class="graphe" viewBox="0 0 ${W} ${H}" role="img"><line x1="${g}" x2="${W - d}" y1="${H - b}" y2="${H - b}" stroke="#334155"/>${axes}${pts}${courbes}<text x="${W - d}" y="${H - 4}" font-size="12" text-anchor="end" fill="#475569">longueur d'onde (nm)</text></svg>`;
+  }
+
+  function ouvrirModeles(onglet) {
+    document.querySelector(".voile")?.remove();
+    const ONGLETS = [["illuminants", "📈 Les illuminants"], ["observateur", "👁 L'observateur 1931"], ["metamerie", "🎨 Conditions de métamérie"], ["equations", "🧮 Les équations"]];
+    let corps;
+    if (onglet === "equations") corps = EQUATIONS.map(([t, f, n]) => `<div><h3 style="margin:0 0 4px;color:#fff">${h(t)}</h3>${f.map((x) => `<p class="formule">${h(x)}</p>`).join("")}<p style="margin:4px 0 0;color:#a1a1aa">${h(n)}</p></div>`).join("");
+    else {
+      const D = DONNEES[onglet]();
+      corps = `<h3 style="margin:0;color:#fff">${h(D.titre)}</h3>
+        <div class="legende">${D.series.map((s) => `<span><i style="background:${s.couleur}"></i>${h(s.nom)}</span>`).join("")}</div>
+        ${graphe(D.series, D.points)}
+        <p style="margin:0;color:#d4d4d8">${h(D.texte)}</p>
+        <div class="rangee"><b>📋 Les valeurs</b><button class="btn" data-csv="${onglet}">⬇️ CSV</button></div>
+        <div class="tableau"><table><thead><tr><th>λ (nm)</th>${D.series.map((s) => `<th>${h(s.nom)}</th>`).join("")}</tr></thead><tbody>${L.map((l, i) => `<tr><td>${l}</td>${D.series.map((s) => `<td>${Number(s.brut[i].toPrecision(5))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+    }
+    const v = document.createElement("div");
+    v.className = "voile";
+    v.innerHTML = `<div class="popup" role="dialog" aria-modal="true"><div class="onglets">${ONGLETS.map(([id, nom]) => `<button class="${id === onglet ? "actif" : ""}" data-onglet="${id}">${nom}</button>`).join("")}<button class="fermer" data-fermer>✕ Fermer</button></div><div class="popup-corps">${corps}</div></div>`;
+    v.addEventListener("click", (ev) => { if (ev.target === v) v.remove(); });
+    document.body.appendChild(v);
+  }
+
+  function telechargerCSV(onglet) {
+    const D = DONNEES[onglet]();
+    const lignes = [["longueur_onde_nm", ...D.series.map((s) => s.nom)].join(";"), ...L.map((l, i) => [l, ...D.series.map((s) => String(s.brut[i]).replace(".", ","))].join(";"))];
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(new Blob(["﻿" + lignes.join("\n")], { type: "text/csv" }));
+    a.download = `metamerisme-${onglet}.csv`;
+    a.click();
+  }
+
+  afficher();
+  return {
+    // La simulation publie les réflectances des deux cartes (81 valeurs, 380 → 780 nm, pas de 5 nm) : contrôle de la règle n° 1.
+    publierCartes(R1, R2) { cartes = { R1, R2 }; afficher(); },
+  };
+})();
+</script>
+</body>
+</html>
