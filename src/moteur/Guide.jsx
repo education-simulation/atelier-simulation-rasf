@@ -231,7 +231,7 @@ export const CSS = `
 .g-liste-parties button:hover, .g-liste-parties button.actif { background:#fffbeb; border-color:#f59e0b; color:#0f172a; }
 .g-liste-parties .g-num-partie { min-width:24px; height:22px; font-size:12px; }
 .g-apparait { animation:g-fondu .45s; }
-.g-clic { animation:g-clic 1.2s ease-out infinite; transform-origin:center; transform-box:fill-box; }
+.g-clic { animation:g-clic 1s ease-out infinite; transform-origin:center; transform-box:fill-box; }
 @keyframes g-clic { 0%,55% { opacity:0; transform:scale(.4); } 65% { opacity:1; } 100% { opacity:0; transform:scale(1.8); } }
 .g-trou, .g-zone { transition: x .55s cubic-bezier(.2,.8,.2,1), y .55s cubic-bezier(.2,.8,.2,1), width .55s cubic-bezier(.2,.8,.2,1), height .55s cubic-bezier(.2,.8,.2,1); }
 .v { max-width:min(1100px, max(340px, calc((100vh - 170px) * 1.77))); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
@@ -554,7 +554,7 @@ const Z = {
 const DEMO = [
   { titre: "Les 3 parties d'Antigravity", texte: "L'écran d'Antigravity a 3 parties : à gauche le menu, au milieu Antigravity (là où tu parles avec l'IA Gemini), à droite un navigateur.", zones: [Z.gauche, Z.milieu, Z.droite], etiquettes: true },
   { titre: "① Le menu, à gauche", texte: "Tout en haut, « New Conversation » ouvre une nouvelle conversation. Dessous, la liste de tes conversations. Tout en bas, « Settings » : les réglages, et la déconnexion.", zones: [Z.gauche] },
-  { titre: "Réduire le menu", texte: "Le petit rectangle tout en haut à gauche replie le menu pour gagner de la place. Un 2e clic le rouvre.", zones: [Z.reduire], images: [{ curseur: { x: 72, y: 18 } }, { curseur: { x: 72, y: 18 }, replie: true }] },
+  { titre: "Réduire le menu", texte: "Le petit rectangle tout en haut à gauche replie le menu pour gagner de la place. Un 2e clic le rouvre.", zones: [Z.reduire, Z.gauche], bulle: { x: 170, y: 60 }, images: [{ curseur: { x: 72, y: 18 } }, { curseur: { x: 72, y: 18 }, replie: true }] },
   { titre: "② Au milieu : Antigravity", texte: "C'est ici que tu parles avec l'IA Gemini : elle t'écrit, tu lui réponds.", zones: [Z.milieu] },
   { titre: "L'historique", texte: "Les messages de la conversation, du plus ancien au plus récent. Ceux qui sont pour toi commencent par 💬 Pour toi. Le reste (« Ran commands »…) est technique : tu peux l'ignorer.", zones: [Z.historique] },
   { titre: "La zone de prompt", texte: "Tout en bas, « Ask anything… » : écris ici ta réponse ou ta demande (ton « prompt »), puis appuie sur Entrée. Le micro 🎤 permet de dicter.", zones: [Z.prompt] },
@@ -568,7 +568,7 @@ const DEMO = [
   { titre: "Refermer le navigateur", texte: "Le rectangle tout en haut à droite ferme le navigateur ; un 2e clic le rouvre.", zones: [Z.fermer], images: [{ curseur: { x: 716, y: 18 } }, { curseur: { x: 716, y: 18 }, ferme: true }] },
   { titre: "Régler la largeur", texte: "La fine barre verticale entre le milieu et le navigateur se déplace : garde le bouton de la souris appuyé dessus et glisse à gauche ou à droite.", zones: [Z.barre], images: [{ actif: "6c", curseur: { x: 476, y: 244 } }, { actif: "6c", curseur: { x: 420, y: 244 } }, { actif: "6c", curseur: { x: 530, y: 244 } }] },
 ];
-const dureeLecture = (texte) => Math.max(4, Math.round(texte.split(/\s+/).length / 4.5)) * 1000;
+const dureeLecture = (texte) => Math.max(3, Math.round(texte.split(/\s+/).length / 6)) * 1000;
 
 // Place la bulle d'explication SUR l'image, tout près de la partie éclairée (en % du schéma 760 × 430).
 const LARGEUR_BULLE = 300;
@@ -602,7 +602,7 @@ function DemoAntigravity({ explorer }) {
   }, [i, auto, etape]);
   useEffect(() => { // la petite animation de l'étape (images qui s'enchaînent en boucle)
     if (!etape?.images) return;
-    const t = setInterval(() => setImg((k) => (k + 1) % etape.images.length), 1200);
+    const t = setInterval(() => setImg((k) => (k + 1) % etape.images.length), 1000);
     return () => clearInterval(t);
   }, [i, etape]);
   useEffect(() => {
