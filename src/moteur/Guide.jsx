@@ -345,6 +345,10 @@ export const CSS = `
 .ga-ia a { color:#93c5fd; word-break:break-all; }
 .ga-ia-choix { display:flex; align-items:center; gap:10px; margin:6px 0 0; color:#fff; font-weight:700; font-size:16px; }
 .ga-ia-choix span { flex-shrink:0; width:26px; height:26px; border-radius:50%; display:grid; place-items:center; background:#f59e0b; color:#1f1300; font-weight:800; font-size:14px; }
+.ga-points { display:inline-flex; gap:6px; margin-top:4px; }
+.ga-points i { width:9px; height:9px; border-radius:50%; background:#f59e0b; animation:ga-point 1.2s ease-in-out infinite; }
+.ga-points i:nth-child(2) { animation-delay:.2s; } .ga-points i:nth-child(3) { animation-delay:.4s; }
+@keyframes ga-point { 0%,80%,100% { opacity:.25; transform:translateY(0); } 40% { opacity:1; transform:translateY(-5px); } }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
@@ -1047,10 +1051,11 @@ export function Guide() {
   // Une petite fenêtre d'autorisation attend-elle un clic ? Le serveur d'aperçu le déduit du journal d'Antigravity (vite.config.js).
   const [attente, setAttente] = useState(false);
   const [message, setMessage] = useState("");   // le dernier message de l'IA dans Antigravity, affiché tel quel
+  const [reflexion, setReflexion] = useState(null);   // l'IA réfléchit : { reponse } (la réponse que la personne vient d'écrire)
   useEffect(() => {
     let fini = false;
     const voir = () => fetch("./__atelier/attente", { cache: "no-store" }).then((r) => (r.ok ? r.json() : {}))
-      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); } }).catch(() => {});
+      .then((r) => { if (!fini) { setAttente(!!r.attente); setMessage(r.message || ""); setReflexion(r.reflexion ? { reponse: r.reponse || "" } : null); } }).catch(() => {});
     voir();
     const id = setInterval(voir, 2000);
     return () => { fini = true; clearInterval(id); };
@@ -1115,7 +1120,14 @@ export function Guide() {
                       {!fait && <p>{e.texte}</p>}
                     </div>
                   </div>
-                  {!fait && message && <MessageIA texte={message} />}
+                  {!fait && reflexion && !attente && (
+                    <div className="ga-ia ga-reflexion" aria-live="polite">
+                      <p className="ga-ia-titre">🤔 L'IA réfléchit…</p>
+                      {reflexion.reponse && <p>Ta réponse : <b>« {reflexion.reponse} »</b></p>}
+                      <span className="ga-points" aria-hidden="true"><i /><i /><i /></span>
+                    </div>
+                  )}
+                  {!fait && message && !(reflexion && !attente) && <MessageIA texte={message} />}
                   {e.sous && !fait && !message && (
                     <ol className="ga-sous">
                       {e.sous.map(([titre, aide], j) => {

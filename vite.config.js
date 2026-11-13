@@ -96,16 +96,24 @@ function attenteAutorisation() {
       const m = lire(lignes[k])
       if (m.type === 'PLANNER_RESPONSE' && !(m.tool_calls && m.tool_calls.length) && m.content) { message = String(m.content).slice(0, 4000); break }
     }
+    // L'IA réfléchit : la dernière ligne n'est pas un message pour la personne (sa réponse vient d'arriver, ou l'IA agit).
+    const estMessage = d.type === 'PLANNER_RESPONSE' && !(d.tool_calls && d.tool_calls.length) && d.content
+    let reponse = ''
+    for (let k = lignes.length - 1; k >= 0; k--) {
+      const m = lire(lignes[k])
+      if (m.type === 'USER_INPUT') { reponse = (String(m.content || '').match(/<USER_REQUEST>([\s\S]*?)<\/USER_REQUEST>/) || [])[1]?.trim().slice(0, 200) || ''; break }
+    }
+    const reflexion = !estMessage && Date.now() - recent.t < 10 * 60 * 1000
     const appel = d.type === 'PLANNER_RESPONSE' && Array.isArray(d.tool_calls) && d.tool_calls[0]
-    if (!appel) return { attente: false, message }
+    if (!appel) return { attente: false, message, reflexion, reponse }
     const outil = String(appel.name || '')
     const commande = JSON.stringify(appel.args || {})
     const depuis = Date.now() - Date.parse(d.created_at || '')
-    if (!Number.isFinite(depuis)) return { attente: false, message }
+    if (!Number.isFinite(depuis)) return { attente: false, message, reflexion, reponse }
     // Commandes longues connues (copie, installation, aperçu) : on attend plus longtemps avant de conclure.
     const longue = outil === 'run_command' && /git clone|npm install|npm i\b|npm run dev|IsDaemon/.test(commande)
     const seuil = longue ? 45000 : outil === 'run_command' ? 12000 : 3500
-    return { attente: depuis > seuil, outil, message }
+    return { attente: depuis > seuil, outil, message, reflexion: reflexion && !(depuis > seuil), reponse }
   }
   return {
     name: 'atelier-attente-autorisation',
