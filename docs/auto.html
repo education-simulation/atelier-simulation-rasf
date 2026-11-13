@@ -274,8 +274,7 @@ b.cle { color:#fde68a; }
     <div class="nav"><button type="button" class="prec" id="prec">‹ Précédent</button><button type="button" class="suiv" id="suiv">Suivant ›</button></div>
   </div>
 </div>
-<div class="bande" id="bande" role="note" hidden><span class="bfleche" aria-hidden="true">⬅</span>
-  <span><b>Réponds à l'IA</b> <em>dans la zone de message d'Antigravity, en bas à gauche</em><span class="quoi">👉 Écris « continue », puis Entrée. Ensuite, ferme cet onglet (le × en haut).</span></span></div>
+
 <script>
 const etapes = [...document.querySelectorAll(".etape")], ronds = [...document.querySelectorAll("#st li")];
 let n = 0;
@@ -284,7 +283,6 @@ function montrer() {
   ronds.forEach((r, i) => { r.className = i < n ? "fait" : i === n ? "ici" : ""; });
   document.getElementById("prec").hidden = n === 0;
   document.getElementById("suiv").textContent = n === etapes.length - 1 ? "Suivant : fermer cet onglet ›" : "Suivant ›";
-  document.getElementById("bande").hidden = n !== etapes.length - 1;
   // chaque animation repart du début quand on arrive sur son étape
   etapes[n].querySelectorAll("*").forEach((el) => el.getAnimations().forEach((a) => { a.currentTime = 0; }));
 }
