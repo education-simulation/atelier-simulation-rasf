@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Préparer ton IA</title>
+<style>
+html { background:#e9ecf2; }
+body { margin:0; padding:22px 14px 60px; font-family:'Nunito',system-ui,-apple-system,'Segoe UI',sans-serif; color:#e4e4e7; display:flex; justify-content:center; }
+.fen { width:min(860px,100%); background:#0b0b0f; border-radius:16px; overflow:hidden; box-shadow:0 18px 50px rgba(15,23,42,.35); }
+.barre { display:flex; align-items:center; gap:8px; padding:10px 16px; background:#18181b; border-bottom:1px solid #27272a; }
+.barre i { width:11px; height:11px; border-radius:50%; background:#3f3f46; }
+.barre b { margin-left:8px; color:#fff; font-size:14px; }
+.corps { padding:20px 22px 24px; display:grid; gap:16px; }
+h1 { margin:0; font:800 clamp(22px,3.4vw,30px)/1.2 'Outfit',system-ui,sans-serif; color:#fff; }
+.tuiles { display:grid; grid-template-columns:repeat(auto-fit,minmax(150px,1fr)); gap:12px; }
+.tuile { all:unset; cursor:pointer; display:flex; flex-direction:column; align-items:center; gap:8px; text-align:center; background:#16161b; border:2px solid #3f3f46; border-radius:16px; padding:16px 10px; font-weight:800; font-size:16px; color:#fff; }
+.tuile span { font-size:34px; line-height:1; }
+.tuile em { font-style:normal; font-weight:400; font-size:13px; color:#a1a1aa; }
+.tuile:hover { border-color:#f59e0b; }
+.tuile.choisie { border-color:#f59e0b; background:#1f1a10; }
+.panneau { border:2px solid #f59e0b; background:#1f1a10; border-radius:14px; padding:14px 16px; font-size:17px; line-height:1.5; }
+.panneau[hidden] { display:none; }
+.panneau h2 { margin:0 0 8px; font:800 20px 'Outfit',system-ui,sans-serif; color:#fff; }
+.panneau ol { margin:0 0 10px; padding-left:22px; display:grid; gap:6px; }
+b.cle { color:#fde68a; }
+.continue { margin:10px 0 0; background:#0b0b0f; border:2px dashed #f59e0b; border-radius:10px; padding:10px 12px; color:#fde68a; font-weight:800; }
+.aller { all:unset; cursor:pointer; display:inline-block; background:#f59e0b; color:#1f1300; font-weight:800; font-size:16px; border-radius:10px; padding:10px 18px; margin-top:6px; }
+.note { margin:0; color:#a1a1aa; font-size:14px; }
+</style>
+</head>
+<body>
+<div class="fen">
+  <div class="barre"><i></i><i></i><i></i><b>Atelier · Préparer ton IA</b></div>
+  <div class="corps">
+    <h1>Quelle IA utilises-tu ?</h1>
+    <div class="tuiles" id="tuiles">
+      <button type="button" class="tuile" data-ia="antigravity"><span>🚀</span>Antigravity<em>l'application de Google</em></button>
+      <button type="button" class="tuile" data-ia="chatgpt"><span>💬</span>ChatGPT</button>
+      <button type="button" class="tuile" data-ia="claude"><span>✳️</span>Claude</button>
+      <button type="button" class="tuile" data-ia="lechat"><span>🐱</span>Le Chat<em>Mistral</em></button>
+      <button type="button" class="tuile" data-ia="gemini"><span>✨</span>Gemini</button>
+      <button type="button" class="tuile" data-ia="autre"><span>🤖</span>Une autre IA</button>
+    </div>
+
+    <section class="panneau" data-pour="antigravity" hidden>
+      <h2>🚀 Antigravity</h2>
+      Antigravity demande quelques réglages (fermer des fenêtres, le modèle, le mode « Auto »), montrés pas à pas, en animation.
+      <div><button type="button" class="aller" data-lien="auto.html">Configurer Antigravity ›</button></div>
+    </section>
+
+    <section class="panneau" data-pour="chatgpt" hidden>
+      <h2>💬 ChatGPT</h2>
+      <ol>
+        <li>Rien à régler : ChatGPT lira les consignes sur Internet et affichera ta simulation dans son <b class="cle">canvas</b> (l'aperçu à côté de la conversation).</li>
+        <li>Si ChatGPT dit qu'il ne peut pas lire une page web : sous la zone de message, active <b class="cle">« Rechercher »</b> (le globe 🌐), puis réécris « continue ».</li>
+      </ol>
+      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
+    </section>
+
+    <section class="panneau" data-pour="claude" hidden>
+      <h2>✳️ Claude</h2>
+      <ol>
+        <li>Rien à régler : Claude lira les consignes sur Internet et affichera ta simulation dans un <b class="cle">artefact</b> (l'aperçu à côté de la conversation).</li>
+        <li>Si Claude dit qu'il ne peut pas lire une page web : dans le menu des outils, sous la zone de message, active <b class="cle">la recherche web</b>, puis réécris « continue ».</li>
+      </ol>
+      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
+    </section>
+
+    <section class="panneau" data-pour="lechat" hidden>
+      <h2>🐱 Le Chat (Mistral)</h2>
+      <ol>
+        <li>Sous la zone de message, dans les outils, active <b class="cle">« Recherche web »</b> et <b class="cle">« Canvas »</b>.</li>
+        <li>Le Chat lira les consignes sur Internet et affichera ta simulation dans son canvas.</li>
+      </ol>
+      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
+    </section>
+
+    <section class="panneau" data-pour="gemini" hidden>
+      <h2>✨ Gemini</h2>
+      <ol>
+        <li>Sous la zone de message, choisis l'outil <b class="cle">« Canvas »</b> : Gemini y affichera ta simulation.</li>
+        <li>Gemini lira les consignes sur Internet.</li>
+      </ol>
+      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
+    </section>
+
+    <section class="panneau" data-pour="autre" hidden>
+      <h2>🤖 Une autre IA</h2>
+      <ol>
+        <li>Ton IA doit pouvoir <b class="cle">lire une page web</b> (recherche web activée) et <b class="cle">afficher une page HTML</b> (un aperçu, souvent appelé « canvas » ou « artefact »).</li>
+        <li>Sinon, elle te donnera le code de la page à enregistrer dans un fichier <b class="cle">.html</b>, à ouvrir d'un double-clic.</li>
+      </ol>
+      <p class="continue">✍️ Reviens dans la conversation et écris <b class="cle">continue</b>, puis Entrée.</p>
+    </section>
+
+    <p class="note">Ta simulation sera une seule page HTML : rien à installer.</p>
+  </div>
+</div>
+<script>
+// Une tuile choisie montre ses réglages ; le choix est retenu au rechargement.
+const montrer = (ia) => {
+  document.querySelectorAll(".tuile").forEach((t) => t.classList.toggle("choisie", t.dataset.ia === ia));
+  document.querySelectorAll(".panneau").forEach((p) => { p.hidden = p.dataset.pour !== ia; });
+  try { localStorage.setItem("atelier.ia", ia); } catch { /* aperçu sans stockage */ }
+};
+document.getElementById("tuiles").addEventListener("click", (e) => { const t = e.target.closest(".tuile"); if (t) montrer(t.dataset.ia); });
+document.addEventListener("click", (e) => { const b = e.target.closest("[data-lien]"); if (b) location.href = b.dataset.lien; });
+try { const ia = localStorage.getItem("atelier.ia"); if (ia) montrer(ia); } catch { /* rien */ }
+</script>
+</body>
+</html>

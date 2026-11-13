@@ -34,18 +34,18 @@ Pour l'instant, une seule simulation : **le métamérisme** (`ateliers/metameris
 
 ## Le démarrage, dans cet ordre
 
-> ⚠️ **Antigravity : au tout premier « continue » de la personne, ton premier message est TOUJOURS la vérification de la configuration (🔎, voir étape 0), jamais la présentation.**
+> ⚠️ **Au tout premier « continue » de la personne : si tu es Antigravity, ton premier message est TOUJOURS la vérification de la configuration (🔎, voir étape 0), jamais la présentation. Si tu es une IA de conversation (ChatGPT, Claude…), passe directement à l'étape 1.**
 
-**0. Antigravity seulement : passer en « Auto », avant tout** — ton **tout premier** message, **avant la moindre commande** (une commande, en mode « Default », ouvrirait une fenêtre d'autorisation en anglais que la personne ne comprend pas). Aéré exactement ainsi :
+**0. Préparer l'IA, avant tout (lien de la page « Préparer ton IA »)** — ton **tout premier** message, **avant la moindre commande** (une commande, en mode « Default », ouvrirait une fenêtre d'autorisation en anglais que la personne ne comprend pas). Aéré exactement ainsi :
 ```
 **💬 Pour toi :**
 
-Bonjour ! Avant de commencer, un seul réglage, pour que je puisse travailler sans te demander la permission à chaque fois.
+Bonjour ! Avant de commencer, prépare ton IA.
 
-👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/auto.html
+👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/preparer.html
 ```
 Puis attends : la page dit d'écrire « continue ».
-**Quand la personne écrit « continue » : vérifie la configuration, dans un message à part, avant la présentation.**
+**Quand la personne écrit « continue »** — **IA de conversation** : étape 1 directement. **Antigravity : vérifie la configuration, dans un message à part, avant la présentation.**
 - **Le modèle** : regarde le **dernier** changement de modèle signalé dans les informations des messages de la conversation (« The user changed setting `Model Selection` … to … »). Il doit être **Gemini 3.8 Flash (Low)**.
 - **Le mode « Auto »** ne t'est pas communiqué : demande à la personne de le regarder.
 Message, aéré exactement ainsi :
@@ -59,7 +59,7 @@ Message, aéré exactement ainsi :
 👀 Mode : en bas à droite de la zone de message, tu dois lire « 🛡 Auto ».
 ```
 Choix : 1. **C'est bon, je vois « Auto »** · 2. **Je vois autre chose**. Si le modèle n'est pas Gemini 3.8 Flash (Low), remplace la ligne ✅ par « ⚠️ Modèle : <le modèle trouvé> — refais l'étape 2 de la page de configuration (Gemini 3.8 Flash, niveau Low) » avec le lien de la page. « Je vois autre chose » : redonne le lien de la page (étape 3, le mode Auto), puis repose la question. Quand tout est bon : étape 1.
-**Si la phrase de départ t'a déjà fait donner ce lien** : ne le redonne pas. Mais quand la personne écrit « continue », **fais toujours la vérification de la configuration ci-dessus** (message 🔎), avant la présentation.
+**Si la phrase de départ t'a déjà fait donner ce lien** (« Clique sur ce lien pour préparer ton IA… ») : ne le redonne pas. Antigravity : au « continue », **fais toujours la vérification de la configuration ci-dessus** (message 🔎), avant la présentation.
 
 **1. La présentation et le choix** — question à choix, aérée exactement ainsi :
 ```

@@ -11,22 +11,17 @@ Pour l'instant : **une simulation sur le métamérisme**, à partir d'une page m
 👉 **Tout est expliqué, avec une image, sur cette page : https://education-simulation.github.io/atelier-simulation-rasf/demarrer.html** (c'est le lien à envoyer aux profs).
 
 1. Installe **Antigravity** et connecte-toi avec ton compte d'établissement.
-2. Ouvre une nouvelle conversation. En bas, à droite de la zone de message (à gauche du micro 🎤), clique sur **« Default »** et choisis **« Auto »** : l'IA pourra travailler sans te demander la permission à chaque commande.
-3. Colle cette phrase :
+2. Ouvre une nouvelle conversation et colle cette phrase :
 
    ```text
-   Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity : » suivi du lien de la page auto.html du site GitHub Pages education-simulation/atelier-simulation-rasf, rien d'autre, puis attends ma réponse. Ensuite, lis le fichier AGENTS.md de ce dépôt et suis-le pour me guider.
+   Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour préparer ton IA : » suivi du lien de la page preparer.html du site GitHub Pages education-simulation/atelier-simulation-rasf, rien d'autre, puis attends ma réponse. Ensuite, lis le fichier AGENTS.md de ce dépôt GitHub et suis-le pour me guider.
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
 
-### Avec ChatGPT, Claude, Le Chat (Mistral) ou Gemini
+### Avec n'importe quelle IA
 
-Pas de dossier ni de serveur : l'IA affiche la page dans son aperçu (« canvas » ou « artefact ») et la modifie là. Colle cette phrase (l'IA doit pouvoir lire une adresse web) :
-
-```text
-Lis le fichier AGENTS.md à cette adresse : https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/AGENTS.md, puis suis-le pour me guider.
-```
+La même phrase marche avec Antigravity, ChatGPT, Claude, Le Chat (Mistral) ou Gemini : la page « Préparer ton IA » montre les réglages de chacune. Avec Antigravity, la simulation est dans un dossier du Bureau ; avec les autres, elle s'affiche dans l'aperçu de l'IA (« canvas » ou « artefact »).
 
 ### Les fois suivantes
 
