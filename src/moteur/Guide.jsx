@@ -230,6 +230,9 @@ export const CSS = `
 .g-liste-parties button { all:unset; box-sizing:border-box; width:100%; display:flex; align-items:center; gap:8px; padding:5px 8px; border-radius:9px; font-size:14px; font-weight:700; color:#334155; cursor:pointer; border:2px solid transparent; }
 .g-liste-parties button:hover, .g-liste-parties button.actif { background:#fffbeb; border-color:#f59e0b; color:#0f172a; }
 .g-liste-parties .g-num-partie { min-width:24px; height:22px; font-size:12px; }
+.g-apparait { animation:g-fondu .45s; }
+.g-clic { animation:g-clic 1.8s ease-out infinite; transform-origin:center; transform-box:fill-box; }
+@keyframes g-clic { 0%,55% { opacity:0; transform:scale(.4); } 65% { opacity:1; } 100% { opacity:0; transform:scale(1.8); } }
 .g-trou, .g-zone { transition: x .55s cubic-bezier(.2,.8,.2,1), y .55s cubic-bezier(.2,.8,.2,1), width .55s cubic-bezier(.2,.8,.2,1), height .55s cubic-bezier(.2,.8,.2,1); }
 .v { max-width:min(1000px, max(340px, calc((100vh - 300px) * 1.77))); margin:0 auto; display:flex; flex-direction:column; gap:14px; }
 .v-tete { display:flex; align-items:center; gap:12px; flex-wrap:wrap; }
@@ -252,6 +255,7 @@ export const CSS = `
 .v-points { display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
 .v-point { all:unset; cursor:pointer; min-width:28px; height:28px; border-radius:14px; display:grid; place-items:center; font-size:12px; font-weight:800; background:#e2e8f0; color:#475569; transition:all .2s; }
 .v-point.vu { background:#fde68a; color:#92400e; } .v-point.ici { background:#f59e0b; color:#1f1300; transform:scale(1.15); }
+.v-explorer { width:100%; max-height:none; overflow:visible; }
 .v-accueil { text-align:center; background:#fff; border-radius:22px; padding:34px 24px; box-shadow:0 8px 28px rgba(15,23,42,.1); animation:v-entre .5s; }
 .v-accueil .g-main { font-size:60px; }
 .v-accueil h1 { font:800 clamp(28px,4.5vw,42px)/1.1 'Outfit',sans-serif; margin:10px 0; }
@@ -309,9 +313,11 @@ function Pastille({ id, actif, setActif }) {
   );
 }
 
-function SchemaAntigravity({ actif, setActif, spot = false }) {
+function SchemaAntigravity({ actif, setActif, spot = false, zones = null, pastilles = true, conv = 0, replie = false, ferme = false, curseur = null, etiquettes = false }) {
   const t = { fontFamily: "Nunito, system-ui, sans-serif" };
-  const z = actif && ZONES[actif];
+  // zones : la démo passe ses propres rectangles (plusieurs possibles) ; sinon, la zone du numéro actif.
+  const liste = zones || (actif && ZONES[actif] ? [ZONES[actif]] : []);
+  const z = liste[0];
   return (
     <svg viewBox="0 0 760 430" role="img" aria-label="Schéma de la fenêtre d'Antigravity, avec ses parties numérotées" style={{ width: "100%", height: "auto", display: "block" }}>
       <rect x="0" y="0" width="760" height="430" rx="14" fill="#0b0b0f" />
@@ -324,17 +330,30 @@ function SchemaAntigravity({ actif, setActif, spot = false }) {
       <rect x="0" y="32" width="150" height="398" fill="#16161b" />
       <rect x="10" y="44" width="130" height="22" rx="6" fill="#26262e" /><text x="20" y="59" fontSize="11" fill="#e4e4e7" style={t}>+ New Conversation</text>
       <text x="16" y="92" fontSize="10" fill="#71717a" style={t}>Conversations</text>
-      <rect x="10" y="100" width="130" height="20" rx="5" fill="#26262e" /><text x="18" y="114" fontSize="10" fill="#d4d4d8" style={t}>Création de mon site</text>
+      <rect x="10" y="100" width="130" height="20" rx="5" fill={conv === 0 ? "#3a3a44" : "transparent"} style={{ transition: "fill .3s" }} /><text x="18" y="114" fontSize="10" fill="#d4d4d8" style={t}>Création de mon site</text>
+      <rect x="10" y="124" width="130" height="20" rx="5" fill={conv === 1 ? "#3a3a44" : "transparent"} style={{ transition: "fill .3s" }} /><text x="18" y="138" fontSize="10" fill="#d4d4d8" style={t}>Ma 1re simulation</text>
       <text x="16" y="414" fontSize="10" fill="#a1a1aa" style={t}>⚙ Settings</text>
-      {/* conversation */}
-      <rect x="166" y="48" width="200" height="34" rx="10" fill="#1e1e25" /><text x="176" y="69" fontSize="10" fill="#d4d4d8" style={t}>Crée mon site avec le modèle…</text>
-      <text x="166" y="106" fontSize="10" fill="#71717a" style={t}>Ran commands ›</text>
-      <text x="166" y="132" fontSize="11" fill="#fff" fontWeight="700" style={t}>💬 Pour toi :</text>
-      <text x="166" y="152" fontSize="10.5" fill="#e4e4e7" style={t}>Quel nom pour ton site ?</text>
-      <text x="166" y="174" fontSize="10.5" fill="#d4d4d8" style={t}>1. Mon labo virtuel</text>
-      <text x="166" y="190" fontSize="10.5" fill="#d4d4d8" style={t}>2. La paillasse virtuelle</text>
-      <text x="166" y="206" fontSize="10.5" fill="#d4d4d8" style={t}>3. 😕 Je suis perdu·e</text>
-      <text x="166" y="228" fontSize="10" fill="#a1a1aa" fontStyle="italic" style={t}>✍️ Écris le numéro dans la zone de message</text>
+      {/* conversation (le milieu change avec la conversation choisie à gauche) */}
+      {conv === 0 ? (
+        <g key="c0" className="g-apparait">
+        <rect x="166" y="48" width="200" height="34" rx="10" fill="#1e1e25" /><text x="176" y="69" fontSize="10" fill="#d4d4d8" style={t}>Crée mon site avec le modèle…</text>
+        <text x="166" y="106" fontSize="10" fill="#71717a" style={t}>Ran commands ›</text>
+        <text x="166" y="132" fontSize="11" fill="#fff" fontWeight="700" style={t}>💬 Pour toi :</text>
+        <text x="166" y="152" fontSize="10.5" fill="#e4e4e7" style={t}>Quel nom pour ton site ?</text>
+        <text x="166" y="174" fontSize="10.5" fill="#d4d4d8" style={t}>1. Mon labo virtuel</text>
+        <text x="166" y="190" fontSize="10.5" fill="#d4d4d8" style={t}>2. La paillasse virtuelle</text>
+        <text x="166" y="206" fontSize="10.5" fill="#d4d4d8" style={t}>3. 😕 Je suis perdu·e</text>
+        <text x="166" y="228" fontSize="10" fill="#a1a1aa" fontStyle="italic" style={t}>✍️ Écris le numéro dans la zone de message</text>
+        </g>
+      ) : (
+        <g key="c1" className="g-apparait">
+          <rect x="226" y="48" width="200" height="34" rx="10" fill="#1e1e25" /><text x="236" y="69" fontSize="10" fill="#d4d4d8" style={t}>Ajoute une simulation de titrage</text>
+          <text x="166" y="106" fontSize="10" fill="#71717a" style={t}>Edited 2 files ›</text>
+          <text x="166" y="132" fontSize="11" fill="#fff" fontWeight="700" style={t}>💬 Pour toi :</text>
+          <text x="166" y="152" fontSize="10.5" fill="#e4e4e7" style={t}>✅ Ta simulation de titrage est prête.</text>
+          <text x="166" y="172" fontSize="10.5" fill="#d4d4d8" style={t}>👉 Regarde-la à droite, dans ton site.</text>
+        </g>
+      )}
       {/* zone de message */}
       <rect x="160" y="340" width="300" height="74" rx="14" fill="#1e1e25" stroke="#3f3f46" />
       <text x="176" y="366" fontSize="11" fill="#71717a" style={t}>Ask anything…   ← écris ici</text>
@@ -354,7 +373,10 @@ function SchemaAntigravity({ actif, setActif, spot = false }) {
       <rect x="506" y="182" width="224" height="18" rx="5" fill="#dcfce7" /><rect x="506" y="206" width="224" height="18" rx="5" fill="#fef3c7" stroke="#f59e0b" />
       {/* menu des modèles, montré pour 4 et 5 */}
       {/* les pastilles numérotées, sous les fenêtres qui s'ouvrent (menus, Settings…) */}
-      {PARTIES.map((p) => <Pastille key={p.id} id={p.id} actif={actif} setActif={setActif} />)}
+      {/* démo : le menu de gauche replié, le volet de droite fermé */}
+      <rect x="0" y="32" width={replie ? 150 : 0} height="398" fill="#0b0b0f" style={{ transition: "width .6s cubic-bezier(.2,.8,.2,1)" }} />
+      <rect x={ferme ? 476 : 760} y="32" width={ferme ? 284 : 0} height="398" fill="#0b0b0f" style={{ transition: "all .6s cubic-bezier(.2,.8,.2,1)" }} />
+      {pastilles && PARTIES.map((p) => <Pastille key={p.id} id={p.id} actif={actif} setActif={setActif} />)}
       {/* le menu des modèles (comme dans Antigravity), montré pour 4 et 5 */}
       {(actif === "4" || actif === "5") && (
         <g>
@@ -435,129 +457,203 @@ function SchemaAntigravity({ actif, setActif, spot = false }) {
           <defs>
             <mask id="g-trou">
               <rect x="0" y="0" width="760" height="430" fill="#fff" />
-              <rect className="g-trou" x={z.x - 4} y={z.y - 4} width={z.w + 8} height={z.h + 8} rx="10" fill="#000" />
+              {liste.map((r, n) => <rect key={n} className="g-trou" x={r.x - 4} y={r.y - 4} width={r.w + 8} height={r.h + 8} rx="10" fill="#000" />)}
             </mask>
           </defs>
           <rect x="0" y="0" width="760" height="430" rx="14" fill="rgba(2,6,23,.62)" mask="url(#g-trou)" />
         </g>
       )}
-      {/* zone encadrée */}
-      {z && (
-        <rect className="g-zone" x={z.x} y={z.y} width={z.w} height={z.h} rx="8" fill="rgba(245,158,11,.16)" stroke="#f59e0b" strokeWidth="3" pointerEvents="none" />
+      {/* zone(s) encadrée(s) */}
+      {liste.map((r, n) => (
+        <rect key={n} className="g-zone" x={r.x} y={r.y} width={r.w} height={r.h} rx="8" fill="rgba(245,158,11,.10)" stroke="#f59e0b" strokeWidth="3" pointerEvents="none" />
+      ))}
+      {/* démo : le nom des 3 parties */}
+      {etiquettes && [["① Le menu", 75], ["② Antigravity", 312], ["③ Le navigateur", 618]].map(([nom, x]) => (
+        <g key={nom} className="g-apparait" pointerEvents="none">
+          <rect x={x - 62} y="196" width="124" height="34" rx="17" fill="#f59e0b" stroke="#fff" strokeWidth="2.5" />
+          <text x={x} y="218" fontSize="14" fontWeight="800" fill="#1f1300" textAnchor="middle" style={t}>{nom}</text>
+        </g>
+      ))}
+      {/* démo : la souris qui clique */}
+      {curseur && (
+        <g pointerEvents="none" style={{ transform: `translate(${curseur.x}px, ${curseur.y}px)`, transition: "transform .7s cubic-bezier(.2,.8,.2,1)" }}>
+          <circle r="11" fill="rgba(251,191,36,.45)" className="g-clic" />
+          <path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#0b0b0f" strokeWidth="1.3" />
+        </g>
       )}
     </svg>
   );
 }
 
-export function FenetreAntigravity({ fermer }) {
+// Les parties numérotées, à explorer (survol / clic) : dans la fenêtre du guide et sur la page en ligne (mode « Explorer »).
+function ExplorerAntigravity({ fermer, bouton }) {
   const [actif, setActif] = useState(null);     // partie survolée
   const [choisi, setChoisi] = useState("3");    // partie cliquée (reste affichée)
+  const montre = actif || choisi;
+  const fiche = PARTIES.find((p) => p.id === montre);
+  const survol = (id) => { setActif(id); if (id) setChoisi(id); };
+  return (
+    <>
+      <div className="g-aide-tete">
+        <h2 id="g-aide-titre"><span aria-hidden="true">🧭</span> Antigravity en un coup d'œil</h2>
+        <span className="g-aide-astuce" style={{ margin: 0, flex: 1 }}>Survole ou clique un numéro : la partie s'entoure en orange et son explication s'affiche sous l'image.</span>
+        {bouton}
+        {fermer && <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>}
+      </div>
+      <div className="g-aide-corps">
+        <div className="g-aide-schema">
+          <SchemaAntigravity actif={montre} setActif={survol} />
+          {fiche && (
+            <div className="g-fiche" aria-live="polite">
+              <b><span className="g-num-partie" aria-hidden="true">{fiche.id}</span> {fiche.titre}</b>
+              <p>{fiche.texte}</p>
+            </div>
+          )}
+        </div>
+        <aside className="g-aide-cote">
+          <ol className="g-liste-parties">
+            {PARTIES.map((p) => (
+              <li key={p.id}>
+                <button type="button" className={montre === p.id ? "actif" : ""} onMouseEnter={() => survol(p.id)} onMouseLeave={() => setActif(null)} onFocus={() => survol(p.id)} onClick={() => setChoisi(p.id)}>
+                  <span className="g-num-partie" aria-hidden="true">{p.id}</span>{p.titre}
+                </button>
+              </li>
+            ))}
+          </ol>
+        </aside>
+      </div>
+    </>
+  );
+}
+
+export function FenetreAntigravity({ fermer }) {
   useEffect(() => {
     const touche = (e) => { if (e.key === "Escape") fermer(); };
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, [fermer]);
-  const montre = actif || choisi;
-  const fiche = PARTIES.find((p) => p.id === montre);
-  const survol = (id) => { setActif(id); if (id) setChoisi(id); };
   return (
     <div className="g-voile" onClick={fermer}>
       <div className="g-fenetre-aide g-paysage" role="dialog" aria-modal="true" aria-labelledby="g-aide-titre" onClick={(e) => e.stopPropagation()}>
-        <div className="g-aide-tete">
-          <h2 id="g-aide-titre"><span aria-hidden="true">🧭</span> Antigravity en un coup d'œil</h2>
-          <span className="g-aide-astuce" style={{ margin: 0, flex: 1 }}>Survole ou clique un numéro : la partie s'entoure en orange et son explication s'affiche sous l'image.</span>
-          <button type="button" className="g-fermer" onClick={fermer} aria-label="Fermer">×</button>
-        </div>
-        <div className="g-aide-corps">
-          <div className="g-aide-schema">
-            <SchemaAntigravity actif={montre} setActif={survol} />
-            {fiche && (
-              <div className="g-fiche" aria-live="polite">
-                <b><span className="g-num-partie" aria-hidden="true">{fiche.id}</span> {fiche.titre}</b>
-                <p>{fiche.texte}</p>
-              </div>
-            )}
-          </div>
-          <aside className="g-aide-cote">
-            <ol className="g-liste-parties">
-              {PARTIES.map((p) => (
-                <li key={p.id}>
-                  <button type="button" className={montre === p.id ? "actif" : ""} onMouseEnter={() => survol(p.id)} onMouseLeave={() => setActif(null)} onFocus={() => survol(p.id)} onClick={() => setChoisi(p.id)}>
-                    <span className="g-num-partie" aria-hidden="true">{p.id}</span>{p.titre}
-                  </button>
-                </li>
-              ))}
-            </ol>
-          </aside>
-        </div>
+        <ExplorerAntigravity fermer={fermer} />
       </div>
     </div>
   );
 }
 
-// --- Visite guidée d'Antigravity : une partie après l'autre, comme la présentation d'un site (page en ligne aide/antigravity.html) ---
-const dureeLecture = (texte) => Math.max(6, Math.round(texte.split(/\s+/).length / 3)) * 1000;
+// --- Démo d'Antigravity : la présentation animée, partie par partie (page en ligne aide/antigravity.html) ---
+// Chaque étape : les zones éclairées (coordonnées du schéma) et, si besoin, une petite animation (images qui s'enchaînent).
+const Z = {
+  gauche: { x: 0, y: 32, w: 150, h: 398 }, milieu: { x: 152, y: 32, w: 322, h: 398 }, droite: { x: 476, y: 32, w: 284, h: 398 },
+  reduire: { x: 59, y: 3, w: 28, h: 26 }, historique: { x: 158, y: 40, w: 312, h: 200 }, prompt: { x: 160, y: 340, w: 300, h: 40 },
+  reglages: { x: 164, y: 386, w: 268, h: 24 }, conversations: { x: 6, y: 96, w: 138, h: 52 },
+  onglets: { x: 478, y: 34, w: 236, h: 22 }, adresse: { x: 480, y: 60, w: 276, h: 20 }, fermer: { x: 702, y: 3, w: 26, h: 26 },
+  barre: { x: 468, y: 60, w: 16, h: 330 },
+};
+const DEMO = [
+  { titre: "Les 3 parties d'Antigravity", texte: "L'écran d'Antigravity a 3 parties : à gauche le menu, au milieu Antigravity (là où tu parles avec l'IA Gemini), à droite un navigateur.", zones: [Z.gauche, Z.milieu, Z.droite], etiquettes: true },
+  { titre: "① Le menu, à gauche", texte: "Tout en haut, « New Conversation » ouvre une nouvelle conversation. Dessous, la liste de tes conversations. Tout en bas, « Settings » : les réglages, et la déconnexion.", zones: [Z.gauche] },
+  { titre: "Réduire le menu", texte: "Le petit rectangle tout en haut à gauche replie le menu pour gagner de la place. Un 2e clic le rouvre.", zones: [Z.reduire], images: [{ curseur: { x: 72, y: 18 } }, { curseur: { x: 72, y: 18 }, replie: true }] },
+  { titre: "② Au milieu : Antigravity", texte: "C'est ici que tu parles avec l'IA Gemini : elle t'écrit, tu lui réponds.", zones: [Z.milieu] },
+  { titre: "L'historique", texte: "Les messages de la conversation, du plus ancien au plus récent. Ceux qui sont pour toi commencent par 💬 Pour toi. Le reste (« Ran commands »…) est technique : tu peux l'ignorer.", zones: [Z.historique] },
+  { titre: "La zone de prompt", texte: "Tout en bas, « Ask anything… » : écris ici ta réponse ou ta demande (ton « prompt »), puis appuie sur Entrée. Le micro 🎤 permet de dicter.", zones: [Z.prompt] },
+  { titre: "Le modèle, l'usage et « Auto »", texte: "Sous la zone de prompt : le modèle d'IA (Gemini 3.8 Flash, Low ou Medium suffisent), dans son menu « View Usage » montre ce qu'il te reste pour la semaine, et « Auto » laisse l'IA travailler seule en te demandant la permission quand il le faut.", zones: [Z.reglages], images: [{}, { actif: "4" }, { actif: "5" }] },
+  { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
+  { titre: "③ À droite : le navigateur", texte: "Un navigateur intégré à Antigravity, comme Chrome : tu y vois ta page « J'en suis où » et ton site.", zones: [Z.droite] },
+  { titre: "Les onglets", texte: "Comme dans Chrome : un clic sur un onglet pour passer de l'un à l'autre, le × pour le fermer, le + pour en ouvrir un nouveau, ↗ pour l'ouvrir dans ton navigateur habituel.", zones: [Z.onglets] },
+  { titre: "L'adresse : localhost", texte: "« localhost » veut dire « ton ordinateur » : ton site y tourne en brouillon et toi seul le vois. Il sera visible par tous une fois mis en ligne.", zones: [Z.adresse] },
+  { titre: "Refermer le navigateur", texte: "Le rectangle tout en haut à droite ferme le navigateur ; un 2e clic le rouvre.", zones: [Z.fermer], images: [{ curseur: { x: 716, y: 18 } }, { curseur: { x: 716, y: 18 }, ferme: true }] },
+  { titre: "Régler la largeur", texte: "La fine barre verticale entre le milieu et le navigateur se déplace : garde le bouton de la souris appuyé dessus et glisse à gauche ou à droite.", zones: [Z.barre], images: [{ actif: "6c", curseur: { x: 476, y: 244 } }, { actif: "6c", curseur: { x: 420, y: 244 } }, { actif: "6c", curseur: { x: 530, y: 244 } }] },
+];
+const dureeLecture = (texte) => Math.max(7, Math.round(texte.split(/\s+/).length / 3)) * 1000;
 
-export function VisiteAntigravity() {
-  const [i, setI] = useState(-1);          // -1 : accueil ; PARTIES.length : fin
-  const [auto, setAuto] = useState(true);  // lecture automatique (on peut la mettre en pause)
-  const fin = i >= PARTIES.length;
-  const partie = i >= 0 && !fin ? PARTIES[i] : null;
-  const aller = (n) => setI(Math.max(0, Math.min(PARTIES.length, n)));
-  useEffect(() => {
-    if (!partie || !auto) return;
-    const t = setTimeout(() => setI((n) => n + 1), dureeLecture(partie.texte));
+function DemoAntigravity({ explorer }) {
+  const [i, setI] = useState(0);
+  const [auto, setAuto] = useState(true);
+  const [img, setImg] = useState(0);
+  const fin = i >= DEMO.length;
+  const etape = fin ? null : DEMO[i];
+  const aller = (n) => { setImg(0); setI(Math.max(0, Math.min(DEMO.length, n))); };
+  useEffect(() => { // passage automatique à l'étape suivante
+    if (!etape || !auto) return;
+    const t = setTimeout(() => { setImg(0); setI((n) => n + 1); }, dureeLecture(etape.texte));
     return () => clearTimeout(t);
-  }, [i, auto, partie]);
+  }, [i, auto, etape]);
+  useEffect(() => { // la petite animation de l'étape (images qui s'enchaînent en boucle)
+    if (!etape?.images) return;
+    const t = setInterval(() => setImg((k) => (k + 1) % etape.images.length), 1800);
+    return () => clearInterval(t);
+  }, [i, etape]);
   useEffect(() => {
     const touche = (e) => {
-      if (e.key === "ArrowRight") { setAuto(false); setI((n) => Math.min(PARTIES.length, n + 1)); }
-      if (e.key === "ArrowLeft") { setAuto(false); setI((n) => Math.max(0, n - 1)); }
-      if (e.key === " ") { e.preventDefault(); setAuto((a) => !a); }
+      if (e.key === "ArrowRight") { setAuto(false); setImg(0); setI((n) => Math.min(DEMO.length, n + 1)); }
+      if (e.key === "ArrowLeft") { setAuto(false); setImg(0); setI((n) => Math.max(0, n - 1)); }
     };
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, []);
-
-  if (i < 0) return (
-    <div className="v"><div className="v-accueil">
-      <span className="g-main" aria-hidden="true">🧭</span>
-      <h1>Découvre Antigravity</h1>
-      <p>Une petite visite en {PARTIES.length} étapes (environ 2 minutes) : chaque partie de l'écran s'allume à son tour, avec son explication.</p>
-      <button type="button" className="v-bouton bleu" onClick={() => { setAuto(true); setI(0); }}>▶ Commencer la visite</button>
-    </div></div>
-  );
   if (fin) return (
-    <div className="v"><div className="v-accueil">
+    <div className="v-accueil">
       <span className="g-main" aria-hidden="true">🎉</span>
       <h1>Tu connais Antigravity !</h1>
       <p>Reviens dans la conversation d'Antigravity et réponds <b>1</b> (« J'ai regardé, on continue »).</p>
-      <button type="button" className="v-bouton" onClick={() => { setAuto(true); setI(0); }}>↺ Revoir la visite</button>
-    </div></div>
+      <div className="v-commandes" style={{ justifyContent: "center" }}>
+        <button type="button" className="v-bouton bleu" onClick={() => { setAuto(true); aller(0); }}>▶ Revoir la démo</button>
+        <button type="button" className="v-bouton orange" onClick={explorer}>🔢 Explorer</button>
+      </div>
+    </div>
   );
+  const vue = etape.images ? etape.images[img % etape.images.length] : {};
   return (
-    <div className="v">
+    <>
       <div className="v-tete">
         <h1><span aria-hidden="true">🧭</span> Découvre Antigravity</h1>
-        <span className="v-compte">Étape {i + 1} sur {PARTIES.length}</span>
+        <span className="v-compte">Étape {i + 1} sur {DEMO.length}</span>
+        <button type="button" className="v-bouton orange" onClick={explorer}>🔢 Explorer</button>
       </div>
-      <div className="v-barre" aria-hidden="true"><div style={{ width: `${((i + 1) / PARTIES.length) * 100}%` }} /></div>
-      <div className="v-scene"><SchemaAntigravity actif={partie.id} setActif={() => {}} spot /></div>
-      <div className="v-bulle" key={partie.id} aria-live="polite">
-        <h2><span className="g-num-partie" aria-hidden="true">{partie.id}</span> {partie.titre}</h2>
-        <p>{partie.texte}</p>
-        {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeLecture(partie.texte)}ms` }} /></div>}
+      <div className="v-barre" aria-hidden="true"><div style={{ width: `${((i + 1) / DEMO.length) * 100}%` }} /></div>
+      <div className="v-scene"><SchemaAntigravity spot pastilles={false} zones={etape.zones} etiquettes={etape.etiquettes} setActif={() => {}} {...vue} /></div>
+      <div className="v-bulle" key={i} aria-live="polite">
+        <h2>{etape.titre}</h2>
+        <p>{etape.texte}</p>
+        {auto && <div className="v-minuteur" aria-hidden="true"><div style={{ animationDuration: `${dureeLecture(etape.texte)}ms` }} /></div>}
       </div>
       <div className="v-commandes">
         <button type="button" className="v-bouton" onClick={() => { setAuto(false); aller(i - 1); }} disabled={i === 0} style={i === 0 ? { opacity: .4, cursor: "default" } : null}>‹ Précédent</button>
         <div className="v-points">
-          {PARTIES.map((p, n) => (
-            <button key={p.id} type="button" className={`v-point${n === i ? " ici" : n < i ? " vu" : ""}`} onClick={() => { setAuto(false); aller(n); }} aria-label={`Étape ${n + 1} : ${p.titre}`}>{p.id}</button>
+          {DEMO.map((e, n) => (
+            <button key={n} type="button" className={`v-point${n === i ? " ici" : n < i ? " vu" : ""}`} onClick={() => { setAuto(false); aller(n); }} aria-label={`Étape ${n + 1} : ${e.titre}`}>{n + 1}</button>
           ))}
         </div>
-        <button type="button" className="v-bouton orange" onClick={() => setAuto((a) => !a)}>{auto ? "⏸ Pause" : "▶ Lecture"}</button>
-        <button type="button" className="v-bouton bleu" onClick={() => { setAuto(false); aller(i + 1); }}>{i === PARTIES.length - 1 ? "Terminer ✓" : "Suivant ›"}</button>
+        <button type="button" className="v-bouton" onClick={() => setAuto((a) => !a)}>{auto ? "⏸ Pause" : "▶ Lecture"}</button>
+        <button type="button" className="v-bouton bleu" onClick={() => { setAuto(false); aller(i + 1); }}>{i === DEMO.length - 1 ? "Terminer ✓" : "Suivant ›"}</button>
       </div>
+    </>
+  );
+}
+
+// La page en ligne : un accueil avec deux boutons (Démo / Explorer), et depuis chaque mode un bouton vers l'autre.
+export function VisiteAntigravity() {
+  const [mode, setMode] = useState("accueil");
+  return (
+    <div className="v">
+      {mode === "accueil" && (
+        <div className="v-accueil">
+          <span className="g-main" aria-hidden="true">🧭</span>
+          <h1>Découvre Antigravity</h1>
+          <p>Deux façons de le découvrir : la <b>démo</b>, une présentation animée d'environ 2 minutes, ou <b>explorer</b> l'écran toi-même, partie par partie, avec les numéros.</p>
+          <div className="v-commandes" style={{ justifyContent: "center" }}>
+            <button type="button" className="v-bouton bleu" onClick={() => setMode("demo")}>▶ Démo</button>
+            <button type="button" className="v-bouton orange" onClick={() => setMode("explorer")}>🔢 Explorer</button>
+          </div>
+        </div>
+      )}
+      {mode === "demo" && <DemoAntigravity explorer={() => setMode("explorer")} />}
+      {mode === "explorer" && (
+        <div className="g-fenetre-aide g-paysage v-explorer">
+          <ExplorerAntigravity bouton={<button type="button" className="v-bouton bleu" onClick={() => setMode("demo")}>▶ Démo</button>} />
+        </div>
+      )}
     </div>
   );
 }
