@@ -329,7 +329,8 @@ export const CSS = `
 .ga .g-regle b { color:#fff; }
 .ga { padding-bottom:110px !important; }
 .ga-repondre { position:fixed; left:0; right:0; bottom:0; z-index:40; display:flex; align-items:center; gap:12px; background:#f59e0b; color:#1f1300; padding:10px 16px; box-shadow:0 -6px 24px rgba(15,23,42,.25); font-size:16px; line-height:1.35; }
-.ga-repondre.alerte { background:#dc2626; color:#fff; animation:ga-alerte 1.2s ease-in-out infinite; }
+.ga-repondre.alerte { bottom:140px; background:#dc2626; color:#fff; animation:ga-alerte 1.2s ease-in-out infinite; }
+/* La fenêtre d'autorisation s'affiche AU-DESSUS de la zone de message d'Antigravity : la bande rouge monte à sa hauteur. */
 @keyframes ga-alerte { 0%,100% { background:#dc2626; } 50% { background:#991b1b; } }
 .ga-fleche { font-size:34px; font-weight:800; line-height:1; animation:ga-fleche 1s ease-in-out infinite; }
 @keyframes ga-fleche { 0%,100% { transform:translateX(0); } 50% { transform:translateX(-12px); } }
