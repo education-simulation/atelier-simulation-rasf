@@ -292,6 +292,10 @@ export const CSS = `
 .st-etape:first-child::before { display:none; }
 .st-etape.fait::before, .st-etape.ici::before { background:#22c55e; }
 .st-etape a { text-decoration:none; z-index:1; }
+.st-bouton { all:unset; cursor:pointer; z-index:1; border-radius:50%; }
+.st-bouton:focus-visible { outline:3px solid #fde68a; outline-offset:3px; }
+.st-bouton:hover .st-rond { transform:scale(1.08); }
+.st-bouton.ouvert .st-rond { box-shadow:0 0 0 4px rgba(34,197,94,.35); }
 .st-rond { position:relative; z-index:1; width:44px; height:44px; border-radius:50%; display:grid; place-items:center; font:800 18px 'Outfit',sans-serif; background:#27272a; color:#a1a1aa; border:3px solid #3f3f46; transition:all .3s; }
 .st-etape.fait .st-rond { background:#16a34a; border-color:#22c55e; color:#fff; }
 .st-etape.ici .st-rond { background:#f59e0b; border-color:#fde68a; color:#1f1300; animation:st-pulse 1.8s ease-in-out infinite; }
@@ -998,7 +1002,10 @@ export function Guide() {
   const nbFaites = ETAPES.filter((_, i) => faites.has(i)).length;
   const toutFini = encours === -1;
   // De la plus récente (en cours) à la première : ce qui se passe maintenant est en haut.
-  const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => faites.has(i) || i === encours).reverse();
+  // Seule l'étape en cours est affichée ; une étape passée réapparaît quand on clique sur son rond vert (et disparaît au 2e clic).
+  const [ouvertes, setOuvertes] = useState(() => new Set());
+  const basculer = (i) => setOuvertes((o) => { const n = new Set(o); if (n.has(i)) n.delete(i); else n.add(i); return n; });
+  const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => i === encours || (faites.has(i) && ouvertes.has(i))).reverse();
   const [mail, setMail] = useState(false);   // la fenêtre « Recevoir les instructions sur ton mail RASF »
   useEffect(() => {
     if (!mail) return;
@@ -1016,7 +1023,6 @@ export function Guide() {
     "Suis l'IA pour Vercel : écris « C'est fait » à chaque étape",
     "Demande à l'IA ce que tu veux, avec tes mots",
   ][encours] || "Demande à l'IA ce que tu veux, avec tes mots";
-  const pageEtape = (i) => `${AIDE_EN_LIGNE}etape.html?n=${i + 1}`;
   useEffect(() => { document.title = "Progression de l'installation"; window.name = "atelier-guide"; }, []);
 
   return (
@@ -1042,7 +1048,9 @@ export function Guide() {
               const rond = <span className="st-rond" aria-hidden="true">{etat === "fait" ? "✓" : i + 1}</span>;
               return (
                 <li key={i} className={`st-etape ${etat}`} aria-current={etat === "ici" ? "step" : undefined}>
-                  {etat === "avenir" ? rond : <a href={pageEtape(i)} target="_blank" rel="noopener noreferrer" title="Infos sur cette étape">{rond}</a>}
+                  {etat === "fait"
+                    ? <button type="button" className={`st-bouton${ouvertes.has(i) ? " ouvert" : ""}`} onClick={() => basculer(i)} title={ouvertes.has(i) ? "Masquer cette étape" : "Revoir cette étape"} aria-pressed={ouvertes.has(i)}>{rond}</button>
+                    : rond}
                   <span className="st-nom">{e.titre}</span>
                 </li>
               );
