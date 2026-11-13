@@ -255,6 +255,7 @@ export const CSS = `
 .v-points { display:flex; gap:6px; flex-wrap:wrap; flex:1; justify-content:center; }
 .v-point { all:unset; cursor:pointer; min-width:28px; height:28px; border-radius:14px; display:grid; place-items:center; font-size:12px; font-weight:800; background:#e2e8f0; color:#475569; transition:all .2s; }
 .v-point.vu { background:#fde68a; color:#92400e; } .v-point.ici { background:#f59e0b; color:#1f1300; transform:scale(1.15); }
+.v-fini { margin:0; background:#dcfce7; border:2px solid #16a34a; border-radius:14px; padding:12px 16px; font-size:17px; color:#14532d; animation:v-entre .45s; }
 .v-explorer { width:100%; max-height:none; overflow:visible; }
 .v-accueil { text-align:center; background:#fff; border-radius:22px; padding:34px 24px; box-shadow:0 8px 28px rgba(15,23,42,.1); animation:v-entre .5s; }
 .v-accueil .g-main { font-size:60px; }
@@ -549,7 +550,7 @@ const Z = {
   reglages: { x: 164, y: 386, w: 268, h: 24 }, modele: { x: 164, y: 386, w: 122, h: 24 }, auto: { x: 352, y: 386, w: 56, h: 24 },
   menuModeles: { x: 164, y: 196, w: 230, h: 186 }, niveaux: { x: 398, y: 214, w: 138, h: 86 }, usage: { x: 398, y: 262, w: 210, h: 112 }, conversations: { x: 6, y: 96, w: 138, h: 52 },
   onglets: { x: 478, y: 34, w: 236, h: 22 }, adresse: { x: 480, y: 60, w: 276, h: 20 }, fermer: { x: 702, y: 3, w: 26, h: 26 },
-  barre: { x: 468, y: 60, w: 16, h: 330 },
+  barre: { x: 468, y: 60, w: 16, h: 330 }, settings: { x: 6, y: 400, w: 84, h: 22 }, fenetreSettings: { x: 12, y: 232, w: 250, h: 160 },
 };
 const DEMO = [
   { titre: "Les 3 parties d'Antigravity", texte: "L'écran d'Antigravity a 3 parties : à gauche le menu, au milieu Antigravity (là où tu parles avec l'IA Gemini), à droite un navigateur.", zones: [Z.gauche, Z.milieu, Z.droite], etiquettes: true },
@@ -567,6 +568,7 @@ const DEMO = [
   { titre: "L'adresse : localhost", texte: "« localhost » veut dire « ton ordinateur » : ton site y tourne en brouillon et toi seul le vois. Il sera visible par tous une fois mis en ligne.", zones: [Z.adresse] },
   { titre: "Refermer le navigateur", texte: "Le rectangle tout en haut à droite ferme le navigateur ; un 2e clic le rouvre.", zones: [Z.fermer], images: [{ curseur: { x: 716, y: 18 } }, { curseur: { x: 716, y: 18 }, ferme: true }] },
   { titre: "Régler la largeur", texte: "La fine barre verticale entre le milieu et le navigateur se déplace : garde le bouton de la souris appuyé dessus et glisse à gauche ou à droite.", zones: [Z.barre], images: [{ actif: "6c", curseur: { x: 476, y: 244 } }, { actif: "6c", curseur: { x: 420, y: 244 } }, { actif: "6c", curseur: { x: 530, y: 244 } }] },
+  { titre: "Quitter Antigravity", texte: "En bas à gauche : Settings, puis ton nom, puis « Sign Out » pour te déconnecter. Pour fermer Antigravity : Cmd + Q (Mac) ou la croix de la fenêtre (Windows).", zones: [Z.settings, Z.fenetreSettings], bulle: { x: 300, y: 250 }, images: [{ curseur: { x: 40, y: 412 } }, { actif: "8", curseur: { x: 200, y: 296 } }, { actif: "8", curseur: { x: 190, y: 356 } }] },
 ];
 const dureeLecture = (texte) => Math.max(3, Math.round(texte.split(/\s+/).length / 6)) * 1000;
 
@@ -613,17 +615,8 @@ function DemoAntigravity({ explorer }) {
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
   }, []);
-  if (fin) return (
-    <div className="v-accueil">
-      <span className="g-main" aria-hidden="true">🎉</span>
-      <h1>Tu connais Antigravity !</h1>
-      <p>Reviens dans la conversation d'Antigravity et réponds <b>1</b> (« J'ai regardé, on continue »).</p>
-      <div className="v-commandes" style={{ justifyContent: "center" }}>
-        <button type="button" className="v-bouton bleu" onClick={() => { setAuto(true); aller(0); }}>▶ Revoir la démo</button>
-        <button type="button" className="v-bouton orange" onClick={explorer}>🔢 Explorer</button>
-      </div>
-    </div>
-  );
+  useEffect(() => { if (fin) explorer(true); }, [fin, explorer]);
+  if (fin) return null;
   const vue = etape.images ? etape.images[img % etape.images.length] : {};
   const zonesVues = vue.zones || etape.zones;
   return (
@@ -659,6 +652,7 @@ function DemoAntigravity({ explorer }) {
 // La page en ligne : un accueil avec deux boutons (Démo / Explorer), et depuis chaque mode un bouton vers l'autre.
 export function VisiteAntigravity() {
   const [mode, setMode] = useState("accueil");
+  const [fini, setFini] = useState(false);   // on arrive sur « Explorer » à la fin de la démo
   return (
     <div className="v">
       {mode === "accueil" && (
@@ -672,10 +666,13 @@ export function VisiteAntigravity() {
           </div>
         </div>
       )}
-      {mode === "demo" && <DemoAntigravity explorer={() => setMode("explorer")} />}
+      {mode === "demo" && <DemoAntigravity explorer={(fini) => { setFini(fini === true); setMode("explorer"); }} />}
+      {mode === "explorer" && fini && (
+        <p className="v-fini">🎉 <b>Tu connais Antigravity !</b> Reviens dans la conversation d'Antigravity et réponds <b>1</b> (« J'ai regardé, on continue »). Ou explore encore l'écran ici, numéro par numéro.</p>
+      )}
       {mode === "explorer" && (
         <div className="g-fenetre-aide g-paysage v-explorer">
-          <ExplorerAntigravity bouton={<button type="button" className="v-bouton bleu" onClick={() => setMode("demo")}>▶ Démo</button>} />
+          <ExplorerAntigravity bouton={<button type="button" className="v-bouton bleu" onClick={() => { setFini(false); setMode("demo"); }}>▶ Démo</button>} />
         </div>
       )}
     </div>
