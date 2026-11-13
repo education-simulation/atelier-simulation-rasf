@@ -44,10 +44,10 @@ export function Atelier() {
                 <span className="at-titre">{t.titre}</span>
                 <span className="at-texte">{t.texte}</span>
               </>;
-              const classe = `at-tuile${k === 0 ? " premier" : ""}${t.bientot ? " bientot" : ""}${t.site ? " site" : ""}`;
+              const cls = `at-tuile${k === 0 ? " premier" : ""}${t.bientot ? " bientot" : ""}${t.site ? " site" : ""}`;
               return t.bientot
-                ? <div key={k} className={classe} aria-disabled="true">{contenu}</div>
-                : <a key={k} className={classe} href={t.lien} target="atelier-site">{contenu}</a>;
+                ? <div key={k} className={cls} aria-disabled="true">{contenu}</div>
+                : <a key={k} className={cls} href={t.lien} target="atelier-site">{contenu}</a>;
             })}
           </div>
         </div>
