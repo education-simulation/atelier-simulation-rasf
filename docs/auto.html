@@ -73,31 +73,44 @@ b.cle { color:#fde68a; }
 .menu p b { color:#fff; display:block; }
 .menu .titre { font-size:12px; color:#71717a; padding:4px 10px; }
 .souris { position:absolute; z-index:5; filter:drop-shadow(0 2px 3px rgba(0,0,0,.6)); }
-/* étape 2 : modèle → Gemini 3.8 Flash → Low (9 s, en boucle) */
-.e2 .menu.modeles { left:30px; bottom:96px; width:230px; animation:m-menu 9s infinite; }
-.e2 .menu.niveaux { left:262px; bottom:120px; width:130px; animation:m-niv 9s infinite; }
+/* étape 2 : modèle → Gemini 3.8 Flash → Low (9 s, en boucle), d'après le vrai menu d'Antigravity */
+.e2h { height:430px; }
+.e2 .menu.modeles { left:20px; top:12px; width:340px; animation:m-menu 9s infinite; }
+.e2 .menu .ligne { display:flex; align-items:center; justify-content:space-between; gap:8px; color:#e4e4e7; padding:6px 10px; font-size:14px; }
+.e2 .menu .ligne.off { color:#52525b; }
+.e2 .menu .ligne.usage { border-top:1px solid #3f3f46; border-radius:0; margin-top:4px; padding-top:9px; }
+.e2 .menu .tag { font-style:normal; font-size:12px; background:#2e2e36; color:#a1a1aa; border-radius:6px; padding:1px 6px; margin-right:auto; }
+.e2 .menu .off .tag { color:#52525b; }
+.e2 .menu .niv { font-style:normal; color:#a1a1aa; margin-left:4px; }
+.e2 .menu .chev { color:#a1a1aa; }
+.e2 .menu.niveaux { left:366px; top:40px; width:150px; animation:m-niv 9s infinite; }
+.e2 .menu.niveaux p { display:flex; justify-content:space-between; align-items:center; }
 .e2 .flash { animation:m-flash 9s infinite; }
 .e2 .low { animation:m-low 9s infinite; }
 .e2 .low b { animation:m-lowb 9s infinite; }
+.e2 .ok-low { opacity:0; animation:m-oklow 9s infinite; }
+.e2 .ok-high { animation:m-okhigh 9s infinite; }
 .e2 .bouton-ag { animation:m-bouton 9s infinite; }
 .e2 .bouton-ag .avant { animation:m-avant 9s infinite; }
 .e2 .bouton-ag .apres { animation:m-apres 9s infinite; }
-.e2 .souris { left:340px; bottom:200px; animation:m-souris 9s infinite; }
+.e2 .souris { left:470px; top:220px; animation:m-souris 9s infinite; }
 @keyframes m-souris {
-  0% { left:340px; bottom:200px; transform:scale(1); }
-  18% { left:110px; bottom:18px; transform:scale(1); }
-  21% { left:110px; bottom:18px; transform:scale(.8); }
-  24% { left:110px; bottom:18px; transform:scale(1); }
-  40% { left:150px; bottom:118px; }
-  56% { left:300px; bottom:184px; transform:scale(1); }
-  59% { left:300px; bottom:184px; transform:scale(.8); }
-  62%, 100% { left:300px; bottom:184px; transform:scale(1); }
+  0% { left:470px; top:220px; transform:scale(1); }
+  18% { left:110px; top:392px; transform:scale(1); }
+  21% { left:110px; top:392px; transform:scale(.8); }
+  24% { left:110px; top:392px; transform:scale(1); }
+  40% { left:200px; top:46px; }
+  56% { left:400px; top:52px; transform:scale(1); }
+  59% { left:400px; top:52px; transform:scale(.8); }
+  62%, 100% { left:400px; top:52px; transform:scale(1); }
 }
 @keyframes m-menu { 0%, 21% { opacity:0; } 23%, 66% { opacity:1; } 69%, 100% { opacity:0; } }
 @keyframes m-niv { 0%, 38% { opacity:0; } 40%, 66% { opacity:1; } 69%, 100% { opacity:0; } }
 @keyframes m-flash { 0%, 36% { background:transparent; } 38%, 66% { background:#2e2e36; } 69%, 100% { background:transparent; } }
 @keyframes m-low { 0%, 58% { background:transparent; } 60%, 100% { background:#f59e0b; } }
 @keyframes m-lowb { 0%, 58% { color:#fff; } 60%, 100% { color:#1f1300; } }
+@keyframes m-oklow { 0%, 58% { opacity:0; } 60%, 100% { opacity:1; color:#1f1300; } }
+@keyframes m-okhigh { 0%, 58% { opacity:1; } 60%, 100% { opacity:0; } }
 @keyframes m-bouton { 0%, 15% { border-color:transparent; box-shadow:none; } 18%, 100% { border-color:#f59e0b; box-shadow:0 0 0 5px rgba(245,158,11,.25); } }
 @keyframes m-avant { 0%, 67% { opacity:1; } 69%, 100% { opacity:0; } }
 @keyframes m-apres { 0%, 67% { opacity:0; } 69%, 100% { opacity:1; } }
@@ -156,9 +169,18 @@ b.cle { color:#fde68a; }
     <section class="etape e2">
       <h2>2. Le modèle : Gemini 3.8 Flash, niveau « Low »</h2>
       En bas, à gauche de la zone de message, clique sur le modèle, passe la souris sur <b class="cle">« Gemini 3.8 Flash »</b>, puis choisis <b class="cle">« Low »</b> : le plus rapide, et il consomme le moins.
-      <div class="ecran" role="img" aria-label="Le menu des modèles d'Antigravity : Gemini 3.8 Flash, niveau Low">
-        <div class="menu modeles"><p class="titre">Model</p><p><b>Gemini 3.8 Pro</b></p><p class="flash"><b>Gemini 3.8 Flash ›</b></p><p><b>Claude Sonnet</b></p></div>
-        <div class="menu niveaux"><p class="low"><b>Low</b></p><p><b>Medium</b></p><p><b>High</b></p></div>
+      <div class="ecran e2h" role="img" aria-label="Le menu des modèles d'Antigravity : Gemini 3.8 Flash, niveau Low">
+        <div class="menu modeles">
+          <p class="titre">Model</p>
+          <p class="ligne flash"><span>Gemini 3.8 Flash <em class="niv">High</em></span><span class="chev">›</span></p>
+          <p class="ligne">Claude Sonnet 4.6 (Thinking) <i class="tag">Notice ⓘ</i></p>
+          <p class="ligne">Claude Opus 4.6 (Thinking) <i class="tag">Notice ⓘ</i></p>
+          <p class="ligne">GPT-OSS 120B (Medium) <i class="tag">Notice ⓘ</i></p>
+          <p class="ligne off">Gemini 4 Carbon <i class="tag">Unavailable ⓘ</i></p>
+          <p class="ligne off">Gemini 4 Argon <i class="tag">Unavailable ⓘ</i></p>
+          <p class="ligne usage">◔ View Usage <span class="chev">›</span></p>
+        </div>
+        <div class="menu niveaux"><p class="low"><b>Low</b><span class="ok-low">✓</span></p><p><b>Medium</b></p><p class="high"><b>High</b><span class="ok-high">✓</span></p></div>
         <svg class="souris" viewBox="0 0 14 21" width="22" height="33" aria-hidden="true"><path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#000" stroke-width="1.3"/></svg>
         <div class="saisie">Ask anything, @ to mention, / for actions
           <div class="bas"><span>+</span><span class="bouton-ag"><span class="avant">Gemini 3.8 Flash High ⌃</span><span class="apres">Gemini 3.8 Flash Low ⌃</span></span><span class="esp"></span><span>🔒 Default ⌃</span><span>🎤</span><span>⬆</span></div>
