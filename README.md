@@ -15,7 +15,7 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
 3. Colle cette phrase :
 
    ```text
-   Sans rien lancer, donne-moi d'abord ce lien : https://education-simulation.github.io/atelier-simulation-rasf/auto.html et attends ma réponse. Ensuite, lis le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf et suis-le pour me guider.
+   Sans rien lancer, donne-moi d'abord le lien de la page auto.html du site GitHub Pages education-simulation/atelier-simulation-rasf, et attends ma réponse. Ensuite, lis le fichier AGENTS.md de ce dépôt et suis-le pour me guider.
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.

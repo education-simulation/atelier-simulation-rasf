@@ -41,7 +41,7 @@ Bonjour ! Avant de commencer, un seul réglage, pour que je puisse travailler sa
 1. C'est fait
 ```
 (avec la ligne ✍️ habituelle). Puis étape 1.
-**Si la phrase de départ t'a déjà fait donner ce lien** (« Sans rien lancer, donne-moi d'abord ce lien… ») et que la personne a répondu : ne le redonne pas, passe directement à l'étape 1.
+**Si la phrase de départ t'a déjà fait donner ce lien** (« Sans rien lancer, donne-moi d'abord le lien de la page auto.html… ») et que la personne a répondu : ne le redonne pas, passe directement à l'étape 1.
 
 **1. La présentation** — question à choix, aérée exactement ainsi :
 ```
