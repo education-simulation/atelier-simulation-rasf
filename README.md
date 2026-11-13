@@ -15,7 +15,7 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
 3. Colle cette phrase :
 
    ```text
-   Lis le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf avec ton outil de lecture de page web, sans lancer de commande, puis suis-le pour me guider.
+   Lis le fichier AGENTS.md du dépôt GitHub education-simulation/atelier-simulation-rasf, puis suis-le pour me guider.
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
