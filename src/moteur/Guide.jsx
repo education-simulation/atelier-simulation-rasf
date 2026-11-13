@@ -371,6 +371,8 @@ export const CSS = `
 .ga-liens button { color:#bbf7d0; border:1px solid #166534; border-radius:10px; padding:7px 12px; }
 .ga-liens a:hover { background:#172554; } .ga-liens button:hover { background:#052e16; }
 .ga-popup { position:relative; width:min(640px,100%); }
+.ga-poubelle { all:unset; cursor:pointer; margin-left:10px; font-size:17px; line-height:1; padding:5px 8px; border-radius:8px; border:1px solid #3f3f46; }
+.ga-poubelle:hover { background:#3f1d1d; border-color:#7f1d1d; }
 .ga-popup .g-carte { margin:0; }
 .ga-popup .g-fermer { position:absolute; top:10px; right:12px; z-index:2; }
 .ga-clair { display:flex; flex-direction:column; gap:12px; }
@@ -886,20 +888,19 @@ function FenetreStyles({ fermer }) {
 
 // --- Tout supprimer : la phrase à écrire à l'IA pour mettre ce site à la Corbeille ---
 function CarteSupprimer({ dossier, lieu }) {
-  const [ouvert, setOuvert] = useState(false);
   const [copie, setCopie] = useState(false);
   const ou = lieu === "Documents" ? "dans Documents" : "sur le Bureau";
   // La phrase renvoie à CONSIGNES.md : dans une conversation neuve, l'IA ne connaît pas la règle (confirmation, Corbeille).
   const phrase = `Supprime mon site, dossier ${dossier} ${ou} : lis d'abord la section « Supprimer le site » de son fichier CONSIGNES.md et suis-la.`;
   const copier = () => { navigator.clipboard?.writeText(phrase).then(() => { setCopie(true); setTimeout(() => setCopie(false), 2500); }).catch(() => {}); };
   return (
-    <details className="g-carte g-pliable" open={ouvert} onToggle={(e) => setOuvert(e.currentTarget.open)}>
-      <summary><h2><span aria-hidden="true">🗑️</span> Tout supprimer et recommencer</h2><span className="g-chevron" aria-hidden="true">{ouvert ? "Réduire ▴" : "Afficher ▾"}</span></summary>
-      <p style={{ margin: "0 0 10px", color: "#334155" }}>Pour mettre ce site à la Corbeille (le dossier <b>{dossier}</b> {ou}), copie cette phrase et colle-la dans la zone de message d'Antigravity. L'IA Gemini te demandera de confirmer avant de supprimer quoi que ce soit.</p>
+    <section className="g-carte">
+      <h2><span aria-hidden="true">🗑️</span> Tout supprimer et recommencer</h2>
+      <p style={{ margin: "0 0 10px", color: "#334155" }}>Pour mettre ton interface à la Corbeille (le dossier <b>{dossier}</b> {ou}), copie cette phrase et colle-la dans la zone de message d'Antigravity. L'IA Gemini te demandera de confirmer avant de supprimer quoi que ce soit.</p>
       <div className="g-phrase">{phrase}</div>
       <button type="button" className="g-mini" style={{ marginTop: 10 }} onClick={copier}>{copie ? "✅ Copiée : colle-la avec Cmd + V ou Ctrl + V" : "📋 Copier la phrase"}</button>
-      <p className="g-note">Tes autres sites (mon-site-2…) ne sont pas touchés. Ton site en ligne, s'il existe, reste sur Vercel.</p>
-    </details>
+      <p className="g-note">Tes autres interfaces (mon-site-2…) ne sont pas touchées. Ta version en ligne, si elle existe, reste sur Vercel.</p>
+    </section>
   );
 }
 
@@ -1007,12 +1008,13 @@ export function Guide() {
   const basculer = (i) => setOuvertes((o) => { const n = new Set(o); if (n.has(i)) n.delete(i); else n.add(i); return n; });
   const visibles = ETAPES.map((e, i) => ({ e, i })).filter(({ i }) => i === encours || (faites.has(i) && ouvertes.has(i))).reverse();
   const [mail, setMail] = useState(false);   // la fenêtre « Recevoir les instructions sur ton mail RASF »
+  const [poubelle, setPoubelle] = useState(false);   // la fenêtre « Tout supprimer et recommencer »
   useEffect(() => {
-    if (!mail) return;
-    const touche = (e) => { if (e.key === "Escape") setMail(false); };
+    if (!mail && !poubelle) return;
+    const touche = (e) => { if (e.key === "Escape") { setMail(false); setPoubelle(false); } };
     window.addEventListener("keydown", touche);
     return () => window.removeEventListener("keydown", touche);
-  }, [mail]);
+  }, [mail, poubelle]);
   // Ce qu'il faut répondre maintenant, en très court (bande orange en bas à gauche).
   const sousEnCours = encours >= 0 && ETAPES[encours].sous ? ETAPES[encours].sous.findIndex((_, k) => !sousFaites.has(`${encours}.${k + 1}`)) : -1;
   const quoi = [
@@ -1035,7 +1037,7 @@ export function Guide() {
         <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>
       </div>
       <div className="ga-fenetre">
-        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Progression de l'installation</b><em>ce n'est pas ton interface</em></div>
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Progression de l'installation</b><em>ce n'est pas ton interface</em><button type="button" className="ga-poubelle" onClick={() => setPoubelle(true)} title="Tout supprimer et recommencer" aria-label="Tout supprimer et recommencer">🗑️</button></div>
         <div className="ga-corps">
           <div className="ga-progres-tete">
             <h1>Progression de l'installation de ton interface simulations</h1>
@@ -1115,9 +1117,14 @@ export function Guide() {
             </div>
           )}
 
-          <div className="ga-clair">
-            <CarteSupprimer dossier={suivi.dossier || "mon-site"} lieu={suivi.lieu || "Bureau"} />
-          </div>
+          {poubelle && (
+            <div className="g-voile" onClick={() => setPoubelle(false)}>
+              <div className="ga-popup" role="dialog" aria-modal="true" aria-label="Tout supprimer et recommencer" onClick={(e) => e.stopPropagation()}>
+                <button type="button" className="g-fermer" onClick={() => setPoubelle(false)} aria-label="Fermer">×</button>
+                <CarteSupprimer dossier={suivi.dossier || "mon-site"} lieu={suivi.lieu || "Bureau"} />
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>
