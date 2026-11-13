@@ -281,6 +281,10 @@ function AideOutil({ outil, fermer }) {
   const verifs = modele && outil.verifier ? outil.verifier(modele) : null;
   // Équations : celles des modèles par défaut, ou celles que la personne a fait écrire dans SES modèles (rien sinon).
   const equations = outil.equations || (modele && Array.isArray(modele.EQUATIONS) ? modele.EQUATIONS : null);
+  // Des onglets plutôt qu'une longue page : les modèles, les équations, les données (un sous-onglet par graphique).
+  const [onglet, setOnglet] = useState("modeles");
+  const [graphe, setGraphe] = useState(0);
+  const onglets = [["modeles", "📋 Les modèles"], ...(equations ? [["equations", "🧮 Les équations"]] : []), ...(donnees?.length ? [["donnees", "📈 Les données"]] : [])];
   useEffect(() => {
     const echap = (e) => { if (e.key === "Escape") fermer(); };
     document.addEventListener("keydown", echap);
@@ -295,6 +299,21 @@ function AideOutil({ outil, fermer }) {
           <strong style={{ fontSize: 18, flex: 1 }}>🧰 {(verifs && outil.titreComplet && verifs.every((v) => v.ok) ? outil.titreComplet : outil.titre) || outil.nom}</strong>
           <button type="button" onClick={fermer} aria-label="Fermer" style={{ border: "none", background: "#f1f5f9", borderRadius: 999, width: 30, height: 30, cursor: "pointer", fontSize: 15 }}>✕</button>
         </div>
+        <style>{`
+          .ao-onglets { display:flex; gap:4px; flex-wrap:wrap; margin:12px 0 4px; border-bottom:2px solid #e2e8f0; }
+          .ao-onglets button { border:none; background:none; font:inherit; font-weight:800; font-size:14.5px; color:#64748b; padding:8px 12px; cursor:pointer; border-bottom:3px solid transparent; margin-bottom:-2px; }
+          .ao-onglets button[aria-selected="true"] { color:#0f172a; border-bottom-color:var(--accent, #2563eb); }
+          .ao-sous { display:flex; gap:6px; flex-wrap:wrap; margin:10px 0 0; }
+          .ao-sous button { border:1px solid #cbd5e1; background:#fff; border-radius:99px; padding:5px 12px; font:inherit; font-size:13px; font-weight:700; color:#334155; cursor:pointer; }
+          .ao-sous button[aria-pressed="true"] { background:#0f172a; color:#fff; border-color:#0f172a; }
+          .ao-graphe summary { pointer-events:none; } .ao-graphe summary button { pointer-events:auto; } .ao-graphe .ex-fleche { display:none; }
+        `}</style>
+        {onglets.length > 1 && (
+          <div role="tablist" className="ao-onglets">
+            {onglets.map(([id, nom]) => <button key={id} type="button" role="tab" aria-selected={onglet === id} onClick={() => setOnglet(id)}>{nom}</button>)}
+          </div>
+        )}
+        {onglet === "modeles" && <>
         <p style={{ margin: "10px 0 6px" }}>{outil.resume}</p>
         {verifs ? (
           <ul style={{ margin: "0 0 10px", padding: 0, listStyle: "none", display: "grid", gap: 3 }}>
@@ -308,10 +327,11 @@ function AideOutil({ outil, fermer }) {
         {perso === "erreur" && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fef2f2", border: "1px solid #fecaca", borderRadius: 10 }}>⚠️ <strong>Tes modèles contiennent une erreur</strong> et ne peuvent pas être lus. Demande à l'agent de la corriger.</p>}
         {outil.limites && <p style={{ margin: "0 0 10px", padding: "8px 12px", background: "#fffbeb", border: "1px solid #fde68a", borderRadius: 10 }}>⚠️ <strong>Les limites des modèles :</strong> {outil.limites}</p>}
         {outil.conseil && <p style={{ margin: 0, padding: "8px 12px", background: "#f0fdf4", border: "1px solid #bbf7d0", borderRadius: 10 }}>💡 {outil.conseil}</p>}
-        {equations && (
-          <details style={{ margin: "14px 0 0", padding: "0 10px", border: "1px solid #e2e8f0", borderRadius: 12 }}>
-            <summary style={{ display: "flex", alignItems: "center", gap: 8, cursor: "pointer", padding: "8px 0", listStyle: "none" }}>
-              <span aria-hidden="true" className="ex-fleche" style={{ fontSize: 11, color: "#64748b" }}>▶</span>
+        {outil.chemin && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : {outil.nomModele && !/s$/.test(outil.nomModele.split(" ")[0]) ? "le modèle est" : "les modèles sont"} dans le fichier <code>{outil.chemin}</code>.</p>}
+        </>}
+        {onglet === "equations" && equations && (
+          <div style={{ margin: "12px 0 0" }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", padding: "4px 0 10px" }}>
               <strong style={{ flex: 1, fontSize: 14.5 }}>🧮 {outil.equations ? (outil.titreEquations || "Les modèles mathématiques : de la réflectance à la couleur") : "Les équations de tes modèles"}</strong>
               <button type="button" style={bouton()} onClick={(e) => { e.preventDefault(); e.stopPropagation(); telechargerPDF(outil, equations, boite.current, setEtatPDF); }}>{etatPDF || "📄 PDF"}</button>
               {outil.code && <button type="button" style={bouton()} title="Le code des modèles, à redonner à l'agent" onClick={async (e) => {
@@ -323,7 +343,7 @@ function AideOutil({ outil, fermer }) {
                 lien.download = outil.code.nom; lien.click();
                 setTimeout(() => URL.revokeObjectURL(lien.href), 1000);
               }}>⬇️ JS</button>}
-            </summary>
+            </div>
             <div style={{ display: "grid", gap: 10, paddingBottom: 10 }}>
               {equations.map((q) => (
                 <div key={q.titre}>
@@ -335,18 +355,20 @@ function AideOutil({ outil, fermer }) {
                 </div>
               ))}
             </div>
-          </details>
+          </div>
         )}
-        {donnees && (
+        {onglet === "donnees" && donnees && (
           <>
             <div style={{ display: "flex", alignItems: "center", gap: 8, flexWrap: "wrap", margin: "14px 0 4px" }}>
               <strong style={{ flex: 1 }}>{outil.titreDonnees || "Les données des modèles (380 à 780 nm, pas de 5 nm)"}</strong>
               <button type="button" style={bouton()} onClick={() => telechargerCSV(`${outil.prefixeCSV || "colorimetrie"}-toutes-les-donnees`, donnees)}>⬇️ Tout télécharger (CSV)</button>
             </div>
-            {donnees.map((g) => <Graphique key={g.id} g={g} prefixe={outil.prefixeCSV} />)}
+            <div className="ao-sous">
+              {donnees.map((g, k) => <button key={g.id} type="button" aria-pressed={graphe === k} onClick={() => setGraphe(k)}>{g.titre.replace(/\s*\(.*\)\s*$/, "")}</button>)}
+            </div>
+            {donnees[graphe] && <div className="ao-graphe" key={donnees[graphe].id}><Graphique g={donnees[graphe]} ouvert prefixe={outil.prefixeCSV} /></div>}
           </>
         )}
-        {outil.chemin && <p style={{ margin: "10px 0 0", fontSize: 12.5, color: "#64748b" }}>📁 Pour les curieux : {outil.nomModele && !/s$/.test(outil.nomModele.split(" ")[0]) ? "le modèle est" : "les modèles sont"} dans le fichier <code>{outil.chemin}</code>.</p>}
       </div>
     </div>,
     document.body,
