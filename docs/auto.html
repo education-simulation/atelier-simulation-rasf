@@ -32,7 +32,27 @@ b.cle { color:#fde68a; }
 .nav .suiv { background:#f59e0b; color:#1f1300; margin-left:auto; }
 .nav button[hidden] { display:none; }
 .fini { text-align:center; font:800 22px 'Outfit',system-ui,sans-serif; color:#86efac; margin:6px 0; }
-/* étape 1 : les petites fenêtres à fermer */
+/* étape 1 : les petites fenêtres à fermer (8 s, en boucle) */
+.absent { color:#a1a1aa; font-size:15px; }
+.e1 .carte-ag { position:absolute; right:14px; width:330px; box-sizing:border-box; }
+.e1 .ca { bottom:128px; animation:d-ca 8s infinite; }
+.e1 .cb { bottom:14px; animation:d-cb 8s infinite; }
+.e1 .ca .dismiss { animation:d-da 8s infinite; }
+.e1 .cb .dismiss { animation:d-db 8s infinite; }
+.e1 .souris { right:420px; bottom:200px; animation:d-souris 8s infinite; }
+@keyframes d-souris {
+  0% { right:420px; bottom:200px; transform:scale(1); }
+  20% { right:118px; bottom:118px; transform:scale(1); }
+  23% { right:118px; bottom:118px; transform:scale(.8); }
+  26% { right:118px; bottom:118px; transform:scale(1); }
+  45% { right:258px; bottom:4px; transform:scale(1); }
+  48% { right:258px; bottom:4px; transform:scale(.8); }
+  51%, 100% { right:258px; bottom:4px; transform:scale(1); }
+}
+@keyframes d-ca { 0%, 24% { opacity:1; } 27%, 100% { opacity:0; } }
+@keyframes d-cb { 0%, 47% { opacity:1; } 50%, 100% { opacity:0; } }
+@keyframes d-da { 0%, 12% { outline-color:transparent; box-shadow:none; } 16%, 100% { outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25); } }
+@keyframes d-db { 0%, 32% { outline-color:transparent; box-shadow:none; } 36%, 100% { outline:3px solid #f59e0b; box-shadow:0 0 0 6px rgba(245,158,11,.25); } }
 .cartes { margin-top:12px; display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:10px; }
 .carte-ag { background:#1c1c22; border:1px solid #3f3f46; border-radius:12px; padding:10px 12px; display:grid; gap:6px; font-size:13.5px; color:#a1a1aa; }
 .carte-ag b { color:#fff; font-size:14.5px; }
@@ -124,10 +144,12 @@ b.cle { color:#fde68a; }
 
     <section class="etape">
       <h2>1. Fermer les petites fenêtres</h2>
-      Si de petites fenêtres en anglais s'affichent en bas à droite, ferme-les : clique sur <b class="cle">« Dismiss »</b>.
-      <div class="cartes" aria-hidden="true">
-        <div class="carte-ag"><b>Notification Preferences</b><span>Choose whether to be notified when the agent needs your attention or completes a task.</span><div class="boutons"><i class="bleu">Open Preferences</i><i class="dismiss">Dismiss 👈</i></div></div>
-        <div class="carte-ag"><b>Search Across Conversations</b><span>Search conversations with 🔍 in the top left.</span><div class="boutons"><i class="dismiss">Dismiss 👈</i></div></div>
+      Si de petites fenêtres en anglais s'affichent en bas à droite, ferme-les : clique sur <b class="cle">« Dismiss »</b>.<br>
+      <span class="absent">Tu ne les vois pas ? Clique sur <b class="cle">« Suivant »</b>.</span>
+      <div class="ecran e1" role="img" aria-label="Deux petites fenêtres en bas à droite d'Antigravity : cliquer sur Dismiss pour les fermer">
+        <div class="carte-ag ca"><b>Notification Preferences</b><span>Choose whether to be notified when the agent needs your attention or completes a task.</span><div class="boutons"><i class="bleu">Open Preferences</i><i class="dismiss">Dismiss</i></div></div>
+        <div class="carte-ag cb"><b>Search Across Conversations</b><span>Search conversations with 🔍 in the top left.</span><div class="boutons"><i class="dismiss">Dismiss</i></div></div>
+        <svg class="souris" viewBox="0 0 14 21" width="22" height="33" aria-hidden="true"><path d="M0 0 L0 17 L4.5 13 L8 20 L11 18.5 L7.5 12 L13 12 Z" fill="#fff" stroke="#000" stroke-width="1.3"/></svg>
       </div>
     </section>
 
