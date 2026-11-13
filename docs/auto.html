@@ -273,7 +273,7 @@ b.cle { color:#fde68a; }
       <p class="vers-suivant">Quand c'est fait, clique sur <b class="cle">« Suivant »</b> <span class="fleche-bas" aria-hidden="true">↘</span></p>
     </section>
 
-    <section class="etape">
+    <section class="etape e5">
       <p class="fini">✅ Antigravity est prêt.</p>
       <p class="fermer-onglet"><span class="num">✍️</span><span>Dans la zone de message, en bas à gauche, écris <b class="cle mot-continue">continue</b>, puis Entrée.</span></p>
       <div class="zone-ag" aria-hidden="true">
@@ -297,6 +297,8 @@ b.cle { color:#fde68a; }
   </div>
 </div>
 
+<div class="bande" id="bande" role="note" hidden><span class="bfleche" aria-hidden="true">⬅</span>
+  <span><b>Réponds à l'IA</b> <em>dans la zone de message d'Antigravity, en bas à gauche</em><span class="quoi">👉 Écris « continue », puis Entrée.</span></span></div>
 <script>
 const etapes = [...document.querySelectorAll(".etape")], ronds = [...document.querySelectorAll("#st li")];
 let n = 0;
@@ -305,6 +307,7 @@ function montrer() {
   ronds.forEach((r, i) => { r.className = i < n ? "fait" : i === n ? "ici" : ""; });
   document.getElementById("prec").hidden = n === 0;
   document.getElementById("suiv").hidden = n === etapes.length - 1;
+  document.getElementById("bande").hidden = !etapes[n].classList.contains("e5");   // seulement à l'étape « C'est prêt »
   // chaque animation repart du début quand on arrive sur son étape
   etapes[n].querySelectorAll("*").forEach((el) => el.getAnimations().forEach((a) => { a.currentTime = 0; }));
 }
