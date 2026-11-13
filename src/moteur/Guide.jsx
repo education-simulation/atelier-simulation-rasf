@@ -349,6 +349,12 @@ export const CSS = `
 .ga-points i { width:9px; height:9px; border-radius:50%; background:#f59e0b; animation:ga-point 1.2s ease-in-out infinite; }
 .ga-points i:nth-child(2) { animation-delay:.2s; } .ga-points i:nth-child(3) { animation-delay:.4s; }
 @keyframes ga-point { 0%,80%,100% { opacity:.25; transform:translateY(0); } 40% { opacity:1; transform:translateY(-5px); } }
+.ga-ia { cursor:pointer; }
+.ga-ia-choix { border-radius:10px; padding:2px 6px; margin-left:-6px !important; transition:background .15s; }
+.ga-ia-choix:hover { background:#1f1a10; }
+.ga-ia-ici { margin:12px 0 0 !important; background:#dc2626; color:#fff !important; border-radius:10px; padding:10px 12px; font-weight:700; animation:ga-secoue .45s; }
+.ga-ia-ici b { color:#fff; }
+@keyframes ga-secoue { 0%,100% { transform:translateX(0); } 20%,60% { transform:translateX(-8px); } 40%,80% { transform:translateX(8px); } }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
@@ -1008,20 +1014,28 @@ export function PageEtape({ n }) {
 // Le dernier message de l'IA (lu dans le journal d'Antigravity), mis en forme simplement : texte, puis les choix numérotés.
 const enLiens = (t) => t.split(/(https?:\/\/[^\s)]+)/g).map((m, k) => (/^https?:/.test(m) ? <a key={k} href={m} target="_blank" rel="noopener noreferrer">{m}</a> : m));
 function MessageIA({ texte }) {
+  // Un clic ici ne répond pas : on rappelle que la réponse s'écrit dans Antigravity (avec le numéro cliqué, s'il y en a un).
+  const [clic, setClic] = useState(null);
+  useEffect(() => { if (!clic) return; const t = setTimeout(() => setClic(null), 5000); return () => clearTimeout(t); }, [clic]);
   const propre = texte.replace(/\*\*/g, "").replace(/(^|\s)\*([^*\n]+)\*/g, "$1$2");
   const lignes = propre.split("\n").map((l) => l.trim()).filter(Boolean);
   const fin = lignes.findIndex((l) => l.startsWith("✍️") || l === "---");
   const utiles = (fin >= 0 ? lignes.slice(0, fin) : lignes).filter((l) => !/^💬\s*Pour toi\s*:?$/i.test(l));
   if (!utiles.length) return null;
   return (
-    <div className="ga-ia" aria-live="polite">
+    <div className="ga-ia" aria-live="polite" onClick={(e) => { if (e.target.closest("a")) return; setClic({ n: e.target.closest("[data-n]")?.dataset.n || "", k: Date.now() }); }}>
       <p className="ga-ia-titre">💬 L'IA te demande :</p>
       {utiles.map((l, k) => {
         const choix = l.match(/^(\d+)[.)]\s*(.+)$/);
         return choix
-          ? <div key={k} className="ga-ia-choix"><span>{choix[1]}</span>{enLiens(choix[2])}</div>
+          ? <div key={k} className="ga-ia-choix" data-n={choix[1]}><span>{choix[1]}</span>{enLiens(choix[2])}</div>
           : <p key={k}>{enLiens(l)}</p>;
       })}
+      {clic && (
+        <p className="ga-ia-ici" key={clic.k} role="alert">
+          ⬅ Ta réponse ne se donne pas sur cette page : écris {clic.n ? <b>« {clic.n} »</b> : "ta réponse"} dans la <b>zone de message d'Antigravity</b>, en bas à gauche, puis Entrée.
+        </p>
+      )}
     </div>
   );
 }
