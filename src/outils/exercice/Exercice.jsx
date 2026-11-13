@@ -364,7 +364,7 @@ function AideOutil({ outil, fermer }) {
               <button type="button" style={bouton()} onClick={() => telechargerCSV(`${outil.prefixeCSV || "colorimetrie"}-toutes-les-donnees`, donnees)}>⬇️ Tout télécharger (CSV)</button>
             </div>
             <div className="ao-sous">
-              {donnees.map((g, k) => <button key={g.id} type="button" aria-pressed={graphe === k} onClick={() => setGraphe(k)}>{g.titre.replace(/\s*\(.*\)\s*$/, "")}</button>)}
+              {donnees.map((g, k) => <button key={g.id} type="button" aria-pressed={graphe === k} onClick={() => setGraphe(k)}>{g.onglet || g.titre.replace(/\s*\(.*\)\s*$/, "")}</button>)}
             </div>
             {donnees[graphe] && <div className="ao-graphe" key={donnees[graphe].id}><Graphique g={donnees[graphe]} ouvert prefixe={outil.prefixeCSV} /></div>}
           </>
