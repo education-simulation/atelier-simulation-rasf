@@ -67,7 +67,7 @@ Choix : 1. **Oui, montre-moi** · 2. **Non, on continue** · 3. **😕 Je suis p
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton interface ? »
 Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. **Sous la ligne ✍️**, ajoute un trait horizontal (`---`) puis, exactement :
   ```
-  🔐 Juste après, des petites fenêtres en anglais vont s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger.
+  🔐 Juste après, des petites fenêtres d'autorisation en anglais vont s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger.
 
   👉 Voir à quoi elles ressemblent : https://education-simulation.github.io/atelier-simulation-rasf/fenetres.html
   ```
@@ -93,7 +93,7 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 
 👉 Clique sur ce lien : http://localhost:5799/?guide
 
-Garde cet onglet ouvert : il te montre où tu en es et traduit les petites fenêtres en anglais.
+Garde cet onglet ouvert : il te montre où tu en es.
 ```
 Choix : 1. **J'ai ouvert ma page de progression** · 2. **😕 Je suis perdu·e**
 - Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien. 

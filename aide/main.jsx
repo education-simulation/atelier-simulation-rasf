@@ -1,5 +1,5 @@
 // Pages d'aide EN LIGNE (GitHub Pages, dossier docs/) : l'agent donne leur lien dans ses messages.
-// Elles réutilisent les morceaux de la page « J'en suis où de l'installation » (src/moteur/Guide.jsx).
+// Elles réutilisent les morceaux de la page de progression (src/moteur/Guide.jsx), avec le même habillage.
 // Construire : npm run aide  (écrit docs/, à committer). Ne pas modifier pour son site.
 import { createRoot } from 'react-dom/client'
 import '@fontsource/outfit/latin-600.css'
@@ -15,14 +15,14 @@ const page = document.body.dataset.page
 
 function Fenetres() {
   return (
-    <div className="g">
-      <div className="g-col">
-        <header className="g-hero">
-          <span className="g-main" aria-hidden="true">🔐</span>
-          <h1>Les petites fenêtres en anglais</h1>
-        </header>
-        <section className="g-carte"><ContenuFenetres /></section>
-        <p className="aide-retour">✅ Quand tu as fini de regarder, reviens dans Antigravity et réponds à la question.</p>
+    <div className="ga">
+      <div className="ga-fenetre">
+        <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Les petites fenêtres d'autorisation</b><em>infos</em></div>
+        <div className="ga-corps">
+          <div className="pe2-titre"><span aria-hidden="true">🔐</span><h1>Les petites fenêtres d'autorisation en anglais</h1></div>
+          <ContenuFenetres />
+          <p className="pe2-retour">✅ Reviens dans Antigravity quand tu as vu.</p>
+        </div>
       </div>
     </div>
   )
@@ -31,6 +31,6 @@ function Fenetres() {
 createRoot(document.getElementById('root')).render(
   <>
     <style>{CSS + PLUS}</style>
-    {page === 'antigravity' ? <div className="g"><VisiteAntigravity /></div> : page === 'etape' ? <div><PageEtape n={Number(new URLSearchParams(location.search).get('n')) || 1} /></div> : <Fenetres />}
+    {page === 'antigravity' ? <div className="g"><VisiteAntigravity /></div> : page === 'etape' ? <PageEtape n={Number(new URLSearchParams(location.search).get('n')) || 1} /> : <Fenetres />}
   </>,
 )

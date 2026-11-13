@@ -87,10 +87,6 @@ const CHOIX_FENETRE = [
   ["No (tell the agent what to do instead)", "Non (dire à l'IA quoi faire)"],
 ];
 
-const LEXIQUE = [
-  ["Allow", "autoriser"], ["Submit", "valider ma réponse"], ["Skip", "passer"],
-  ["Other (write your answer)", "autre : écris ta réponse"], ["Continue with Google", "continuer avec Google"],
-];
 
 // Lit PROGRESSION.md : les étapes cochées « - [x] Étape N » et l'adresse du site en ligne.
 function lire(texte) {
@@ -322,6 +318,10 @@ export const CSS = `
 .pe2-liens { justify-content:center; }
 .pe2-retour { margin:0; text-align:center; color:#a1a1aa; font-size:15px; }
 @media (max-width:600px) { .pe2-styles { grid-template-columns:1fr; } .pe2-fleche { display:none; } }
+.pf-intro { margin:0 0 14px; color:#d4d4d8; font-size:17px; line-height:1.5; }
+.pf-intro b { color:#fff; }
+.ga .g-regle { color:#fde68a; background:#1f1a10; border:2px solid #f59e0b; border-radius:14px; padding:12px 16px; font-size:17px; }
+.ga .g-regle b { color:#fff; }
 .ga-progres-tete { display:flex; align-items:baseline; justify-content:space-between; gap:10px; margin-bottom:8px; }
 .ga-progres-tete h1 { margin:0; font:800 clamp(20px,3vw,26px)/1.2 'Outfit',sans-serif; color:#fff; }
 .ga-progres-tete span { color:#a1a1aa; font-weight:700; }
@@ -688,8 +688,8 @@ const DEMO = [
   { titre: "La zone de prompt", texte: "Tout en bas, « Ask anything… » : écris ici ta réponse ou ta demande (ton « prompt »), puis appuie sur Entrée. Le micro 🎤 permet de dicter.", zones: [Z.prompt] },
   { titre: "Le modèle d'IA", texte: "Sous la zone de prompt, à gauche : le modèle d'IA. Un clic ouvre la liste ; sur Gemini, choisis un niveau : Low (rapide), Medium ou High (plus réfléchi). Low ou Medium suffisent.", zones: [Z.modele], bulle: { x: 452, y: 308 }, images: [{ curseur: { x: 230, y: 398 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 300, y: 232 } }, { actif: "4", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 440, y: 232 } }, { actif: "4", niveau: "Low", zones: [Z.modele, Z.menuModeles, Z.niveaux], curseur: { x: 440, y: 232 } }, { niveau: "Low", curseur: { x: 230, y: 398 } }], boucle: false },
   { titre: "Ton usage", texte: "Dans ce même menu, « View Usage » montre ce qu'il te reste pour la semaine, pour chaque famille de modèles. À 0 %, écris à marc-olivier.reula@rasf.fr.", zones: [Z.modele, Z.menuModeles, Z.usage], images: [{ actif: "5", curseur: { x: 260, y: 352 } }] },
-  { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres en anglais). Laisse-le tel quel.", zones: [Z.auto] },
-  { titre: "Les petites fenêtres en anglais", texte: "Avant certaines actions, l'IA demande la permission dans une petite fenêtre, au-dessus de la zone de prompt. Clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. ⛔ Si elle parle de supprimer (delete) : choisis No.", zones: [Z.fenetre], bulle: { x: 470, y: 200 }, boucle: false, images: [{ fenetre: 1 }, { fenetre: 1, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 428, y: 326 } }, { zones: [Z.prompt], curseur: { x: 428, y: 326 } }] },
+  { titre: "« Auto »", texte: "« Auto » laisse l'IA travailler seule ; elle te demande la permission quand il le faut (les petites fenêtres d'autorisation en anglais). Laisse-le tel quel.", zones: [Z.auto] },
+  { titre: "Les petites fenêtres d'autorisation en anglais", texte: "Avant certaines actions, l'IA demande la permission dans une petite fenêtre, au-dessus de la zone de prompt. Clique sur « Yes, and always allow » (le 3e choix), puis sur Submit.", zones: [Z.fenetre], bulle: { x: 470, y: 200 }, boucle: false, images: [{ fenetre: 1 }, { fenetre: 1, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 300, y: 300 } }, { fenetre: 2, curseur: { x: 428, y: 326 } }, { zones: [Z.prompt], curseur: { x: 428, y: 326 } }] },
   { titre: "Une conversation = un écran", texte: "Le milieu montre la conversation choisie à gauche. Tu peux en avoir plusieurs : clique sur une autre, et le milieu change.", zones: [Z.conversations, Z.milieu], bulle: { x: 20, y: 250 }, images: [{ conv: 0, curseur: { x: 60, y: 110 } }, { conv: 1, curseur: { x: 60, y: 134 } }] },
   { titre: "③ À droite : le navigateur", texte: "Un navigateur intégré à Antigravity, comme Chrome : tu y vois ta page de progression et ton interface simulations.", zones: [Z.droite] },
   { titre: "Les onglets", texte: "Comme dans Chrome : un clic sur un onglet pour passer de l'un à l'autre, le × pour le fermer, le + pour en ouvrir un nouveau, ↗ pour l'ouvrir dans ton navigateur habituel.", zones: [Z.onglets] },
@@ -892,8 +892,8 @@ function CarteSupprimer({ dossier, lieu }) {
 export function ContenuFenetres() {
   return (
     <>
-    <p style={{ margin: "0 0 14px", color: "#334155" }}>
-      Dans Antigravity, des fenêtres comme celle-ci s'affichent sous la conversation. Elles demandent la permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
+    <p className="pf-intro">
+      Dans Antigravity, des fenêtres comme celle-ci s'affichent au-dessus de la zone de message. Elles demandent ta permission avant une action de l'IA Gemini. <b>C'est sans danger pour ton ordinateur.</b>
     </p>
     <div className="g-fenetre" aria-label="Exemple de petite fenêtre d'autorisation">
       <p className="g-fenetre-titre"><span aria-hidden="true">🖥️</span> Allow …?</p>
@@ -906,10 +906,6 @@ export function ContenuFenetres() {
       ))}
     </div>
     <p className="g-regle">👉 <b>Clique toujours sur le 3e choix, « Yes, and always allow »</b>, puis sur <b>Submit</b>. La même demande ne reviendra plus.</p>
-    <p className="g-regle g-danger">⛔ <b>Sauf si la fenêtre parle de supprimer</b> (« delete », « rm », « Permanently deletes ») : choisis <b>4 · No</b>, écris « Non, mets-le à la Corbeille », puis <b>Submit</b>. Rien ne doit être supprimé pour de bon.</p>
-    <div className="g-lexique">
-      {LEXIQUE.map(([en, fr]) => <div key={en} className="g-mot"><b>{en}</b> = {fr}</div>)}
-    </div>
     </>
   );
 }
@@ -1050,7 +1046,7 @@ export function Guide() {
                   {i === 0 && (
                     <div className="ga-liens ga-liens-etape">
                       <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer" title="Découvrir Antigravity : démo et écran numéroté">🧭 Antigravity</a>
-                      <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="_blank" rel="noopener noreferrer" title="Les petites fenêtres en anglais : quoi cliquer">🔐 Autorisations</a>
+                      <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="_blank" rel="noopener noreferrer" title="Les petites fenêtres d'autorisation en anglais : quoi cliquer">🔐 Autorisations</a>
                       <button type="button" onClick={() => setMail(true)} title="Recevoir les instructions sur ton mail RASF">📧 Mail RASF</button>
                     </div>
                   )}
