@@ -1090,7 +1090,9 @@ export function Guide() {
     <div className="ga">
       <style>{CSS}</style>
       {/* En bas à gauche : une flèche animée vers la zone de message d'Antigravity (à gauche de ce navigateur) */}
-      <div className={`ga-repondre${attente ? " alerte" : ""}`} role={attente ? "alert" : "note"}>
+      {/* Pendant que l'IA réfléchit, rien à répondre : la bande disparaît (sauf si une fenêtre d'autorisation attend). */}
+      {(attente || !reflexion) && (
+        <div className={`ga-repondre${attente ? " alerte" : ""}`} role={attente ? "alert" : "note"}>
         <span className="ga-fleche" aria-hidden="true">⬅</span>
         {attente ? (
           <span className="ga-repondre-texte"><b>🔐 Une petite fenêtre t'attend</b> <em>au-dessus de la zone de message, en bas à gauche</em><span className="ga-quoi">👉 Clique sur 3 « Yes, and always allow », puis sur Submit.</span></span>
@@ -1098,7 +1100,8 @@ export function Guide() {
           <span className="ga-repondre-texte"><b>Réponds à l'IA</b> <em>dans la zone de message, en bas à gauche</em><span className="ga-quoi">👉 {quoi}</span></span>
         )}
         <a className="ga-decouvrir" href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Fais-moi découvrir Antigravity</a>
-      </div>
+        </div>
+      )}
       <div className="ga-fenetre">
         <div className="ga-barre-titre"><span /><span /><span /><b>Atelier · Progression de l'installation</b><em>ce n'est pas ton interface</em><button type="button" className="ga-poubelle" onClick={() => setPoubelle(true)} title="Tout supprimer et recommencer" aria-label="Tout supprimer et recommencer">🗑️</button></div>
         <div className="ga-corps">
