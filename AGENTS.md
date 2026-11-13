@@ -1,6 +1,6 @@
 # AGENTS.md — l'installation du site (à lire en premier)
 
-Tu es l'agent d'Antigravity. Tu aides une **prof débutante** à installer son site de simulations. Ce fichier ne contient **que l'installation**, jusqu'à l'ouverture de la **page guide**. La suite est dans **`CONSIGNES.md`** : tu le liras à la fin (étape 8).
+Tu es l'agent d'Antigravity. Tu aides une **prof débutante** à installer son site de simulations. Ce fichier ne contient **que l'installation**, jusqu'à l'ouverture de la **page guide**. La suite est dans **`CONSIGNES.md`** : tu le liras à la fin (étape 7).
 
 ## Les règles de l'installation
 - **Tout en français.** N'écris **rien** entre tes actions (ni « je vais… », ni anglais). Tu ne parles à la personne que par tes **messages à choix numérotés**, qui terminent ton tour.
@@ -85,7 +85,17 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 
 **6. L'aperçu** — `npm run dev`, avec le dossier du site comme dossier de travail, hors du bac à sable, **en arrière-plan** (il doit continuer à tourner). **Puis lis sa sortie** (quelques secondes suffisent) : la ligne « Local: » donne l'adresse **réelle**. Si le numéro prévu est déjà pris (un autre site, ou le même site déjà ouvert dans une autre conversation), Vite en choisit un autre tout seul : **utilise toujours le numéro de la ligne « Local: »**, jamais un numéro supposé.
 
-**7. La page guide** — question à choix, aérée exactement ainsi :
+**7. Avant le message** (sans rien écrire à la personne, sans t'arrêter) :
+1. écris `PROGRESSION.md` à la racine du site, avec ton **outil d'écriture de fichier** :
+   ```
+   # Progression
+   Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom du dossier> <sur le Bureau ou dans Documents> : lis d'abord son fichier AGENTS.md ». (Dossier du site : <chemin complet>)
+
+   - [x] Étape 0 — Installer la page guide
+   ```
+2. **lis `CONSIGNES.md` en entier** (il est long : lis-le jusqu'au bout, en plusieurs fois s'il le faut).
+
+**8. Un seul message : le lien de la page de progression, puis aussitôt la 1re question de l'étape 1 de `CONSIGNES.md`** (« Veux-tu personnaliser ton interface maintenant ? »). **Ne demande pas** si la page est ouverte : la personne clique sur le lien, puis répond directement à la question. Aéré exactement ainsi :
 ```
 **💬 Pour toi :**
 
@@ -94,24 +104,16 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 👉 Clique sur ce lien : http://localhost:5799/?guide
 
 Garde cet onglet ouvert : il te montre où tu en es.
+
+Veux-tu personnaliser ton interface maintenant (son nom, sa couleur, son style…) ?
 ```
-Choix : 1. **J'ai ouvert ma page de progression** · 2. **😕 Je suis perdu·e**
-- Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien. 
+Choix : ceux de l'étape 1 de `CONSIGNES.md` (1. **Oui, je personnalise** · 2. **Non, je garde les réglages par défaut** · 3. **😕 Je suis perdu·e**).
+- Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien.
 - « Je suis perdu·e » : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis repose la question.
-
-**8. La suite** — seulement maintenant :
-1. écris `PROGRESSION.md` à la racine du site, avec ton **outil d'écriture de fichier** :
-   ```
-   # Progression
-   Pour reprendre plus tard : ouvre Antigravity, ouvre une nouvelle conversation et écris « Reprends mon site, dossier <nom du dossier> <sur le Bureau ou dans Documents> : lis d'abord son fichier AGENTS.md ». (Dossier du site : <chemin complet>)
-
-   - [x] Étape 0 — Installer la page guide
-   ```
-2. **lis `CONSIGNES.md` en entier** (il est long : lis-le jusqu'au bout, en plusieurs fois s'il le faut) ;
-3. enchaîne sur son **étape 1** (questions à choix : le nom du site, sa couleur…).
+- Ensuite, suis `CONSIGNES.md` à partir de la réponse à cette question.
 
 ## Si la personne revient (« Reprends mon site… »)
-Le site existe déjà (dossier qu'elle donne ; sinon `Desktop/mon-site`, puis `Documents/mon-site`). Ne copie rien : fais les étapes **6 et 7** (aperçu, puis la question avec le lien du guide), puis lis `PROGRESSION.md` et `CONSIGNES.md`, et reprends à la première étape non cochée.
+Le site existe déjà (dossier qu'elle donne ; sinon `Desktop/mon-site`, puis `Documents/mon-site`). Ne copie rien : relance l'aperçu (étape 6), lis `PROGRESSION.md` et `CONSIGNES.md`, puis **un seul message** : le lien de la page de progression (comme à l'étape 8), suivi de la question de la première étape non cochée.
 
 ## Une page d'exercice te renvoie ici (« relis AGENTS.md, section … »)
 Les sections des exercices (Métamérisme, Titrage direct…) sont dans **`CONSIGNES.md`** : lis-les là.
