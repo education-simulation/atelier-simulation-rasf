@@ -51,7 +51,7 @@ Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** · 3. **😕 Je 
   Choix : 1. **C'est installé** · 2. **😕 Je suis bloqué·e**. Si « C'est installé » dans cette conversation : relance `node -v`.
 
 **3. Le dossier** — question à choix « Dans quel dossier de ton ordinateur veux-tu ranger ton site ? »
-Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. Rien d'autre. **Pas de question sur le nom** : le dossier s'appelle `mon-site`.
+Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis perdu·e**. Ajoute juste avant les choix, sur sa propre ligne : « 👉 Ensuite, des petites fenêtres en anglais peuvent s'afficher : clique sur « Yes, and always allow » (le 3e choix), puis sur Submit. C'est sans danger. » Rien d'autre. **Pas de question sur le nom** : le dossier s'appelle `mon-site`.
 - Bureau : `Desktop` sur Mac ; sur Windows, souvent `C:\Users\<nom>\OneDrive\Bureau` (prends le vrai chemin).
 - **Ne touche JAMAIS à un dossier qui existe déjà** : la personne peut déjà avoir un site (créé dans une autre conversation), qu'il ne faut ni écraser, ni remplir, ni supprimer. **Ne cherche pas à vérifier toi-même** si le dossier existe (dans le bac à sable, le Bureau paraît vide : un `ls` y répond « rien » même quand le dossier est là). C'est la **copie** qui vérifie, à l'étape 4.
 
@@ -69,13 +69,13 @@ Choix : 1. **Bureau (recommandé)** · 2. **Documents** · 3. **😕 Je suis per
 ```
 **💬 Pour toi :**
 
-✅ Ton guide pour créer ton site est prêt, en français.
+✅ Ta page « J'en suis où de l'installation » est prête, en français.
 
 👉 Clique sur ce lien : http://localhost:5799/?guide
 
 Garde cet onglet ouvert : il te montre où tu en es et traduit les petites fenêtres en anglais.
 ```
-Choix : 1. **J'ai ouvert ma page guide** · 2. **😕 Je suis perdu·e**
+Choix : 1. **J'ai ouvert ma page « J'en suis où »** · 2. **😕 Je suis perdu·e**
 - Adresse habituelle, selon le nom du dossier (**mais c'est la ligne « Local: » qui fait foi**) : `mon-site` → **http://localhost:5799/?guide** ; `mon-site-2` → `5484` ; `mon-site-3` → `5485` ; `mon-site-4` → `5486` ; `mon-site-5` → `5487` ; `mon-site-6` → `5488` (même forme : `http://localhost:NNNN/?guide`). Si la ligne « Local: » donne un autre numéro, c'est lui qu'il faut écrire dans le lien. 
 - « Je suis perdu·e » : redis en une phrase de cliquer sur le lien bleu (il s'ouvre à droite, dans Antigravity), puis repose la question.
 

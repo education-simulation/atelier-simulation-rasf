@@ -1,5 +1,5 @@
 // ============================================================
-//  GUIDE (moteur, ne pas modifier) — la page « Ton guide », à l'adresse  …/?guide
+//  GUIDE (moteur, ne pas modifier) — la page « J'en suis où de l'installation », à l'adresse  …/?guide
 //  Seulement sur l'ordinateur (aperçu) : elle n'existe pas sur le site en ligne.
 //  Elle relit PROGRESSION.md toutes les 2 secondes (via le serveur d'aperçu, voir vite.config.js) :
 //  quand l'agent coche une étape, la page se met à jour toute seule.
@@ -555,7 +555,7 @@ export function Guide() {
   const [aide, setAide] = useState(false);
   // « Aller sur mon site » n'apparaît qu'au début de l'étape 3 (« Voir ton site »), une fois « Faire connaissance » cochée.
   // Onglets nommés : le bouton 🗺️ du site revient sur CET onglet, et « Aller sur mon site » sur celui du site, au lieu d'en ouvrir d'autres.
-  useEffect(() => { document.title = "Ton guide"; window.name = "atelier-guide"; }, []);
+  useEffect(() => { document.title = "J'en suis où de l'installation"; window.name = "atelier-guide"; }, []);
 
   return (
     <div className="g">
@@ -563,7 +563,7 @@ export function Guide() {
       <div className="g-col">
         <header className="g-hero">
           <span className="g-main" aria-hidden="true">👋</span>
-          <h1>Ton guide</h1>
+          <h1>J'en suis où de l'installation</h1>
           <p className="g-sous">Garde cet onglet ouvert : il te montre où tu en es, et il se met à jour tout seul.</p>
         </header>
 
