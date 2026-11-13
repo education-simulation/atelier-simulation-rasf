@@ -15,7 +15,7 @@ Les exemples : **1. Métamérisme** (les exemples 2 et 3 arrivent bientôt).
 3. Colle cette phrase :
 
    ```text
-   Sans rien lancer, donne-moi d'abord le lien de la page auto.html du site GitHub Pages education-simulation/atelier-simulation-rasf, et attends ma réponse. Ensuite, lis le fichier AGENTS.md de ce dépôt et suis-le pour me guider.
+   Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity : » suivi du lien de la page auto.html du site GitHub Pages education-simulation/atelier-simulation-rasf, rien d'autre, puis attends ma réponse. Ensuite, lis le fichier AGENTS.md de ce dépôt et suis-le pour me guider.
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
