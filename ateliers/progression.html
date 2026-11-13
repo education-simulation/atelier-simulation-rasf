@@ -38,9 +38,11 @@ h1 small { font:800 15px 'Nunito',system-ui,sans-serif; color:#a1a1aa; }
 .btn.vert { background:#16a34a; border-color:#16a34a; }
 .toi { margin:0; background:#0b0b0f; border:2px dashed #f59e0b; border-radius:10px; padding:10px 12px; color:#fde68a; font-weight:800; font-size:17px; }
 .toi.alerte { border-color:#dc2626; color:#fca5a5; }
-.voile { position:fixed; inset:0; z-index:100; background:rgba(15,23,42,.7); display:grid; place-items:center; padding:12px; }
-.popup { position:relative; width:min(1100px,100%); height:min(820px,94vh); background:#fff; border-radius:14px; overflow:hidden; }
+.voile { position:fixed; inset:0; z-index:100; background:rgba(15,23,42,.75); display:flex; flex-direction:column; align-items:center; justify-content:center; gap:12px; padding:12px; }
+.popup { position:relative; width:min(1100px,100%); height:calc(100vh - 90px); background:#fff; border-radius:14px; overflow:hidden; }
 .popup iframe { width:100%; height:100%; border:0; }
+.revenir { all:unset; cursor:pointer; background:#f59e0b; color:#1f1300; font-weight:800; font-size:16px; border-radius:10px; padding:10px 18px; }
+.revenir:hover { background:#fbbf24; }
 .popup .fermer { position:absolute; top:8px; right:8px; z-index:2; border:0; cursor:pointer; background:#0b0b0f; color:#fff; font-weight:800; font-size:14px; border-radius:8px; padding:7px 13px; }
 .popup .fermer:hover { background:#dc2626; }
 details { background:#16161b; border:1px solid #3f3f46; border-radius:10px; padding:8px 12px; }
@@ -164,8 +166,8 @@ document.addEventListener("click", (ev) => {
   if (b) {
     const v = document.createElement("div");
     v.className = "voile";
-    v.innerHTML = `<div class="popup" role="dialog" aria-modal="true"><iframe src="${b.dataset.popup}" title="Aide"></iframe></div>`;
-    v.addEventListener("click", (e) => { if (e.target === v || e.target.closest(".fermer")) v.remove(); });
+    v.innerHTML = `<div class="popup" role="dialog" aria-modal="true"><iframe src="${b.dataset.popup}" title="Aide"></iframe></div><button type="button" class="revenir">↩ Revenir à ma progression</button>`;
+    v.addEventListener("click", (e) => { if (e.target === v || e.target.closest(".revenir")) v.remove(); });
     document.body.appendChild(v);
   }
 });
