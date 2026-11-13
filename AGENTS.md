@@ -38,7 +38,8 @@ Bonjour ! Avant de commencer, un seul réglage, pour que je puisse travailler sa
 
 👉 Clique sur ce lien : https://education-simulation.github.io/atelier-simulation-rasf/auto.html
 ```
-Puis attends : la page dit d'écrire « continue ». Puis étape 1.
+Puis attends : la page dit d'écrire « continue ».
+**Quand la personne écrit « continue » : vérifie les réglages avant tout.** Le modèle choisi t'est donné dans les informations du message (« The user changed setting `Model Selection` … to Gemini 3.8 Flash (Low) ») : il doit être **Gemini 3.8 Flash, niveau Low**. S'il ne l'est pas (ou si aucun changement n'est signalé et que tu n'es pas en Flash Low), n'enchaîne pas : réponds « ⚠️ Le modèle n'est pas encore réglé : refais l'étape 2 de la page de configuration (Gemini 3.8 Flash, niveau Low), puis écris « continue ». » avec le lien de la page. Le mode « Auto » ne t'est pas communiqué : si une fenêtre d'autorisation s'affiche quand tu lis ce fichier ou lances ta première commande, rappelle en une ligne de passer en « Auto » (étape 3 de la même page). Puis étape 1.
 **Si la phrase de départ t'a déjà fait donner ce lien** (« Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity »… ») et que la personne a répondu : ne le redonne pas, passe directement à l'étape 1.
 
 **1. La présentation** — question à choix, aérée exactement ainsi :
