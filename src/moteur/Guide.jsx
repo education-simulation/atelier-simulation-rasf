@@ -350,6 +350,7 @@ export const CSS = `
 .ga-outils p { margin:0 0 10px; }
 .ga-outils b { color:#e4e4e7; }
 .ga-liens { display:flex; gap:10px; flex-wrap:wrap; }
+.ga-liens-etape { margin:10px 0 0 36px; }
 .ga-liens a { color:#bfdbfe; text-decoration:none; border:1px solid #1e3a8a; border-radius:10px; padding:7px 12px; font-weight:700; }
 .ga-liens a, .ga-liens button { font:700 14.5px 'Nunito',sans-serif; cursor:pointer; background:transparent; }
 .ga-liens button { color:#bbf7d0; border:1px solid #166534; border-radius:10px; padding:7px 12px; }
@@ -1046,6 +1047,13 @@ export function Guide() {
                       })}
                     </ol>
                   )}
+                  {i === 0 && (
+                    <div className="ga-liens ga-liens-etape">
+                      <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer" title="Découvrir Antigravity : démo et écran numéroté">🧭 Antigravity</a>
+                      <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="_blank" rel="noopener noreferrer" title="Les petites fenêtres en anglais : quoi cliquer">🔐 Autorisations</a>
+                      <button type="button" onClick={() => setMail(true)} title="Recevoir les instructions sur ton mail RASF">📧 Mail RASF</button>
+                    </div>
+                  )}
                   {e.boutonSite && <a className="ga-action vert" href="./" target="atelier-site">👀 Aller sur mon interface (localhost)</a>}
                 </li>
               );
@@ -1068,11 +1076,6 @@ export function Guide() {
 
           <div className="ga-outils">
             <p>✍️ Pour répondre à l'IA : écris le <b>numéro</b> (ou ta réponse avec tes mots) dans la zone de message d'Antigravity, puis Entrée. Perdu·e ? Écris <b>« je suis perdu »</b>.</p>
-            <div className="ga-liens">
-              <a href={`${AIDE_EN_LIGNE}antigravity.html`} target="_blank" rel="noopener noreferrer">🧭 Découvrir Antigravity</a>
-              <a href={`${AIDE_EN_LIGNE}fenetres.html`} target="_blank" rel="noopener noreferrer">🔐 Donner ton autorisation (anglais)</a>
-              <button type="button" onClick={() => setMail(true)}>📧 Recevoir les instructions sur mon mail RASF</button>
-            </div>
           </div>
 
           {mail && (
