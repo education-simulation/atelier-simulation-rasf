@@ -34,9 +34,7 @@ Les exemples : **1. Métamérisme** (`ateliers/metamerisme.html` dans ce dépôt
 ```
 **💬 Pour toi :**
 
-Bonjour ! Bienvenue dans l'atelier « Je crée des simulations en ligne pour illustrer mon cours ».
-
-Tu te laisses guider tout au long du processus : tu n'auras qu'à suivre mes instructions.
+Bonjour ! Bienvenue dans l'atelier « Je crée une simulation sur une page html avec l'IA ».
 ```
 Choix : 1. **C'est parti mon kiki** · 2. **En voiture Simone** (1 et 2 veulent dire la même chose : on démarre).
 
