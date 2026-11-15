@@ -59,7 +59,7 @@ Message, aéré exactement ainsi :
 👀 Mode : en bas à droite de la zone de message, tu dois lire « 🛡 Auto ».
 ```
 Choix : 1. **C'est bon, je vois « Auto »** · 2. **Je vois autre chose**. Si le modèle n'est pas Gemini 3.8 Flash (Low), remplace la ligne ✅ par « ⚠️ Modèle : <le modèle trouvé> — refais l'étape 2 de la page de configuration (Gemini 3.8 Flash, niveau Low) » avec le lien de la page. « Je vois autre chose » : redonne le lien de la page (étape 3, le mode Auto), puis repose la question. Quand tout est bon : étape 1.
-**Si la phrase de départ t'a déjà fait donner ce lien** (« Clique sur ce lien pour préparer ton IA… ») : ne le redonne pas. Antigravity : au « continue », **fais toujours la vérification de la configuration ci-dessus** (message 🔎), avant la présentation.
+**Si la phrase de départ t'a déjà fait donner un lien** (« Clique sur ce lien pour préparer ton IA… » ou « … pour paramétrer Antigravity… ») : ne le redonne pas. Antigravity : au « continue », **fais toujours la vérification de la configuration ci-dessus** (message 🔎), avant la présentation.
 
 **1. La présentation et le choix** — question à choix, aérée exactement ainsi :
 ```

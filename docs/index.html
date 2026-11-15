@@ -30,30 +30,34 @@ b.cle { color:#fde68a; }
   <div class="corps">
     <h1>Je crée une simulation sur une page html avec l'IA</h1>
     <div class="bloc">
-      <p>Ouvre ton IA (<b class="cle">Antigravity</b>, ChatGPT, Le Chat…), démarre une nouvelle conversation, colle cette phrase, puis appuie sur <b class="cle">Entrée</b> :</p>
-      <div class="phrase"><code id="phrase">Lis atelier.rasf.fr et suis les instructions.</code><button type="button" class="copier" id="copier">📋 Copier</button></div>
+      <p>Démarre une nouvelle conversation avec ton IA, colle la phrase qui lui correspond, puis appuie sur <b class="cle">Entrée</b>.</p>
+      <p><b class="cle">🚀 Avec Antigravity</b></p>
+      <div class="phrase"><code>Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity : https://atelier.rasf.fr/auto.html », rien d'autre, puis attends ma réponse. Ensuite, lis atelier.rasf.fr et suis les instructions.</code><button type="button" class="copier">📋 Copier</button></div>
+      <p><b class="cle">💬 Avec ChatGPT, Le Chat, Claude, Gemini…</b></p>
+      <div class="phrase"><code>Lis atelier.rasf.fr et suis les instructions.</code><button type="button" class="copier">📋 Copier</button></div>
     </div>
 
     <div class="bloc ia" id="consignes-ia">
       <h2>🤖 Consignes pour l'IA qui lit cette page</h2>
       <p>Tu guides un prof dans l'atelier « Je crée une simulation sur une page html avec l'IA ». Fais exactement ceci :</p>
       <ol>
-        <li>Sans rien lancer ni rien installer, écris seulement ce message, rien d'autre :<br>
-          <code>👉 Clique sur ce lien pour préparer ton IA : https://atelier.rasf.fr/preparer.html</code></li>
-        <li>Puis attends la réponse du prof.</li>
+        <li><b class="cle">Si tu es Antigravity</b> (ou une IA qui agit sur l'ordinateur) : si tu as <b>déjà</b> donné le lien « paramétrer Antigravity », ne redonne aucun lien et passe au point 3 (au « continue » du prof, ton premier message est la vérification de la configuration 🔎 décrite dans AGENTS.md). Sinon, sans rien lancer, écris seulement :<br>
+          <code>👉 Clique sur ce lien pour paramétrer Antigravity : https://atelier.rasf.fr/auto.html</code><br>puis attends la réponse du prof.</li>
+        <li><b class="cle">Si tu es une IA de conversation</b> (ChatGPT, Le Chat, Claude, Gemini…) : sans rien lancer ni rien installer, écris seulement ce message, rien d'autre :<br>
+          <code>👉 Clique sur ce lien pour préparer ton IA : https://atelier.rasf.fr/preparer.html</code><br>puis attends la réponse du prof.</li>
         <li>Ensuite, lis en entier le fichier <code>AGENTS.md</code> du dépôt GitHub education-simulation/atelier-simulation-rasf (version brute : <code>https://raw.githubusercontent.com/education-simulation/atelier-simulation-rasf/main/AGENTS.md</code>) et suis-le à la lettre pour guider le prof.</li>
       </ol>
     </div>
   </div>
 </div>
 <script>
-document.getElementById("copier").addEventListener("click", async (e) => {
-  const texte = document.getElementById("phrase").textContent;
-  try { await navigator.clipboard.writeText(texte); }
-  catch { const r = document.createRange(); r.selectNodeContents(document.getElementById("phrase")); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand("copy"); }
-  e.target.textContent = "✅ Copié";
-  setTimeout(() => { e.target.textContent = "📋 Copier"; }, 2500);
-});
+document.querySelectorAll(".copier").forEach((b) => b.addEventListener("click", async () => {
+  const c = b.previousElementSibling;
+  try { await navigator.clipboard.writeText(c.textContent); }
+  catch { const r = document.createRange(); r.selectNodeContents(c); getSelection().removeAllRanges(); getSelection().addRange(r); document.execCommand("copy"); }
+  b.textContent = "✅ Copié";
+  setTimeout(() => { b.textContent = "📋 Copier"; }, 2500);
+}));
 </script>
 </body>
 </html>

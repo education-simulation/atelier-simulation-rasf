@@ -14,7 +14,7 @@ Pour l'instant : **une simulation sur le métamérisme**, à partir d'une page m
 2. Ouvre une nouvelle conversation et colle cette phrase :
 
    ```text
-   Lis atelier.rasf.fr et suis les instructions.
+   Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour paramétrer Antigravity : https://atelier.rasf.fr/auto.html », rien d'autre, puis attends ma réponse. Ensuite, lis atelier.rasf.fr et suis les instructions.
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
