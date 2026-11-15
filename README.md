@@ -14,7 +14,7 @@ Pour l'instant : **une simulation sur le métamérisme**, à partir d'une page m
 2. Ouvre une nouvelle conversation et colle cette phrase :
 
    ```text
-   Sans rien lancer, écris seulement « 👉 Clique sur ce lien pour préparer ton IA : » suivi du lien de la page preparer.html du site GitHub Pages education-simulation/atelier-simulation-rasf, rien d'autre, puis attends ma réponse. Ensuite, lis le fichier AGENTS.md de ce dépôt GitHub et suis-le pour me guider.
+   Lis atelier.rasf.fr et suis les instructions.
    ```
 
 4. Quand une petite fenêtre « Allow… ? » s'affiche, clique sur **« Yes, and always allow »** (le 3e choix) : c'est sans danger.
